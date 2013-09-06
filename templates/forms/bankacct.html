@@ -1,0 +1,49 @@
+{% block content %}
+<script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
+<script type="text/javascript">
+    //balanced.init('/v1/marketplaces/TEST-MP59PrHkpa0ko7BaYwp0CkH5');
+    balanced.init('/v1/marketplaces/MPzQH7Kg11jaH5eTYoFxMVg');
+</script>
+
+ <form enctype="multipart/form-data" method="post" id='bank_form' class="form-horizontal">
+    <h4>Add Bank Account Information</h4>
+    <div class="row-fluid"> 
+      <div class='span2'><p>Driver's Name:</p></div>
+      <div class='span4'><input type='text' class='acct_name' value='{{first_name}} {{last_name}}'></div>
+      <div class='span4'><span class="text-error" id='name-err'></span></div>
+    </div>
+    <div class="row-fluid"> 
+      <div class='span2'><p>Routing Number:</p></div>
+      <div class='span4'><input type='text' class='route_num span12' maxlength='9'></div>
+      <div class='span4'><span class="text-error" id='route-err'></span></div>
+    </div>    
+    <div class="row-fluid"> 
+      <div class='span2'><p>Account Number:</p></div>
+      <div class='span4'><input type='text' class='acct_num span12' maxlength='16'></div>
+      <div class='span4'><span class="text-error" id='acct-err'></span></div>
+    </div>
+    <div class="row-fluid"> 
+      <div class='span2'><p>Account Type:</p></div>
+      <div class='span4'>
+            <label class="radio inline">
+              <input type="radio" name="acct_type" value="checking" checked> Checking
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="acct_type" value="savings"> Savings
+            </label>
+      </div>
+    </div>    
+    <div class="row-fluid"> 
+      <div class='span2 offset2'>
+	<button type="submit" class="btn" id='request_btn'>Save</button>
+      </div>
+      <div class='span4 text-error' id='check-err'></div>
+    </div>
+</form>
+  </div>
+
+  </div>
+</div>
+
+<script type="text/javascript" src='/static/js/bankpay.js'></script>  
+{% endblock %}

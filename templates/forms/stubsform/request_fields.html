@@ -1,0 +1,69 @@
+    <div class="control-group">
+      <label class="control-label" for="dropoff">Origin:</label>
+        <div class="controls">
+          <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}">
+          <span class="help-inline error" id='map0Err'>{{error_route}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="dest">Delivery Address:</label>
+        <div class="controls">
+          <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{locend}}">
+          <span class="help-inline error" id='map1Err'>{{error_route}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="reqdate">Deliver By:</label>
+        <div class="controls">
+          <input type="text" name="reqdate" value="{{delivby}}" id="reqdate" autocomplete="off">
+        </div>
+    </div>    
+    <div class="control-group">
+        <label class="control-label" for="capacity">Space Needed:<br>
+        <a href='#sizechart'>Size Chart</a><br>
+        </label>
+        <div class="controls" id="repeatRadios">
+            <label class="radio inline">
+              <input type="radio" name="vcap" id="cap4" value="0"> 
+              <img src='/static/img/icons/icocap4.png'><br> Carry On
+            </label>        
+            <label class="radio inline">
+              <input type="radio" name="vcap" id="cap0" value="1"> 
+              <img src='/static/img/icons/icocap0.png'> <br> Car Trunk
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="vcap" id="cap1" value="2"> 
+              <img src='/static/img/icons/icocap1.png'><br> Oversized 
+            </label>            
+        </div>
+   </div>       
+    <div class="control-group">
+      <label class="control-label" for="rates">Offer Price (optional):</label>
+        <div class="controls">
+        <span class="add-on hidden-phone">$</span>
+          <input class="span2" type="number" name="rates" value="{{rates}}" onkeyup="validate_rate()" min="0">
+        </div>
+   </div>
+     <div class="control-group">
+        <label class="control-label" for="items">Description of item(s) to be delivered:</label>
+        <div class="controls">
+            <textarea class="span5" name="items" rows="2">{{items}}</textarea>
+        </div>
+    </div>	
+   
+<script>
+  $(function() {
+    $( "#reqdate" ).datepicker({
+      minDate: 0,
+      maxDate: "+1Y",
+      changeMonth: true
+    });
+    
+    var capacity = $('input#hidecap').val();
+    if (capacity != '') {
+        var c = parseInt(capacity);
+        $('input[name=vcap]').get(c).setAttribute('checked',true);
+    }
+  });
+  
+</script>

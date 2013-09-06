@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title%}Barnacle{% endblock %}
+{% block heading %}News and Updates{% endblock %}
+{% block content %}
+<div class="row-fluid contentpad20">
+<div class='span8' id="posts">
+</div>
+<div id="archives" class='span3 offset1'>
+<table style='width:100%'>
+    <tr style=""><td>
+        <table style='padding-top:5px; border-top:3px solid #000;border-bottom:1px solid #333;width:100%'><tr><td>
+        <b>RECENT POSTS</b>
+        </td></tr></table>
+    </td></tr>
+    <tr><td>
+    <div style='font-size: 0.9em;line-height:1.5em' id='archives'>
+    <br>
+    <li>
+    <a href="/blog/mumford-brewing-loves-barnacle" class="archives" id='newest'>Mumford Brewing Loves Barnacle</a></li>    
+    <li>
+    <a href="/blog/what-its-like-to-drive-for-barnacle" class="archives">What it's Like to Drive for Barnacle</a></li>    
+    <li>
+    <a href="/blog/money-doesnt-buy-you-trust" class="archives">Money Doesn't Buy You Trust</a></li>
+    <li>
+    <a href="/blog/lets-motor" class="archives">Let's Motor</a></li>
+    <li>
+    <a href="/blog/peer-to-peer-postal" class="archives">Peer-to-Peer Postal</a></li>
+    <br>
+    </div>
+    </td></tr>
+</table>
+</div>
+<div class='row-fluid'>
+    <div class='span8 offset1'>
+    <img src='/static/img/icons/tweet.jpg' width='72px' id='tweet'>
+    <img src='/static/img/icons/fb_share.jpg' width='72px' id='fb_share'>
+    <img src='/static/img/icons/li_share.jpg' width='72px' id='li_share'>
+    <img src='/static/img/icons/reddit.jpg' width='72px' id='reddit'>
+    </div>
+</div>
+<div class='row-fluid contentpad20'>
+    <div class='span8'>
+    <ul class="pager">
+    <li class="previous" id='previous'>
+    <a href="#">&larr; Older</a>
+    </li>
+    <li class="next" id='next'>
+    <a href="#">Newer &rarr;</a>
+    </li>
+    </ul>
+    </div>
+</div>
+<script>
+var BlogFile = '/static/blog/{{blog_post}}.html';
+
+$(document).ready(function() {  
+    var newest = $('#newest').attr('href');    
+    if (BlogFile === '/static/blog/None.html') 
+        window.location.replace(newest);
+    $.get(BlogFile, function(data) {
+        var fileDom = $(data);
+        $('#posts').html(fileDom);
+    })
+    .fail(function() {
+        window.location.replace(newest);
+    });
+    var blogCur = $('a[href$="{{blog_post}}"]');
+    var blogI = $('.archives').index(blogCur);
+    console.log(blogI);
+    var blogLen = $('.archives').length;
+    if (blogI==0) $('#next').addClass('hide');
+    else { 
+      $('#next').removeClass('hide');
+      $('#next>a').attr('href', $('.archives')[blogI-1].getAttribute('href'));
+    }
+    if (blogI==blogLen-1) $('#previous').addClass('hide');
+    else { 
+      $('#previous').removeClass('hide');
+      $('#previous>a').attr('href', $('.archives')[blogI+1].getAttribute('href'));
+    }
+    
+    var blogTitle = "Barnacle: {{blog_post}}";
+    var blogLink = window.location;
+    $('#tweet').click(function() {
+        var twitURL = 'http://twitter.com/share?text="'+blogTitle+'"&url='+blogLink;
+        console.log(twitURL);
+        window.open(twitURL,'','width=500,height=300','');
+    });
+    $('#fb_share').click(function() {
+        var fbURL = 'http://www.facebook.com/sharer.php?u='+blogLink;
+        window.open(fbURL,'','width=500,height=300','');
+    });
+    $('#li_share').click(function(){
+        var liURL  = 'http://www.linkedin.com/shareArticle?mini=true&url=' + blogLink + '&title=' + blogTitle + '&source=Barnacle';
+        window.open(liURL,'','width=500,height=300',''); 
+    });
+    $('#reddit').click(function(){
+        var redditURL  = 'http://www.reddit.com/submit?url=' + blogLink;
+        window.open(redditURL,'','width=500,height=300',''); 
+    });
+});
+</script>
+{% endblock %}

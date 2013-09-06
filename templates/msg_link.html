@@ -1,0 +1,10 @@
+<div class="row-fluid">
+    <div class="span10 offset1">
+  {% if msg_ok==True %}
+  <button type="submit" class="btn btn-inverse" id="msg_btn">Message {{first_name}}</button>
+    &nbsp;
+  {% endif %}
+  <button type="submit" class="btn btn-inverse" id='review_btn'>Leave a Review</button><br> 
+        <p class="plabel">Member Since:</p> {{created}}
+    </div>
+</div>

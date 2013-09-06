@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}About Us{% endblock %}
+{% block heading %}About Barnacle{% endblock %}
+{% block content %}
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=540602052657989";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<div class='row-fluid'>
+  <div class="fb-follow span3 offset9" data-href="https://www.facebook.com/GoBarnacle" data-width="250" data-show-faces="false"></div>
+</div>
+<div class="row-fluid">
+  <div class="span3 offset1">
+  <img src='/static/img/aj.jpg' class='img-rounded img-polaroid'>
+  </div>
+  <div class="span7">
+<p>Here at Barnacle, we love going on road trips!</p>
+<p>For those who don't, our network of drivers can help you deliver items that are uneconomical to send by mail. Barnacle drivers are commuting as part of their everyday lives, and your deliveries are just along for the ride.</p>
+<p>Because Barnacle is a community, we look out for our drivers and users. 
+Our happy customers have used us to transport bicycles, musical instruments, care packages, pets, and more! <br>
+</p>
+  </div>
+</div>
+<div class="row-fluid">    
+  <div class="span10 offset1">
+<h4><br>Status Update (September 2013)</h4>
+<p>
+Barnacle drivers now service routes all over the San Francisco Bay Area. We also offer weekly deliveries between Northern California and the Greater Los Angeles Area. We have a central holding facility for dropoffs and pickups located in Mountain View, California. We have a another storage site just east of Los Angeles.
+</p>
+<p><a href='/loc'>How to find us</a>.</p>
+<!--
+Barnacle has become a cheap and convenient alternative to checking airline baggage on flights between SFO, SJC, OAK and LAX, BUR, LGB. 
+</p>
+<p>Have an upcoming flight? Need something transported across the state? Our drivers will deliver to your doorstep.</p>
+<p style='text-align:center'>
+<a href="/airport"><button class="btn btn-primary">Reserve a Route</button></a>
+-->
+<div class="row bottom">&nbsp;<hr></div>  
+<p>Barnacle is a <a href='http://www.bumpscientist.com'>Bumpscientist Labs</a> production.</p>
+We are not perfect, and we want you to tell us why. If you have suggestions, please <a href='/contact'>contact us</a>.
+</p>
+<br>
+{% include 'share/mailchimp.html' %}
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+
+<div class="row" style='height:10px'></div>
+<div class="row-fluid" id="navbar">
+  <div class="span4 hidden-phone">
+    <a href="/"><img src="/static/img/barnaclelogo.png"></a>
+  </div>
+  <div class="span5">
+    <table width="100%"><tr><td width="25%">
+    <center><div class="visible-phone">
+      <button class="navicoaccount"></button><p>Account</p>
+    </div></center>
+    </td><td width="25%">
+    <button class="navicoreqs"></button><p>Send It</p>
+    </td><td width="25%">    
+    <button class="navicoroutes"></button><p>Drive</p>
+    </td><td width="25%" class="dropdown">    
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" style='color:#555; text-decoration:None;'>
+    <button class="navicosearch"></button><p>Search</p>
+    </a>
+    
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+      <li><a href='/search'>Drivers</a></li>
+      <li><a href='/search/request'>Requests</a></li>
+    </ul>
+    
+    </td></tr></table>
+  </div>
+  <div class="span3 hidden-phone" id='user_head'>
+   <table class="table-condensed"><tr><td rowspan='2'>
+     <img src="{{prof_thumb}}" class="img-rounded" id='prof_thumb'>
+   </td><td style='text-align:left'>
+   {{nickname | safe}}<br>
+   {{account_links | safe}} </td></tr></table>
+   </div>
+</div>
+<!--
+  <div class="row-fluid bottom">
+    <div class="span12">
+  <hr>
+    </div>
+  </div>
+-->
+<script>
+$(document).ready(function(){
+    //add some validation
+    click_redirect('.navicoroutes','/drive');
+    click_redirect('.navicoreqs','/res');
+    click_redirect('.navicoaccount','/account');
+})
+</script>

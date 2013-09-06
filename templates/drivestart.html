@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}Getting Started{% endblock %}
+{% block heading %}Getting Started{% endblock %}
+{% block content %}
+<div class="row-fluid">    
+  <div class="span10 offset1">
+<h4>Welcome to Barnacle!</h4>
+<p>
+Thank you for signing up to become a driver. It's easy to get on the road and making deliveries. <br>Here are some things you can do to get started.
+</p>
+  </div>
+</div>
+ <div class="row bottom">&nbsp;<br><br></div> 
+<div class="row-fluid">    
+  <div class="span10 offset1">
+  <h4>Set up a payment account</h4>
+  </div>
+</div>
+<div class="row-fluid">    
+  <div class="span3 offset1">
+<button id='account_btn' class='btn btn-info btn-large'><i class="icon-lock icon-white"></i> Add Account</button>
+  </div>
+  <div class="span7">
+<p>
+Barnacle users appreciate the added security of our escrow system. 
+Have your payments securely transferred to your bank account and funds will be released upon delivery confirmation.
+</p>
+  </div>
+</div>
+ <div class="row bottom">&nbsp;<br><br></div> 
+<div class="row-fluid">    
+  <div class="span10 offset1">
+  <h4>Post a driving route</h4>
+  </div>
+</div>
+<div class="row-fluid">    
+  <div class="span3 offset1">
+<button id='post_btn'  class='btn btn-info btn-large'><i class="icon-refresh icon-white"></i> Add Route</button>
+  </div>
+  <div class="span7">
+<p>
+Add your next drive to our database so that other users can find you when they need to send something!
+</p>
+  </div>
+</div>
+
+ <div class="row bottom">&nbsp;<br><br></div> 
+<div class="row-fluid">    
+  <div class="span10 offset1">
+  <h4>Search for requests</h4>
+  </div>
+</div>
+<div class="row-fluid">    
+  <div class="span3 offset1">
+<button id='search_btn' class='btn btn-info btn-large'><i class="icon-search icon-white"></i> Search</button>
+  </div>
+  <div class="span7">
+<p>
+If you don't have a planned travel itinerary, search our user requests.
+</p>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+    click_redirect('#post_btn','/drive');        
+    click_redirect('#account_btn','/settings');
+    click_redirect('#search_btn','/search/request');
+});
+</script>
+{% endblock %}
+
+
+
+{% block content2 %}
+<div class="row bottom"><br>&nbsp;<br>&nbsp;<br></div> 
+
+<div class='heading'>
+  <div class="main row-fluid">
+    <div class='span8'>
+   <h3><font color='#330099'></font>What Happens During a Delivery?</h3>
+    </div>
+  </div>
+  <div class="row bottom">&nbsp;<br><br></div> 
+  <div class="row-fluid main">
+    <div class='span3 offset1'>
+      <img src='/static/img/how_it_works.png' width="130px">
+    </div>
+    <div class='span7'>
+    <p>After you have confirmed a request, you will pick up your delivery item either from the sender's location or at Barnacle's warehouse. The location will be agreed upon before confirmation.</p>
+    </div>
+  </div>
+   
+  <div class="row bottom">&nbsp;<br><br></div> 
+  <div class="row-fluid main">
+    <div class='span7 offset1'>
+    <p>Make sure you have the receiver's contact information or dropoff instructions before embarking on your delivery!</p>
+    </div>
+    <div class='span3'>
+      <img src='/static/img/how_drive.png' width="180px">
+    </div>
+  </div>  
+  
+  <div class="row bottom">&nbsp;<br><br></div> 
+  <div class="row-fluid main">
+    <div class='span3 offset1'>
+      <img src='/static/img/barnacle.png' width="150px"><br>&nbsp;<br>
+      <a data-toggle="modal" href="#fakeconfirm" class='btn btn-danger'>Confirm Delivery</a>
+    </div>
+    <div class='span7'>
+    <p>If your final destination is a Barnacle office, we will verify and confirm your delivery immediately.</p>
+    <p>Otherwise, a "Confirm Delivery" link will appear at the top of your <a href='/account'>Account</a> page. After releasing your delivery to the recipient, use this button to notify us and we will verify the delivery with the sender. Once delivery has been confirmed by both parties, your payment will be credited to your account.
+    </p>
+    </div>
+  </div>  
+  
+  <div class="row bottom">&nbsp;<br><br></div> 
+  <div class="main row-fluid">
+    <div class='span10 offset1'>
+    <p>For your own security, we encourage you to obtain a photo of one of the following:<br>
+    <ul>
+      <li>A street view of the delivery item at its final destination</li>
+      <li>The recipient with the delivery</li>
+    </ul>
+    </p>
+    </div>
+  </div>
+  <div class="row bottom">&nbsp;<br><br></div>   
+</div>
+<div class="main row-fluid">
+  <div class='span10 offset1'>
+   <h3>Coming Soon</h3>
+   <p>In the next few weeks, Barnacle will be available for Android and iOS for real-time tracking and confirmation.<br>
+   The mobile app will also allow you to obtain a signature confirmation from the recipient.</p>
+   <p>Thank you for your patience!</p>
+   </div>
+</div>
+<div class="row bottom">&nbsp;<br></div> 
+
+<div id="fakeconfirm" class="modal hide fade in" style="display: none; ">  
+    <div class="modal-header">  
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4>Very Good!</h4>
+    </div>  
+    <div class="modal-body">  
+    <p>That's exactly how you confirm a delivery. You are ready to drive for Barnacle!</p>
+    </div>  
+    <div class="modal-footer">  
+    <a href="#" class="btn" data-dismiss="modal">Close</a>  
+    </div>  
+</div>  
+  
+{% endblock %}

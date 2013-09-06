@@ -1,0 +1,36 @@
+application: p2ppostal
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /static
+  static_dir: static
+
+- url: /favicon\.ico
+  static_files: static/favicon.ico
+  upload: static/favicon\.ico
+  
+- url: /robots\.txt
+  static_files: static/robots.txt  
+  upload: static/robots\.txt  
+  
+- url: /.*
+  script: main.app
+  
+- url: /_ah/mail/.+
+  script: Utils.EmailUtils.app
+#  login: admin
+
+inbound_services:
+- mail
+  
+libraries:
+- name: jinja2
+  version: latest
+
+  
+#error_handlers:
+#  - error_code: over_quota
+#    file: over_quota.html

@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /js/
+Disallow: /css/
+Disallow: /splash/
+Disallow: /drive
+Disallow: /debug/
+Disallow: /account
+Disallow: /settings/
+Disallow: /kickstart

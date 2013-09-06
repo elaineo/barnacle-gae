@@ -1,0 +1,59 @@
+{% extends "launch/baseblank.html" %}
+{% block title%}Thank You For Your Reservation{% endblock %}
+{% block content %}
+
+      <div class="row-fluid"> <div class="span10 offset1">
+      <h2><br>Thank You</h2><br>
+        <p>Thank you for your reservation. You will receive an email confirmation shortly. </p>
+        <p>Please <a href='/message?receiver={{d.key}}' target='_blank'>contact your driver</a> if you would like to provide any additional delivery information, such as a contact number for the recipient. 
+        You can access your reservation at any time through your <a href='/account'>account page</a>.
+        </p>
+        <p>Questions? Please <a href='mailto:help@gobarnacle.com'>contact us</a> directly.</p>
+        
+        <p class="arial"><h4>Reservation Details</h4>
+        <small>
+    <div class="row-fluid">
+      <div class='span2'><p>Origin:</p></div>
+      <div class='span6'><p>{{ locstart }}
+      <br><small>{{ delivstart }}</small></p></div>
+    </div>  
+    <div class="row-fluid">
+      <div class='span2'><p>Destination:</p></div>
+      <div class='span8'><p>{{ locend }}
+      <br><small>{{ delivend }}</small></p></div>
+    </div>      
+    <div class="row-fluid">
+      <div class='span2'>Driver:</div>
+      <div class='span6'><a href='{{d.prof_url}}'>{{d.first_name}}</a> </span>
+      </div>
+      <div class='insured'>
+        <br>{{d.insured | safe}}
+      </div>
+    </div>   
+    <div class="row-fluid">
+      <div class='span2'>Size:</div>
+      <div class='span2 icons'>
+      {% if capacity == 0 %}
+        <img src='/static/img/icons/icocap4.png'> Carry On
+      {% elif capacity == 1 %}
+        <img src='/static/img/icons/icocap0.png'> Car Trunk
+      {% else %}
+        <img src='/static/img/icons/icocap1.png'> Wagon 
+      {% endif %}
+      </div>
+    </div>       
+    <div class="row-fluid">
+      <div class='span2'>Special instructions:</div>
+      <div class='span6'>{{ details }}
+      </div>
+    </div>      
+    <div class="row-fluid">
+      <div class='span2'><p><b>Total:</b></p></div>
+      <div class='span6'><b>${{ rates }} </b></span>
+      </div>
+    </div>       
+        </small></p>
+        
+        <p>Go Home: <a href='/home'><img width="100px" src="/static/img/barnacle.png"></a></p>
+      </div></div>
+{% endblock %}

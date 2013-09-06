@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Locations{% endblock %}
+{% block heading %}Barnacle Locations{% endblock %}
+{% block content %}
+<div class="row-fluid">
+  <div class="span4 offset1">
+  <h4>Mountain View</h4>
+  <p>1601-B N. Shoreline Blvd.<br>
+   Mountain View, CA 94043<br>
+   765 335 2463</p>
+   <div style='height:300px;width:400px'>
+     <img src='http://maps.google.com/maps/api/staticmap?center=94043&markers=icon:http://www.gobarnacle.com/static/barnacle64.png|shadow:false|94043&zoom=10&size=400x300&sensor=false'>   
+   </div>
+  </div>
+  <div class="span4 offset1">
+  <h4>Los Angeles</h4>
+  <p>6936 N. Ferncroft Ave, Unit 4<br>
+   San Gabriel, Los Angeles, CA 91775<br>
+   626 482 2636</p>
+   <div style='height:300px;width:400px'>
+     <img src='http://maps.google.com/maps/api/staticmap?center=91775&markers=icon:http://www.gobarnacle.com/static/barnacle64.png|shadow:false|91775&zoom=10&size=400x300&sensor=false'>
+   </div>
+  </div>  
+</div>
+<div class='row-fluid'>
+<div class='span10 offset1'>
+<br>&nbsp;<br>
+  <p>Barnacle warehouses are staffed 24 hours a day. </p>
+  <p>However, we require that you specify pickup and dropoff times when making a reservation to help maintain security at our facilities.</p>
+</div></div>
+{% endblock %}

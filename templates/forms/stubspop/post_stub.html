@@ -1,0 +1,77 @@
+<div class="row-fluid">
+  <div class="span5 offset1  contentpad10">
+    <div id="map-canvas"  class="routemap"></div>
+  </div>
+  <div class="span6">
+    <div class="row-fluid">
+      <div class="span6"><p class="plabel">
+        Departure Location:
+      </p></div>
+      <div class="span5">
+        {{ locstart }} 
+       </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span6"><p class="plabel">
+        Arrival Location:
+      </p></div>
+      <div class="span5">
+        {{ locend }} 
+       </div>
+    </div>
+    {% if repeat == True %}
+        <div class="row-fluid">
+          <div class="span11">
+            <br>{{ rstring }}<br>&nbsp;<br>
+          </div>
+        </div>
+    {% else %}
+    <div class="row-fluid">
+      <div class="span6"><p class="plabel">
+        <br>
+        Departure Date:
+      </p></div>
+      <div class="span5">
+      <br>
+        {{ delivstart }} 
+       </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span6"><p class="plabel">
+        Arrival Date:
+      </p></div>
+      <div class="span5">
+        {{ delivend }} 
+       </div>
+    </div>
+    {% endif %}
+    <div class="row-fluid">
+      <div class="span4"><p class="plabel">
+        Capacity:
+      </p>
+      </div>
+      <div class="span6 capacity">
+        {% if capacity == 0 %}<img src='/static/img/icons/icocap0.png'> Compact
+        {% elif capacity == 1 %}<img src='/static/img/icons/icocap1.png'> SUV
+        {% elif capacity == 2 %}<img src='/static/img/icons/icocap2.png'> Pickup
+        {% elif capacity == 3 %}<img src='/static/img/icons/icocap3.png'> Hauler
+        {% elif capacity == 4 %}<img src='/static/img/icons/icocap4.png'> Carry On
+        {% endif %}
+       </div>
+    </div>
+    <div class="row-fluid">
+      <p class="plabel">
+      <br>
+        Details:
+      </p><br>
+        {{ details }} 
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="/static/js/maps/mapoverlay.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    var mapURL = '/post/jsonroute/{{routekey}}';
+    initialize_map(mapURL);
+    });
+</script>

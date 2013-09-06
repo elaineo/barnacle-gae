@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Search Delivery Requests{% endblock %}
+{% block heading %}Search Delivery Requests{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/jquery-ui.css" />
+<div class="row-fluid">
+  <div class="span10 offset1">
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="/static/js/maps/mapsclient.js"></script>
+ <form enctype="multipart/form-data" method="post" class="form-horizontal" id="search_form">
+    Plan a route according to delivery requests. Enter a destination or let us find one for you.<br>&nbsp;<br>
+    <div class="control-group">
+        <label class="control-label" for="start">Origin:</label>
+        <div class="controls">
+          <input class="input input-xlarge" type="text" name="start" id='map0Field'>
+          <span class="help-inline error" id='map0Err'>{{error_route}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="dest">Destination:<br>(Optional)</label>
+        <div class="controls">
+          <input class="input input-xlarge" type="text" name="dest" id='map1Field'>
+          <span class="help-inline error" id='map1Err'>{{error_route}}</span>
+        </div>
+    </div>    
+    <div class="control-group">
+        <label class="control-label" for="dates">Delivery Dates:</label>
+        <div class="controls">
+          <input class="input-small" type="text" name="startdate" id="startdate" autocomplete="off" value="{{delivstart}}">
+          To <input class="input-small" type="text" name="enddate" id="enddate" autocomplete="off" value="{{delivend}}">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="dist">How far are you willing to travel?</label>
+        <div class="controls">
+          <input class="input-small" type="number" name="dist" autocomplete="off" value="{{dist}}" min="0">
+          &nbsp; &nbsp; miles.
+        </div>
+    </div>    
+    <input type='hidden' name="startlat" id="startlat">
+    <input type='hidden' name="startlon" id="startlon">
+    <input type='hidden' name="destlat" id="destlat">
+    <input type='hidden' name="destlon" id="destlon">     
+    <p align="center">
+	<button type="submit" class="btn" id="search_btn">Search</button>
+    </p>
+</form>
+</div></div>
+<div class="row-fluid">
+  <div class="span8 offset2">
+    <p>Or, click on map to select route points.</p>
+    <div id="map-canvas" class="homemap"></div>
+</div>
+</div>
+  <script>
+  $(function() {
+    $('.navicosearch').addClass('onbutton');
+    $( "#startdate" ).datepicker({
+      minDate: 0,
+      maxDate: "+1Y",
+      changeMonth: true,
+      onClose: function( selectedDate ) {
+        $( "#enddate" ).datepicker( "option", "minDate", selectedDate, "maxDate", "+1Y" );
+      }
+    });
+    $( "#enddate" ).datepicker({
+      minDate: 0,
+      maxDate: "+1Y",
+      changeMonth: true,
+      onClose: function( selectedDate ) {
+        $( "#startdate" ).datepicker( "option", "maxDate", selectedDate, "minDate", "+1d" );
+      }
+    });
+    
+    vtest = [[0],['input#map1Field','']];
+    click_validloc('#search_btn',['map0','map1'],['start','dest'],
+        vtest,'#search_form',false);
+  });
+  </script>
+  <script type="text/javascript" src="/static/js/validation.js"></script>
+{% endblock %}

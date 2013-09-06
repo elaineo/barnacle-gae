@@ -1,0 +1,39 @@
+<h3>Email Notifications</h3>
+    <div class="control-group">
+        <!--
+      <label class="checkbox">
+        <input type="checkbox" name="notify" value="0"> Allow messages from other users.
+      </label>-->
+      <label class="checkbox">
+        <input type="checkbox" name="notify" value="1"> Receive reservation updates for my route or request.
+      </label>
+      <label class="checkbox">
+        <input type="checkbox" name="notify" value="2"> Receive notification when a review is left for me.
+      </label>      
+      <label class="checkbox">
+        <input type="checkbox" name="notify" value="3"> Receive daily summary of delivery requests that match my driving route.
+      </label>      
+      <label class="checkbox">
+        <input type="checkbox" name="notify" value="4"> Receive monthly newsletters from Barnacle.
+      </label>      
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="email">Email Address</label>
+        <div class="controls">
+          <input type="email" name="email" value="{{email}}">
+        </div>
+    </div>   
+<script>    
+    $(document).ready(function(){
+    //fill in some info
+    var sdict = [{{notify|safe}}];
+    if (sdict.length > 0) {
+        sdict = sdict[0];
+        for (i=sdict['notify'].length-1; i>=0; i--) {
+            $n = $('input[name=notify]').get(sdict['notify'][i]-1);
+            $n.setAttribute('checked',true);
+        }
+    }
+    });
+</script>
+    

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title%}Message {{first_name}}{% endblock %}
+{% block content %}
+{{last_message}}
+{{sender}}
+<div class="row-fluid">
+  <div class="span8 offset2">
+  <form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label">To:</label>
+        <div class="controls">
+            {{recv_name}}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="subject">Subject:</label>
+        <div class="controls">
+            <input type="text" name="subject" value="{{subject}}" class="input-xlarge" id="subject">
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+          <textarea class="input-xlarge" rows="10" name="msg" id="msg">{{msg}}</textarea>
+        </div>
+    </div>
+    <p align="center">
+    <button type="submit" class="btn" id="submit_btn">send</button>
+    </p>
+</form>
+</div>
+</div>
+<script>
+$(document).ready(function(){
+    var allowSub = true;
+    $('#submit_btn').click(function(event) {
+      event.preventDefault();
+      loggedIn = checkLoginStatus();
+      if (loggedIn) {
+          var subject = $('#subject').val();
+          var msg = $('#msg').val();
+          data = 'receiver={{receiver}}'+"&subject="+subject+"&msg="+msg;
+          if (allowSub) {
+              $.ajax({
+                type: "POST",
+                url: "/message",
+                data: data,
+                success: function(response) {
+                    if (response.status == "ok") {
+                        window.location.assign(response.next_url);
+                    } else {
+                        console.log('Send Message failed.');
+                    }
+                }
+              });
+              allowSub=false;
+          }
+      } else {
+        loginPlease();
+      }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title%}Review {{first_name}}{% endblock %}
+{% block heading%}Review {{recv_name}}{% endblock %}
+{% block content %}
+<script type="text/javascript">
+    $(function() {
+        $('#faceRate').rater();
+    	});
+    
+    function submit_review(){
+        //event.preventDefault();
+        var receiver = {{receiver}};
+        var content = $("textarea#content").val();
+        var data = "receiver="+receiver+"&rating="+Rating+"&content="+content;
+        $.ajax({
+            type: "POST",
+            url: "/review",
+            data: data,
+            success: function() {
+            }
+        });
+    };
+            
+$.fn.rater = function(options) {
+    var opts = $.extend({}, $.fn.rater.defaults, options);
+    return this.each(function() {
+        var $this = $(this);
+        var $on = $this.find('.rating-starsOn');
+        var $off = $this.find('.rating-starsOff');
+        opts.size = $on.height();
+        if (opts.rating == undefined) opts.rating = $on.width() / opts.size;
+        if (opts.id == undefined) opts.id = $this.attr('id');
+
+        $off.mousemove(function(e) {
+            var left = e.clientX - $off.offset().left;
+            var width = $off.width() - ($off.width() - left);
+            width = Math.ceil(width / (opts.size / opts.step)) * opts.size / opts.step;
+            $on.width(width);
+        }).hover(function(e) { $on.addClass('rating-starsHover'); }, function(e) {
+            $on.removeClass('rating-starsHover'); $on.width(opts.rating * opts.size);
+        }).click(function(e) {
+            var r = Math.round($on.width() / $off.width() * (opts.units * opts.step)) / opts.step;
+            $off.unbind('click').unbind('mousemove').unbind('mouseenter').unbind('mouseleave');
+            $off.css('cursor', 'default'); $on.css('cursor', 'default');
+            Rating = r;
+            $('#hide_rate').html('<input type="hidden" name="rating" value="'+r+'">');
+            $on.removeClass('rating-starsHover');
+            $on.addClass('rating-starsOn');
+            $off.fadeTo(600, 0.8);
+        }).css('cursor', 'pointer'); $on.css('cursor', 'pointer');
+    });
+};
+
+$.fn.rater.defaults = {
+    postHref: location.href,
+    units: 5,
+    step: 1
+};
+
+</script>
+
+<div class="row-fluid">
+  <div class="span8 offset2">
+<form name="review" enctype="multipart/form-data" method="post" id="review_form" class="form-horizontal">
+    <input type="hidden" name="receiver" value="{{receiver}}">
+    <div class="control-group">
+        <div id="hide_rate"></div>
+        <label class="control-label">Rating:</label>
+        <div class="controls">
+        <div id="faceRate" class="stat">
+            <div class="statVal">
+                <span class="rating">
+                    <span class="rating-starsOff" style="width:95px;">
+                    <span class="rating-starsOn" style="width:19px"></span>
+                    </span>
+                </span>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Your Review:</label>
+        <div class="controls">
+          <textarea class="input-xlarge" rows="5" name="content">{{content}}</textarea>
+        </div>
+    </div>    
+    <p align="center">
+    <button type="submit" class="btn" id="review_btn">submit</button>
+    </p>
+</form>
+</div>
+</div>
+<script>
+$(document).ready(function(){
+  click_submit('#review_btn','#review_form');
+});
+</script>
+{% endblock %}

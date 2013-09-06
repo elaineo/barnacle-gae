@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{# View Reservation #}
+{% block title%}{{sender_first_name}}'s Reservation Request{% endblock %}
+{% block heading %}{{sender_first_name}}'s Reservation Request{% endblock %}
+{% block content %}
+
+<div class="row-fluid"><div class="span6 offset1">
+    {% if edit_allow == True %} 
+<button type="submit" class="btn btn-inverse" id="editres_btn">Edit Reservation</button>
+<button type="submit" class="btn btn-danger confirm" id='delete_btn'>Delete Reservation</button>
+    {% endif %}
+</div></div>
+    {% include "forms/stubspop/reserve_stub.html" %}
+    {% include "res_buttons_stub.html" %}
+
+
+{% endblock %}

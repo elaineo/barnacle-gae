@@ -1,0 +1,45 @@
+    <div class="control-group">
+        <label class="control-label" for="first_name">First Name</label>
+        <div class="controls">
+          <input type="text" name="first_name" value="{{first_name}}" onfocus="validate_clear()">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="last_name">Last Name</label>
+        <div class="controls">
+          <input type="text" name="last_name" value="{{last_name}}" onfocus="validate_clear()">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="loc">Location</label>
+        <div class="controls">
+          <input class="input span8" type="text" name="loc" id='map0Field' value="{{location}}">
+          <span class="help-inline error" id='map0Err'>{{error_route}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="about">About</label>
+        <div class="controls">
+            <textarea rows="3" class='span8' name="about" value="{{about}}" placeholder='Users are more likely to work with drivers who say something awesome here.'>{{about}}</textarea>
+        </div>
+    </div>
+    <div class="control-group">
+     <table border=0>
+        <tr><td>Upload a Photo</td>
+            <td rowspan=3>
+            <div id="img-prev"><img height="100" src="{{profile_thumb}}"></div>
+            </td>
+        </tr>
+        <tr class="space"></tr>
+        <tr>
+    <td style='vertical-align:bottom'>
+        <div style='display:inline'>
+            <input type="hidden" name="id" value="{{id}}">
+            <input type="file" class="file" id="images" accept="image/png,image/jpeg,image/gif" name="file">
+            </td>
+        </div>
+    </td>   
+    </tr>
+    </table>
+    </div>
+    <label>To establish trust in the community, we require that drivers sign up using their Facebook accounts. Please read our <a href='/privacy'>privacy policy</a> to learn how we protect your information.</label>    

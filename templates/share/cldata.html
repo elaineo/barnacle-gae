@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>CL Patch Cuz Google Uses crappy rackspace</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+    <link href="/static/css/p2pps.css" rel="stylesheet" media="screen">
+    <script src="/static/js/jquery-1.9.1.js"></script>
+    <script src="/static/js/jquery-ui-1.10.2.custom.min.js"></script>    
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>    
+    <script type="text/javascript" src="/static/js/data/cldata.js"></script>
+</head>
+
+<body onload="initialize()">
+
+  <h3>Freaking Rackspace</h3>
+<br>
+ <div id='popspace'></div>
+<br> 
+ <div id="map-canvas" style="width: 300px; height: 200px;"></div>
+<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+<script>
+  var geocoder0, geocoder1;
+  var map;
+  function initialize() {
+    geocoder0 = new google.maps.Geocoder();
+    geocoder1 = new google.maps.Geocoder();
+    var latlng = new google.maps.LatLng(-34.397, 150.644);
+    var mapOptions = {
+      zoom: 8,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+  }
+
+nc = cldata.length;
+$(document).ready(function(){
+    for (var i = 0; i<nc; i=i+8) {
+        $('#popspace').append('<p><button id="'+i+'">Pop Me '+i+'</button></p>');       
+    }
+    $('button').click(function() {
+        console.log(this.id);
+        sti = parseInt(this.id);
+        eni = sti + 8;
+        if (eni > nc) eni = nc;
+        popMe(sti, eni);
+    });
+});
+
+function popMe(x,y) {
+    for (var i = x; i<y; i++) {           
+        email = cldata[i][0];
+        time = cldata[i][1];
+        subj = cldata[i][2];
+        url = cldata[i][3];
+        details = cldata[i][4];
+        start = cldata[i][5];
+        dest = cldata[i][6];
+        date = cldata[i][7];
+        var claddress = {
+            'email':email, 
+            'time':time,
+            'subj':subj,
+            'url':url,
+            'details':details,
+            'start':start,
+            'dest':dest,
+            'date':date }
+        codeAddress(claddress);
+        pausecomp(2000);
+    }
+}
+
+function pausecomp(ms) {
+  ms += new Date().getTime();
+  while (new Date() < ms){}
+} 
+
+  function codeAddress(address) {
+    var postaddr = address;
+    geocoder0.geocode( { 'address': address.start}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        postaddr.startlat = results[0].geometry.location.ob;
+        postaddr.startlng = results[0].geometry.location.pb;
+        geocoder1.geocode( { 'address': address.dest}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            console.log(results[0]);
+            postaddr.destlat = results[0].geometry.location.ob;
+            postaddr.destlng = results[0].geometry.location.pb;
+            djson = JSON.stringify(postaddr);
+            $.ajax({
+                type: "POST",
+                dataType: "json",  
+                contentType: "json", 
+                url: "/debug/createcl",
+                data: djson,
+                success: function(response) {
+                    console.log(response);
+                }
+            });
+          } else { console.log(status) }
+        });
+        console.log(results[0]);
+        
+      } else {
+        console.log("Geocode was not successful for the following reason: " + status);
+      }
+    });
+  }
+ 
+
+</script>
+</body>
+</html>

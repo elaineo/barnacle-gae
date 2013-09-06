@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title%}{{first_name}}'s Account{% endblock %}
+{% block heading %}{{first_name}}'s Account{% endblock %}
+{% block content %}
+<div class="row visible-phone">
+  <div class="span4 offset1">
+  <a href='/signout'><button class="btn btn-mini">Logout</button></a>
+  </div>
+</div>
+<div class="row visible-phone" style='height:10px;'></div>
+<div class="row">
+  <div class="span10 offset1">
+  <button type="submit" class="btn btn-inverse" id="editprof_btn">Edit Profile</button>
+  <button type="submit" class="btn btn-inverse" id='sett_btn'>Settings</button>
+  <button type="submit" class="btn btn-inverse" id='routes_btn'>Routes and Reservations</button>
+  </div>
+</div>
+<div class="row" style='height:20px'></div>
+{% include "forms/stubspop/profile_stub.html" %}
+  <script>
+  $(function() {
+    $('.navicoaccount').addClass('onbutton');
+    });
+    
+$(document).ready(function(){
+    click_redirect('#editprof_btn','/profile');
+    click_redirect('#routes_btn','/routes');
+    click_redirect('#sett_btn','/settings');
+});
+</script>
+{% endblock %}

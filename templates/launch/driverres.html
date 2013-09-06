@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Select a Driver{% endblock %}
+{% block heading %}Select a Driver{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/drivers.css" />
+<script type="text/javascript">
+$(document).ready(function(){
+    $(document).on('fbload', function(){
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+              $('.clicky').each(function() {
+                var fbid = $(this).attr('data-fb');
+                dumpFriends(fbid, $(this).find('.dumpfriends'),3);
+              });
+            }
+        });
+    });
+});
+</script>
+
+<div class="row">
+  <div class="span10 offset1">
+  <div class="row">
+    {% for d in drivers %}
+      <div class='span3'>
+        <table class="table table-bordered table-hover clicky" data-fb='{{d.fbid}}'>
+        <tr><td>
+        <table><tr><td style='border: none;'>
+        <img style='width:100px' src="{{d.thumb_url}}">
+        </td><td style='border: none;'>
+        <p class='pricetag'>${{d.rates}}</p></br>
+        <form enctype="multipart/form-data" method="post" class='form_submit'>
+        <input type='hidden' value='{{d.rates}}' name='rates'>
+        <input type='hidden' value='{{d.key}}' name='dkey'>
+        <input type='hidden' value='{{d.reskey}}' name='reskey'>
+        <button class='btn btn-small'>Checkout</button>
+        </form>
+        </td></tr></table>
+        <h4>{{d.first_name}} &nbsp;&nbsp;</h4>
+        <a href='{{d.prof_url}}' target='_blank'>view profile</a><br>
+        Deliveries Completed: <b>{{d.deliveries}}</b><br> 
+        <div style='max-height:40px'>
+        {{d.insured | safe}} <br><br>
+        </div>
+        <b>Mutual Friends</b><br>
+        <div class='dumpfriends' >None.</div>
+        <!-- Networks: {% for n in d.networks %} {{n}}{% endfor %} -->
+        </td></tr></table>
+      </div>
+    {% endfor %}
+  </div>
+  <br>
+  Don't see any results you like? Post a <button class="btn btn-info btn-small" id="postreq_btn">Delivery Request</button>
+  </div>
+</div>
+  <script>
+$(document).ready(function(){  
+    $('.navicoreq').addClass('onbutton');
+    click_redirect('#postreq_btn','/post/request');
+    $('.clicky tr td table tr td button').addClass('hide');
+    
+    $('.clicky').click(function() {
+        $('.clicky').removeClass('selected');
+        $('.clicky tr td table tr td button').addClass('hide');
+        $(this).addClass('selected');          
+        $(this).find('button').removeClass('hide');
+    });
+    $('.form_checkout').submit( function(event) {
+        event.preventDefault();
+        loggedIn = checkLoginStatus();
+          if (loggedIn) {
+            $(this).submit();    
+          } else {
+            loginPlease();
+          }
+    });
+    
+});    
+  </script>
+{% endblock %}

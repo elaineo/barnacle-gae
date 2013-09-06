@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title%}{{first_name}}{% endblock %}
+{% block heading%}{{first_name}}{% endblock %}
+{% block content %}
+{% if msg == 1 %}
+<div class="row">
+  <div class="span12 notif"><h2><small>Message Sent!</small></h2></div>
+</div>
+{% endif %}
+{% if msg == 2 %}
+<div class="row">
+  <div class="span12 notif"><h2><small>Thank you for your review!</small></h2></div>
+</div>
+{% endif %}
+{% include "forms/stubspop/profile_stub.html" %}
+{% if fbfriend==True %}
+{% include "msg_link.html" %}
+{% endif %}
+  <script>
+$(document).ready(function(){
+    click_redirect('#review_btn','{{review_url}}');
+    click_redirect('#msg_btn','{{message_url}}');
+});
+</script>
+{% endblock %}

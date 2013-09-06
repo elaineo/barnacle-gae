@@ -1,0 +1,80 @@
+    <div class="control-group row-fluid">   
+      <label class="control-label" for="dropoff">Origin:</label>
+        <div class="controls">
+          <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}">
+          <span class="help-inline error" id='map0Err'>{{error_route}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="startdate">Pickup Date:</label>
+        <div class="controls">
+          <input type="text" name="startdate" value="{{delivstart}}" id="startdate" autocomplete="off">
+        </div>
+    </div>        
+    <div class="control-group">
+        <label class="control-label" for="dest">Destination:</label>
+        <div class="controls">
+          <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{locend}}">
+          <span class="help-inline error" id='map1Err'>{{error_route}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="enddate">Delivery Date:</label>
+        <div class="controls">
+          <input type="text" name="enddate" value="{{delivend}}" id="enddate" autocomplete="off">
+        </div>
+    </div>    
+    <div class="control-group">
+        <label class="control-label" for="capacity">Item Size:<br>
+        <a href='#sizechart'>Size Chart</a><br>
+        </label>
+        <div class="controls" id="repeatRadios">
+            <label class="radio inline">
+              <input type="radio" name="vcap" id="cap4" value="4"> 
+              <img src='/static/img/icons/icocap4.png'><br> Carry On
+            </label>        
+            <label class="radio inline">
+              <input type="radio" name="vcap" id="cap0" value="0"> 
+              <img src='/static/img/icons/icocap0.png'> <br> Car Trunk
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="vcap" id="cap1" value="1"> 
+              <img src='/static/img/icons/icocap1.png'><br> Oversized 
+            </label>            
+        </div>
+   </div>   
+     <div class="control-group">
+        <label class="control-label" for="details">Special instructions or Description of items:</label>
+        <div class="controls">
+            <textarea class="span5" name="details" rows="3">{{details}}</textarea>
+        </div>
+    </div>	
+     <div class="control-group">
+        <label class="control-label" for="email">Email Address:</label>
+        <div class="controls">
+            <input type="email" name="email" value="{{email}}">
+        </div>
+    </div>   
+<script>
+  $(function() {
+    $('.navicoreqs').addClass('onbutton');  
+    $( "#startdate" ).datepicker({
+      minDate: 0,
+      maxDate: "+1Y",
+      changeMonth: true,
+      onClose: function( selectedDate ) {
+        $( "#enddate" ).datepicker( "option", "minDate", selectedDate, "maxDate", "+1Y" );
+      }
+    });
+    $( "#enddate" ).datepicker({
+      minDate: 0,
+      maxDate: "+1Y",
+      changeMonth: true,
+      onClose: function( selectedDate ) {
+        $( "#startdate" ).datepicker( "option", "maxDate", selectedDate, "minDate", "+1d" );
+      }
+    });
+    
+  });
+  
+</script>

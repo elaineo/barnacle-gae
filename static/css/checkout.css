@@ -1,0 +1,42 @@
+.cc { display:inline-block; margin:4px; }
+.cc_initial {
+opacity:1.0;
+-webkit-transition:all .5s linear;
+-moz-transition:all .5s linear;
+-o-transition:all .5s linear;
+-ms-transition:all .5s linear;
+transition:all .5s linear;
+}
+.cc_selected {
+opacity:1.0;
+-webkit-transition:all .5s linear;
+-moz-transition:all .5s linear;
+-o-transition:all .5s linear;
+-ms-transition:all .5s linear;
+transition:all .5s linear;
+border-radius:4px;
+box-shadow:0 2px 2px rgba(0,0,0,0.5);
+}
+
+.cc_deselected {
+opacity:0.25;
+-webkit-transition:all .5s linear;
+-moz-transition:all .5s linear;
+-o-transition:all .5s linear;
+-ms-transition:all .5s linear;
+transition:all .5s linear;
+}
+.cc_visa, .cc_mastercard, .cc_amex, .cc_discover, .cc_diners, .cc_jcb, .visa_back, .amex_front{ background:url('/static/img/icons/ccsprites1.png') no-repeat}
+.cc_visa{background-position:0 0; width:32px; height:21px}
+.cc_mastercard{background-position:-32px 0; width:32px; height:21px}
+.cc_amex{background-position:-64px 0; width:32px; height:21px}
+.cc_discover{background-position:-96px 0; width:32px; height:21px}
+.cc_diners{background-position:-128px 0; width:32px; height:21px}
+.cc_jcb{background-position:-160px 0; width:32px; height:21px}
+.visa_back{background-position:0 -22px; width:75px; height:48px}
+.amex_front{background-position:-75px -22px; width:75px; height:48px}
+
+}
+#map-canvas {
+    height: 300px;
+}

@@ -1,0 +1,36 @@
+<div class="row-fluid">    
+    <div class="span10 offset1 dropshadow">
+        <table>
+        <tr><td style='vertical-align:middle; padding:10px'>
+        <img style='width:100px' src="{{profile_thumb}}">
+        <h4>{{first_name}}</h4> 
+        </td><td style='padding:10px'>
+        <div id="avgrating">
+            <span class="rating-starsOff" style="width:95px;">
+            <span class="rating-starsOn" style="width:19px">{{avg_rating}}</span>
+            </span>
+            </div>
+        Deliveries Completed: <b>{{deliveries}}</b><br> 
+        <div style='max-height:40px'>
+        {{insured | safe}} <br><br>
+        </div>
+        <b>Mutual Friends</b><br>
+        <div id='dumpfriends' >None.</div>
+        <!-- Networks: {% for n in networks %} {{n}}{% endfor %} -->
+        </td></tr></table>
+    </div>
+</div>
+<script>
+$(document).ready(function(){
+    user_rating();
+    
+    $(document).on('fbload', function(){
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+              dumpFriends('{{fbid}}','#dumpfriends', 6);
+            }
+        });
+    });
+});
+</script>
+<script src="/static/js/profile.js"></script>

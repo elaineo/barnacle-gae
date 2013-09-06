@@ -1,0 +1,4 @@
+cron:
+- description: daily summary job
+  url: /expire
+  schedule: every day 00:00

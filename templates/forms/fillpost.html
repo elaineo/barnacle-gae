@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block title%}{{route_title}}{% endblock %}
+{% block heading%}{{route_title}}{% endblock %}
+{% block content %}
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="/static/js/maps/mapsclientno.js"></script>
+<link rel="stylesheet" href="/static/css/jquery-ui.css" />
+<div class="row-fluid">
+  <div class="span6 offset5" style='text-align:right'>
+    <p>Sending something? <br>Post a <button class="btn btn-info btn-mini" id='postreq_btn'>Delivery Request</button></p> 
+  </div><div class='span1 visible-desktop'></div> 
+</div>    
+<div class="row">
+    <div class="span10 offset1">
+ <form enctype="multipart/form-data" method="post" id='route_form' class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" for="start">Start Address:</label>
+        <div class="controls">
+          <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}">
+          <span class="help-inline error" id='map0Err'>{{error_route}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" id='startlbl'>Departure Date:</label>
+        <div class="controls">
+          <input type="text" name="delivstart" value="{{delivstart}}" id="startdate" autocomplete="off">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="dest">Destination:</label>
+        <div class="controls">
+          <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{locend}}">
+          <span class="help-inline error" id='map1Err'>{{error_route}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" id='endlbl'>Arrival Date:</label>
+        <div class="controls">
+          <input type="text" name="delivend" value="{{delivend}}" id="enddate" autocomplete="off">
+        </div>
+    </div>    
+    <div class="control-group">
+        <label class="control-label" for="repeat">Repeat?</label>
+        <div class="controls" id="repeatRadios">
+            <label class="radio inline">
+              <input type="radio" name="repeatr" id="repeatNo" value="2" checked> No
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="repeatr" id="repeatWeek" value="0"> Weekly
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="repeatr" id="repeatMonth" value="1"> Monthly
+            </label>
+        </div>
+        <div class="controls span8" id="weekMonthOpts">
+            <label class="checkbox inline">
+              <input type="checkbox" name="monthr" value="0"> 1st week
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" name="monthr" value="1"> 2nd week
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" name="monthr" value="2"> 3rd week
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" name="monthr" value="3"> 4th week
+            </label>            
+        </div>
+        <div class="controls span8" id="dayWeekOpts">
+            <label class="checkbox inline">
+              <input type="checkbox" name="weekr" value="0"> Sun
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" name="weekr" value="1"> Mon
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" name="weekr" value="2"> Tue
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" name="weekr" value="3"> Wed
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" name="weekr" value="4"> Thu
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" name="weekr" value="5"> Fri
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" name="weekr" value="6"> Sat
+            </label>
+        </div>
+    </div>       
+<!--    <div class="control-group">
+        TODO: <button class="btn btn-mini disabled">Add destination</button>
+    </div>-->
+    <div class="control-group">
+        <label class="control-label" for="capacity">Vehicle Capacity:</label>
+        <div class="controls" id="repeatRadios">
+            <label class="radio inline">
+              <input type="radio" name="vcap" id="cap0" value="0"> 
+              <img src='/static/img/icons/icocap0.png'> <br> Compact
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="vcap" id="cap1" value="1"> 
+              <img src='/static/img/icons/icocap1.png'><br> SUV 
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="vcap" id="cap2" value="2"> 
+              <img src='/static/img/icons/icocap2.png'><br> Pickup
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="vcap" id="cap3" value="3"> 
+              <img src='/static/img/icons/icocap3.png'><br> Hauler
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="vcap" id="cap4" value="4"> 
+              <img src='/static/img/icons/icocap4.png'><br> Carry On
+            </label>
+        </div>
+   </div>
+     <div class="control-group">
+        <label class="control-label" for="details">Details: <br>Prohibited items, etc.</label>
+        <div class="controls">
+            <textarea class="span4" name="details" rows="4">{{details}}</textarea>
+        </div>
+    </div>	
+    <input type="hidden" id="hiderepeat" value="{{repeat}}">
+    <input type="hidden" id="hidecap" value="{{capacity}}">
+    <input type='hidden' name="startlat" id="startlat">
+    <input type='hidden' name="startlon" id="startlon">
+    <input type='hidden' name="startstr" id="startstr">
+    <input type='hidden' name="destlat" id="destlat">
+    <input type='hidden' name="destlon" id="destlon">
+    <input type='hidden' name="deststr" id="deststr">        
+    <div class='row-fluid'>
+      <div class='span2 offset3'>
+	<button type="submit" class="btn" id='route_btn'>Submit</button>
+      </div>
+      <div class='span4'>
+         <label class="checkbox inline">
+           <input type="checkbox" id="fbshare" name='fbshare' value='1' checked> Share on Facebook
+         </label>
+       </div>
+    </div>	
+</form>
+</div>
+</div>
+ <script>
+  $(function() {
+    $('.navicoroutes').addClass('onbutton');
+ 
+    if (Modernizr.touch && Modernizr.inputtypes.date) {
+        document.getElementById('startdate').type = 'date';
+        document.getElementById('enddate').type = 'date';
+    } else {
+    $( "#startdate" ).datepicker({
+      minDate: 0,
+      maxDate: "+1Y",
+      changeMonth: true,
+      onClose: function( selectedDate ) {
+        $( "#enddate" ).datepicker( "option", "minDate", selectedDate, "maxDate", "+1Y" );
+      }
+    });
+    $( "#enddate" ).datepicker({
+      minDate: 0,
+      maxDate: "+1Y",
+      changeMonth: true,
+      onClose: function( selectedDate ) {
+        $( "#startdate" ).datepicker( "option", "maxDate", selectedDate, "minDate", "+1d" );
+      }
+    });
+    }
+    $('.disabled').click(function(event) {
+        event.preventDefault();
+        });
+  });
+  
+$(document).ready(function(){
+    //fill in some info
+    var repeat = $('input#hiderepeat').val();
+    if (repeat === 'True') {
+        $('input[name=repeatr]').attr('checked',false);        
+        var rdict = [{{repeatr|safe}}];
+        rdict = rdict[0];
+        $period = $('input[name=repeatr]').get(rdict['period']+1);
+        $period.setAttribute('checked',true);
+        for (i=rdict['dayweek'].length-1; i>=0; i--) {
+            $day = $('input[name=weekr]').get(rdict['dayweek'][i]);
+            $day.setAttribute('checked',true);
+        }
+        if (rdict['period'] == 1) {
+            for (i=rdict['weekmonth'].length-1; i>=0; i--) {
+                $week = $('input[name=monthr]').get(rdict['weekmonth'][i]);
+                $week.setAttribute('checked',true);
+            }
+        }
+    }
+
+    var capacity = $('input#hidecap').val();
+    if (capacity != '') {
+        var c = parseInt(capacity);
+        $('input[name=vcap]').get(c).setAttribute('checked',true);
+    }
+
+    //add some validation
+    //click_submit('#route_btn','#route_form');
+    var v = [[0],[0]];
+    click_validloc('#route_btn',['map0','map1'],['start','dest'],v,'#route_form',true);
+    click_redirect('#postreq_btn','/post/request');
+    $("#dayWeekOpts").css("display","none");
+    $("#weekMonthOpts").css("display","none");
+    $("#repeatRadios").click(function(){
+        rr = $("input[name=repeatr]:checked").val();
+        if ( rr== "1" ) {
+            $("#weekMonthOpts").slideDown("fast"); //Slide Down Effect
+        } else {
+            $("#weekMonthOpts").slideUp("fast");  //Slide Up Effect
+        }
+        if (rr == "0" | rr== "1" ) {
+            $("#dayWeekOpts").slideDown("fast"); //Slide Down Effect
+            $('label#startlbl').html('Repeat From:');
+            $('label#endlbl').html('Repeat Until:');
+        } else {
+            $("#dayWeekOpts").slideUp("fast");  //Slide Up Effect
+        }
+        if (rr == "2" ) {
+            $('label#startlbl').html('Departure Date:');
+            $('label#endlbl').html('Arrival Date:');
+        }
+     });    
+});
+  </script>
+  <script type="text/javascript" src="/static/js/validation.js"></script>
+{% endblock %}
