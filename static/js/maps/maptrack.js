@@ -35,7 +35,7 @@ function initialize_map(mapURL) {
             routePaths.push(new google.maps.Marker({
                 position:m,
                 clickable: false,
-                icon: 'http://www.gobarnacle.com/static/img/icons/dot.jpg',
+                icon: 'http://www.gobarnacle.com/static/img/icons/dot.png',
                 raiseOnDrag: false,
                 visible: true
             }));

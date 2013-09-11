@@ -48,8 +48,14 @@ class TrackerHandler(BaseHandler):
             response = { 'status': 'ok'}
         except:
             response = { 'status': 'fail'}
+        try:
+            locstr = data['locstr']
+            msg = data['msg']
+        except:
+            locstr = ''           
+            msg = ''
         if loc:
-            point = TrackPt(loc=loc, created=datetime.now())
+            point = TrackPt(loc=loc, created=datetime.now(), locstr=locstr, msg=msg)
             routes = TrackerModel.by_driver(self.user_prefs.key)
             for r in routes:
                 r.points.append(point)
