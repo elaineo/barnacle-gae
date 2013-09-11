@@ -6,6 +6,7 @@ from datetime import *
 
 from Handlers.BaseHandler import *
 from Models.Tracker.TrackerModel import *
+from Utils.ValidUtils import parse_date
 
 class TrackerHandler(BaseHandler):
     def get(self, action=None, key=None):
@@ -28,6 +29,9 @@ class TrackerHandler(BaseHandler):
     def post(self, action=None):       
         if not self.user_prefs:
             logging.error('Not logged in')
+            response = { 'status': 'fail'}            
+            self.response.headers['Content-Type'] = "application/json"
+            self.write(response)
             return
         if action=='updateloc':
             self.__updateloc()
@@ -72,7 +76,30 @@ class TrackerHandler(BaseHandler):
         except:
             self.abort(409)
             return         
-
+            
+    def __create(self):
+        data = json.loads(self.request.body)
+        logging.info(data)    
+        try:
+            startlat = float(data['startlat'])
+            startlon = float(data['startlon'])
+            destlat = float(data['destlat'])
+            destlon = float(data['destlon'])
+            locstart = data['locstart']
+            locend = data['locend']
+            delivend = parse_date(data['delivend'])
+            start = ndb.GeoPt(lat=startlat, lon=startlon)
+            dest = ndb.GeoPt(lat=destlat, lon=destlon)
+            response = { 'status': 'ok'}
+        except:
+            response = { 'status': 'fail'}            
+        if start and dest:
+            track = TrackerModel(driver = self.user_prefs.key, start = start, 
+                dest=dest, delivend=delivend, locstart=locstart, locend=locend)
+            track.put()
+        self.response.headers['Content-Type'] = "application/json"
+        self.write(json.dumps(response))              
+            
     def __debug(self):
         locstart='Mountain View, CA'
         locend = 'San Gabriel, CA'        
