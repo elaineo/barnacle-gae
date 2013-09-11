@@ -83,13 +83,13 @@ function pausecomp(ms) {
     var postaddr = address;
     geocoder0.geocode( { 'address': address.start}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
-        postaddr.startlat = results[0].geometry.location.ob;
-        postaddr.startlng = results[0].geometry.location.pb;
+        postaddr.startlat = results[0].geometry.location.lat();
+        postaddr.startlng = results[0].geometry.location.lng();
         geocoder1.geocode( { 'address': address.dest}, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             console.log(results[0]);
-            postaddr.destlat = results[0].geometry.location.ob;
-            postaddr.destlng = results[0].geometry.location.pb;
+            postaddr.destlat = results[0].geometry.location.lat();
+            postaddr.destlng = results[0].geometry.location.lng();
             djson = JSON.stringify(postaddr);
             $.ajax({
                 type: "POST",

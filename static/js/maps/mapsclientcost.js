@@ -27,8 +27,8 @@ function initialize() {
     }
     zip0 = extract_zip(place0.adr_address);
     $('input#startstr').val(place0.formatted_address);
-    $('input#startlat').val(place0.geometry.location.jb);
-    $('input#startlon').val(place0.geometry.location.kb);
+    $('input#startlat').val(place0.geometry.location.lat());
+    $('input#startlon').val(place0.geometry.location.lng());
     $('input#startzip').val(zip0);
     update_cost();
     $('#map0Err').html('');
@@ -45,8 +45,8 @@ function initialize() {
     }
     zip1 = extract_zip(place1.adr_address);
     $('input#deststr').val(place1.formatted_address);
-    $('input#destlat').val(place1.geometry.location.jb);
-    $('input#destlon').val(place1.geometry.location.kb);
+    $('input#destlat').val(place1.geometry.location.lat());
+    $('input#destlon').val(place1.geometry.location.lng());
     $('input#destzip').val(zip1);    
     update_cost();
     $('#map1Err').html('');

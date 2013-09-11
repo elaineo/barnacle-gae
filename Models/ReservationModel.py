@@ -94,13 +94,7 @@ class DeliveryOffer(ndb.Model):
     deliverby = ndb.DateProperty()
     confirmed = ndb.BooleanProperty(default=False)
     pathpts = ndb.GeoPtProperty(repeated=True)         
-    
-    def _pre_put_hook(self):
-        p = RouteUtils().setloc(self, self.locstart, self.locend)        
-        if p:
-            self = p
-        else:
-            raise Exception('error')
+   
             
     def reserve_url(self):
         """ url for public view of reservation """

@@ -13,6 +13,7 @@ from Handlers.SearchHandler import *
 from Handlers.ExpireHandler import *
 from Handlers.SettingsHandler import *
 from Handlers.DriverHandler import *
+from Handlers.Tracker.TrackerHandler import *
 from Utils.DebugUtils import *
 from Utils.EmailUtils import *
 from Utils.CloseUtils import *
@@ -48,7 +49,10 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/checkout/<key>', handler=CheckoutHandler),     
 # scrape
    webapp2.Route('/scraped/<key:[\w\-]{20,}>', handler=CLHandler),
-   webapp2.Route('/scraped/<action>/<key:[\w\-]{20,}>', handler=CLHandler),     
+   webapp2.Route('/scraped/<action>/<key:[\w\-]{20,}>', handler=CLHandler),    
+# mobile driver tracker
+   webapp2.Route('/track/<action>', handler=TrackerHandler),
+   webapp2.Route('/track/<action>/<key:[\w\-]{20,}>', handler=TrackerHandler),
 # search
    webapp2.Route('/search', handler=SearchHandler),
    webapp2.Route('/search/<action>', handler=SearchHandler),

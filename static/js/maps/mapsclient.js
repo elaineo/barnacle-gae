@@ -54,8 +54,8 @@ function initialize() {
       return;
     }
     $('input#startstr').val(place0.formatted_address);
-    $('input#startlat').val(place0.geometry.location.jb);
-    $('input#startlon').val(place0.geometry.location.kb);
+    $('input#startlat').val(place0.geometry.location.lat());
+    $('input#startlon').val(place0.geometry.location.lng());
     
     var bounds = new google.maps.LatLngBounds ();
     bounds.extend (place0.geometry.location);
@@ -86,8 +86,8 @@ function initialize() {
       return;
     }
     $('input#deststr').val(place1.formatted_address);
-    $('input#destlat').val(place1.geometry.location.jb);
-    $('input#destlon').val(place1.geometry.location.kb);
+    $('input#destlat').val(place1.geometry.location.lat());
+    $('input#destlon').val(place1.geometry.location.lng());
     
     var bounds = new google.maps.LatLngBounds ();
     bounds.extend (place1.geometry.location);

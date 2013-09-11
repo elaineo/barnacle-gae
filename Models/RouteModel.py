@@ -23,12 +23,6 @@ class Route(ndb.Model):
     locend = ndb.StringProperty(required=True) #text descr of location
     pathpts = ndb.GeoPtProperty(repeated=True)     
 
-    def _pre_put_hook(self):
-        p = RouteUtils().setloc(self, self.locstart, self.locend)        
-        if p:
-            self = p
-        else:
-            raise Exception('error')
     
     def suggest_rate(self):
         """ I don't really know """

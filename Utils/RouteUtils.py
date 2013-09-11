@@ -105,6 +105,23 @@ class RouteUtils():
         route['markers'] = markers
         route['zoom'] = map_zoom_pts(pts)       
         return json.dumps(route)
+
+    def dumptrack(self,r,pts):
+        route = {}
+        lat = sum([x.lat for x in pts])/len(pts)
+        lng = sum([x.lon for x in pts])/len(pts)
+        route['center'] = [lat,lng]
+        markers = []
+        for q in pts:
+            markers.append([q.lat,q.lon])
+        route['markers'] = markers
+        route['zoom'] = map_zoom_pts(pts) 
+        points = [q.loc for q in r.points]
+        pathpts = []
+        for p in points:
+            pathpts.append([p.lat,p.lon])
+        route['waypts'] = pathpts        
+        return json.dumps(route)        
         
     def dumpall(self,routes):
         route = {}
