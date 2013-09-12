@@ -26,7 +26,9 @@ class TrackerHandler(BaseHandler):
             self.response.headers['Content-Type'] = "application/json"
             self.write(rdump)
         elif action=='view' and key:
-            self.__view_page(key)
+            self.__view_page(key,False)
+        elif action=='mobile' and key:
+            self.__view_page(key,True)            
             
     def post(self, action=None):       
         if not self.user_prefs:
@@ -69,11 +71,14 @@ class TrackerHandler(BaseHandler):
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))              
         
-    def __view_page(self,key):
+    def __view_page(self,key,mobile=False):
         try:
             p = ndb.Key(urlsafe=key).get()
             self.params.update(p.to_dict())
-            self.render('track/track.html', **self.params)
+            if mobile:
+                self.render('mobile/track.html', **self.params)
+            else:
+                self.render('track/track.html', **self.params)
             return
         except:
             self.abort(409)

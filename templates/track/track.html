@@ -3,77 +3,8 @@
 {% block title%}{{ locstart }} to {{ locend }}{% endblock %}
 {% block heading%}Barnacle Tracker{% endblock %}
 {% block content %}
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-<div class="row-fluid">
-  <div class="span6  contentpad10">
-    <div id="map-canvas" class="homemap"></div>
-  </div>
-  <div class="span6">
-    <div class="row-fluid">
-      <div class="span6"><p class="plabel">
-        Departure Location:
-      </p></div>
-      <div class="span5">
-        {{ locstart }} 
-       </div>
-    </div>
-    <div class="row-fluid">
-      <div class="span6"><p class="plabel">
-        Arrival Location:
-      </p></div>
-      <div class="span5">
-        {{ locend }} 
-       </div>
-    </div>
 
-    <div class="row-fluid">
-      <div class="span6"><p class="plabel">
-        Expected Arrival:
-      </p></div>
-      <div class="span5">
-        {{ delivend }} 
-       </div>
-    </div>
-    <div class="row-fluid"><br></div>
-    <div class="row-fluid">
-      <div class="span6"><p class="plabel">
-        Status:
-      </p></div>
-      <div class="span6">
-        {{ status }} 
-       </div>
-    </div> 
-    {% if disppoints==True %}
-    <div class="row-fluid">
-      <div class="span6"><p class="plabel">
-        Last Seen:
-      </p></div>
-      <div class="span6">
-        {{ last_seen }} 
-       </div>
-    </div>    
-    {% endif %}
-  </div>
-</div>
-{% if disppoints==True %}
-<div class="row-fluid">
-  <div class="span6">
-    <table class="table">
-      <tr><th>Location</th><th>Time</th><th>Message</th></tr>
-      {% for p in points %}
-      <tr><td>{{p.locstr}} <small>({{p.lat}},{{p.lon}})</small></td><td>{{p.time}}</td><td><small>{{p.msg}}</small></td></tr>
-      {% endfor %}
-    </table>
-  </div>
-</div>
-{% endif %}
-<script type="text/javascript" src="/static/js/maps/maptrack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){
-    var mapURL = '/track/jsonroute/{{routekey}}';
-    initialize_map(mapURL);
-    });
-</script>
+{% include "forms/stubspop/track_stub.html" %}
 
 
 {% endblock %}
