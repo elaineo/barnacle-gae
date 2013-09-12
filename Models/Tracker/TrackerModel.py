@@ -24,7 +24,7 @@ class TrackerModel(ndb.Model):
         """ url for public view of post """
         return '/track/view/' + self.key.urlsafe()
             
-    def to_dict(cls):
+    def to_dict(cls,abbrev=False):
         route = {  
             'routekey' : cls.key.urlsafe(),
             'post_url' : cls.post_url(),
@@ -33,6 +33,8 @@ class TrackerModel(ndb.Model):
             'delivend' : cls.delivend.strftime('%m/%d/%Y'),
             'statusint' : cls.status
         }
+        if abbrev:
+            return route
         if cls.points:
             route['last_seen'] = cls.points[-1].created.strftime('%m/%d/%Y %H:%M')
             route['disppoints'] = True
@@ -57,5 +59,6 @@ class TrackerModel(ndb.Model):
         return route
     
     @classmethod
-    def by_driver(cls,userkey):
-        return cls.query().filter(cls.driver==userkey)  #add filter for status    
+    def by_driver(cls,userkey,status=None):
+        return cls.query().filter(cls.driver==userkey)  #if status, add filter for status    
+        

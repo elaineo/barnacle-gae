@@ -14,6 +14,8 @@ class TrackerHandler(BaseHandler):
             self.__debugcheckin()  
         elif action=='create':
             self.__debug()     
+        elif action=='getroutes':
+            self.__getroutes()
         elif action=='jsonroute' and key:
             try:
                 route=ndb.Key(urlsafe=key).get()
@@ -99,7 +101,20 @@ class TrackerHandler(BaseHandler):
             track.put()
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))              
-            
+
+    def __getroutes(self):
+        if not self.user_prefs.key:
+            response = { 'status': 'fail'}            
+        else:
+            routes=[]
+            tracks = TrackerModel.by_driver(self.user_prefs.key)
+            for t in tracks:
+                routes.append(t.to_dict(True))
+            response = { 'status': 'ok'}
+            response['routes'] = routes
+        self.response.headers['Content-Type'] = "application/json"
+        self.write(json.dumps(response)) 
+        
     def __debug(self):
         locstart='Mountain View, CA'
         locend = 'San Gabriel, CA'        
