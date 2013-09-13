@@ -30,7 +30,7 @@ class TrackerHandler(BaseHandler):
         elif action=='mobile' and key:
             self.__view_page(key,True)            
             
-    def post(self, action=None):       
+    def post(self, action=None, key=None):       
         if not self.user_prefs:
             logging.error('Not logged in')
             response = { 'status': 'fail'}            
@@ -41,9 +41,34 @@ class TrackerHandler(BaseHandler):
             self.__updateloc()
         elif action=='create':
             self.__create()
+        elif action=='status':
+            self.__status()
         else:
             return
                     
+    def __status(self):
+        data = json.loads(self.request.body)
+        logging.info(data)
+        try:
+            key = data['routekey']
+            status = int(data['status'])
+            r = ndb.Key(urlsafe=key).get()
+            if not r:
+                response = { 'status': 'Route not found.'}
+            elif r.driver!=self.user_prefs.key:
+                response = { 'status': 'Permission denied.'}
+            else:
+                if status == 0: #delete
+                    r.key.delete()
+                else:
+                    r.status = 1-r.status
+                    r.put()
+                response = { 'status': 'ok', 'newstat': r.status}
+        except:
+            response = { 'status': 'Failed.'}            
+        self.response.headers['Content-Type'] = "application/json"
+        self.write(json.dumps(response))                 
+                
     def __updateloc(self):
         #trackermodel
         data = json.loads(self.request.body)

@@ -18,7 +18,7 @@ class TrackerModel(ndb.Model):
     delivend = ndb.DateProperty()    
     locstart = ndb.StringProperty() #text descr of location
     locend = ndb.StringProperty() #text descr of location
-    status = ndb.IntegerProperty(default=0)  #0 inactive, 1 active, 2 waiting
+    status = ndb.IntegerProperty(default=1)  #1 inactive, 0 active, 2 waiting
 
     def post_url(self):
         """ url for public view of post """
@@ -50,7 +50,7 @@ class TrackerModel(ndb.Model):
         else:
             route['last_seen'] = ''
             route['disppoints'] = False
-        if cls.status==1:
+        if cls.status==0:
             route['status'] = 'active'
         elif cls.status==2:
             route['status'] = 'waiting'
