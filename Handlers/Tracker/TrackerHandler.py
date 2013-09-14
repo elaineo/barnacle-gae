@@ -129,6 +129,7 @@ class TrackerHandler(BaseHandler):
             track = TrackerModel(driver = self.user_prefs.key, start = start, 
                 dest=dest, delivend=delivend, locstart=locstart, locend=locend)
             track.put()
+            response['route'] = track.to_dict()
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))              
 
