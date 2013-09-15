@@ -73,8 +73,13 @@ def send_mail(sender_email, to_email, subject, body):
                   body=body)
                   
 def send_info(to_email, subject, body, html=None):
-    mail.send_mail(to=to_email, bcc=bcc_email,
-        sender=info_email, subject=subject, 
-        body=body, html=html)           
+    if html:
+        mail.send_mail(to=to_email, bcc=bcc_email,
+            sender=info_email, subject=subject, 
+            body=body, html=html)           
+    else:
+        mail.send_mail(to=to_email, bcc=bcc_email,
+            sender=info_email, subject=subject, 
+            body=body)           
         
         

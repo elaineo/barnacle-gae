@@ -45,7 +45,7 @@ class TrackerModel(ndb.Model):
                       'locstr' : px.locstr,
                       'time' : px.created.strftime('%m/%d/%Y %H:%M'),
                       'msg' : px.msg }
-                points.append(p)
+                points.insert(0,p)
             route['points'] = points
         else:
             route['last_seen'] = ''
