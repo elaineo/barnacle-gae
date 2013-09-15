@@ -59,7 +59,7 @@ class UserPrefs(ndb.Model):
     location = ndb.StringProperty()
     fblocation = ndb.StringProperty()    
     locpt = ndb.GeoPtProperty(default=ndb.GeoPt(37.4,-122))
-    about = ndb.StringProperty()
+    about = ndb.TextProperty()
     last_active = ndb.DateTimeProperty(auto_now=True)
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
     img_id = ndb.IntegerProperty()      # set to -1 if using FB picture
@@ -182,7 +182,7 @@ class Review(ndb.Model):
     sender = ndb.KeyProperty()
     receiver = ndb.KeyProperty()
     rating = ndb.IntegerProperty()
-    content = ndb.StringProperty()
+    content = ndb.TextProperty()
     created = ndb.DateTimeProperty(auto_now_add=True)
     @classmethod
     def newest(cls,num):

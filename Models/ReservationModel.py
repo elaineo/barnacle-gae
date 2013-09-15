@@ -7,7 +7,7 @@ class Reservation(ndb.Model):
     sender = ndb.KeyProperty(required=True)      # user_prefs of reserver and reservee
     receiver = ndb.KeyProperty(required=True)
     route = ndb.KeyProperty(required=True)       # route being reserved
-    items = ndb.StringProperty()    # description of goods
+    items = ndb.TextProperty()    # description of goods
     price = ndb.IntegerProperty()   # Offer price
     created = ndb.DateTimeProperty(auto_now_add=True)
     deliverby = ndb.DateProperty(required=True)

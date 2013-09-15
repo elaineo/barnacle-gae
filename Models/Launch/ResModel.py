@@ -8,7 +8,7 @@ class ResModel(ndb.Model):
     driver = ndb.KeyProperty()
     email = ndb.StringProperty()
     capacity = ndb.IntegerProperty(default=0) # seat (0), trunk (1), big (2),    
-    details = ndb.StringProperty() 
+    details = ndb.TextProperty() 
     delivstart = ndb.DateProperty(required=True)
     delivend = ndb.DateProperty(required=True)    
     pickup = ndb.BooleanProperty(default=False)     # sender picks up shit at dest

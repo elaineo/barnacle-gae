@@ -13,6 +13,7 @@
     <input type='hidden' name="startlon" id="startlon">    
 	<button type="submit" class="btn" id="fillprof_btn">{{createorupdate}}</button>
 	</p>
+    <label>To establish trust in the community, we require that drivers sign up using their Facebook accounts. Please read our <a href='/privacy'>privacy policy</a> to learn how we protect your information.</label>        
 </form>
   </div>
 </div>
@@ -21,6 +22,7 @@ $(document).ready(function(){
     click_submit('#fillprof_btn','#fillprof_form');
 });
 </script>
+<script src="/static/js/jquery.validate.js"></script>
 <script type="text/javascript" src="/static/js/validation.js"></script>
 <script type="text/javascript" src="/static/js/save_image.js"></script>
 {% endblock %}

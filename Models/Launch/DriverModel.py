@@ -11,7 +11,7 @@ class DriverModel(ndb.Model):
     last_name = ndb.StringProperty()
     email = ndb.StringProperty()
     tel = ndb.StringProperty()
-    details = ndb.StringProperty()
+    details = ndb.TextProperty()
     descr = ndb.StringProperty()
     freq = ndb.IntegerProperty()
     dist = ndb.IntegerProperty(repeated=True)

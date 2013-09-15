@@ -7,7 +7,7 @@ class ReqModel(ndb.Model):
     user = ndb.KeyProperty(required=True)
     email = ndb.StringProperty()
     capacity = ndb.IntegerProperty(default=0) # car (0), SUV (1), flatbed (2),    
-    details = ndb.StringProperty() 
+    details = ndb.TextProperty() 
     created = ndb.DateTimeProperty(auto_now_add=True)
     delivstart = ndb.DateProperty(required=True)
     delivend = ndb.DateProperty(required=True)    

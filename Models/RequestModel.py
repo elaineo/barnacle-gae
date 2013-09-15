@@ -8,7 +8,7 @@ class Request(ndb.Model):
     userkey = ndb.KeyProperty(required=True)  # the user_pref it is connected to
     capacity = ndb.IntegerProperty(default=0) # car (0), SUV (1), flatbed (2)
     rates = ndb.IntegerProperty()
-    items = ndb.StringProperty() 
+    items = ndb.TextProperty() 
     created = ndb.DateTimeProperty(auto_now_add=True)
     delivby = ndb.DateProperty(required=True)
     start = ndb.GeoPtProperty(required=True)
@@ -99,7 +99,7 @@ class SearchEntry(ndb.Model):
 class ExpiredRequest(ndb.Model):
     userkey = ndb.KeyProperty()  # the user_pref it is connected to
     rates = ndb.IntegerProperty()
-    items = ndb.StringProperty() 
+    items = ndb.TextProperty() 
     delivby = ndb.DateProperty()
     start = ndb.GeoPtProperty()
     dest = ndb.GeoPtProperty()

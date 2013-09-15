@@ -6,7 +6,7 @@ class Message(ndb.Model):
     sender = ndb.KeyProperty()
     receiver = ndb.KeyProperty()
     subject = ndb.StringProperty(default='(no subject)')
-    msg = ndb.StringProperty()
+    msg = ndb.TextProperty()
     created = ndb.DateTimeProperty(auto_now_add=True)
     sender_visible = ndb.BooleanProperty(default=True)
     receiver_visible = ndb.BooleanProperty(default=True)
