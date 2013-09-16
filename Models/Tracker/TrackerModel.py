@@ -18,7 +18,7 @@ class TrackerModel(ndb.Model):
     delivend = ndb.DateProperty()    
     locstart = ndb.StringProperty() #text descr of location
     locend = ndb.StringProperty() #text descr of location
-    status = ndb.IntegerProperty(default=1)  #1 inactive, 0 active, 2 waiting
+    status = ndb.IntegerProperty(default=1)  #1 inactive, 0 active, 2 waiting, 99 done
 
     def post_url(self):
         """ url for public view of post """
@@ -61,4 +61,3 @@ class TrackerModel(ndb.Model):
     @classmethod
     def by_driver(cls,userkey,status=None):
         return cls.query().filter(cls.driver==userkey)  #if status, add filter for status    
-        

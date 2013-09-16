@@ -7,6 +7,7 @@ from datetime import *
 from Handlers.BaseHandler import *
 from Models.Tracker.TrackerModel import *
 from Utils.ValidUtils import parse_date
+from Utils.ConfirmUtils import *
 
 class TrackerHandler(BaseHandler):
     def get(self, action=None, key=None):
@@ -43,9 +44,38 @@ class TrackerHandler(BaseHandler):
             self.__create()
         elif action=='status':
             self.__status()
+        elif action=='confirm':
+            self.__confirm()
+        elif action=='sendconfirm':
+            self.__sendconfirm()
         else:
             return
-                    
+
+    def __confirm(self):
+        data = json.loads(self.request.body)
+        logging.info(data)
+        try:
+            key = data['routekey']
+            code = int(data['code'])
+            r = ndb.Key(urlsafe=key).get()
+            if not r:
+                response = { 'status': 'Route not found.'}
+            elif r.driver!=self.user_prefs.key:
+                response = { 'status': 'Permission denied.'}
+            else:
+                if int(code)==pin_gen(r.key.id()):
+                    r.status = 99
+                    response = { 'status': 'ok'}
+                else:
+                    r.status = 2 
+                    response = { 'status': 'Wrong code.'} 
+                r.put()
+        except:
+            response = { 'status': 'Failed.'}            
+        self.response.headers['Content-Type'] = "application/json"
+        self.write(json.dumps(response))                 
+    
+            
     def __status(self):
         data = json.loads(self.request.body)
         logging.info(data)
@@ -145,6 +175,24 @@ class TrackerHandler(BaseHandler):
             response['routes'] = routes
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response)) 
+
+    def __sendconfirm(self):
+        data = json.loads(self.request.body)
+        logging.info(data)
+        try:
+            key = data['routekey']
+            r = ndb.Key(urlsafe=key).get()
+            if not r:
+                response = { 'status': 'Route not found.'}
+            elif r.driver!=self.user_prefs.key:
+                response = { 'status': 'Permission denied.'}
+            else:
+                response = { 'status': 'ok'}
+                #send a notification to the nonexistent customer
+        except:
+            response = { 'status': 'Failed.'}            
+        self.response.headers['Content-Type'] = "application/json"
+        self.write(json.dumps(response))   
         
     def __debug(self):
         locstart='Mountain View, CA'
