@@ -143,6 +143,7 @@ class TrackerHandler(BaseHandler):
         data = json.loads(self.request.body)
         logging.info(data)    
         try:
+            tzoffset = int(data['tzoffset'])
             startlat = float(data['startlat'])
             startlon = float(data['startlon'])
             destlat = float(data['destlat'])
@@ -157,7 +158,8 @@ class TrackerHandler(BaseHandler):
             response = { 'status': 'fail'}            
         if start and dest:
             track = TrackerModel(driver = self.user_prefs.key, start = start, 
-                dest=dest, delivend=delivend, locstart=locstart, locend=locend)
+                dest=dest, delivend=delivend, locstart=locstart, locend=locend,
+                tzoffset=tzoffset)
             track.put()
             response['route'] = track.to_dict()
         self.response.headers['Content-Type'] = "application/json"

@@ -2,6 +2,7 @@ from google.appengine.ext import ndb
 from Handlers.BaseHandler import *
 from Utils.RouteUtils import *
 import logging
+from datetime import *
 
 class TrackPt(ndb.Model):   
     loc = ndb.GeoPtProperty()
@@ -18,6 +19,7 @@ class TrackerModel(ndb.Model):
     delivend = ndb.DateProperty()    
     locstart = ndb.StringProperty() #text descr of location
     locend = ndb.StringProperty() #text descr of location
+    tzoffset = ndb.IntegerProperty()
     status = ndb.IntegerProperty(default=1)  #1 inactive, 0 active, 2 waiting, 99 done
 
     def post_url(self):
@@ -43,7 +45,7 @@ class TrackerModel(ndb.Model):
                 p = { 'lat': "%.2f" % px.loc.lat,
                       'lon': "%.2f" % px.loc.lon,
                       'locstr' : px.locstr,
-                      'time' : px.created.strftime('%m/%d/%Y %H:%M'),
+                      'time' : (px.created + self.tzdelta()).strftime('%m/%d/%Y %H:%M'),
                       'msg' : px.msg }
                 points.insert(0,p)
             route['points'] = points
@@ -51,13 +53,18 @@ class TrackerModel(ndb.Model):
             route['last_seen'] = ''
             route['disppoints'] = False
         if cls.status==0:
-            route['status'] = 'active'
+            route['status'] = 'Active'
         elif cls.status==2:
-            route['status'] = 'waiting'
+            route['status'] = 'Awaiting Confirmation'
+        elif cls.status==99:
+            route['status'] = 'Completed and Confirmed'
         else:
-            route['status'] = 'inactive'
+            route['status'] = 'Inactive'
         return route
     
     @classmethod
     def by_driver(cls,userkey,status=None):
         return cls.query().filter(cls.driver==userkey)  #if status, add filter for status    
+        
+    def tzdelta(self):
+        return timedelta(0,self.tzoffset)
