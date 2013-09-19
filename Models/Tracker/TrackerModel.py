@@ -64,7 +64,10 @@ class TrackerModel(ndb.Model):
     
     @classmethod
     def by_driver(cls,userkey,status=None):
-        return cls.query().filter(cls.driver==userkey)  #if status, add filter for status    
+        if status is not None:
+            return cls.query(ndb.AND(cls.driver==userkey, cls.status==status)) 
+        else:
+            return cls.query().filter(cls.driver==userkey)  
         
     def tzdelta(self):
         return timedelta(0,self.tzoffset)

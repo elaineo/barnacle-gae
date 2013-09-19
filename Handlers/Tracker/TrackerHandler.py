@@ -69,6 +69,7 @@ class TrackerHandler(BaseHandler):
                 else:
                     r.status = 2 
                     response = { 'status': 'Wrong code.'} 
+                r.delivend = datetime.today()                    
                 r.put()
         except:
             response = { 'status': 'Failed.'}            
@@ -108,9 +109,8 @@ class TrackerHandler(BaseHandler):
             lon = float(data['lon'])
             # todo: add speed
             loc =  ndb.GeoPt(lat=lat,lon=lon)  
-            response = { 'status': 'ok'}
         except:
-            response = { 'status': 'fail'}
+            response = { 'status': 'Failed.'}
         try:
             locstr = data['locstr']
             msg = data['msg']
@@ -119,10 +119,16 @@ class TrackerHandler(BaseHandler):
             msg = ''
         if loc:
             point = TrackPt(loc=loc, created=datetime.now(), locstr=locstr, msg=msg)
-            routes = TrackerModel.by_driver(self.user_prefs.key)
-            for r in routes:
-                r.points.append(point)
-                r.put()
+            routes = TrackerModel.by_driver(self.user_prefs.key,0)  #only active ones
+            if routes.count(1)==0:
+                response = { 'status': 'No active routes.'}
+            else:
+                for r in routes:
+                    r.points.append(point)
+                    r.put()
+                response = { 'status': 'ok'}
+        else:
+            response = { 'status': 'Invalid location.'}
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))              
         
@@ -190,6 +196,8 @@ class TrackerHandler(BaseHandler):
                 response = { 'status': 'Permission denied.'}
             else:
                 response = { 'status': 'ok'}
+                r.delivend = datetime.today()
+                r.put()
                 #send a notification to the nonexistent customer
         except:
             response = { 'status': 'Failed.'}            
@@ -204,10 +212,6 @@ class TrackerHandler(BaseHandler):
         t = RouteUtils().setpoints(t,locstart,locend)
         t.put()
         return
-        # data = json.loads(self.request.body)
-        # try:
-            # startlat = float(data['startlat'])
-            # startlon = float(data['startlon'])
 
     def __debugcheckin(self):            
         loc = ndb.GeoPt(lat=34, lon=-119.08)
