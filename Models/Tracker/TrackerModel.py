@@ -45,7 +45,7 @@ class TrackerModel(ndb.Model):
                 p = { 'lat': "%.2f" % px.loc.lat,
                       'lon': "%.2f" % px.loc.lon,
                       'locstr' : px.locstr,
-                      'time' : (px.created + self.tzdelta()).strftime('%m/%d/%Y %H:%M'),
+                      'time' : (px.created + cls.tzdelta()).strftime('%m/%d/%Y %H:%M'),
                       'msg' : px.msg }
                 points.insert(0,p)
             route['points'] = points

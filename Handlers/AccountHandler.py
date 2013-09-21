@@ -57,7 +57,7 @@ class SignupPage(BaseHandler):
         self.write(json.dumps(response))            
     def __fb(self):
         # retrieve information   
-        data = json.loads(self.request.body)
+        data = json.loads(unicode(self.request.body, errors='replace'))
         logging.info(data)        
         first_name = data['first_name']
         last_name = data['last_name']

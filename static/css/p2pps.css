@@ -6,6 +6,9 @@
     margin: 0 auto;
     max-width:1000px;
 }
+.densetxt {
+    font: 1.2em/1.6em 'Open Sans', sans-serif;
+}
 .heading {
     background: rgba(70,70,70,0.04);
     border-top: 1px solid #dad2d2;

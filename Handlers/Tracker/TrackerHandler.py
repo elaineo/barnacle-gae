@@ -44,6 +44,8 @@ class TrackerHandler(BaseHandler):
             self.__create()
         elif action=='status':
             self.__status()
+        elif action=='inactivate':
+            self.__inactivate()
         elif action=='confirm':
             self.__confirm()
         elif action=='sendconfirm':
@@ -99,7 +101,19 @@ class TrackerHandler(BaseHandler):
             response = { 'status': 'Failed.'}            
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))                 
-                
+
+    def __inactivate(self):
+        try:
+            routes = TrackerModel.by_driver(self.user_prefs.key,0)  #only active ones
+            for r in routes:
+                r.status = 1
+                r.put()
+            response = { 'status': 'ok'}
+        except:
+            response = { 'status': 'Failed.'}            
+        self.response.headers['Content-Type'] = "application/json"
+        self.write(json.dumps(response))   
+        
     def __updateloc(self):
         #trackermodel
         data = json.loads(self.request.body)
@@ -113,9 +127,11 @@ class TrackerHandler(BaseHandler):
             response = { 'status': 'Failed.'}
         try:
             locstr = data['locstr']
-            msg = data['msg']
         except:
             locstr = ''           
+        try:
+            msg = data['msg']
+        except:
             msg = ''
         if loc:
             point = TrackPt(loc=loc, created=datetime.now(), locstr=locstr, msg=msg)
