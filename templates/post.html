@@ -53,7 +53,7 @@
 $(document).ready(function(){
     caption = '{{first_name}} has a new Delivery Route on Barnacle';
     description = '{{first_name}} will be driving from {{ locstart }} to {{ locend }} between {{ delivstart }} and {{ delivend }} and can deliver your stuff!'
-    fb_url='https://www.facebook.com/dialog/feed?app_id=540602052657989&link=http://www.gobarnacle.com/post/{{routekey}}&picture=http://www.gobarnacle.com/static/barnaclelogo.png&name=Barnacle&caption='+escape(caption)+'&description='+escape(description)+'&redirect_uri=http://www.gobarnacle.com/suicide'
+    fb_url='https://www.facebook.com/dialog/feed?app_id=540602052657989&link=http://www.gobarnacle.com/post/{{routekey}}&picture=http://www.gobarnacle.com/static/img/barnacle.png&name=Barnacle&caption='+escape(caption)+'&description='+escape(description)+'&redirect_uri=http://www.gobarnacle.com/suicide'
     {% if share_onload == True %}
       window.open(fb_url, '', 'width=800,height=500,scrollbars=no,location=no');
     {% endif %}     

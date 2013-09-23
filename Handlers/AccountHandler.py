@@ -67,7 +67,7 @@ class SignupPage(BaseHandler):
         except:
             email = fbid
         try:
-            location = data['location']
+            location = data['location']['name']
         except:
             location = 'Mountain View, CA'
         # I guess we can assume there won't be an error for now
