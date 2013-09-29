@@ -102,7 +102,7 @@ class DebugUtils(BaseHandler):
                 u.put()
             self.write('done.')            
         elif action=='createroutes':  
-            users = UserPrefs.query().fetch()
+            users = BarnacleModel.query().fetch()
             for r in fakeroutes2:
                 r = r.split()                
                 ukey = random.choice(users).key
@@ -116,6 +116,14 @@ class DebugUtils(BaseHandler):
                 except:
                     continue
             self.write('routes created.')
+        elif action=='repairroutes':
+            routes = Route.query().fetch()
+            for r in routes:
+                if not r.pathpts:
+                    q = RouteUtils().setloc(r, r.locstart, r.locend)
+                    if q:
+                        r = q
+                        r.put()
         elif action=='createreqs':  
             users = UserPrefs.query().fetch()
             for r in fakereqs:

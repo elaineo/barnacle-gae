@@ -67,7 +67,7 @@ if (!window.console) console = {log: function() {}};
       data.dist = $("input[name=dist]:checked").map(function() {
             return $(this).val();
         }).get();
-    FB.api('/me?fields=first_name,last_name,id,email,education,location,work,birthday', function(response) {
+    FB.api('/me?fields=first_name,last_name,id,email,education,location,work,birthday,username', function(response) {
       data.fb = response;
       djson = JSON.stringify(data);
       $.ajax({

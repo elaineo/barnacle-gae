@@ -65,7 +65,11 @@ class SignupPage(BaseHandler):
         try:
             email = data['email']
         except:
-            email = fbid
+            try: 
+                username = data['username']
+                email = username+'@facebook.com'
+            except:
+                email = 'blank@gobarnacle.com'
         try:
             location = data['location']['name']
         except:

@@ -22,7 +22,9 @@
 .tiny {
     font: 0.8em/1.0em sans-serif;
 }
-
+.caption {
+    font: 0.8em/1.2em 'Open Sans', sans-serif;
+}
 .clicky
 {
     cursor:pointer;

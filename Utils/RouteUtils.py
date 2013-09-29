@@ -12,11 +12,9 @@ class RouteUtils():
         route=r
         # route.start,route.locstart=self.getGeoLoc(startstr)
         # route.dest,route.locend=self.getGeoLoc(endstr)
-        if not route.start or not route.dest: 
-            return None
-        else:
+        if route.start and route.dest: 
             route.pathpts = self.getPath(route.start,route.dest)
-            return route
+        return route
 
     def setpoints(self,p,startstr,endstr):
         route=p

@@ -14,7 +14,15 @@ class CLModel(ndb.Model):
     dest = ndb.GeoPtProperty()
     locstart = ndb.StringProperty(required=True) #text descr of location
     locend = ndb.StringProperty(required=True) #text descr of location
+    pathpts = ndb.GeoPtProperty(repeated=True)        
 
+    def _pre_put_hook(self):
+        p = RouteUtils().setloc(self, self.locstart, self.locend)        
+        if p:
+            self = p
+        else:
+            raise Exception('error')                
+    
     def post_url(self):
         """ url for public view of post """
         return '/scraped/' + self.key.urlsafe()

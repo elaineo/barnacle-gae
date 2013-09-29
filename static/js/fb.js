@@ -54,7 +54,7 @@
  
   function createFBAcct() {
     console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me?fields=first_name,last_name,email,id', function(response) {
+    FB.api('/me?fields=first_name,last_name,email,id,username', function(response) {
       console.log(response);
       //var data = "first_name="+response.first_name+"&last_name="+response.last_name+"&id="+response.id;
       $.ajax({
