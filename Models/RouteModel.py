@@ -13,6 +13,7 @@ class Route(ndb.Model):
     userkey = ndb.KeyProperty(required=True)  # the user_pref it is connected to
     capacity = ndb.IntegerProperty(default=0) # car (0), SUV (1), flatbed (2), hauler (3)
     details = ndb.TextProperty() # text describing
+    roundtrip = ndb.BooleanProperty(default=False)
     repeatr = ndb.StructuredProperty(RepeatRoute)
     created = ndb.DateTimeProperty(auto_now_add=True)
     delivstart = ndb.DateProperty(required=True)

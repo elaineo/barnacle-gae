@@ -12,6 +12,7 @@ function initialize() {
       input0.className = 'notfound';
       return;
     }
+
   });
 
 }

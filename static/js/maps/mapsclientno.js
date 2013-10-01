@@ -20,6 +20,7 @@ function initialize() {
     $('input#startstr').val(place0.formatted_address);
     $('input#startlat').val(place0.geometry.location.lat());
     $('input#startlon').val(place0.geometry.location.lng());
+    $('#map0Err').html('');
   });
   
   
@@ -34,6 +35,7 @@ function initialize() {
     $('input#deststr').val(place1.formatted_address);
     $('input#destlat').val(place1.geometry.location.lat());
     $('input#destlon').val(place1.geometry.location.lng());
+    $('#map1Err').html('');
   });
 
 }

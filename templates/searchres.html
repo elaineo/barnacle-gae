@@ -10,7 +10,7 @@ $(document).ready(function(){
             if (response.status === 'connected') {
               $('.clicky').each(function() {
                 var fbid = $(this).attr('data-fb');
-                dumpFriends(fbid, $(this).find('.dumpfriends'),3);
+                dumpFriends(fbid, $(this).next().find('.dumpfriends'),3);
               });
             }
         });
@@ -30,7 +30,7 @@ $(document).ready(function(){
         <th>Arrival Date</th>
     </tr></thead>
         {% for post in posts %}
-    <tr  class='clicky' data-fb='{{post.fbid}}' onclick="document.location.href = '{{post.post_url}}';">
+    <tr  class='clicky' data-fb='{{post.fbid}}' onclick="document.location.href = '/post/{{post.routekey}}';">
         <td {% if post.fbid %}rowspan='2'{% endif %}>
         <img height="50px" src="{{post.thumb_url}}"><br>
         {{post.first_name}}</td>
@@ -38,10 +38,9 @@ $(document).ready(function(){
         <td>{{post.dest}}</td>
         <td>{{post.delivstart}}</td>
         <td>{{post.delivend}}</td>
-		</tr>
 	  {% if post.fbid %}
 	  <tr>
-		<td colspan='4'>Mutual Friends: <div id='dumpfriends'>None.</div></td>
+		<td colspan='4'>Mutual Friends: <div class='dumpfriends'>None.</div></td>
 	  </tr>
 	  {% endif %}
     </tr>
@@ -56,7 +55,7 @@ $(document).ready(function(){
         <th>Arrival Date</th>
     </tr></thead>
         {% for post in clposts %}
-    <tr  class='clicky' onclick="document.location.href = '{{post.post_url}}';">
+    <tr  class='clicky' onclick="document.location.href = '/scraped/{{post.routekey}}';">
         <td>{{post.start}}</td>
         <td>{{post.dest}}</td>
         <td>{{post.delivend}}</td>
@@ -64,7 +63,8 @@ $(document).ready(function(){
             {% endfor %}
   </table>
   <br>
-  Don't see any results you like? Submit this as a <button class="btn btn-info btn-small" id="postreq_btn">Delivery Request</button>
+  Don't see any results you like? Submit this as a <button class="btn btn-info btn-small" id="postreq_btn">Delivery Request</button><br>
+  We will notify you when we find a driver.
   </div>
 </div>
   <script>

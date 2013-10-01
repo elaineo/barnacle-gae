@@ -3,7 +3,22 @@
 {% block heading %}Search Results{% endblock %}
 
 {% block content %}
-<div class="contentpad10 row">
+<script type="text/javascript">
+$(document).ready(function(){
+    $(document).on('fbload', function(){
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+              $('.clicky').each(function() {
+                var fbid = $(this).attr('data-fb');
+                 dumpFriends(fbid, $(this).next().find('.dumpfriends'),3);
+              });
+            }
+        });
+    });
+});
+</script>
+
+<div class="row">
   <div class="span10 offset1">
   <br>
   <table class="table table-striped table-hover">
@@ -14,13 +29,18 @@
         <th>Deliver By</th>
     </tr></thead>
         {% for post in posts %}
-    <tr class='clicky' onclick="document.location.href = '{{post.post_url}}';">
-        <td>
+    <tr class='clicky' onclick="document.location.href = '/post/request/{{post.routekey}}';">
+        <td {% if post.fbid %}rowspan='2'{% endif %}>
         <img height="50px" src="{{post.thumb_url}}"><br>
         {{post.first_name}}</td>
         <td>{{post.start}}</td>
         <td>{{post.dest}}</td>
         <td>{{post.delivby}}</td>
+	  {% if post.fbid %}
+	  <tr>
+		<td colspan='4'>Mutual Friends: <div class='dumpfriends'>None.</div></td>
+	  </tr>
+	  {% endif %}        
     </tr>
             {% endfor %}
   </table>

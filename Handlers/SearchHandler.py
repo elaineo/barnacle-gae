@@ -3,6 +3,7 @@ from Models.RouteModel import *
 from Models.RequestModel import SearchEntry
 from Utils.RouteUtils import *
 from Utils.SearchUtils import *
+from Utils.SearchDocUtils import *
 import logging
 from google.appengine.ext import ndb
 from Utils.ValidUtils import *
@@ -80,8 +81,7 @@ class SearchHandler(BaseHandler):
         self.params['posts'] = posts
         self.render('searchqres.html', **self.params)
             
-    def __search_routes(self):
-        dist = 100  ## IMPROVE THIS
+    def __search_routes(self):        
         enddate = self.request.get('enddate')
         remoteip = self.request.remote_addr
         if enddate:
@@ -96,44 +96,70 @@ class SearchHandler(BaseHandler):
             self.params['error_route'] = 'Invalid Route'
             self.render('search.html', **self.params)
             return           
-        results = search_points_end(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivend','start',start,'dest',dest)
+            
+        dist = HaversinDist(start.lat,start.lon,dest.lat,dest.lon)/10
+        
+        startresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivend',start).results
+        destresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivend',dest).results
+        results = search_intersect(startresults, destresults)
+        keepers = []
+        for c in results:
+            startpt = field_byname(c, "start")
+            destpt = field_byname(c, "dest")
+            # shouldn't need this IF check after I refactor indices
+            if destpt and startpt:
+                dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) 
+                dist1 = HaversinDist(dest.lat,dest.lon, destpt.latitude, destpt.longitude)
+                if dist0 < dist1:
+                    keepers.append(c)
+        results = keepers
 
-        clresults = search_points_end(dist,'CL_INDEX',delivend.strftime('%Y-%m-%d'),'delivend','start',start,'dest',dest)        
-
+        cl_startres = search_pathpts(dist,'PATHPT_INDEX',delivend.strftime('%Y-%m-%d'),'delivend',start).results
+        cl_destres = search_pathpts(dist,'PATHPT_INDEX',delivend.strftime('%Y-%m-%d'),'delivend',dest).results
+        #get intersection
+        clresults = search_intersect(cl_startres, cl_destres)
+        # Check for correct start/dest (startpt should be closer to start than dest)
+        
+        keepers = []
+        for c in clresults:
+            startpt = field_byname(c, "start")
+            destpt = field_byname(c, "dest")
+            if destpt and startpt:
+                if HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) < HaversinDist(dest.lat,dest.lon, destpt.latitude, destpt.longitude):
+                    keepers.append(c)
+        clresults = keepers 
         # store this search
         sr = SearchEntry(remoteip = remoteip, delivby=delivend, start=start, 
                     dest=dest, locstart=startstr,locend=deststr).put()
-        route_ids=[]
+                    
         posts = []
-        for doc in results.results:
-            logging.info(doc)
-            route_ids.append(doc.doc_id)
+        for doc in results:
             d = search_todict(doc)
             try:
                 p = {  'first_name': d['first_name'],
-                        'post_url': d['post_url'],
-                        'prof_url': d['prof_url'],
+                        'routekey': d['routekey'],
                         'thumb_url': d['thumb_url'],
                         'start': d['locstart'],
                         'dest': d['locend'],
+                        'fbid': d['fbid'],
                         'delivstart': d['delivstart'].strftime('%b-%d-%y'),
                         'delivend': d['delivend'].strftime('%b-%d-%y')
                     }
                 posts.append(p)
             except:
                 continue
-        cl_ids=[]
         clposts = []
-        for doc in clresults.results:
-            logging.info(doc)
-            cl_ids.append(doc.doc_id)
+        for doc in clresults:
             d = search_todict(doc)
-            p = {   'post_url': d['post_url'],
-                    'start': d['locstart'],
-                    'dest': d['locend'],
-                    'delivend': d['delivend'].strftime('%b-%d-%y')
-                }
-            clposts.append(p)
+            try:
+                p = {  'routekey': d['routekey'],
+                        'start': d['locstart'],
+                        'dest': d['locend'],
+                        'delivend': d['delivend'].strftime('%b-%d-%y')
+                    }   
+                clposts.append(p)
+            except:
+                continue
         self.params['posts'] = posts
         self.params['clposts'] = clposts
         self.render('searchres.html', **self.params)

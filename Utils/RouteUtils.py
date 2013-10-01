@@ -194,3 +194,29 @@ def HaversinRev(center,d):
     minLon = center.lon - 2*dLon
     bb = { 'maxLat':maxLat, 'minLat':minLat, 'maxLon':maxLon,'minLon':minLon }
     return bb
+    
+def HaversinDist(startlat, startlon, destlat, destlon):
+    # d = 2r asin sqrt(haversin(lat2-lat1) + cos(lat1)cos(lat2)haversin(lon2-lon1)
+    # haversin theta = sin^2(theta/2)
+    
+    degrees_to_radians = math.pi/180.0
+        
+    phi1 = (90.0 - startlat)*degrees_to_radians
+    phi2 = (90.0 - destlat)*degrees_to_radians
+        
+    theta1 = startlon*degrees_to_radians
+    theta2 = destlon*degrees_to_radians
+        
+    # Compute spherical distance from spherical coordinates.
+        
+    # For two locations in spherical coordinates 
+    # (1, theta, phi) and (1, theta, phi)
+    # cosine( arc length ) = 
+    #    sin phi sin phi' cos(theta-theta') + cos phi cos phi'
+    # distance = rho * arc length
+    
+    cos = (math.sin(phi1)*math.sin(phi2)*math.cos(theta1 - theta2) + 
+           math.cos(phi1)*math.cos(phi2))
+    arc = math.acos( cos )
+    # multiply by earth's radius in miles
+    return arc*3960

@@ -9,7 +9,7 @@ class CLModel(ndb.Model):
     clurl = ndb.StringProperty()
     details = ndb.TextProperty() # text describing
     posted = ndb.DateTimeProperty(required=True)
-    delivby = ndb.DateProperty(required=True)
+    delivend = ndb.DateProperty(required=True)
     start = ndb.GeoPtProperty()
     dest = ndb.GeoPtProperty()
     locstart = ndb.StringProperty(required=True) #text descr of location
@@ -33,7 +33,7 @@ class CLModel(ndb.Model):
             'routekey' : cls.key.urlsafe(),
             'post_url' : cls.post_url(),
             'post_date' : cls.posted.strftime('%m/%d/%Y'),
-            'delivend' : cls.delivby.strftime('%m/%d/%Y'),
+            'delivend' : cls.delivend.strftime('%m/%d/%Y'),
             'locstart' : cls.locstart,
             'locend' : cls.locend,
             'details' : cls.details.replace('\\n','<br>'),

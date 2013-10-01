@@ -7,9 +7,8 @@ from Models.RouteModel import *
 from Models.RequestModel import *
 from Models.ReservationModel import *
 from Models.Launch.CLModel import *
-from Utils.SearchUtils import ROUTE_INDEX
-from Utils.SearchUtils import REQUEST_INDEX
-from Utils.SearchUtils import CL_INDEX
+from Utils.SearchDocUtils import *
+from Utils.SearchUtils import expire_pathpts
 
 import json
 
@@ -17,6 +16,8 @@ class ExpireHandler(BaseHandler):
     def get(self):
         deaddump={}
         now = date.today()
+        expire_pathpts(PATHPT_INDEX, now, "delivend")
+        
         deadroutes = Route.query().filter(Route.delivend<now)
         drouts=[]
         dresv=[] 
@@ -27,6 +28,8 @@ class ExpireHandler(BaseHandler):
             start=r.start, dest=r.dest, repeatr=r.repeatr)
             exr.put()
             route_index.delete(r.key.urlsafe())
+            if r.roundtrip:
+                route_index.delete(r.key.urlsafe()+'_RT')
             r.key.delete()
             drouts.append(exr.to_dict())
             for q in Reservation.by_route(r.key):
@@ -60,7 +63,7 @@ class ExpireHandler(BaseHandler):
                     doff.append(exp.to_dict())
                 q.key.delete()
 
-        deadcl = CLModel.query().filter(CLModel.delivby<now)
+        deadcl = CLModel.query().filter(CLModel.delivend<now)
         cl_index = search.Index(name=CL_INDEX)
         bodycount = 0
         for r in deadcl:
@@ -73,7 +76,7 @@ class ExpireHandler(BaseHandler):
         hourago = datetime.now() - timedelta(minutes=60)
         deadsearch = SearchEntry.query().filter(SearchEntry.delivby < hourago)
         for s in deadsearch:
-            s.key.delete()
+            s.key.delete()            
                 
         deaddump['exp_routes'] = drouts
         deaddump['exp_requests'] = dreqs

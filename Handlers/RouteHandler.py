@@ -6,9 +6,9 @@ from Models.RouteModel import *
 from Models.RequestModel import *
 from Models.Launch.Driver import *
 from Utils.RouteUtils import *
-from Utils.SearchUtils import create_route_doc
-from Utils.SearchUtils import create_request_doc
-from Utils.SearchUtils import delete_doc
+from Utils.SearchDocUtils import create_route_doc
+from Utils.SearchDocUtils import create_request_doc
+from Utils.SearchDocUtils import delete_doc
 from Utils.ValidUtils import *
 
 class RouteHandler(BaseHandler):
@@ -110,6 +110,8 @@ class RouteHandler(BaseHandler):
                     res = Reservation.by_route(r.key)
                     for q in res:
                        q.key.delete() 
+                    if r.roundtrip:
+                        delete_doc(r.key.urlsafe()+'_RT',type) 
                 elif type=='Request':
                     if DeliveryOffer.route_confirmed(r.key)>0:
                         return
@@ -175,6 +177,7 @@ class RouteHandler(BaseHandler):
     def __create_route(self,key=None):
         capacity = self.request.get('vcap')
         repeatr = int(self.request.get('repeatr'))
+        rtr = bool(self.request.get('rtr'))
         capacity = parse_unit(capacity)
         if (repeatr<2):
             weekr = self.request.get_all('weekr')
@@ -214,12 +217,17 @@ class RouteHandler(BaseHandler):
                 p.locend = deststr
                 p.dest = dest
                 p.start = start
+                if not p.roundtrip and rtr: #added a return trip
+                    add_roundtrip(p)
+                if p.roundtrip and not rtr: #deleted return trip
+                    delete_doc(r.key.urlsafe()+'_RT',p.__class__.__name__)
+                p.roundtrip = rtr
             else:
                 self.redirect('/post')
         else: # new post
             p = Route(userkey=self.user_prefs.key, locstart=startstr, locend=deststr, 
                 start=start, dest=dest, capacity=capacity, details=details, 
-                delivstart=delivstart, delivend=delivend)
+                delivstart=delivstart, delivend=delivend, roundtrip=rtr)
         if (repeatr<2):
             p.repeatr = rr
         else:
@@ -227,6 +235,8 @@ class RouteHandler(BaseHandler):
         try:                
             p.put()            
             create_route_doc(p.key.urlsafe(), p)
+            if rtr:
+                add_roundtrip(p)
             fbshare = bool(self.request.get('fbshare'))
             self.params['share_onload'] = fbshare               
             self.view_page(p.key.urlsafe())                
@@ -238,6 +248,7 @@ class RouteHandler(BaseHandler):
             self.params['delivstart'] = startdate
             self.params['delivend'] = enddate
             self.params['capacity'] = capacity
+            self.params['rt'] = int(rtr)
             self.params['route_title'] = 'Edit Route'
             self.render('forms/fillpost.html', **self.params)           
             
@@ -276,7 +287,16 @@ class RouteHandler(BaseHandler):
         else:
             ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
         return ptg, ptstr
-            
+
+def add_roundtrip(route):
+    p2 = route
+    p2.locstart = route.locend
+    p2.locend = route.locstart
+    p2.start = route.dest
+    p2.dest = route.start            
+    create_route_doc(route.key.urlsafe()+'_RT', p2)
+
+        
 def fill_route_params(key,is_route=False):
     p = ndb.Key(urlsafe=key).get()
     u = p.userkey.get()
@@ -300,6 +320,7 @@ def fill_route_params(key,is_route=False):
         params.update({ 'details' : p.details,
                         'num_requests' : p.num_requests(),
                         'sugg_rate' :p.suggest_rate(),
+                        'rt' : int(p.roundtrip),
                         'delivstart' : p.delivstart.strftime('%m/%d/%Y'),
                         'delivend' : p.delivend.strftime('%m/%d/%Y') })
         params.update(p.gen_repeat())

@@ -100,7 +100,6 @@ app = webapp2.WSGIApplication([('/', HomePage),
     webapp2.Route('/blog/<post>', handler=BlogPage),
    ('/contact', ContactPage),
 # Admin
-    webapp2.Route('/kickstart', handler=Kickstarter),
     webapp2.Route('/debug/<action>', handler=DebugUtils),
    ('/expire', ExpireHandler), EmailHandler.mapping()],
   debug=True)

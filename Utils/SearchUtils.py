@@ -1,40 +1,35 @@
-from google.appengine.ext import ndb
 from google.appengine.api import search
-from Models.RouteModel import *
-from Models.RequestModel import *
 from Utils.Defs import miles2m
 import re
 import logging
-ROUTE_INDEX = 'ROUTE_INDEX'
-REQUEST_INDEX = 'REQUEST_INDEX'
-CL_INDEX = 'CL_INDEX'
 
-
-def create_route_doc(keysafe, route):
-    index = search.Index(name=ROUTE_INDEX)
-    u = route.userkey.get()
-    startpoint = search.GeoPoint(route.start.lat,route.start.lon)
-    destpoint = search.GeoPoint(route.dest.lat,route.dest.lon)
-    # everything that will be returned in search results should be in a field
-    doc = search.Document(doc_id=keysafe,
-        fields=[search.GeoField(name='start', value=startpoint),
-                search.GeoField(name='dest', value=destpoint),
-                search.DateField(name='delivstart', value=route.delivstart),
-                search.DateField(name='delivend', value=route.delivend),
-                search.TextField(name='locstart', value=route.locstart),
-                search.TextField(name='locend', value=route.locend),
-                search.TextField(name='routekey', value=route.key.urlsafe()),
-                search.TextField(name='userkey', value=u.key.urlsafe()),
-                search.TextField(name='first_name', value=u.first_name),
-                search.TextField(name='prof_url', value=u.profile_url()),
-                search.TextField(name='post_url', value=route.post_url()),
-                search.TextField(name='thumb_url', value=u.profile_image_url('small'))])
-#get rid of extraneous stupid fields                
-    try:
-        index.put(doc)
-    except search.Error,e:
-        logging.error(e)            
-
+def search_pathpts(dist, index_name, date, datefield, center):
+    limit = 100
+    meters = dist * miles2m
+    index = search.Index(index_name)
+    query = 'distance(point, geopoint('+str(center.lat)+', '+str(center.lon)+')) < '+str(meters) + ' AND ' + datefield+ ' < ' + date
+    loc_expr = 'distance(point, geopoint('+str(center.lat)+', '+str(center.lon)+'))'
+    logging.info(query)
+        
+    sortexpr = search.SortExpression( expression=loc_expr,
+      direction=search.SortExpression.ASCENDING, default_value=meters)
+    dateexpr = search.SortExpression( expression='delivend', direction=search.SortExpression.ASCENDING, default_value=date)
+    search_query = search.Query( query_string=query,
+       options=search.QueryOptions(limit=limit,
+        sort_options=search.SortOptions(expressions=[sortexpr, dateexpr])))
+    results = index.search(search_query)
+    logging.info(results)    
+    return results        
+    
+def expire_pathpts(index_name, date, datefield):
+    index = search.Index(index_name)
+    query = datefield+ ' > ' + date        
+    search_query = search.Query( query_string=query )
+    results = index.search(search_query)
+    logging.info(results)    
+    for r in results:
+        index.delete(r.doc_id)
+    return 
 
 def search_points(center, field, dist, index_name):
     limit = 100
@@ -115,37 +110,20 @@ def search_todict(s):
     d = {}
     for f in s.fields:
         d[f.name] = f.value
+    d['routekey'] = s.doc_id
     return d
     
-def create_request_doc(keysafe, route):
-    index = search.Index(name=REQUEST_INDEX)
-    u = route.userkey.get()
-    startpoint = search.GeoPoint(route.start.lat,route.start.lon)
-    destpoint = search.GeoPoint(route.dest.lat,route.dest.lon)
-    # everything that will be returned in search results should be in a field
-    doc = search.Document(doc_id=keysafe,
-        fields=[search.GeoField(name='start', value=startpoint),
-                search.GeoField(name='dest', value=destpoint),
-                search.DateField(name='delivby', value=route.delivby),
-                search.TextField(name='locstart', value=route.locstart),
-                search.TextField(name='locend', value=route.locend),
-                search.TextField(name='first_name', value=u.first_name),
-                search.TextField(name='routekey', value=route.key.urlsafe()),
-                search.TextField(name='userkey', value=u.key.urlsafe()),
-                search.TextField(name='prof_url', value=u.profile_url()),
-                search.TextField(name='post_url', value=route.post_url()),
-                search.TextField(name='thumb_url', value=u.profile_image_url('small'))])
-    try:
-        index.put(doc)
-    except search.Error,e:
-        logging.error(e)            
-
-def delete_doc(keysafe, r_name):
-    if r_name == 'Route':
-        index = search.Index(name=ROUTE_INDEX)
-        index.delete(keysafe)
-    elif r_name == 'Request':
-        index = search.Index(name=REQUEST_INDEX)
-        index.delete(keysafe)
-    return
+def search_intersect(s0,s1):
+    #return intersection based on doc_ids
+    s0_ids = [s.doc_id for s in s0]
+    s1_ids = [s.doc_id for s in s1]
+    s_ids_int = [s for s in s0_ids if s in s1_ids]
+    s_int = [s for s in s0 if s.doc_id in s_ids_int]
+    return s_int
     
+def field_byname(s, fname):
+    for f in s.fields:
+        if f.name==fname:
+            return f.value
+    return None
+           

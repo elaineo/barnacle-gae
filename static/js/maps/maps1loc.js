@@ -16,6 +16,7 @@ function initialize() {
     $('input#startstr').val(place0.formatted_address);
     $('input#startlat').val(place0.geometry.location.lat());
     $('input#startlon').val(place0.geometry.location.lng());
+    $('#map0Err').html('');
   });
   
 }

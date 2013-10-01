@@ -14,8 +14,7 @@ def create_cl_doc(keysafe, route):
                 search.GeoField(name='dest', value=destpoint),
                 search.DateField(name='delivend', value=route.delivby),
                 search.TextField(name='locstart', value=route.locstart),
-                search.TextField(name='locend', value=route.locend),
-                search.TextField(name='post_url', value=route.post_url())])
+                search.TextField(name='locend', value=route.locend)])
                 
     try:
         index.put(doc)

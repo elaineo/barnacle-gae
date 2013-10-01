@@ -3,6 +3,13 @@
     <div id="map-canvas"  class="routemap"></div>
   </div>
   <div class="span6">
+    {% if rt == 1 %}
+    <div class="row-fluid">
+      <div class="span6"><p class="plabel">
+        Round Trip
+      </p></div>
+    </div>      
+    {% endif %}
     <div class="row-fluid">
       <div class="span6"><p class="plabel">
         Departure Location:

@@ -4,9 +4,6 @@ from google.appengine.ext import ndb
 from google.appengine.api import search
 
 from Handlers.BaseHandler import *
-from Utils.SearchUtils import ROUTE_INDEX
-from Utils.SearchUtils import REQUEST_INDEX
-from Utils.SearchUtils import CL_INDEX
 from Models.ImageModel import ImageStore
 from Models.MessageModel import Message
 from Models.RequestModel import Request
@@ -17,9 +14,8 @@ from Models.UserModels import *
 from Models.Launch.BarnacleModel import *
 from Models.Launch.CLModel import *
 from Utils.data.fakedata import *
-from Utils.SearchUtils import create_route_doc
-from Utils.SearchUtils import create_request_doc
-from Utils.SearchUtils import delete_doc
+from Utils.SearchUtils import *
+from Utils.SearchDocUtils import *
 from Utils.CLUtils import create_cl_doc
 from Utils.RouteUtils import *
 
@@ -116,14 +112,11 @@ class DebugUtils(BaseHandler):
                 except:
                     continue
             self.write('routes created.')
-        elif action=='repairroutes':
+        elif action=='repairrouteindex':
+            delete_all_in_index(ROUTE_INDEX) 
             routes = Route.query().fetch()
             for r in routes:
-                if not r.pathpts:
-                    q = RouteUtils().setloc(r, r.locstart, r.locend)
-                    if q:
-                        r = q
-                        r.put()
+                create_route_doc(r.key.urlsafe(), r)              
         elif action=='createreqs':  
             users = UserPrefs.query().fetch()
             for r in fakereqs:
@@ -170,14 +163,14 @@ class DebugUtils(BaseHandler):
             destlng = d['destlng']
             cl = CLModel(email = email, 
                 posted = datetime.fromtimestamp(int(time) // 1000),
-                clurl = url, delivby = datetime.strptime(date,'%m/%d/%Y'),
+                clurl = url, delivend = datetime.strptime(date,'%m/%d/%Y'),
                 locstart = locstart, locend = locend, 
                 start = ndb.GeoPt(lat=startlat, lon=startlng),
                 dest = ndb.GeoPt(lat=destlat, lon=destlng),
                 details = details)
             try:
                 cl.put()
-                create_cl_doc(cl.key.urlsafe(), cl)
+                create_pathpt_doc(cl.key.urlsafe(), cl)
                 response = { 'status': 'ok' }
             except:
                 response = {'status': 'fail'}
