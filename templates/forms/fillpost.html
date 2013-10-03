@@ -15,13 +15,12 @@
  <form enctype="multipart/form-data" method="post" id='route_form' class="form-horizontal">
 
      <div class="control-group">
-        <label class="control-label" for="rt">Round Trip?</label>
         <div class="controls" id="rtRadios">
             <label class="radio inline">
-              <input type="radio" name="rtr" id="repeatNo" value="0" checked> No
+              <input type="radio" name="rtr" id="repeatNo" value="0" checked> One-Way
             </label>
             <label class="radio inline">
-              <input type="radio" name="rtr" id="repeatWeek" value="1"> Yes
+              <input type="radio" name="rtr" id="repeatWeek" value="1"> Round Trip
             </label>
         </div>     <br>
      
@@ -102,9 +101,11 @@
           <input type="text" name="delivend" value="{{delivend}}" id="enddate" autocomplete="off">
         </div>
     </div>    
-
-<!--    <div class="control-group">
-        TODO: <button class="btn btn-mini disabled">Add destination</button>
+    <!--
+    <div class="control-group" id='waypts-group'>
+        <div class="controls">
+          <button class="btn btn-mini" id='adddest_btn'>Add destination</button>
+        </div>
     </div>-->
     <div class="control-group">
         <label class="control-label" for="capacity">Vehicle Capacity:</label>
@@ -160,6 +161,12 @@
 </div>
 </div>
  <script>
+$(document).ready(function(){
+    $('button#adddest_btn').click(function(event) {
+        event.preventDefault();
+    });
+}); 
+ 
   $(function() {
     $('.navicoroutes').addClass('onbutton');
  

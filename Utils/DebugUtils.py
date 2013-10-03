@@ -161,6 +161,10 @@ class DebugUtils(BaseHandler):
             startlng = d['startlng']
             destlat = d['destlat']
             destlng = d['destlng']
+            try:
+                rtdate = d['rtdate']
+            except:
+                rtdate = None
             cl = CLModel(email = email, 
                 posted = datetime.fromtimestamp(int(time) // 1000),
                 clurl = url, delivend = datetime.strptime(date,'%m/%d/%Y'),
@@ -168,6 +172,18 @@ class DebugUtils(BaseHandler):
                 start = ndb.GeoPt(lat=startlat, lon=startlng),
                 dest = ndb.GeoPt(lat=destlat, lon=destlng),
                 details = details)
+            if rtdate:
+                cl2 = cl
+                cl2.locstart = locend
+                cl2.locend = locstart
+                cl2.start = cl.dest
+                cl2.dest = cl.start
+                cl2.delivend = datetime.strptime(rtdate,'%m/%d/%Y')
+                try:
+                    cl2.put()
+                    create_pathpt_doc(cl2.key.urlsafe(), cl2)
+                except:
+                    response = {'status': 'fail'}
             try:
                 cl.put()
                 create_pathpt_doc(cl.key.urlsafe(), cl)

@@ -183,9 +183,9 @@ class ExpiredReservation(ndb.Model):
         
     def to_dict(cls):
         res = {
-            'senderkey': cls.sender.key.urlsafe(),
-            'receiverkey': cls.receiver.key.urlsafe(),
-            'route': cls.route.key.urlsafe(),
+            'senderkey': cls.sender.urlsafe(),
+            'receiverkey': cls.receiver.urlsafe(),
+            'route': cls.route.urlsafe(),
             'price' : cls.price,
             'deliverby' : cls.deliverby.strftime('%m/%d/%Y'),
             'locstart': cls.locstart,
@@ -212,9 +212,9 @@ class ExpiredOffer(ndb.Model):
     def to_dict(cls):
         r = cls.route.get()
         res = {
-            'senderkey': cls.sender.key.urlsafe(),
-            'receiverkey': cls.receiver.key.urlsafe(),
-            'route': cls.route.key.urlsafe(),
+            'senderkey': cls.sender.urlsafe(),
+            'receiverkey': cls.receiver.urlsafe(),
+            'route': cls.route.urlsafe(),
             'locstart': cls.locstart,
             'locend': cls.locend,
             'sender_name':cls.sender_name,

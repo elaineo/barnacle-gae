@@ -99,8 +99,8 @@ class SearchHandler(BaseHandler):
             
         dist = HaversinDist(start.lat,start.lon,dest.lat,dest.lon)/10
         
-        startresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivend',start).results
-        destresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivend',dest).results
+        startresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',start).results
+        destresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',dest).results
         results = search_intersect(startresults, destresults)
         keepers = []
         for c in results:

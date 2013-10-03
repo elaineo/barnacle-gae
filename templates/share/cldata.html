@@ -69,6 +69,8 @@ function popMe(x,y) {
             'start':start,
             'dest':dest,
             'date':date }
+        if (cldata[i].length > 8)  
+            claddress['rtdate'] = cldata[i][8];
         codeAddress(claddress);
         pausecomp(2000);
     }

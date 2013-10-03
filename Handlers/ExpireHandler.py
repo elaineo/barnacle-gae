@@ -16,7 +16,7 @@ class ExpireHandler(BaseHandler):
     def get(self):
         deaddump={}
         now = date.today()
-        expire_pathpts(PATHPT_INDEX, now, "delivend")
+        expire_pathpts(PATHPT_INDEX, now.strftime('%Y-%m-%d'), "delivend")
         
         deadroutes = Route.query().filter(Route.delivend<now)
         drouts=[]
