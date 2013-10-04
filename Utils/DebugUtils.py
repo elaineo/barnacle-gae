@@ -184,13 +184,13 @@ class DebugUtils(BaseHandler):
                     create_pathpt_doc(cl2.key.urlsafe(), cl2)
                 except:
                     response = {'status': 'fail'}
-            try:
-                cl.put()
-                create_pathpt_doc(cl.key.urlsafe(), cl)
-                response = { 'status': 'ok' }
-            except:
-                response = {'status': 'fail'}
-                logging.error(cl)
+            # try:
+            cl.put()
+            create_pathpt_doc(cl.key.urlsafe(), cl)
+            response = { 'status': 'ok' }
+            # except:
+                # response = {'status': 'fail'}
+                # logging.error(cl)
             self.response.headers['Content-Type'] = "application/json"
             self.write(json.dumps(response))            
         else:

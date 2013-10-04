@@ -252,7 +252,11 @@ class RouteHandler(BaseHandler):
             self.params['route_title'] = 'Edit Route'
             self.render('forms/fillpost.html', **self.params)           
             
-    def view_page(self,key):
+    def view_page(self,keyrt):
+        if keyrt.endswith('_RT'):
+            key = keyrt[:-3]
+        else:
+            key = keyrt
         try:
             p = ndb.Key(urlsafe=key).get()
             if self.user_prefs and self.user_prefs.key == p.userkey:

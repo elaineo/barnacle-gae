@@ -6,6 +6,7 @@ from google.appengine.api import search
 from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
 from Utils.Defs import geocode_url, directions_url
+from Utils.PolylineCode import poly_decode
 
 class RouteUtils():            
     def setloc(self,r,startstr,endstr):
@@ -52,16 +53,20 @@ class RouteUtils():
     def getPath(self,start,dest):
         pathpts = [start]
         locs='origin=' + str(start) + '&destination=' + str(dest)
+        # eventually add waypoints
         #locs = locs+'&waypoints='
         dir_url = directions_url + locs + '&sensor=false'
         req = urlfetch.fetch(dir_url)
         logging.info(req.content)        
         results = json.loads(req.content)['routes'][0]['legs'][0]
-        distance = results['distance']['value']
         for s in results['steps']:
+            distance = s['distance']['value']   #dist in metres
+            polyline = s['polyline']['points']
+            pathsegment = poly_decode(polyline)[0::100]
             lat = s['end_location']['lat']
             lon = s['end_location']['lng']
-            pathpts.append(ndb.GeoPt(lat=lat,lon=lon))
+            pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
+            pathpts = pathpts + pathsegment
         return pathpts
         
     def dumproute(self,r):

@@ -68,8 +68,6 @@ class SearchHandler(BaseHandler):
                     'dest': d['locend'],
                     'delivby': d['delivby'].strftime('%b-%d-%y')
                 }
-            # by  october, the other fields will be deprecated and we'll only
-            # be using this
             try:
                 routekey = d['routekey']
                 userkey = d['userkey']
@@ -105,12 +103,14 @@ class SearchHandler(BaseHandler):
         keepers = []
         for c in results:
             startpt = field_byname(c, "start")
-            destpt = field_byname(c, "dest")
             # shouldn't need this IF check after I refactor indices
-            if destpt and startpt:
+            if startpt:
                 dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) 
-                dist1 = HaversinDist(dest.lat,dest.lon, destpt.latitude, destpt.longitude)
+                dist1 = HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude)
                 if dist0 < dist1:
+                    logging.info(dist0)
+                    logging.info(dist1)
+                    logging.info(c)
                     keepers.append(c)
         results = keepers
 
@@ -123,9 +123,8 @@ class SearchHandler(BaseHandler):
         keepers = []
         for c in clresults:
             startpt = field_byname(c, "start")
-            destpt = field_byname(c, "dest")
-            if destpt and startpt:
-                if HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) < HaversinDist(dest.lat,dest.lon, destpt.latitude, destpt.longitude):
+            if startpt:
+                if HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) < HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude):
                     keepers.append(c)
         clresults = keepers 
         # store this search
