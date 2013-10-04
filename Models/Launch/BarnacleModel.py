@@ -85,6 +85,16 @@ class BarnacleModel(ndb.Model):
         params['created'] = str(self.creation_date)[0:16]
         params['deliv_completed'] = self.completed
         return params
+    def params_fill_sm(self, params):
+        if self.first_name:
+            params['first_name'] = self.first_name
+        else:
+            params['first_name'] = 'Barnacle'  
+        params['profile_thumb'] = self.profile_image_url(mode='small')   
+        params['profile_url'] = self.profile_url()
+        params['avg_rating'] = 5       
+        params['fbid'] = self.userid
+        return params        
 
     @classmethod
     def by_email(cls, email):

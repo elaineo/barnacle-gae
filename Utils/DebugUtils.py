@@ -16,7 +16,6 @@ from Models.Launch.CLModel import *
 from Utils.data.fakedata import *
 from Utils.SearchUtils import *
 from Utils.SearchDocUtils import *
-from Utils.CLUtils import create_cl_doc
 from Utils.RouteUtils import *
 
 import json
@@ -29,8 +28,9 @@ class TestUtils(BaseHandler):
 class DebugUtils(BaseHandler):
     def get(self, action=None):
         if action=='clearall':
-            delete_all_in_index(ROUTE_INDEX)
-            delete_all_in_index(REQUEST_INDEX)
+            delete_all_in_index(CL_INDEX)
+            # delete_all_in_index(ROUTE_INDEX)
+            # delete_all_in_index(REQUEST_INDEX)
             self.redirect('/')
         elif action=='clearusers':
             data = ImageStore.query()

@@ -7,7 +7,6 @@ from Utils.RouteUtils import *
 from Utils.ValidUtils import *
 
 class CLHandler(BaseHandler):
-    """ Post a new route """
     def get(self, action=None,key=None):
         if action=='jsonroute' and key:
             try:

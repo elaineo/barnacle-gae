@@ -45,28 +45,31 @@ def decode_email_address(email):
     k = ndb.Key('UserPrefs', id)
     up = k.get()
     if up is None:
-        return 
-    return up.email
+        logging.error('Email address missing')
+        logging.info(email)
+        return bcc_email
+    else:
+        return up.email
         
 def create_msg(sender, receiver, subject, msg):
     send_name = sender.get().first_name
     send_email = send_name + ' via Barnacle <' + str(sender.id()) + email_domain + '>'
     recv_email = str(receiver.id()) + email_domain
     body = (msg_start % send_name) + msg
-    mail.send_mail(sender=send_email, 
+    mail.send_mail(sender=send_email, bcc=bcc_email,
                     to=recv_email, 
                     subject=subject, 
                     body=body)
 
 def create_note(receiver, subject, body): 
     recv_email = str(receiver.id()) + email_domain
-    mail.send_mail(sender=noreply_email,
+    mail.send_mail(sender=noreply_email, bcc=bcc_email,
                   to=recv_email,
                   subject=subject,
                   body=body)
     
 def send_mail(sender_email, to_email, subject, body):
-    mail.send_mail(sender=sender_email,
+    mail.send_mail(sender=sender_email, bcc=bcc_email,
                   reply_to=sender_email,
                   to=to_email,
                   subject=subject,

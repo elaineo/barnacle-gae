@@ -23,11 +23,11 @@ def search_pathpts(dist, index_name, date, datefield, center):
     
 def expire_pathpts(index_name, date, datefield):
     index = search.Index(index_name)
-    query = datefield+ ' > ' + date        
+    query = datefield+ ' < ' + date        
     search_query = search.Query( query_string=query )
     results = index.search(search_query)
     logging.info(results)    
-    for r in results:
+    for r in results.results:
         index.delete(r.doc_id)
     return 
 

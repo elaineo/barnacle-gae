@@ -78,4 +78,3 @@ def delete_doc(keysafe, r_name):
         index = search.Index(name=REQUEST_INDEX)
     index.delete(keysafe)
     return
-    

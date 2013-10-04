@@ -67,7 +67,6 @@ class ExpireHandler(BaseHandler):
         cl_index = search.Index(name=CL_INDEX)
         bodycount = 0
         for r in deadcl:
-            cl_index.delete(r.key.urlsafe())
             r.key.delete()
             bodycount=bodycount+1
             
