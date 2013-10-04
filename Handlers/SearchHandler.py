@@ -108,9 +108,6 @@ class SearchHandler(BaseHandler):
                 dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) 
                 dist1 = HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude)
                 if dist0 < dist1:
-                    logging.info(dist0)
-                    logging.info(dist1)
-                    logging.info(c)
                     keepers.append(c)
         results = keepers
 
