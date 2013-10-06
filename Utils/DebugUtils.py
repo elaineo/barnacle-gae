@@ -148,7 +148,6 @@ class DebugUtils(BaseHandler):
     def post(self, action=None):        
         if action=='createcl':
             d = json.loads(self.request.body)
-            logging.info(d)     
             email = d['email']
             time = d['time']
             subj = d['subj']

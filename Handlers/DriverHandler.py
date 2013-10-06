@@ -55,7 +55,7 @@ class DriverHandler(BaseHandler):
                 imgstore.put()
                 user_prefs.img_id = imgstore.key.id()
             user_prefs.put()
-            logging.info(user_prefs)
+            logging.info('User turns into a driver')
             self.redirect(user_prefs.profile_url())
         else: # if user is not logged in, redirect to login page, which will redirect back
             self.redirect('/#signin-box')

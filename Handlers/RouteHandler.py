@@ -10,6 +10,7 @@ from Utils.SearchDocUtils import create_route_doc
 from Utils.SearchDocUtils import create_request_doc
 from Utils.SearchDocUtils import delete_doc
 from Utils.ValidUtils import *
+import logging
 
 class RouteHandler(BaseHandler):
     """ Post a new route """
@@ -140,7 +141,8 @@ class RouteHandler(BaseHandler):
             
         start, startstr = self.__get_map_form('start')
         dest, deststr = self.__get_map_form('dest')  
-            
+        logging.info('New Request: '+startstr+' to '+deststr)
+        
         if key: # if editing post
             p = ndb.Key(urlsafe=key).get()
             if p and self.user_prefs and p.userkey == self.user_prefs.key:  
@@ -205,6 +207,7 @@ class RouteHandler(BaseHandler):
             
         start, startstr = self.__get_map_form('start')
         dest, deststr = self.__get_map_form('dest')
+        logging.info('New Route: '+startstr+' to '+deststr)
             
         if key: # if editing post
             p = ndb.Key(urlsafe=key).get()

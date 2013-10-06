@@ -87,8 +87,10 @@ class SignupPage(BaseHandler):
                 self.user_prefs = up
                 self.current_user_key = up.key
                 response = { 'status': 'new'}
+                logging.info('New account')
             else:
                 response = { 'status': 'existing'}
+                logging.info('Existing account login')
             # set cookies
             self.login(fbid, 'fb')
             self.set_current_user()
@@ -174,5 +176,6 @@ class SigninPage(BaseHandler):
 class SignoutPage(BaseHandler):
     """ User Sign Out Page """
     def get(self):
+        logging.info('Log out')
         self.logout() # deletes cookie
         self.redirect('/')    

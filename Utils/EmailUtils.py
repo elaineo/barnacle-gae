@@ -36,14 +36,13 @@ def extract_email(email):
         return email
 def encode_email_address(email):
     k = UserPrefs.by_email(email)
-    if k is None:
-        return 'Barnacle <' + email + '>'
+    if k is None:  ##this is going to be an issue for ppl who don't have email addr
+        return info_email
     return k.first_name + ' via Barnacle <' + str(k.key.id()) + email_domain + '>'
 def decode_email_address(email):
     buf = email.split('@')
     id = int(buf[0])
-    k = ndb.Key('UserPrefs', id)
-    up = k.get()
+    up = UserPrefs.get_by_id(id)
     if up is None:
         logging.error('Email address missing')
         logging.info(email)

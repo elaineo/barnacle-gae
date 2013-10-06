@@ -57,7 +57,7 @@ class RouteUtils():
         #locs = locs+'&waypoints='
         dir_url = directions_url + locs + '&sensor=false'
         req = urlfetch.fetch(dir_url)
-        logging.info(req.content)        
+        #logging.info(req.content)        
         results = json.loads(req.content)['routes'][0]['legs'][0]
         for s in results['steps']:
             distance = s['distance']['value']   #dist in metres

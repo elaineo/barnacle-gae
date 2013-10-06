@@ -16,7 +16,7 @@ class ExpireHandler(BaseHandler):
     def get(self):
         deaddump={}
         now = date.today()
-        expire_pathpts(PATHPT_INDEX, now.strftime('%Y-%m-%d'), "delivend")
+        # expire_pathpts(PATHPT_INDEX, now.strftime('%Y-%m-%d'), "delivend")
         
         deadroutes = Route.query().filter(Route.delivend<now)
         drouts=[]
@@ -67,13 +67,14 @@ class ExpireHandler(BaseHandler):
         cl_index = search.Index(name=CL_INDEX)
         bodycount = 0
         for r in deadcl:
+            req_index.delete(r.key.urlsafe())
             r.key.delete()
             bodycount=bodycount+1
             
         logging.info(str(bodycount) + ' CL entries deleted')
                 
         hourago = datetime.now() - timedelta(minutes=60)
-        deadsearch = SearchEntry.query().filter(SearchEntry.delivby < hourago)
+        deadsearch = SearchEntry.query().filter(SearchEntry.created < hourago)
         for s in deadsearch:
             s.key.delete()            
                 

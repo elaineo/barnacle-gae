@@ -8,6 +8,7 @@ from Utils.RouteUtils import *
 from Utils.ValidUtils import *
 from Utils.EmailUtils import create_note, create_msg
 from Utils.Defs import *
+import logging
 
 class ReservationHandler(BaseHandler):
     """ Make a Reservation """
@@ -247,6 +248,7 @@ class ReservationHandler(BaseHandler):
             if new_res:
                 do_msg = new_do_msg % p.key.urlsafe()
                 create_note(route.userkey, new_do_sub, do_msg)
+                logging.info('New Offer: '+ p.key.urlsafe())
             self.redirect('/reserve/' + p.key.urlsafe())      
         except:
             self.params['error_route'] = 'Invalid Dropoff or Pickup Location'
@@ -319,6 +321,7 @@ class ReservationHandler(BaseHandler):
             if new_res:
                 res_msg = new_res_msg % p.key.urlsafe()
                 create_note(route.userkey, new_res_sub, res_msg)
+                logging.info('New Reservation: '+ p.key.urlsafe())
             self.redirect('/reserve/' + p.key.urlsafe())      
         except:
             self.params['error_route'] = 'Invalid Start or Destination'

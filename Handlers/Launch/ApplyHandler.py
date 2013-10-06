@@ -68,7 +68,8 @@ class ApplyHandler(BaseHandler):
         except:
             response = {'status': 'err'}
         self.write(json.dumps(response))
-        self.send_message('new driver',email,first_name+last_name,remoteip) 
+        logging.info('Driver application submitted '+email) 
+        #self.send_message('new driver',email,first_name+last_name,remoteip) 
         
     def send_message(self,msg,email,name,remoteip):
         if not name:

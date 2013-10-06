@@ -32,7 +32,7 @@ def expire_pathpts(index_name, date, datefield):
     return 
 
 def search_points(center, field, dist, index_name):
-    limit = 100
+    limit = 10
     meters = dist * miles2m
     index = search.Index(index_name)
     query = 'distance('+field+', geopoint('+str(center.lat)+', '+str(center.lon)+')) < '+str(meters)

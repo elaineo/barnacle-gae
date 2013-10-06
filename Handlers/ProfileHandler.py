@@ -86,6 +86,7 @@ class ProfileHandler(BaseHandler):
             d = Driver(userkey = self.user_prefs.key)
             d.put()
             #new driver, send email
+            logging.info('New driver :' + email)
             self.send_driver_info(email)
             self.render('drivestart.html',**self.params)
         else:            
@@ -116,7 +117,6 @@ class ProfileHandler(BaseHandler):
                 imgstore = ImageStore.new(img)
             imgstore.put()
             user_prefs.img_id = imgstore.key.id()
-        logging.info(user_prefs)
         return user_prefs
 
     def send_driver_info(self, email):

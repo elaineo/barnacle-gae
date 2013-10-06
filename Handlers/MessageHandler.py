@@ -37,6 +37,7 @@ class MessageHandler(BaseHandler):
         recv = receiver.get()
         response = { 'status': 'ok',
                     'next_url': recv.profile_url() + '?msg=1' }
+        logging.info('New Message from ' + sender.urlsafe() + ' to ' + receiver.urlsafe())
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))            
 
