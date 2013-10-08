@@ -11,6 +11,7 @@
     <script src="/static/js/jquery-ui-1.10.2.custom.min.js"></script>    
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>    
     <script type="text/javascript" src="/static/js/data/cldata.js"></script>
+    <script type="text/javascript" src="/static/js/data/zdata.js"></script>
 </head>
 
 <body onload="initialize()">
@@ -18,6 +19,7 @@
   <h3>Freaking Rackspace</h3>
 <br>
  <div id='popspace'></div>
+ <div id='zspace'></div>
 <br> 
  <div id="map-canvas" style="width: 300px; height: 200px;"></div>
 <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
@@ -37,17 +39,28 @@
   }
 
 nc = cldata.length;
+nz = zdata.length;
 $(document).ready(function(){
-    for (var i = 0; i<nc; i=i+8) {
-        $('#popspace').append('<p><button id="'+i+'">Pop Me '+i+'</button></p>');       
-    }
-    $('button').click(function() {
+    for (var i = 0; i<nc; i=i+8) 
+        $('#popspace').append('<p><button class="c" id="'+i+'">Pop Me '+i+'</button></p>');
+
+    for (var i = 0; i<nz; i=i+8) 
+        $('#zspace').append('<p><button class="z" id="'+i+'">Pop Z '+i+'</button></p>');
+        
+    $('button.c').click(function() {
         console.log(this.id);
         sti = parseInt(this.id);
         eni = sti + 8;
         if (eni > nc) eni = nc;
         popMe(sti, eni);
     });
+    $('button.z').click(function() {
+        console.log(this.id);
+        sti = parseInt(this.id);
+        eni = sti + 8;
+        if (eni > nz) eni = nz;
+        popZ(sti, eni);
+    });    
 });
 
 function popMe(x,y) {
@@ -71,17 +84,37 @@ function popMe(x,y) {
             'date':date }
         if (cldata[i].length > 8)  
             claddress['rtdate'] = cldata[i][8];
-        codeAddress(claddress);
+        codeAddress(claddress, "createcl");
         pausecomp(2000);
     }
 }
-
+function popZ(x,y) {
+    for (var i = x; i<y; i++) {           
+        url = zdata[i][0];
+        details = zdata[i][1];
+        start = zdata[i][2];
+        dest = zdata[i][3];
+        fbid = zdata[i][4];
+        date = zdata[i][5];
+        rtdate = zdata[i][6];
+        var zaddress = {
+            'url':url,
+            'details':details,
+            'start':start,
+            'dest':dest,
+            'fbid':fbid,
+            'date':date,
+            'rtdate':rtdate}
+        codeAddress(zaddress, "createz");
+        pausecomp(2000);
+    }
+}
 function pausecomp(ms) {
   ms += new Date().getTime();
   while (new Date() < ms){}
 } 
 
-  function codeAddress(address) {
+  function codeAddress(address,debugadd) {
     var postaddr = address;
     geocoder0.geocode( { 'address': address.start}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
@@ -92,12 +125,13 @@ function pausecomp(ms) {
             console.log(results[0]);
             postaddr.destlat = results[0].geometry.location.lat();
             postaddr.destlng = results[0].geometry.location.lng();
+            console.log(postaddr);
             djson = JSON.stringify(postaddr);
             $.ajax({
                 type: "POST",
                 dataType: "json",  
                 contentType: "json", 
-                url: "/debug/createcl",
+                url: "/debug/"+debugadd,
                 data: djson,
                 success: function(response) {
                     console.log(response);

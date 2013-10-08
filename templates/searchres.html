@@ -11,6 +11,7 @@ $(document).ready(function(){
               $('.clicky').each(function() {
                 var fbid = $(this).attr('data-fb');
                 dumpFriends(fbid, $(this).next().find('.dumpfriends'),3);
+                dumpThumb(fbid, $(this).find('td.dumpthumb'));
               });
             }
         });
@@ -49,13 +50,28 @@ $(document).ready(function(){
   <br>
   Results from outside of Barnacle
   <table class="table table-striped table-hover">
-    <thead><tr>
+    <thead><tr><th></th>
         <th>Origin</th>
         <th>Destination</th>
-        <th>Arrival Date</th>
+        <th>Departure Date</th>
     </tr></thead>
+        {% for post in zposts %}
+    <tr  class='clicky' data-fb='{{post.fbid}}' onclick="document.location.href = '/scraped/{{post.routekey}}';">
+        <td {% if post.fbid %} class='dumpthumb' rowspan='2'{% endif %}>
+        </td>    
+        <td>{{post.start}}</td>
+        <td>{{post.dest}}</td>
+        <td>{{post.delivend}}</td>
+	  {% if post.fbid %}
+	  <tr>
+		<td colspan='4'>Mutual Friends: <div class='dumpfriends'>None.</div></td>
+	  </tr>
+	  {% endif %}
+    </tr>
+        {% endfor %}
         {% for post in clposts %}
     <tr  class='clicky' onclick="document.location.href = '/scraped/{{post.routekey}}';">
+        <td></td>
         <td>{{post.start}}</td>
         <td>{{post.dest}}</td>
         <td>{{post.delivend}}</td>

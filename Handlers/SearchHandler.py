@@ -3,6 +3,7 @@ from Models.RouteModel import *
 from Models.RequestModel import SearchEntry
 from Utils.RouteUtils import *
 from Utils.SearchUtils import *
+from Utils.SearchScraped import *
 from Utils.SearchDocUtils import *
 import logging
 from google.appengine.ext import ndb
@@ -124,6 +125,21 @@ class SearchHandler(BaseHandler):
                 if HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) < HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude):
                     keepers.append(c)
         clresults = keepers 
+        
+        z_startres = search_pathpts(dist,'ZIM_INDEX',delivend.strftime('%Y-%m-%d'),'delivend',start).results
+        z_destres = search_pathpts(dist,'ZIM_INDEX',delivend.strftime('%Y-%m-%d'),'delivend',dest).results
+        #get intersection
+        zresults = search_intersect(z_startres, z_destres)
+        # Check for correct start/dest (startpt should be closer to start than dest)
+        logging.info(zresults)
+        keepers = []
+        for z in zresults:
+            startpt = field_byname(z, "start")
+            if startpt:
+                if HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) < HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude):
+                    keepers.append(z)
+        zresults = keepers 
+        
         # store this search
         sr = SearchEntry(remoteip = remoteip, delivby=delivend, start=start, 
                     dest=dest, locstart=startstr,locend=deststr).put()
@@ -156,8 +172,23 @@ class SearchHandler(BaseHandler):
                 clposts.append(p)
             except:
                 continue
+        zposts = []
+        for doc in zresults:
+            d = search_todict(doc)
+            try:
+                p = {   'routekey': d['routekey'],
+                        'start': d['locstart'],
+                        'dest': d['locend'],
+                        'fbid': d['fbid'],
+                        'delivend': d['delivend'].strftime('%b-%d-%y')
+                    }
+                zposts.append(p)
+            except:
+                continue
+                
         self.params['posts'] = posts
         self.params['clposts'] = clposts
+        self.params['zposts'] = zposts
         self.render('searchres.html', **self.params)
     
     def __get_search_form(self,pt):

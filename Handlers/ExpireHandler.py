@@ -8,6 +8,7 @@ from Models.RequestModel import *
 from Models.ReservationModel import *
 from Models.Launch.CLModel import *
 from Utils.SearchDocUtils import *
+from Utils.SearchScraped import *
 from Utils.SearchUtils import expire_pathpts
 
 import json
@@ -16,7 +17,7 @@ class ExpireHandler(BaseHandler):
     def get(self):
         deaddump={}
         now = date.today()
-        # expire_pathpts(PATHPT_INDEX, now.strftime('%Y-%m-%d'), "delivend")
+        expire_pathpts(PATHPT_INDEX, now.strftime('%Y-%m-%d'), "delivend")
         
         deadroutes = Route.query().filter(Route.delivend<now)
         drouts=[]
@@ -64,10 +65,10 @@ class ExpireHandler(BaseHandler):
                 q.key.delete()
 
         deadcl = CLModel.query().filter(CLModel.delivend<now)
-        cl_index = search.Index(name=CL_INDEX)
+        cl_index = search.Index(name=PATHPT_INDEX)
         bodycount = 0
         for r in deadcl:
-            req_index.delete(r.key.urlsafe())
+            cl_index.delete(r.key.urlsafe())
             r.key.delete()
             bodycount=bodycount+1
             

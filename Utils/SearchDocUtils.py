@@ -5,27 +5,6 @@ from Models.RequestModel import *
 import logging
 ROUTE_INDEX = 'ROUTE_INDEX'
 REQUEST_INDEX = 'REQUEST_INDEX'
-CL_INDEX = 'CL_INDEX'
-PATHPT_INDEX = 'PATHPT_INDEX'
-
-def create_pathpt_doc(keysafe, route):
-    index = search.Index(name=PATHPT_INDEX)
-    startpoint = search.GeoPoint(route.start.lat,route.start.lon)
-    destpoint = search.GeoPoint(route.dest.lat,route.dest.lon)    
-    fields=[search.GeoField(name='start', value=startpoint),
-            search.GeoField(name='dest', value=destpoint),
-            search.DateField(name='delivend', value=route.delivend),
-            search.TextField(name='locstart', value=route.locstart),
-            search.TextField(name='locend', value=route.locend)]
-    for p in route.pathpts:
-        point = search.GeoPoint(p.lat,p.lon)
-        fields.append(search.GeoField(name='point', value=point))
-    doc = search.Document(doc_id=keysafe, fields=fields)
-    try:
-        index.put(doc)
-    except search.Error,e:
-        logging.error(e)            
-
 
 def create_route_doc(keysafe, route):
     index = search.Index(name=ROUTE_INDEX)

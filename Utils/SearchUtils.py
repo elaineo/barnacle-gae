@@ -4,7 +4,7 @@ import re
 import logging
 
 def search_pathpts(dist, index_name, date, datefield, center):
-    limit = 100
+    limit = 200
     meters = dist * miles2m
     index = search.Index(index_name)
     query = 'distance(point, geopoint('+str(center.lat)+', '+str(center.lon)+')) < '+str(meters) + ' AND ' + datefield+ ' < ' + date
@@ -116,10 +116,12 @@ def search_todict(s):
 def search_intersect(s0,s1):
     #return intersection based on doc_ids
     s0_ids = [s.doc_id for s in s0]
+    logging.info(s0_ids)
     s1_ids = [s.doc_id for s in s1]
+    logging.info(s1_ids)
     s_ids_int = [s for s in s0_ids if s in s1_ids]
     s_int = [s for s in s0 if s.doc_id in s_ids_int]
-    return s_int
+    return s_int[:10]
     
 def field_byname(s, fname):
     for f in s.fields:

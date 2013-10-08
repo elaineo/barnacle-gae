@@ -121,6 +121,27 @@
     });
   }
   
+  function dumpThumb(fb_id, dumpsite) {    
+    FB.api('/'+fb_id, function(response) {
+      console.log(response);
+      var first_name = response.first_name;
+      console.log(first_name);
+      $(dumpsite).html(response.first_name);
+      var fajax = [];
+      var dumpcont = '';
+      fajax.push( $.ajax({
+        type: 'GET',
+        url: 'http://graph.facebook.com/'+fb_id+'/picture?redirect=false', 
+        contName: first_name,
+        success:  function(data) { 
+          var imgurl = data.data.url;
+          dumpcont = '<img height="50px" src="'+imgurl+'"><br>'+first_name;
+        }
+      }) );
+      $.when.apply($, fajax).then(function() { $(dumpsite).html(dumpcont);});
+    });
+  }  
+  
 $.ajaxSetup ({
     cache: false
 });

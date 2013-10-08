@@ -42,3 +42,52 @@ class CLModel(ndb.Model):
         }
         return route
     
+class ZimModel(ndb.Model):
+    fbid = ndb.StringProperty() # fb unique identifier
+    clurl = ndb.StringProperty()
+    details = ndb.TextProperty() # text describing
+    delivend = ndb.DateProperty(required=True)
+    start = ndb.GeoPtProperty()
+    dest = ndb.GeoPtProperty()
+    locstart = ndb.StringProperty(required=True) #text descr of location
+    locend = ndb.StringProperty(required=True) #text descr of location
+    pathpts = ndb.GeoPtProperty(repeated=True)        
+
+    def _pre_put_hook(self):
+        p = RouteUtils().setloc(self, self.locstart, self.locend)        
+        if p:
+            self = p
+        else:
+            raise Exception('error')                
+    
+    def post_url(self):
+        """ url for public view of post """
+        return '/scraped/' + self.key.urlsafe()
+        
+    
+    def to_dict(cls):
+        route = {  
+            'fbid' : cls.fbid,
+            'routekey' : cls.key.urlsafe(),
+            'delivend' : cls.delivend.strftime('%m/%d/%Y'),
+            'locstart' : cls.locstart,
+            'locend' : cls.locend,
+            'details' : cls.details.replace('\\n','<br>'),
+            'cl_url' :cls.clurl
+        }
+        return route    
+        
+    def profile_image_url(self, mode = None):
+        """ Retrieve link to profile thumbnail or default """
+        # use FB picture
+        fburl = 'http://graph.facebook.com/'+self.fbid+'/picture?redirect=false'
+        if mode == 'small':
+            fburl += '&width=100&height=100'
+        else:
+            fburl += '&width=720&height=720'
+        try:
+            fbdata = json.loads(urllib2.urlopen(fburl).read())
+            if fbdata['data']:
+                return fbdata['data']['url']
+        except:
+            logging.error('FB server shat the bed')

@@ -1,4 +1,5 @@
 from datetime import *
+import dateutil.parser
 import csv
 from google.appengine.ext import ndb
 from google.appengine.api import search
@@ -16,6 +17,7 @@ from Models.Launch.CLModel import *
 from Utils.data.fakedata import *
 from Utils.SearchUtils import *
 from Utils.SearchDocUtils import *
+from Utils.SearchScraped import *
 from Utils.RouteUtils import *
 
 import json
@@ -28,10 +30,9 @@ class TestUtils(BaseHandler):
 class DebugUtils(BaseHandler):
     def get(self, action=None):
         if action=='clearall':
-            delete_all_in_index(CL_INDEX)
+            delete_all_in_index(ZIM_INDEX)
             # delete_all_in_index(ROUTE_INDEX)
             # delete_all_in_index(REQUEST_INDEX)
-            self.redirect('/')
         elif action=='clearusers':
             data = ImageStore.query()
             for d in data:
@@ -69,7 +70,7 @@ class DebugUtils(BaseHandler):
             for d in data:
                 d.key.delete()
             delete_all_in_index(CL_INDEX)                               
-            self.write('cl stuff gone.')			
+            self.write('cl stuff gone.')            
         elif action=='populate':        
             for p in fakefb:
                 p = p.split()
@@ -172,18 +173,19 @@ class DebugUtils(BaseHandler):
                 dest = ndb.GeoPt(lat=destlat, lon=destlng),
                 details = details)
             if rtdate:
-                cl2 = cl
-                cl2.locstart = locend
-                cl2.locend = locstart
-                cl2.start = cl.dest
-                cl2.dest = cl.start
-                cl2.delivend = datetime.strptime(rtdate,'%m/%d/%Y')
-                try:
-                    cl2.put()
-                    create_pathpt_doc(cl2.key.urlsafe(), cl2)
-                except:
-                    response = {'status': 'fail'}
-            # try:
+                cl2 = CLModel(email = email, 
+                posted = datetime.fromtimestamp(int(time) // 1000),
+                clurl = url, delivend = datetime.strptime(rtdate,'%m/%d/%Y'),
+                locstart = locend, locend = locstart, 
+                dest = ndb.GeoPt(lat=startlat, lon=startlng),
+                start = ndb.GeoPt(lat=destlat, lon=destlng),
+                details = details)
+                #try:
+                cl2.put()
+                create_pathpt_doc(cl2.key.urlsafe(), cl2)
+                # except:
+                    # response = {'status': 'fail'}
+            #try:
             cl.put()
             create_pathpt_doc(cl.key.urlsafe(), cl)
             response = { 'status': 'ok' }
@@ -192,9 +194,59 @@ class DebugUtils(BaseHandler):
                 # logging.error(cl)
             self.response.headers['Content-Type'] = "application/json"
             self.write(json.dumps(response))            
+        elif action=='createz':
+            d = json.loads(self.request.body)
+            logging.info(d)
+            url = d['url']
+            fbid = d['fbid']
+            details = d['details']
+            locstart = d['start']
+            locend = d['dest']
+            date = fix_zdate(d['date'])
+            startlat = d['startlat']
+            startlng = d['startlng']
+            destlat = d['destlat']
+            destlng = d['destlng']
+            
+            try:
+                rtdate = fix_zdate(d['rtdate'])
+            except:
+                rtdate = None
+            z = ZimModel(fbid = fbid, 
+                clurl = url, delivend = date,
+                locstart = locstart, locend = locend, 
+                start = ndb.GeoPt(lat=startlat, lon=startlng),
+                dest = ndb.GeoPt(lat=destlat, lon=destlng),
+                details = details)
+            z.put()
+            create_zim_doc(z.key.urlsafe(), z)                
+            if rtdate:
+                z2 = ZimModel(fbid = fbid, 
+                clurl = url, delivend = rtdate,
+                locstart = locend, locend = locstart, 
+                dest = ndb.GeoPt(lat=startlat, lon=startlng),
+                start = ndb.GeoPt(lat=destlat, lon=destlng),
+                details = details)
+                # try:
+                z2.put()
+                create_zim_doc(z2.key.urlsafe(), z2)
+                # except:
+                    # response = {'status': 'fail'}
+            # try:
+            response = { 'status': 'ok' }
+            # except:
+                # response = {'status': 'fail'}
+                # logging.error(z)
+            self.response.headers['Content-Type'] = "application/json"
+            self.write(json.dumps(response))            
         else:
             return
-
+            
+            
+def fix_zdate(date):
+    d = date.split(',')
+    return dateutil.parser.parse(d[-1])
+    
 def delete_all_in_index(index_name):
     """Delete all the docs in the given index."""
     doc_index = search.Index(name=index_name)

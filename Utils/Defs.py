@@ -5,7 +5,7 @@ miles2m = 1609
 signin_reg = '<div class="btn-group fblogin"><button class="btn btn-primary btn-small" style="height: 36px"><div class="icons-fb"></div></button><button class="btn btn-primary btn-small" style="height: 36px">Log In</button></div>'
 
 info_email = 'Barnacle <admin@gobarnacle.com>'
-bcc_email = 'elaine.ou@gmail.com'
+bcc_email = 'joel@gobarnacle.com'
 email_domain = '@p2ppostal.appspotmail.com'
 noreply_email = 'Barnacle Notification <noreply@p2ppostal.appspotmail.com>'
 
