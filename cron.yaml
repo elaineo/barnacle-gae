@@ -1,4 +1,7 @@
 cron:
 - description: daily summary job
+  url: /summary
+  schedule: every day 00:00
+- description: daily expiration job
   url: /expire
   schedule: every day 00:00
