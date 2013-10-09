@@ -83,6 +83,7 @@ class SearchEntry(ndb.Model):
     delivby = ndb.DateProperty(required=True)
     start = ndb.GeoPtProperty(required=True)
     dest = ndb.GeoPtProperty(required=True)
+    dist = ndb.FloatProperty(default=100.0)
     locstart = ndb.StringProperty(required=True) #text descr of location
     locend = ndb.StringProperty(required=True) #text descr of location   
 

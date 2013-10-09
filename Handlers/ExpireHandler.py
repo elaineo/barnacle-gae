@@ -70,10 +70,15 @@ class ExpireHandler(BaseHandler):
         for r in deadcl:
             cl_index.delete(r.key.urlsafe())
             r.key.delete()
-            bodycount=bodycount+1
-            
+            bodycount=bodycount+1            
         logging.info(str(bodycount) + ' CL entries deleted')
-                
+        
+        deadz = ZimModel.query().filter(ZimModel.delivend<now)
+        z_index = search.Index(name=ZIM_INDEX)
+        for r in deadz:
+            z_index.delete(r.key.urlsafe())
+            r.key.delete()
+        
         hourago = datetime.now() - timedelta(minutes=60)
         deadsearch = SearchEntry.query().filter(SearchEntry.created < hourago)
         for s in deadsearch:

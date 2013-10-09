@@ -52,6 +52,8 @@ class ZimModel(ndb.Model):
     locstart = ndb.StringProperty(required=True) #text descr of location
     locend = ndb.StringProperty(required=True) #text descr of location
     pathpts = ndb.GeoPtProperty(repeated=True)        
+    creation_date = ndb.DateTimeProperty(auto_now_add=True)    
+    
 
     def _pre_put_hook(self):
         p = RouteUtils().setloc(self, self.locstart, self.locend)        
@@ -75,6 +77,8 @@ class ZimModel(ndb.Model):
             'details' : cls.details.replace('\\n','<br>'),
             'cl_url' :cls.clurl
         }
+        if cls.creation_date:
+            route['post_date'] = cls.creation_date.strftime('%m/%d/%Y')
         return route    
         
     def profile_image_url(self, mode = None):

@@ -202,7 +202,10 @@ class DebugUtils(BaseHandler):
             details = d['details']
             locstart = d['start']
             locend = d['dest']
-            date = fix_zdate(d['date'])
+            try:
+                date = fix_zdate(d['date'])
+            except:
+                return
             startlat = d['startlat']
             startlng = d['startlng']
             destlat = d['destlat']
@@ -210,8 +213,10 @@ class DebugUtils(BaseHandler):
             
             try:
                 rtdate = fix_zdate(d['rtdate'])
+                details = d['date'] + ', ' + d['rtdate'] + '\n' + details
             except:
                 rtdate = None
+                details = d['date'] + '\n' + details
             z = ZimModel(fbid = fbid, 
                 clurl = url, delivend = date,
                 locstart = locstart, locend = locend, 

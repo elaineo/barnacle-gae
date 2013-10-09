@@ -58,6 +58,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
 # search
    webapp2.Route('/search', handler=SearchHandler),
    webapp2.Route('/search/<action>', handler=SearchHandler),
+   webapp2.Route('/search/<action>/<key:[\w\-]{20,}>', handler=SearchHandler),
 # accounts
    webapp2.Route('/signup', handler=SignupPage),
    webapp2.Route('/signup/<action>', handler=SignupPage),   

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}Search Results{% endblock %}
+{% block heading %}Search Results{% endblock %}
+
+{% block content %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $(document).on('fbload', function(){
+        loadFBdata();
+    });
+});
+
+function loadFBdata() {
+    FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          $('.clicky').each(function() {
+            var fbid = $(this).attr('data-fb');
+            dumpFriends(fbid, $(this).next().find('.dumpfriends'),3);
+            dumpThumb(fbid, $(this).find('td.dumpthumb'));
+          });
+        }
+    });
+}
+</script>
+
+<div class="row">
+  <div class="span10 offset1">
+  <br>
+  <table class="table table-striped table-hover">
+    <thead><tr>
+        <th>Driver</th>
+        <th>Origin</th>
+        <th>Destination</th>
+        <th>Departure Date</th>
+        <th>Arrival Date</th>
+    </tr></thead>
+        {% for post in posts %}
+    <tr  class='clicky' data-fb='{{post.fbid}}' onclick="document.location.href = '/post/{{post.routekey}}';">
+        <td {% if post.fbid %}rowspan='2'{% endif %}>
+        <img height="50px" src="{{post.thumb_url}}"><br>
+        {{post.first_name}}</td>
+        <td>{{post.start}}</td>
+        <td>{{post.dest}}</td>
+        <td>{{post.delivstart}}</td>
+        <td>{{post.delivend}}</td>
+	  {% if post.fbid %}
+	  <tr>
+		<td colspan='4'>Mutual Friends: <div class='dumpfriends'>None.</div></td>
+	  </tr>
+	  {% endif %}
+    </tr>
+            {% endfor %}
+  </table>
+  <br>
+  <b>Results from outside of Barnacle</b>
+  <table id='waiting' class='table'><tr><td>
+  <img src='/static/img/icons/loader.gif'> Searching...
+  </td></tr></table>
+  
+  <table id='outresults' class="table table-striped table-hover">
+    <tr><th></th>
+        <th>Origin</th>
+        <th>Destination</th>
+        <th>Departure Date</th>
+    </tr>
+  </table>
+  <br>
+  Don't see any results you like? Submit this as a <button class="btn btn-info btn-small" id="postreq_btn">Delivery Request</button><br>
+  We will notify you when we find a driver.
+  </div>
+</div>
+  <script>
+$('table#outresults').hide();
+  
+  $(function() {
+    $('.navicosearch').addClass('onbutton');
+    });
+$(document).ready(function(){
+  $('table#outresults').hide();
+  click_redirect('#postreq_btn','/post/request?pop=1');
+  /* populate external results */
+  populateZSearch('/search/scrapez/{{searchkey}}');
+  populateCLSearch('/search/scrapecl/{{searchkey}}');
+});    
+
+function populateZSearch(searchURL) {
+  $.ajax({
+    type: "GET",
+    dataType: "json",
+    contentType: "json", 
+    url: searchURL,
+    success: function(q) {
+        $('table#waiting').hide();
+        $('table#outresults').show();
+        for (i in q.results) {      
+          var rowhtml = '<tr class="clicky" data-fb="' + q.results[i]['fbid'] + '" onclick="document.location.href = /scraped/' +  q.results[i]['routekey'] + ';">';
+          rowhtml +='<td ';
+          if (q.results[i]['fbid'] != 'undefined')  
+            rowhtml += 'class="dumpthumb" rowspan="2"';
+          rowhtml +='</td><td>' + q.results[i]['start'] + '</td>';
+          rowhtml +='<td>' + q.results[i]['dest'] + '</td>';
+          rowhtml +='<td>' + q.results[i]['delivend'] + '</td>';
+          if (q.results[i]['fbid'] != 'undefined')  
+            rowhtml += '<tr><td colspan="4">Mutual Friends: <div class="dumpfriends">None.</div></td></tr>';
+          rowhtml += '</tr>';
+          $('#outresults tr:first').after(rowhtml);
+        }
+        loadFBdata();
+      },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus);
+      console.log(jqXHR);
+     }
+  });    
+}
+function populateCLSearch(searchURL) {
+  $.ajax({
+    type: "GET",
+    dataType: "json",
+    contentType: "json", 
+    url: searchURL,
+    success: function(q) {
+        console.log(q);
+        for (i in q.results) {      
+          var rowhtml = '<tr class="clicky" onclick="document.location.href = /scraped/' +  q.results[i]['routekey'] + ';">';
+          rowhtml +='<td>';
+          rowhtml +='</td><td>' + q.results[i]['start'] + '</td>';
+          rowhtml +='<td>' + q.results[i]['dest'] + '</td>';
+          rowhtml +='<td>' + q.results[i]['delivend'] + '</td>';
+          rowhtml += '</tr>';
+          $('#outresults tr:last').after(rowhtml);
+        }
+      },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus);
+      console.log(jqXHR);
+     }
+  });    
+}
+  </script>
+{% endblock %}

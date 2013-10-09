@@ -12,9 +12,31 @@ from datetime import *
 
 class SearchHandler(BaseHandler):
     """ Search page """
-    def get(self, action=None):
+    def get(self, action=None, key=None):
         if action=='request':
             self.render('search_requests.html', **self.params)
+        elif action=='scrapez':
+            sdump = {}
+            if not key:
+                return
+            try:
+                search=ndb.Key(urlsafe=key).get()
+                sdump['results'] = self.__search_zscrape(search)                
+            except:
+                sdump = {'status' : 'fail'}
+            self.response.headers['Content-Type'] = "application/json"
+            self.write(json.dumps(sdump))
+        elif action=='scrapecl':
+            sdump = {}
+            if not key:
+                return
+            try:
+                search=ndb.Key(urlsafe=key).get()
+                sdump['results'] = self.__search_clscrape(search)                
+            except:
+                sdump = {'status' : 'fail'}
+            self.response.headers['Content-Type'] = "application/json"
+            self.write(json.dumps(sdump))            
         else:
             self.render('search.html', **self.params)
         
@@ -112,34 +134,6 @@ class SearchHandler(BaseHandler):
                     keepers.append(c)
         results = keepers
 
-        cl_startres = search_pathpts(dist,'PATHPT_INDEX',delivend.strftime('%Y-%m-%d'),'delivend',start).results
-        cl_destres = search_pathpts(dist,'PATHPT_INDEX',delivend.strftime('%Y-%m-%d'),'delivend',dest).results
-        #get intersection
-        clresults = search_intersect(cl_startres, cl_destres)
-        # Check for correct start/dest (startpt should be closer to start than dest)
-        
-        keepers = []
-        for c in clresults:
-            startpt = field_byname(c, "start")
-            if startpt:
-                if HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) < HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude):
-                    keepers.append(c)
-        clresults = keepers 
-        
-        z_startres = search_pathpts(dist,'ZIM_INDEX',delivend.strftime('%Y-%m-%d'),'delivend',start).results
-        z_destres = search_pathpts(dist,'ZIM_INDEX',delivend.strftime('%Y-%m-%d'),'delivend',dest).results
-        #get intersection
-        zresults = search_intersect(z_startres, z_destres)
-        # Check for correct start/dest (startpt should be closer to start than dest)
-        logging.info(zresults)
-        keepers = []
-        for z in zresults:
-            startpt = field_byname(z, "start")
-            if startpt:
-                if HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) < HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude):
-                    keepers.append(z)
-        zresults = keepers 
-        
         # store this search
         sr = SearchEntry(remoteip = remoteip, delivby=delivend, start=start, 
                     dest=dest, locstart=startstr,locend=deststr).put()
@@ -160,6 +154,25 @@ class SearchHandler(BaseHandler):
                 posts.append(p)
             except:
                 continue
+                
+        self.params['posts'] = posts
+        self.params['searchkey'] = sr.urlsafe()
+        self.render('searchfrag.html', **self.params)
+        
+    def __search_clscrape(self, sr):
+        startres = search_pathpts(sr.dist,'PATHPT_INDEX',sr.delivby.strftime('%Y-%m-%d'),'delivend',sr.start).results
+        destres = search_pathpts(sr.dist,'PATHPT_INDEX',sr.delivby.strftime('%Y-%m-%d'),'delivend',sr.dest).results
+        #get intersection
+        results = search_intersect(startres, destres)
+        # Check for correct start/dest (startpt should be closer to start than dest)
+        
+        keepers = []
+        for c in results:
+            startpt = field_byname(c, "start")
+            if startpt:
+                if HaversinDist(sr.start.lat,sr.start.lon, startpt.latitude, startpt.longitude) < HaversinDist(sr.dest.lat,sr.dest.lon, startpt.latitude, startpt.longitude):
+                    keepers.append(c)
+        clresults = keepers 
         clposts = []
         for doc in clresults:
             d = search_todict(doc)
@@ -171,7 +184,25 @@ class SearchHandler(BaseHandler):
                     }   
                 clposts.append(p)
             except:
-                continue
+                continue      
+        return clposts
+            
+    
+    def __search_zscrape(self, sr):
+        startres = search_pathpts(sr.dist,'ZIM_INDEX',sr.delivby.strftime('%Y-%m-%d'),'delivend',sr.start).results
+        destres = search_pathpts(sr.dist,'ZIM_INDEX',sr.delivby.strftime('%Y-%m-%d'),'delivend',sr.dest).results
+        #get intersection
+        results = search_intersect(startres, destres)
+        # Check for correct start/dest (startpt should be closer to start than dest)
+        logging.info(results)
+        keepers = []
+        for z in results:
+            startpt = field_byname(z, "start")
+            if startpt:
+                if HaversinDist(sr.start.lat,sr.start.lon, startpt.latitude, startpt.longitude) < HaversinDist(sr.dest.lat,sr.dest.lon, startpt.latitude, startpt.longitude):
+                    keepers.append(z)
+        zresults = keepers                
+        
         zposts = []
         for doc in zresults:
             d = search_todict(doc)
@@ -184,12 +215,8 @@ class SearchHandler(BaseHandler):
                     }
                 zposts.append(p)
             except:
-                continue
-                
-        self.params['posts'] = posts
-        self.params['clposts'] = clposts
-        self.params['zposts'] = zposts
-        self.render('searchres.html', **self.params)
+                continue        
+        return zposts
     
     def __get_search_form(self,pt):
         ptlat = self.request.get(pt+'lat')

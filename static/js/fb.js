@@ -125,7 +125,6 @@
     FB.api('/'+fb_id, function(response) {
       console.log(response);
       var first_name = response.first_name;
-      console.log(first_name);
       $(dumpsite).html(response.first_name);
       var fajax = [];
       var dumpcont = '';
@@ -141,6 +140,27 @@
       $.when.apply($, fajax).then(function() { $(dumpsite).html(dumpcont);});
     });
   }  
+  
+  function dumpResponse(fb_id) {    
+    FB.api('/'+fb_id, function(response) {
+      console.log(response);
+      var first_name = response.first_name;
+      var fajax = [];
+      var dumpcont = '';
+      fajax.push( $.ajax({
+        type: 'GET',
+        url: 'http://graph.facebook.com/'+fb_id+'/picture?redirect=false', 
+        contName: first_name,
+        success:  function(data) { 
+          var imgurl = data.data.url;
+          dumpcont = {img: imgurl, first_name: first_name};
+          console.log(dumpcont);
+          FBResponseHandler(dumpcont);
+        }
+      }) );
+      $.when.apply($, fajax).then(function() { FBResponseHandler(dumpcont);});
+    });
+  }    
   
 $.ajaxSetup ({
     cache: false
