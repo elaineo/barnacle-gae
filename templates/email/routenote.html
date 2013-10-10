@@ -1,0 +1,29 @@
+{% extends "email/ebase.html" %}
+{% block content %}
+        <h4><font color='#666'>Route Matches</font></h4>
+        <p>Barnacle drivers have posted routes that match your request! You can make a reservation on their route page.
+        </p>
+        <br>        
+        <table cellpadding='4px'>
+          <tr>
+            <tr><td><b><font color='#666'>Driver</font></b></td>
+            <td><b><font color='#666'>Origin</font></b></td>
+            <td><b><font color='#666'>Destination</font></b></td>
+            <td><b><font color='#666'>Arrival Date</font></b></td>
+            <td></td>
+          </tr>
+            {% for post in posts %}
+            <tr>
+                <td rowspan='2'>
+                <img height="50px" src="{{post.thumb_url}}"><br>
+                {{post.first_name}}</td>
+                <td>{{post.start}}</td>
+                <td>{{post.dest}}</td>
+                <td>{{post.delivend}}</td>
+                <td><a href='http://www.gobarnacle.com/post/{{post.routekey}}'>view</a></td>
+            </tr>
+            {% endfor %}            
+        </table>
+        <br>
+        <p>Change your notification settings and view your requests by going to your <a href='http://www.gobarnacle.com/account'>account page</a>.</p>
+{% endblock %}        

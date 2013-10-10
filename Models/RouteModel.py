@@ -84,6 +84,20 @@ class Route(ndb.Model):
         }
         return route
     
+    def to_search(cls):
+        u = cls.userkey.get()
+        route = {
+            'routekey' : cls.key.urlsafe(),
+            'delivstart' : cls.delivstart.strftime('%b-%d-%y'),
+            'delivend' : cls.delivend.strftime('%b-%d-%y'),
+            'start' : cls.locstart,
+            'dest' : cls.locend,
+            'thumb_url': u.profile_image_url('small'),
+            'first_name' : u.first_name,
+            'fbid' : u.userid
+        }
+        return route             
+    
     def gen_repeat(self):
         r = {}
         r['repeat'] = False

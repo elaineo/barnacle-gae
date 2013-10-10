@@ -31,7 +31,7 @@ class TrackerHandler(BaseHandler):
         elif action=='mobile' and key:
             self.__view_page(key,True)      
         elif action=='web':
-            self.render('track/web.html', **self.params)
+            self.render('track/web/main.html', **self.params)
             
     def post(self, action=None, key=None):       
         if not self.user_prefs:
