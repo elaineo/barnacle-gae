@@ -50,7 +50,8 @@ class RouteHandler(BaseHandler):
                         self.render('forms/fillrequest.html', **self.params)      
                     return
             except: 
-                logging.info(p)
+                logging.error(p)
+            logging.error(p)
             self.abort(403)
             return  
         elif action=='request' and not key:
@@ -90,7 +91,8 @@ class RouteHandler(BaseHandler):
                         self.__create_request(key)   
                     return
             except: 
-                logging.info(p)
+                logging.error(p)
+            logging.error(p)
             self.abort(403)
             return  
         elif action=='delete' and key:
@@ -241,7 +243,7 @@ class RouteHandler(BaseHandler):
             if rtr:
                 add_roundtrip(p)
             fbshare = bool(self.request.get('fbshare'))
-            self.params['share_onload'] = fbshare               
+            self.params['share_onload'] = fbshare    
             self.view_page(p.key.urlsafe())                
         except:
             self.params['error_route'] = 'Invalid Route'
@@ -296,11 +298,12 @@ class RouteHandler(BaseHandler):
         return ptg, ptstr
 
 def add_roundtrip(route):
-    p2 = route
-    p2.locstart = route.locend
-    p2.locend = route.locstart
-    p2.start = route.dest
-    p2.dest = route.start            
+    p2 = Route(userkey=route.userkey, locstart=route.locend, locend=route.locstart, 
+                start=route.dest, dest=route.start, 
+                capacity=route.capacity, details=route.details, 
+                delivstart=route.delivend, delivend=route.delivend, 
+                roundtrip=route.roundtrip,repeatr=route.repeatr,
+                pathpts=route.pathpts)
     create_route_doc(route.key.urlsafe()+'_RT', p2)
 
         
