@@ -4,6 +4,7 @@ miles2m = 1609
 
 signin_reg = '<div class="btn-group fblogin"><button class="btn btn-primary btn-small" style="height: 36px"><div class="icons-fb"></div></button><button class="btn btn-primary btn-small" style="height: 36px">Log In</button></div>'
 
+www_home = 'http://www.gobarnacle.com'
 info_email = 'Barnacle <admin@gobarnacle.com>'
 bcc_email = 'joel@gobarnacle.com'
 email_domain = '@p2ppostal.appspotmail.com'
@@ -42,6 +43,8 @@ decline_do_msg = ' has declined your delivery offer. \n\nDetails of your offer:\
 decline_do_sub = 'Delivery Offer Declined'
 
 welcome_sub = 'Welcome to Barnacle!'
+
+request_note_sub = 'Delivery Request Matches'
 
 MV_geolat = 37.416
 MV_geolon = -122.077

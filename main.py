@@ -26,6 +26,7 @@ from Handlers.Launch.ApplyHandler import *
 from Handlers.Launch.RequestHandler import *
 from Handlers.Launch.ReserveHandler import *
 from Handlers.Launch.CheckoutHandler import *
+from Handlers.Launch.NotifyHandler import *
 
 from Pages.HomePage import *
 from Pages.ContactPage import *
@@ -103,6 +104,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
    ('/contact', ContactPage),
 # Admin
     webapp2.Route('/debug/<action>', handler=DebugUtils),
+    webapp2.Route('/notify/<action>', handler=NotifyHandler),
    ('/summary', SummaryHandler),
    ('/expire', ExpireHandler), EmailHandler.mapping()],
   debug=True)

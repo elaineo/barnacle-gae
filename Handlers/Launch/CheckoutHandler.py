@@ -85,5 +85,5 @@ class CheckoutHandler(BaseHandler):
     def send_receipt(self, email, res, params):
         htmlbody =  self.render_str('email/receipt.html', **params)
         textbody = receipt_txt % params
-        send_info(to=email, subject=confirm_res_sub, 
+        send_info(to_email=email, subject=confirm_res_sub, 
             body=textbody, html=htmlbody)

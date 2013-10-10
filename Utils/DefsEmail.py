@@ -30,3 +30,9 @@ welcome_txt = """
         If you ever have any questions, feel free to contact us at 
         help@gobarnacle.com and we will respond within a day!
 """
+
+requestnote_txt = """
+        Barnacle users have requested deliveries along your route! You can make a delivery offer on their request page.\n\n
+        %(posts)s\n\n
+        Change your notification settings and view your routes by going to your account page: http://www.gobarnacle.com/account.
+"""
