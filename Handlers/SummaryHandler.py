@@ -38,7 +38,7 @@ class SummaryHandler(BaseHandler):
         return '\n'.join([k + ' : ' + str(d[k]) for k in d])
 
     def email_report(self, to_address, body):
-        sender_address = 'summary@gobarnacle.com'
+        sender_address = 'summary@p2ppostal.appspotmail.com'
         timestamp = datetime.now().strftime('%Y/%m/%d')
         subject = 'Daily Summary for %s' % timestamp
         mail.send_mail(sender_address, to_address, subject, body)
