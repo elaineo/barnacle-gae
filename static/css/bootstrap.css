@@ -2177,22 +2177,20 @@ input[type="button"].btn-block {
   color: rgba(255, 255, 255, 0.75);
 }
 .btn-primary {
-  color: #ffffff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #006dcc;
-  background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
-  background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
-  background-image: -o-linear-gradient(top, #0088cc, #0044cc);
-  background-image: linear-gradient(to bottom, #0088cc, #0044cc);
+  background-color: hsl(219, 41%, 31%) !important;
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0044cc', GradientType=0);
-  border-color: #0044cc #0044cc #002a80;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-color: #0044cc;
-  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
-
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#4364a1", endColorstr="#2e456f");
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#4364a1), to(#2e456f));
+  background-image: -moz-linear-gradient(top, #4364a1, #2e456f);
+  background-image: -ms-linear-gradient(top, #4364a1, #2e456f);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #4364a1), color-stop(100%, #2e456f));
+  background-image: -webkit-linear-gradient(top, #4364a1, #2e456f);
+  background-image: -o-linear-gradient(top, #4364a1, #2e456f);
+  background-image: linear-gradient(#4364a1, #2e456f);
+  border-color: #2e456f #2e456f hsl(219, 41%, 27.5%);
+  color: #fff !important;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.23);
+  -webkit-font-smoothing: antialiased;
 }
 .btn-primary:hover,
 .btn-primary:focus,

@@ -60,7 +60,7 @@ class SearchHandler(BaseHandler):
         if enddate:
             delivend = parse_date(enddate)
         else:
-            delivend = delivstart + timedelta(days=1)
+            delivend = delivstart + timedelta(days=90)
             
         start, startstr = self.__get_search_form('start')
         dest, deststr = self.__get_search_form('dest')            
@@ -84,19 +84,13 @@ class SearchHandler(BaseHandler):
             route_ids.append(doc.doc_id)
             d = search_todict(doc)
             p = {  'first_name': d['first_name'],
-                    'post_url': d['post_url'],
-                    'prof_url': d['prof_url'],
                     'thumb_url': d['thumb_url'],
                     'start': d['locstart'],
                     'dest': d['locend'],
-                    'delivby': d['delivby'].strftime('%b-%d-%y')
+                    'delivby': d['delivby'].strftime('%b-%d-%y'),
+                    'fbid' : d['fbid'],
+                    'routekey': d['routekey']
                 }
-            try:
-                routekey = d['routekey']
-                userkey = d['userkey']
-                p['fbid'] = ndb.Key(urlsafe=userkey).get().userid
-            except:
-                logging.info('Search Requests, old result')
             posts.append(p)
 
         self.params['posts'] = posts
