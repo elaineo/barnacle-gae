@@ -1,6 +1,6 @@
 from Handlers.BaseHandler import *
 from Models.RouteModel import *
-from Models.RequestModel import SearchEntry
+from Models.RequestModel import *
 from Utils.RouteUtils import *
 from Utils.SearchUtils import *
 from Utils.SearchScraped import *
@@ -72,26 +72,30 @@ class SearchHandler(BaseHandler):
             self.render('search_requests.html', **self.params)
             return
 
-        if dest:
-            resultsstart = search_points_start_end(dist,'REQUEST_INDEX',delivend.strftime('%Y-%m-%d'),delivstart.strftime('%Y-%m-%d'),'delivby','start',start,'dest', dest)
-            logging.info(resultsstart)
-        else:
-            resultsstart = search_points_start_end(dist,'REQUEST_INDEX',delivend.strftime('%Y-%m-%d'),delivstart.strftime('%Y-%m-%d'),'delivby','start',start,'dest')
-            logging.info(resultsstart)
-        route_ids=[]
         posts = []
-        for doc in resultsstart.results:
-            route_ids.append(doc.doc_id)
-            d = search_todict(doc)
-            p = {  'first_name': d['first_name'],
-                    'thumb_url': d['thumb_url'],
-                    'start': d['locstart'],
-                    'dest': d['locend'],
-                    'delivby': d['delivby'].strftime('%b-%d-%y'),
-                    'fbid' : d['fbid'],
-                    'routekey': d['routekey']
-                }
-            posts.append(p)
+        ## Change this to a query
+        if dest:
+            ### Get a set of low-res pathpts
+            pathpts, precision = RouteUtils().estPath(start, dest,dist)
+            results = Request.search_route(pathpts, delivstart, delivend, precision)
+            logging.info(results)        
+            for r in results:
+                posts.append(r.to_search())
+        else:
+            results = search_points_start(dist,'REQUEST_INDEX',delivend.strftime('%Y-%m-%d'),delivstart.strftime('%Y-%m-%d'),'delivby','start',start)
+            logging.info(results)
+
+            for doc in results.results:
+                d = search_todict(doc)
+                p = {  'first_name': d['first_name'],
+                        'thumb_url': d['thumb_url'],
+                        'start': d['locstart'],
+                        'dest': d['locend'],
+                        'delivby': d['delivby'].strftime('%b-%d-%y'),
+                        'fbid' : d['fbid'],
+                        'routekey': d['routekey']
+                    }
+                posts.append(p)
 
         self.params['posts'] = posts
         self.render('searchqres.html', **self.params)
@@ -127,7 +131,8 @@ class SearchHandler(BaseHandler):
                 if dist0 < dist1:
                     keepers.append(c)
         results = keepers
-
+        logging.info(results)
+        
         # store this search
         sr = SearchEntry(remoteip = remoteip, delivby=delivend, start=start, 
                     dest=dest, locstart=startstr,locend=deststr).put()
@@ -187,8 +192,7 @@ class SearchHandler(BaseHandler):
         destres = search_pathpts(sr.dist,'ZIM_INDEX',sr.delivby.strftime('%Y-%m-%d'),'delivend',sr.dest).results
         #get intersection
         results = search_intersect(startres, destres)
-        # Check for correct start/dest (startpt should be closer to start than dest)
-        logging.info(results)
+
         keepers = []
         for z in results:
             startpt = field_byname(z, "start")

@@ -2,6 +2,7 @@ from google.appengine.ext import ndb
 from google.appengine.api import search
 from Handlers.BaseHandler import *
 from Utils.Defs import miles2m
+from Utils.RouteUtils import roundPoint
 import logging
 
 class Request(ndb.Model):
@@ -73,8 +74,38 @@ class Request(ndb.Model):
             route.update(udict)
         return route
         
+    def to_search(cls):
+        u = cls.userkey.get()
+        route = {
+            'routekey' : cls.key.urlsafe(),
+            'delivby' : cls.delivby.strftime('%b-%d-%y'),
+            'start' : cls.locstart,
+            'dest' : cls.locend,
+            'thumb_url': u.profile_image_url('small'),
+            'first_name' : u.first_name,
+            'fbid' : u.userid
+        }
+        return route        
+        
     def __eq__(self, other):
         return self.userid==other.userid and self.created==other.created
+        
+    ### Search utils ::...........................::::::::::::::::::::::
+    @classmethod
+    def search_route(cls, pathpts, delivstart, delivend, precision):
+        results = []
+        qall = cls.query().filter(cls.delivby > delivstart and cls.delivby < delivend)
+        logging.info(pathpts)
+        for q in qall:            
+            start = roundPoint(q.start, precision)
+            dest = roundPoint(q.dest, precision)
+            logging.info(start)
+            logging.info(dest)
+            if start in pathpts and dest in pathpts:
+                # Make sure it's going the right way
+                if pathpts.index(start) < pathpts.index(dest):
+                    results.append(q)
+        return results
        
 #save what they searched
 class SearchEntry(ndb.Model):

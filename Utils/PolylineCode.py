@@ -45,7 +45,7 @@ def _encode_value(value):
     # Step 9-10
     return (chr(chunk + 63) for chunk in chunks)
  
-def poly_decode(point_str):
+def poly_decode(point_str, precision):
     '''Decodes a polyline that has been encoded using Google's algorithm
     http://code.google.com/apis/maps/documentation/polylinealgorithm.html    
     '''
@@ -97,5 +97,19 @@ def poly_decode(point_str):
         prev_y += coords[i]
         # a round to 6 digits ensures that the floats are the same as when 
         # they were encoded  !!switch x, y
-        points.append(ndb.GeoPt(lat=float(prev_y),lon=float(prev_x)))
-    return points  
+        if precision<0:
+            lat = prev_y
+            lon = prev_x
+        else:
+            lat = round(prev_y,precision)
+            lon = round(prev_x,precision)
+        points.append(ndb.GeoPt(lat=lat,lon=lon))
+    if precision < 0:
+        return points
+    else:
+        return f7(points)
+    
+def f7(seq):
+    seen = set()
+    seen_add = seen.add
+    return [ x for x in seq if x not in seen and not seen_add(x)]    

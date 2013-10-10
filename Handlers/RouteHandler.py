@@ -237,25 +237,25 @@ class RouteHandler(BaseHandler):
             p.repeatr = rr
         else:
             p.repeatr = None
-        try:                
-            p.put()            
-            create_route_doc(p.key.urlsafe(), p)
-            if rtr:
-                add_roundtrip(p)
-            fbshare = bool(self.request.get('fbshare'))
-            self.params['share_onload'] = fbshare    
-            self.view_page(p.key.urlsafe())                
-        except:
-            self.params['error_route'] = 'Invalid Route'
-            self.params['locstart'] = startstr
-            self.params['locend'] = deststr
-            self.params['details'] = details
-            self.params['delivstart'] = startdate
-            self.params['delivend'] = enddate
-            self.params['capacity'] = capacity
-            self.params['rt'] = int(rtr)
-            self.params['route_title'] = 'Edit Route'
-            self.render('forms/fillpost.html', **self.params)           
+        # try:                
+        p.put()            
+        create_route_doc(p.key.urlsafe(), p)
+        if rtr:
+            add_roundtrip(p)
+        fbshare = bool(self.request.get('fbshare'))
+        self.params['share_onload'] = fbshare    
+        self.view_page(p.key.urlsafe())                
+        # except:
+            # self.params['error_route'] = 'Invalid Route'
+            # self.params['locstart'] = startstr
+            # self.params['locend'] = deststr
+            # self.params['details'] = details
+            # self.params['delivstart'] = startdate
+            # self.params['delivend'] = enddate
+            # self.params['capacity'] = capacity
+            # self.params['rt'] = int(rtr)
+            # self.params['route_title'] = 'Edit Route'
+            # self.render('forms/fillpost.html', **self.params)           
             
     def view_page(self,keyrt):
         if keyrt.endswith('_RT'):

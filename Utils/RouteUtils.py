@@ -57,17 +57,34 @@ class RouteUtils():
         #locs = locs+'&waypoints='
         dir_url = directions_url + locs + '&sensor=false'
         req = urlfetch.fetch(dir_url)
-        #logging.info(req.content)        
         results = json.loads(req.content)['routes'][0]['legs'][0]
+        precision = -1
         for s in results['steps']:
-            distance = s['distance']['value']   #dist in metres
+            # distance = s['distance']['value']   #dist in metres
             polyline = s['polyline']['points']
-            pathsegment = poly_decode(polyline)[0::100]
+            pathsegment = poly_decode(polyline, precision)[0::100]              
             lat = s['end_location']['lat']
             lon = s['end_location']['lng']
             pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
             pathpts = pathpts + pathsegment
         return pathpts
+
+    def estPath(self,start,dest, fudge):
+        """ Precision of path determined by total dist.
+          0.1 ~ 10 miles <-- improve later """
+        locs='origin=' + str(start) + '&destination=' + str(dest)
+        dir_url = directions_url + locs + '&sensor=false'
+        req = urlfetch.fetch(dir_url)
+        results = json.loads(req.content)['routes'][0]['legs'][0]
+        dist = results['distance']['value']   #dist in metres
+        precision = precisionDist(dist/1609 + fudge)
+        pathpts = [roundPoint(start,precision)]        
+        for s in results['steps']:
+            polyline = s['polyline']['points']
+            pathsegment = poly_decode(polyline, precision)              
+            pathpts = pathpts + pathsegment
+        pathpts.append(roundPoint(dest,precision))
+        return pathpts, precision
         
     def dumproute(self,r):
         route = {}
@@ -225,3 +242,14 @@ def HaversinDist(startlat, startlon, destlat, destlon):
     arc = math.acos( cos )
     # multiply by earth's radius in miles
     return arc*3960
+
+def precisionDist(dist):
+    try:
+        p = round(6-2*math.log(dist)/math.log(10))
+    except:
+        p=6
+    return int(min(6, max(0, p)))
+
+def roundPoint(point, prec):
+    p = ndb.GeoPt(lat=round(point.lat,prec),lon=round(point.lon,prec))
+    return p
