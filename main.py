@@ -36,6 +36,7 @@ from Handlers.ReviewHandler import *
 
 sys.path.append('/Pages')
 
+
 app = webapp2.WSGIApplication([('/', HomePage),
                                 ('/home', GuestPage),
                                 ('/splash', SplashPage),

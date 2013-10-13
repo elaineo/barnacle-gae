@@ -20,6 +20,8 @@ class ProfileHandler(BaseHandler):
         elif action=='drivestart':
             self.render('drivestart.html',**self.params)
             return
+        elif action=='drive':
+            self.__index()
         else:
             self.__public(key)
           

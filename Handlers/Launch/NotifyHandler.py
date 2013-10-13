@@ -48,7 +48,7 @@ class NotifyHandler(BaseHandler):
             unroll=unroll + "\n" + p['start'] + "\t" + p['dest'] + "\t" + p['delivend'] + "\t" + www_home + "/post/"+p['routekey']
         params = {'posts': posts}
         unrollparams = {'posts': unroll}
-        self.send_match2s('elaine.ou@gmail.com', params, unrollparams)
+        self.send_match2s('joel@gobarnacle.com', params, unrollparams)
         
     def send_match2d(self, email, params, unrollparams):
         htmlbody =  self.render_str('email/requestnote.html', **params)

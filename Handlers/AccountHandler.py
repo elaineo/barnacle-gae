@@ -81,7 +81,7 @@ class SignupPage(BaseHandler):
             # make user account
             up = UserPrefs.by_userid(fbid)
             if not up:
-                sett = UserSettings(notify=[1,2])
+                sett = UserSettings(notify=[1,2,3,4])
                 up = UserPrefs(account_type = 'fb', email = email, userid = fbid, first_name = first_name, last_name = last_name, img_id = -1, settings=sett, location = location, fblocation = location)
                 up.put()
                 self.user_prefs = up
