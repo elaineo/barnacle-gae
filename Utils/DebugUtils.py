@@ -196,7 +196,6 @@ class DebugUtils(BaseHandler):
             self.write(json.dumps(response))            
         elif action=='createz':
             d = json.loads(self.request.body)
-            logging.info(d)
             url = d['url']
             fbid = d['fbid']
             details = d['details']

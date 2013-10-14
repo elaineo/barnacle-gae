@@ -239,7 +239,11 @@ def HaversinDist(startlat, startlon, destlat, destlon):
     
     cos = (math.sin(phi1)*math.sin(phi2)*math.cos(theta1 - theta2) + 
            math.cos(phi1)*math.cos(phi2))
-    arc = math.acos( cos )
+    try:
+        arc = math.acos( cos )
+    except:
+        logging.error(cos)
+        arc = 1
     # multiply by earth's radius in miles
     return arc*3960
 

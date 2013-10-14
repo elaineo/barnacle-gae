@@ -48,8 +48,8 @@ class ProfileHandler(BaseHandler):
         if userprefs:
             self.params.update(userprefs.params_fill(self.params))
             self.params.update(fill_prof_stub_params(userprefs.key))            
-            self.params['msg'] = m
             self.params['fbfriend'] = False
+            self.params['m'] =m
             if self.user_prefs:
                 self.params['fbaccount'] = True
                 if self.user_prefs.key != userprefs.key:

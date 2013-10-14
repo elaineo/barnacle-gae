@@ -41,9 +41,7 @@ $(document).ready(function() {
   $(window).load(function () {
 	if(window.location.hash) {
 	  var loginBox = window.location.hash;
-      if (loginBox=='#signin-box') {
-        display_modal(loginBox);
-      }
+      display_modal(loginBox);      
 	}			 
   });
 });

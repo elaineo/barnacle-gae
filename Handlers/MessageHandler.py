@@ -24,28 +24,35 @@ class MessageHandler(BaseHandler):
         if not self.user_prefs:
             self.redirect('/#signin-box')
         receiver = self.request.get('receiver')
-        if not receiver:
+        cc = bool(self.request.get('cc'))
+        try:
+            receiver = ndb.Key(urlsafe=receiver)
+        except:
             self.abort(403)
-            return
-        receiver = ndb.Key(urlsafe=receiver)
+            return            
         subject = self.request.get('subject')
         if len(subject) == 0:
             subject = '(no subject)'
         msg = self.request.get('msg')
         sender = self.user_prefs.key
         create_msg(sender, receiver, subject, msg)
+        if cc:  # cuz cc doesn't work. i'm too sick to figure it out.
+            create_msg(sender, sender, subject, msg)
         recv = receiver.get()
-        response = { 'status': 'ok',
-                    'next_url': recv.profile_url() + '?msg=1' }
+        self.redirect(recv.profile_url() + '?msg=1')
+        # response = { 'status': 'ok',
+                    # 'next_url': recv.profile_url() + '?msg=1' }
         logging.info('New Message from ' + sender.urlsafe() + ' to ' + receiver.urlsafe())
-        self.response.headers['Content-Type'] = "application/json"
-        self.write(json.dumps(response))            
+        # self.response.headers['Content-Type'] = "application/json"
+        # self.write(json.dumps(response))            
 
     def __blank(self):
         receiver = self.request.get('receiver')
         subject = self.request.get('subject')
         msg = self.request.get('msg')
-        response = {}
+        if not receiver:
+            self.redirect('/account')
+            return
         self.params['recv_name'] = ndb.Key(urlsafe=receiver).get().first_name
         self.params['receiver'] = receiver
         self.params['subject'] = subject
