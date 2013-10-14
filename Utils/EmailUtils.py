@@ -8,9 +8,10 @@ from Utils.Defs import confirm_res_sub, info_email, bcc_email
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 
 class EmailHandler(InboundMailHandler):
-    def receive(self, mail_message):
-        sender_email = extract_email(mail_message.sender)
-        sender_email = encode_email_address(sender_email)
+    def receive(self, mail_message):        
+        logging.info(mail_message.original)
+        extr_email = extract_email(mail_message.sender)
+        sender_email = encode_email_address(extr_email)
         
         to_email = extract_email(mail_message.to)        
         to_email = decode_email_address(to_email)
@@ -35,8 +36,15 @@ def extract_email(email):
     else:
         return email
 def encode_email_address(email):
-    k = UserPrefs.by_email(email)
+    # Patch for if already encoded.
+    # I don't know why it does this and I am too sick to figure it out
+    if email_domain in email:
+        id = int(email.split('@')[0])
+        k = UserPrefs.get_by_id(id)
+    else:
+        k = UserPrefs.by_email(email)
     if k is None:  ##this is going to be an issue for ppl who don't have email addr
+        logging.info("Not found: "+ email)
         return info_email
     return k.first_name + ' via Barnacle <' + str(k.key.id()) + email_domain + '>'
 def decode_email_address(email):

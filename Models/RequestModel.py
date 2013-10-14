@@ -99,8 +99,6 @@ class Request(ndb.Model):
         for q in qall:            
             start = roundPoint(q.start, precision)
             dest = roundPoint(q.dest, precision)
-            logging.info(start)
-            logging.info(dest)
             if start in pathpts and dest in pathpts:
                 # Make sure it's going the right way
                 if pathpts.index(start) < pathpts.index(dest):

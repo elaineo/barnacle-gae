@@ -84,6 +84,9 @@ class RouteHandler(BaseHandler):
                 self.abort(400)
                 return          
             try:
+                if not self.user_prefs:
+                    self.redirect('/post#signin-box')
+                    return    
                 if p.userkey == self.user_prefs.key:
                     if p.__class__.__name__ == 'Route':
                         self.__create_route(key)   
@@ -92,6 +95,8 @@ class RouteHandler(BaseHandler):
                     return
             except: 
                 logging.error(p)
+                self.abort(403)
+                return  
             logging.error(p)
             self.abort(403)
             return  
