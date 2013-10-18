@@ -11,10 +11,10 @@ from Utils.ConfirmUtils import *
 
 class TrackerHandler(BaseHandler):
     def get(self, action=None, key=None):
-        if action=='updateloc':
-            self.__debugcheckin()  
+        if action=='update':
+            self.render('track/web/update.html', **self.params)
         elif action=='create':
-            self.__debug()     
+            self.render('track/web/create.html', **self.params)
         elif action=='getroutes':
             self.__getroutes()
         elif action=='jsonroute' and key:

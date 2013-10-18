@@ -25,5 +25,5 @@ class ContactPage(BaseHandler):
             subject = "Feedback"
         text = u'From: %s (%s)' % (name, email)
         text += u'\n' + ('-' * len(text)) + '\n\n' + msg + '\n\n' + remoteip
-        mail.send_mail('joel@gobarnacle.com','joel@gobarnacle.com', subject=subject, body=text)
+        mail.send_mail('help@gobarnacle.com','help@gobarnacle.com', subject=subject, body=text)
         

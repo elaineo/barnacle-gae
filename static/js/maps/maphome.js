@@ -3,7 +3,7 @@ function initialize_home(mapURL) {
         center: new google.maps.LatLng(40, -99),
         zoom: 4,
         mapTypeId: google.maps.MapTypeId.TERRAIN,
-        disableDefaultUI: 'True',
+        disableDefaultUI: true
     };
     var map = new google.maps.Map(document.getElementById("map-canvas"),mapOptions);
       var marker0 = new google.maps.Marker({

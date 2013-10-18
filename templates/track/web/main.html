@@ -1,9 +1,17 @@
 {% extends "track/base.html" %}
+{% block title%}Barnacle Driver Tracker{% endblock %}
 
 {% block content %}
 <div class="row-fluid">
-    <button id='how_btn' class="btn btn-main">Create Route</button>
-    <button id='request_btn' class="btn btn-main">Track Drive</button>
-    <button id='post_btn' class="btn btn-main">Manage Routes</button>
+    <button id='create_btn' class="btn btn-main">Create Route</button>
+    <button id='track_btn' class="btn btn-main">Track Drive</button>
+    <button id='manage_btn' class="btn btn-main">Manage Routes</button>
 </div>
+<script>
+$(document).ready(function(){
+  click_redirect('#create_btn','/track/create');
+  click_redirect('#track_btn','/track/update');
+  click_redirect('#manage_btn','/track/manage');
+});
+</script>
 {% endblock %}

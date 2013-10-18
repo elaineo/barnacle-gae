@@ -107,6 +107,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
     webapp2.Route('/debug/<action>', handler=DebugUtils),
     webapp2.Route('/notify/<action>', handler=NotifyHandler),
    ('/summary', SummaryHandler),
+   ('/kickstart', Kickstarter),
    ('/expire', ExpireHandler), EmailHandler.mapping()],
   debug=True)
 

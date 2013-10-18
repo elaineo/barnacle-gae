@@ -34,6 +34,9 @@ handlers:
   script: Utils.EmailUtils.app
 #  login: admin
 
+builtins:
+- remote_api: on
+
 inbound_services:
 - mail
   

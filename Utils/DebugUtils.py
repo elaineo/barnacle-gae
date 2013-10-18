@@ -47,6 +47,12 @@ class DebugUtils(BaseHandler):
             for d in data:
                 d.key.delete()                
             self.write('users gone.')
+        elif action=='updatenotify':
+            data = UserPrefs.query(UserPrefs.creation_date < datetime.now()-timedelta(days=5))
+            for d in data:
+                d.settings.notify.append(4)
+                d.put()
+            return
         elif action=='clearreqs':
             data = DeliveryOffer.query()
             for d in data:

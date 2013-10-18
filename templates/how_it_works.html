@@ -15,8 +15,9 @@
   <div class="span8">
 <p>Barnacle is a distributed delivery network that matches drivers with people who need to send parcels or receive shipments. Bulky or fragile items may be uneconomical to mail, or a hassle to wrap in packaging. Give them their own private seats in passenger vehicles! </p>
 <br>
-    <div class="row-fluid  hidden-phone"><div class="span6 offset3">
-        <img src='/static/img/how_drive.png'>
+    <div class="row-fluid  hidden-phone"><div class="span7 offset1">
+        Current Driver Network:
+        <div id="map-canvas" style='height:300px;width:450px'></div>
     </div></div>
   </div>
 </div>
@@ -255,9 +256,13 @@
     
   </div>
 </div>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script type="text/javascript" src="/static/js/maps/maphomesm.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    click_redirect('.post_btn','/drive');
+    var mapURL = '/post/jsonall';
+    initialize_home(mapURL);
+    click_redirect('#post_btn','/drive');
 });
 </script>
 {% endblock %}

@@ -1,0 +1,131 @@
+{% extends "track/base.html" %}
+{# Create a Route #}
+{% block title%}{{route_title}}{% endblock %}
+
+{% block content %}
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places"></script>
+<script src="/static/js/maps/mapsloccreate.js"></script>
+<link rel="stylesheet" href="/static/css/jquery-ui.css" />
+   
+<div class="row">
+    <div class="span10 offset1">
+ <form enctype="multipart/form-data" method="post" id='route_form' class="form-horizontal">
+ 
+    <div class="control-group">
+        <label class="control-label" for="start">Start Address:</label>
+        <div class="controls">
+          <input class="input" type="text" name="start" id='map0Field' value="Tap to select" disabled>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="dest">Destination:</label>
+        <div class="controls">
+          <input class="input" type="text" name="dest" id='map1Field' value="Tap to select" disabled>          
+        </div>
+    </div>
+    <div id="map-canvas" style='width:400px;height:300px'></div>
+    <div class="control-group">
+        <label class="control-label" id='endlbl'>Arrival Date:</label>
+        <div class="controls">
+          <input type="text" name="delivend" value="{{delivend}}" id="enddate" autocomplete="off">
+        </div>
+    </div>    
+
+    <input type='hidden' name="startlat" id="startlat">
+    <input type='hidden' name="startlon" id="startlon">
+    <input type='hidden' name="startstr" id="startstr">
+    <input type='hidden' name="destlat" id="destlat">
+    <input type='hidden' name="destlon" id="destlon">
+    <input type='hidden' name="deststr" id="deststr">        
+    <div class='row-fluid'>
+      <div class='span2 offset1'>
+	<button type="submit" class="btn" id='route_btn' disabled='disabled'>Submit</button>
+      </div>
+    </div>	
+</form>
+</div>
+</div>
+  <script>
+$(document).ready(function(){
+    $( "#enddate" ).datepicker({
+      minDate: 0,
+      maxDate: "+1Y",
+      changeMonth: true,
+      onSelect: function() { validForm(); }
+    });   
+    $('input').focusout(function() { validForm(); });
+    $('input').click(function() { validForm(); });
+    $('#route_btn').click(function(event) {
+      event.preventDefault();
+      loggedIn = checkLoginStatus();
+      if (loggedIn) {    
+        var ts = Date.now()/1000;
+          var tzURL = "https://maps.googleapis.com/maps/api/timezone/json?location=" + $('#destlat').val() + "," + $('#destlon').val() + "&timestamp=" + ts + "&sensor=true";
+          console.log(tzURL);
+          var TimeZone = "-28800";
+          $.ajax({
+            type: "GET",
+            url: tzURL,
+            success: function(response) {
+                if (response.status == "OK") {
+                    TimeZone = response.rawOffset;
+                }
+            }
+          }).always(function() {
+          
+                        tzoffset = int(data['tzoffset'])
+            startlat = float(data['startlat'])
+            startlon = float(data['startlon'])
+            destlat = float(data['destlat'])
+            destlon = float(data['destlon'])
+            locstart = data['locstart']
+            locend = data['locend']
+            delivend = parse_date(data['delivend'])
+            $.ajax({
+            type: "POST",
+            url: '/track/create',
+            success: function(response) {
+                if (response.status == "OK") {
+                    TimeZone = response.rawOffset;
+                }
+              }
+            })
+          });    
+      } else {
+        loginPlease();
+      }
+    });    
+});
+function validForm() {
+    var empty = false;
+    $('input').each(function() {
+      if ($(this).val() == '') 
+        empty = true;
+    });
+    if (empty) 
+      $('#route_btn').attr('disabled', 'disabled'); 
+    else { 
+      $('#route_btn').removeAttr('disabled'); }
+}    
+
+    var tzURL = "https://maps.googleapis.com/maps/api/timezone/json?location=";
+    tzURL = tzURL + $('#destlat').val() + "," + $('#destlon').val() + "&timestamp=";
+    var ts = Date.now();
+    tzURL = tzURL + ts + "&sensor=true";
+    
+      $.ajax({
+        type: "GET",
+        url: "https://maps.googleapis.com/maps/api/timezone/json",
+        data: "location=" + $('#destlat').val() + "," + $('#destlon').val() + "&timestamp=" + Date.now() + "&sensor=true",
+        success: function(response) {
+            console.log(response);
+            //if (response.status == "OK") {
+              //  TimeZone = response.rawOffset;
+            //}
+        }
+      });    
+
+
+  </script>
+{% endblock %}
