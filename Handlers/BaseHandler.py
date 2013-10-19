@@ -37,9 +37,6 @@ class BaseHandler(webapp2.RequestHandler):
         if self.request.charset == 'utf-8json':
             self.request.charset = 'utf-8'
             logging.warn(self.request.body)
-        if len(self.request.content_type) == 0:
-            self.request.content_type = 'application/json'
-            logging.warn(self.request.body)
         self.params = {} # parameters to pass to template renderer
         self.set_current_user()
         self.fill_header()
