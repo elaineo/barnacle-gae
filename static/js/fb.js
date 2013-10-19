@@ -11,7 +11,7 @@
       }
     },{scope: 'email,user_location'});
    }
-  
+
   window.fbAsyncInit = function() {
     FB.init({
       appId      : '540602052657989', // App ID
@@ -21,16 +21,16 @@
       xfbml      : true  // parse XFBML
     });
     $(document).trigger('fbload');
-    
+
   // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
   // for any authentication related change, such as login, logout or session refresh. This means that
-  // whenever someone who was previously logged out tries to log in again, the correct case below 
-  // will be handled. 
+  // whenever someone who was previously logged out tries to log in again, the correct case below
+  // will be handled.
   FB.Event.subscribe('auth.authResponseChange', function(response) {
-    // Here we specify what we do with the response anytime this event occurs. 
+    // Here we specify what we do with the response anytime this event occurs.
     if (response.status === 'connected') {
       // The response object is returned with a status field that lets the app know the current
-      // login status of the person. In this case, we're handling the situation where they 
+      // login status of the person. In this case, we're handling the situation where they
       // have logged in to the app.
       console.log('Connected');
     } else if (response.status === 'not_authorized') {
@@ -51,7 +51,7 @@
      js.src = "//connect.facebook.net/en_US/all.js";
      ref.parentNode.insertBefore(js, ref);
    }(document));
- 
+
   function createFBAcct() {
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me?fields=first_name,last_name,email,id,username', function(response) {
@@ -59,20 +59,20 @@
       //var data = "first_name="+response.first_name+"&last_name="+response.last_name+"&id="+response.id;
       $.ajax({
         type: "POST",
-        dataType: "json",  
-        contentType: "json", 
+        dataType: "json",
+        contentType: "application/json",
         url: "/signup/fb",
         data: JSON.stringify(response),
         success: function(response) {
             // if (response.status == "new" || response.status == "existing") {
                 // closeModal();
-                // refresh_head();     
+                // refresh_head();
                 // return true;
             if (response.status == "new") {
                 // window.location.replace("/splash");
                 closeModal();
                 var nextLoc = $( 'body' ).data( "nextLoc");
-                if (typeof nextLoc != 'undefined') 
+                if (typeof nextLoc != 'undefined')
                     window.location.replace(nextLoc);
                 refresh_head();
                 // window.location.replace("/profile");
@@ -80,10 +80,10 @@
                 // window.location.replace(window.location.href.split('#')[0]);
                 closeModal();
                 var nextLoc = $( 'body' ).data( "nextLoc");
-                if (typeof nextLoc != 'undefined') 
+                if (typeof nextLoc != 'undefined')
                     window.location.replace(nextLoc);
                 refresh_head();
-            } 
+            }
             else {
                 console.log('FB Account failed.');
                 return false
@@ -92,26 +92,26 @@
     });
     });
   }
-    
+
   function dumpFriends(fb_id, dumpsite, max) {
     FB.api('/me/mutualfriends/'+fb_id, function(response) {
       console.log(response);
       var friends = response.data;
       var fdump='';
       var numfriends = response.data.length;
-      if (numfriends == 0) {$(dumpsite).html('None');} 
+      if (numfriends == 0) {$(dumpsite).html('None');}
       else {
-          if (numfriends > max) { 
-            friends = friends.slice(0,max); 
-            var plusStr = '<span class="friendsplus"> +'+(numfriends-max).toString() + '</span>'; } 
+          if (numfriends > max) {
+            friends = friends.slice(0,max);
+            var plusStr = '<span class="friendsplus"> +'+(numfriends-max).toString() + '</span>'; }
           else {var plusStr = '';}
           var fajax = [];
-          for (f in friends) { 
+          for (f in friends) {
             fajax.push( $.ajax({
               type: 'GET',
-              url: 'http://graph.facebook.com/'+friends[f].id+'/picture?redirect=false', 
+              url: 'http://graph.facebook.com/'+friends[f].id+'/picture?redirect=false',
               contName: friends[f].name,
-              success:  function(data) { 
+              success:  function(data) {
                 var imgurl = data.data.url;
                 fdump += '<img src="'+imgurl+'" title="'+this.contName+'">&nbsp; '; }
               }) );
@@ -120,8 +120,8 @@
       }
     });
   }
-  
-  function dumpThumb(fb_id, dumpsite) {    
+
+  function dumpThumb(fb_id, dumpsite) {
     FB.api('/'+fb_id, function(response) {
       console.log(response);
       var first_name = response.first_name;
@@ -130,18 +130,18 @@
       var dumpcont = '';
       fajax.push( $.ajax({
         type: 'GET',
-        url: 'http://graph.facebook.com/'+fb_id+'/picture?redirect=false', 
+        url: 'http://graph.facebook.com/'+fb_id+'/picture?redirect=false',
         contName: first_name,
-        success:  function(data) { 
+        success:  function(data) {
           var imgurl = data.data.url;
           dumpcont = '<img height="50px" src="'+imgurl+'"><br>'+first_name;
         }
       }) );
       $.when.apply($, fajax).then(function() { $(dumpsite).html(dumpcont);});
     });
-  }  
-  
-  function dumpResponse(fb_id) {    
+  }
+
+  function dumpResponse(fb_id) {
     FB.api('/'+fb_id, function(response) {
       console.log(response);
       var first_name = response.first_name;
@@ -149,9 +149,9 @@
       var dumpcont = '';
       fajax.push( $.ajax({
         type: 'GET',
-        url: 'http://graph.facebook.com/'+fb_id+'/picture?redirect=false', 
+        url: 'http://graph.facebook.com/'+fb_id+'/picture?redirect=false',
         contName: first_name,
-        success:  function(data) { 
+        success:  function(data) {
           var imgurl = data.data.url;
           dumpcont = {img: imgurl, first_name: first_name};
           console.log(dumpcont);
@@ -160,15 +160,15 @@
       }) );
       $.when.apply($, fajax).then(function() { FBResponseHandler(dumpcont);});
     });
-  }    
-  
+  }
+
 $.ajaxSetup ({
     cache: false
 });
 
 $(document).ready(function(){
   $('.fblogin').click(function() {
-    fbLogin();    
+    fbLogin();
   });
   $('#signoutFB').click(function() {
     // check if we have a fb cookie
@@ -179,7 +179,7 @@ $(document).ready(function(){
         });
     }
   });
-  
+
 });
 
 function click_facebook(btn_id,loc) {
