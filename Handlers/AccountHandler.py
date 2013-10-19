@@ -5,15 +5,16 @@ import hashlib
 import logging
 import json
 
+
 class SignupPage(BaseHandler):
     """ User sign up page """
     def get(self):
         # we should never end up here.
         if self.user_prefs: # if user is logged in, redirect to profile
             self.redirect("/profile")
-        else: 
+        else:
             self.redirect('/')
-                    
+
     def post(self,action=None):
         if not action:
             self.__post()
@@ -21,7 +22,7 @@ class SignupPage(BaseHandler):
             self.__mobile()
         elif action=='fb':
             self.__fb()
-            
+
     def __post(self):
         # retrieve information
         password = self.request.get('password')
@@ -43,7 +44,7 @@ class SignupPage(BaseHandler):
         elif password != verify:
             response['errorpw1'] = "Your passwords didn't match."
             response['has_error'] = "verify"
-        if response['has_error']==0: 
+        if response['has_error']==0:
             # make user account
             u = UserAccounts(email = email, pwhash = make_pw_hash(email, password))
             u.put()
@@ -54,18 +55,25 @@ class SignupPage(BaseHandler):
             self.set_current_user()
             self.fill_header()
         self.response.headers['Content-Type'] = "application/json"
-        self.write(json.dumps(response))            
+        self.write(json.dumps(response))
     def __fb(self):
-        # retrieve information   
-        data = json.loads(unicode(self.request.body, errors='replace'))
-        logging.info(data)        
+        # retrieve information
+        # Fix for Bad content type: '; charset=utf-8'
+        if len(self.request.content_type) == 0:
+            fp = self.request.environ['webob._body_file'][1]
+            fp.reset()
+            buf = fp.read()
+            data = json.loads(buf)
+        else:
+            data = json.loads(unicode(self.request.body, errors='replace'))
+        logging.info(data)
         first_name = data['first_name']
         last_name = data['last_name']
-        fbid = data['id']     
+        fbid = data['id']
         try:
             email = data['email']
         except:
-            try: 
+            try:
                 username = data['username']
                 email = username+'@facebook.com'
             except:
@@ -96,10 +104,10 @@ class SignupPage(BaseHandler):
             self.set_current_user()
             self.fill_header()
         self.response.headers['Content-Type'] = "application/json"
-        self.write(json.dumps(response))            
+        self.write(json.dumps(response))
 
     def __mobile(self):
-        self.response.headers['Content-Type'] = "application/json"  
+        self.response.headers['Content-Type'] = "application/json"
         # retrieve information
         password = self.request.get('password')
         email = self.request.get('email')
@@ -156,9 +164,9 @@ class SigninPage(BaseHandler):
             response['has_error'] = 'email'
             response['erroremail'] = 'invalid login'
         self.response.headers['Content-Type'] = "application/json"
-        self.write(json.dumps(response))            
+        self.write(json.dumps(response))
     def __mobile(self,email,password):
-        self.response.headers['Content-Type'] = "application/json"  
+        self.response.headers['Content-Type'] = "application/json"
         if email and password:
             u = UserAccounts.login(email, password)
             if u:
@@ -171,11 +179,11 @@ class SigninPage(BaseHandler):
         mm = {'status' : 'fail'}
         self.write(json.dumps(mm))
         return
-                
+
 
 class SignoutPage(BaseHandler):
     """ User Sign Out Page """
     def get(self):
         logging.info('Log out')
         self.logout() # deletes cookie
-        self.redirect('/')    
+        self.redirect('/')
