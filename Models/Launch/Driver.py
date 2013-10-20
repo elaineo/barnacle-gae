@@ -32,7 +32,14 @@ class Driver(ndb.Model):
             params['networks'] = self.fbnetworks
         else:
             params['networks'] = []
-        #params['deliv_completed'] = self.completed
+        
+        u = self.userkey.get()
+        params['first_name'] = u.first_name
+        params['deliv_completed'] = u.deliveries_completed()
+        params['profile_url'] = u.profile_url()
+        params['profile_thumb'] = u.profile_image_url('small')
+        params['fbid'] = u.userid
+        params['key'] = self.userkey
         return params
 
     @classmethod

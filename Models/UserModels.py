@@ -165,7 +165,7 @@ class UserPrefs(ndb.Model):
         params['email'] = self.email
         params['deliv_completed'] = self.deliveries_completed()+self.deliveries_sent()
         params['notify'] = {'notify' : self.get_notify() }
-        params['profile_thumb'] = self.profile_image_url(mode='small')        
+        params['profile_thumb'] = self.profile_image_url(mode='small')    
         return params
     @classmethod
     def by_userid(cls, email):

@@ -1,5 +1,5 @@
 {% extends "launch/baseblank.html" %}
-{% block title%}Checkout{% endblock %}
+{% block title%}Submit a Reservation Request{% endblock %}
 {% block content %}
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
@@ -21,6 +21,14 @@ $(document).ready(function(){
 <link rel="stylesheet" href="/static/css/drivers.css" />
 <link rel="stylesheet" href="/static/css/checkout.css" />
 <link rel="stylesheet" href="/static/css/jquery-ui.css" />
+<div class="row-fluid greyback">
+  <div class='span10 offset1'>
+    <h4>How this Works</h4>
+    <p>Provide your reservation details below. <b>You will only be charged if the driver accepts your request.</b> They'll have 24 hours to reply. You will be able to cancel your reservation anytime before the driver accepts.</p>
+    <p>If the driver declines or does not respond, no charge is made. </p><br>
+   </div>
+</div>
+
 <div class="row-fluid" style='height:40px'></div>
 <div class="row-fluid">
   <div class='span10 offset1'>
@@ -47,16 +55,16 @@ $(document).ready(function(){
     </div>
     <div class="row-fluid">
  <form enctype="multipart/form-data" method="post" id='cc_form' class="form-horizontal" action="{{checkout_action}}">
-    <h2>Checkout</h2>
+    <h4>Reservation Request</h4>
     <div class="row-fluid">
       <div class='span2'>Origin:</div>
       <div class='span6'><p>{{ locstart }}
-      <br><small>{{ delivstart }}</small></p></div>
+      <br><small>{{ dropoffstr }}</small></p></div>
     </div>  
     <div class="row-fluid">
       <div class='span2'>Destination:</div>
       <div class='span8'><p>{{ locend }}
-      <br><small>{{ delivby }}{{ delivend }}</small></p></div>
+      <br><small>{{ pickupstr }}<br>{{ delivby }}</small></p></div>
     </div>                
     <div class="row-fluid">
       <div class='span2'>Email:</div>
@@ -65,6 +73,11 @@ $(document).ready(function(){
     <div class="row-fluid">
       <div class='span2'>Phone Number:</div>
       <div class='span6'><input name='tel' type='tel' required></div>
+    </div>  
+    <div class="row-fluid">
+      <div class='span2'>Add a Message:</div>
+      <div class='span8'><textarea class="span12" name="msg" rows="3" placeholder="Please specify any preferences for pickup and delivery times here. If you have any questions, include those too."></textarea><br>
+       </div>
     </div>  
     <div class="row-fluid" style='height:20px'></div>
     <h4>Payment Information</h4>

@@ -136,23 +136,23 @@ class ReserveHandler(BaseHandler):
 
 def fill_driver_params(u): 
     p = {  'first_name': u.first_name,
-            'prof_url': u.profile_url(),
-            'thumb_url': u.profile_image_url('small'),
-            'deliveries': u.deliveries_completed(),
+            'profile_url': u.profile_url(),
+            'profile_thumb': u.profile_image_url('small'),
+            'deliv_completed': u.deliveries_completed(),
             'fbid' : u.userid,
             'key' : u.key.urlsafe()
         }
     if u.ins:
-        p['insured'] = ins_str
+        p['ins'] = ins_str
         p['ins_email'] = ins_str_email
     else:
-        p['insured'] = ''
+        p['ins'] = ''
         p['ins_email'] = ''
     return p
 
 def fill_res_params(r):
     r = { 'reskey' : r.key.urlsafe() ,
-          'rates' : r.rates,
+          'price' : r.rates,
           'locstart' : r.locstart,
           'locend' : r.locend,
           'details' : r.details,

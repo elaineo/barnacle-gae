@@ -7,20 +7,23 @@ from google.appengine.api import mail
 from Handlers.BaseHandler import *
 from Handlers.Launch.ReserveHandler import fill_driver_params, fill_res_params
 
+from Models.Launch.Driver import *
 from Models.Launch.ResModel import *
 from Models.Launch.BarnacleModel import *
 
-from Utils.Defs import confirm_res_sub
-from Utils.EmailUtils import send_info
+from Utils.Defs import *
+from Utils.EmailUtils import send_info, create_note
 from Utils.DefsEmail import *
 from Utils.data.balanced import *
 
 class CheckoutHandler(BaseHandler):
-    def get(self, key=None):
-        if key:
+    def get(self, action=None, key=None):
+        if not key:
+            self.redirect('/request')
+        elif not action:
             self.__checkout(key)
-        else:
-            self.redirect('/res')
+        elif action=='confirmhold':
+            self.__confirm_hold(key)
                             
     def post(self, action=None, key=None):
         if not key:
@@ -55,17 +58,7 @@ class CheckoutHandler(BaseHandler):
             res.details = details
             res.put()
         
-        #create customer
-        # test balanced.configure('a966dc28048411e3aa4e026ba7f8ec28')
-        balanced.configure(baccount)
-        if not self.user_prefs.cust_id:
-            customer = balanced.Customer(email=email, facebook=self.user_prefs.userid, card_uri = uri).save()
-            u = self.user_prefs.key.get()
-            u.cust_id = customer.id
-            u.put()
-        else:
-            customer = balanced.Customer.find('/v1/customers/' + self.user_prefs.cust_id)
-            customer.add_card(uri)
+        customer = self.__create_cust(uri)
         charge = res.rates*100
         customer.debit(amount=charge)
         self.params['d'] = fill_driver_params(res.driver.get())
@@ -75,21 +68,70 @@ class CheckoutHandler(BaseHandler):
         self.render('launch/receipt.html', **self.params)
         self.send_receipt(email, res, eparams)
         
+    def __hold(self, key):
+        try:
+            res = ndb.Key(urlsafe=key).get()                
+        except:
+            self.abort(400)    
+        email = self.request.get('email')
+        tel = self.request.get('tel')
+        uri = self.request.get('balancedCreditCardURI')        
+        
+        customer = self.__create_cust(uri)
+        # Don't need to hold, just don't charge yet
+
+        # notify the driver    
+        res_msg = new_res_msg % key
+        create_note(res.receiver, new_res_sub, res_msg)    
+        self.redirect('/reserve/' + key)  
+
+    def __confirm_hold(self,key):
+        try:
+            res = ndb.Key(urlsafe=key).get()                
+        except:
+            self.abort(400)    
+
+        customer = balanced.Customer.find('/v1/customers/' + self.user_prefs.cust_id)
+        charge = res.price*100
+        customer.debit(amount=charge)
+        res.confirmed=True
+        res.put()        
+        d = Driver.by_userkey(res.sender)
+        self.params['d'] = d.params_fill({})
+        self.params['reskey'] = key
+        self.params.update(res.to_dict())        
+        self.send_receipt(email, res, self.params) 
+        # notify the driver?
+        self.redirect('/reserve/'+key)
+        
     def __confirm(self,key):
         try:
             res = ndb.Key(urlsafe=key).get()                
         except:
             self.abort(400)    
         email = self.request.get('email')
-        details = self.request.get('details')
+        tel = self.request.get('tel')
         uri = self.request.get('balancedCreditCardURI')        
-        
-        if details:
-            res.details = details
-            res.put()
-        
+
+        customer = self.__create_cust(uri)
+        charge = res.price*100
+        customer.debit(amount=charge)
+        res.confirmed=True
+        res.put()        
+        d = Driver.by_userkey(res.sender)
+        self.params['d'] = d.params_fill({})
+        self.params['reskey'] = key
+        self.params.update(res.to_dict())        
+        self.render('launch/receipt.html', **self.params)
+        self.send_receipt(email, res, self.params) 
+        # notify the driver
+        msg = self.user_prefs.first_name + confirm_do_msg % key
+        create_note(res.sender, confirm_do_sub, msg)
+
+    def __create_cust(self,uri):
         #create customer
-        # test balanced.configure('a966dc28048411e3aa4e026ba7f8ec28')
+        # test 
+        # balanced.configure('a966dc28048411e3aa4e026ba7f8ec28')
         balanced.configure(baccount)
         if not self.user_prefs.cust_id:
             customer = balanced.Customer(email=email, facebook=self.user_prefs.userid, card_uri = uri).save()
@@ -99,14 +141,7 @@ class CheckoutHandler(BaseHandler):
         else:
             customer = balanced.Customer.find('/v1/customers/' + self.user_prefs.cust_id)
             customer.add_card(uri)
-        charge = res.rates*100
-        customer.debit(amount=charge)
-        self.params['d'] = fill_driver_params(res.driver.get())
-        self.params.update(fill_res_params(res))
-        eparams = self.params
-        eparams.update(self.params['d'])
-        self.render('launch/receipt.html', **self.params)
-        self.send_receipt(email, res, eparams)        
+        return customer
         
     def __test(self):
         balanced.configure('a966dc28048411e3aa4e026ba7f8ec28')

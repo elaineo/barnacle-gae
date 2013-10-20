@@ -2,8 +2,10 @@ from datetime import *
 from google.appengine.ext import ndb
 
 from Handlers.BaseHandler import *
+from Handlers.Launch.CheckoutHandler import *
 from Handlers.RouteHandler import fill_route_params
 from Models.ReservationModel import *
+from Models.Launch.Driver import *
 from Utils.RouteUtils import *
 from Utils.ValidUtils import *
 from Utils.EmailUtils import create_note, create_msg
@@ -139,31 +141,30 @@ class ReservationHandler(BaseHandler):
 
     def __confirm(self, key=None):
         if key:
-            try:
-                r = ndb.Key(urlsafe=key).get()
-                if r and r.receiver==self.user_prefs.key:
+           # try:
+            r = ndb.Key(urlsafe=key).get()
+            if r and r.receiver==self.user_prefs.key:
+                if r.__class__.__name__== 'Reservation':
                     #Notify and send message
                     n = r.sender.get().get_notify()
                     if 1 in n:
-                        if r.__class__.__name__== 'Reservation':
-                            msg = self.user_prefs.first_name + confirm_res_msg % key
-                            create_note(r.sender, confirm_res_sub, msg)
-                            # charge the cc
-                            r.confirmed=True
-                            r.put()                            
-                        else:
-                            msg = self.user_prefs.first_name + confirm_do_msg % key
-                            create_note(r.sender, confirm_do_sub, msg)
-                            # go to checkout
-                            self.params['d'] = fill_driver_params(r.driver.get())
-                            self.params.update(fill_res_params(res))
-                            self.params['checkout_action'] = '/checkout/confirm'
-                            self.render('launch/checkout.html', **self.params)     
-                    self.redirect('/reserve/'+key)
+                        msg = self.user_prefs.first_name + confirm_res_msg % key
+                        create_note(r.sender, confirm_res_sub, msg)
+                    # charge the cc
+                    self.redirect('/checkout/confirmhold/'+key)
                     return
-            except:
-                self.abort(403) 
-                return
+                else:
+                    # go to checkout
+                    d = Driver.by_userkey(r.sender)
+                    self.params['d'] = d.params_fill({})
+                    self.params['reskey'] = key
+                    self.params.update(r.to_dict())
+                    self.params['checkout_action'] = '/checkout/confirm/'+key
+                    self.render('launch/checkout.html', **self.params)
+                    return
+            # except:
+                # self.abort(400) 
+                # return
         self.abort(403)
         return
         
@@ -270,11 +271,11 @@ class ReservationHandler(BaseHandler):
     def __create_reserve(self, route, res=None):
         rates = self.request.get('rates')
         rates = parse_rate(rates)
-        msg = self.request.get('msg')
         items = self.request.get('items')
         dropoff = bool(int(self.request.get('dropoff')))
         pickup = bool(int(self.request.get('pickup')))
         reqdate = self.request.get('reqdate')
+        
         if reqdate:
             reqdate = parse_date(reqdate)
         else:
@@ -317,18 +318,9 @@ class ReservationHandler(BaseHandler):
         except:
             self.abort(403)
             return  
-
-        if msg:
-            subject = 'Reservation Request from ' + self.user_prefs.nickname()
-            create_msg(sender=self.user_prefs.key, receiver=route.userkey, 
-                            subject=subject, msg=msg)
+                            
         try:
-            p.put() 
-            if new_res:
-                res_msg = new_res_msg % p.key.urlsafe()
-                create_note(route.userkey, new_res_sub, res_msg)
-                logging.info('New Reservation: '+ p.key.urlsafe())
-            self.redirect('/reserve/' + p.key.urlsafe())      
+            p.put()                     
         except:
             self.params['error_route'] = 'Invalid Start or Destination'
             self.params['pickup'] = int(pickup)
@@ -339,7 +331,19 @@ class ReservationHandler(BaseHandler):
             self.params['msg'] = msg
             self.params['route_title'] = 'Edit Reservation'
             self.params.update(fill_route_params(route.key.urlsafe(),True))
-            self.render('forms/fillreserve.html', **self.params)                           
+            self.render('forms/fillreserve.html', **self.params)
+
+        if new_res:
+            d = Driver.by_userkey(p.receiver)
+            self.params['d'] = d.params_fill({})
+            self.params['reskey'] = p.key.urlsafe()
+            self.params.update(fill_reserve_params(p.key.urlsafe(),True))
+            self.params.update(p.to_dict())
+            self.params['checkout_action'] = '/checkout/hold/'+p.key.urlsafe()
+            logging.info('New Reservation: '+ p.key.urlsafe())
+            self.render('launch/reservation.html', **self.params)            
+        else:
+            self.redirect('/reserve/' + p.key.urlsafe())  
             
     def view_reserve_page(self,key):
         try:
@@ -412,13 +416,13 @@ def fill_reserve_params(key,resoffer=False):
         'msg_ok' : True #(0 in u.get_notify() and 0 in o.get_notify())
         }
     if p.dropoff:
-        params.update( { 'dropoffstr' : 'Sender will drop off at start.' } )
+        params.update( { 'dropoffstr' : dropoffstr_1 } )
     else:
-        params.update( { 'dropoffstr' : 'Driver will pick up at start.' } )
+        params.update( { 'dropoffstr' : dropoffstr_0 } )
     if p.pickup: 
-        params.update( { 'pickupstr' : 'Sender will pick up at destination.' } )
+        params.update( { 'pickupstr' : pickupstr_1 } )
     else:
-        params.update( { 'pickupstr' : 'Driver will deliver to destination.' } )
+        params.update( { 'pickupstr' : pickupstr_0 } )
     if resoffer:
         params.update( {'items' : p.items })
     else:

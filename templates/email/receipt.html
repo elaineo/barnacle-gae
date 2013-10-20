@@ -15,7 +15,7 @@
           </tr>
           <tr><td>Destination:</td>
             <td>{{ locend }}
-            <br><font size='-1'>{{ delivend }}</font></td>
+            <br><font size='-1'>{{ delivby }}{{ delivend }}</font></td>
           </tr>
           <tr><td>Driver:</td>
             <td>{{d.first_name}}
@@ -29,12 +29,8 @@
             </td>
           </tr>
           <tr>
-            <td>Special instructions:</td>
-            <td>{{ details }}</td>
-          </tr>
-          <tr>
             <td><b>Total:</b></td>
-            <td><b>${{ rates }} </b></td>
+            <td><b>${{ price }} </b></td>
           </tr>
         </table>
 {% endblock %}        

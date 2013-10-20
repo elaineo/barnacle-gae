@@ -12,12 +12,13 @@
     Reservation has been confirmed. You may no longer edit.</span>
     {% endif %}
     {% include "forms/stubsform/reserve_fields.html" %}
+    <!--
      <div class="control-group">
         <label class="control-label" for="msg">Include a message (optional):</label>
         <div class="controls">
             <textarea class="span5" name="msg" rows="4">{{msg}}</textarea>
         </div>
-    </div>	
+    </div>	-->
     <input type='hidden' name="startlat" id="startlat">
     <input type='hidden' name="startlon" id="startlon">
     <input type='hidden' name="startstr" id="startstr">
@@ -25,7 +26,7 @@
     <input type='hidden' name="destlon" id="destlon">
     <input type='hidden' name="deststr" id="deststr">      
     <p align="center">
-	<button type="submit" class="btn" id='reserve_btn'>Submit</button>
+	<button type="submit" class="btn" id='reserve_btn' disabled='disabled'>Submit</button>
     </p>
 </form>
 </div></div>
@@ -37,6 +38,14 @@ $(document).ready(function(){
     vtest = [["input[name=dropoff]:checked","1"],["input[name=pickup]:checked","1"]];
     click_validloc('#reserve_btn',['map0','map1'],['start','dest'],vtest,'#reserve_form',true);
 });
+function enable_validate() {
+  validate_rate();
+  var rates = $("input#offer").val();
+  if (rates!='') 
+    $('#reserve_btn').removeAttr('disabled'); 
+  else
+    $('#reserve_btn').attr('disabled', 'disabled');
+}
   </script>
   <script type="text/javascript" src="/static/js/validation.js"></script>
 {% endblock %}

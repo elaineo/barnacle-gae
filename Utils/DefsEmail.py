@@ -7,11 +7,11 @@ receipt_txt = """
         Origin:  %(locstart)s\n
         %(delivstart)s\n
         Destination: %(locend)s\n
-        %(delivend)s\n\n
+        %(delivend)s%(delivby)s\n\n
         Driver: %(first_name)s
         %(ins_email)s\n\n
         Special instructions: %(details)s\n\n
-        Total: $%(rates)d
+        Total: $%(price)d
 """
 
 welcome_txt = """
