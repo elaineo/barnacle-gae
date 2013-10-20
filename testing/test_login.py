@@ -32,5 +32,15 @@ def main ():
         request = c.post('http://localhost:8080/signup/fb', data=json.dumps(d), headers=headers)
 
 
+    with session() as c:
+        d = { "id" : "123",
+                    "first_name" : "Frëd",
+                    "last_name" : "Low",
+                    "email" : "fredlow340@yahoo.com",
+                    "location" : "Mountain View, CA"}
+        headers = {'content-type': '; charset=utf-8json'}
+        request = c.post('http://localhost:8080/signup/fb', data=json.dumps(d), headers=headers)
+
+
 if __name__ == "__main__":
     main()
