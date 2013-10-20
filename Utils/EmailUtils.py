@@ -11,10 +11,7 @@ class EmailHandler(InboundMailHandler):
     def receive(self, mail_message):
         logging.info(mail_message.original)
         extr_email = extract_email(mail_message.sender)
-        if extr_email == extract_email(noreply_email):
-            sender_email = noreply_email
-        else:
-            sender_email = encode_email_address(extr_email)
+        sender_email = encode_email_address(extr_email)
 
         to_email = extract_email(mail_message.to)
         to_email = decode_email_address(to_email)
@@ -42,8 +39,11 @@ def encode_email_address(email):
     # Patch for if already encoded.
     # I don't know why it does this and I am too sick to figure it out
     if email_domain in email:
-        id = int(email.split('@')[0])
-        k = UserPrefs.get_by_id(id)
+        try:
+            id = int(email.split('@')[0])
+            k = UserPrefs.get_by_id(id)
+        except ValueError:
+            return email
     else:
         k = UserPrefs.by_email(email)
     if k is None:  ##this is going to be an issue for ppl who don't have email addr
