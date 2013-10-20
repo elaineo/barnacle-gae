@@ -11,15 +11,16 @@
         <table cellpadding='4px'>
           <tr><td>Origin:</td>
             <td>{{ locstart }}
-            <br><font size='-1'>{{ delivstart }}</font></td>
+            <br><font size='-1'>{{ dropoffstr }}</font></td>
           </tr>
           <tr><td>Destination:</td>
             <td>{{ locend }}
-            <br><font size='-1'>{{ delivby }}{{ delivend }}</font></td>
+            <br><font size='-1'>{{ pickupstr }}</font>
+            <br><font size='-1'>{{ delivby }}</font></td>
           </tr>
           <tr><td>Driver:</td>
-            <td>{{d.first_name}}
-            <br>{{d.ins_email}}</td>
+            <td>{{first_name}}
+            <br>{{ins_email}}</td>
           </tr>
           <tr><td>Size:</td>
             <td>

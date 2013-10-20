@@ -124,12 +124,10 @@ class SearchHandler(BaseHandler):
         keepers = []
         for c in results:
             startpt = field_byname(c, "start")
-            # shouldn't need this IF check after I refactor indices
-            if startpt:
-                dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) 
-                dist1 = HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude)
-                if dist0 < dist1:
-                    keepers.append(c)
+            dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) 
+            dist1 = HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude)
+            if dist0 < dist1:
+                keepers.append(c)
         results = keepers
         logging.info(results)
         

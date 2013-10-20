@@ -49,6 +49,7 @@ class ReservationHandler(BaseHandler):
                 else:           # offering to deliver
                     self.params.update(fill_route_params(key,False))
                     self.params['reserve_title'] = 'Make a Delivery Offer'
+                    self.params['offer'] = p.rates
                     self.render('forms/filloffer.html', **self.params)     
             except:
                 self.abort(403) 

@@ -57,8 +57,3 @@ ins_str_email = 'Insured up to $500'
 bank_str = '<i class="icon-ok"></i> Bank Account Verified'
 
 blank_img = '/static/img/blank.png'
-
-dropoffstr_1 = 'Sender will drop off at start.'
-dropoffstr_0 = 'Driver will pick up at start.'
-pickupstr_1 = 'Sender will pick up at destination.'
-pickupstr_0 = 'Driver will deliver to destination.'

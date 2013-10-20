@@ -2,6 +2,11 @@ from google.appengine.ext import ndb
 from Handlers.BaseHandler import *
 from Utils.RouteUtils import *
 
+dropoffstr_1 = 'Sender will drop off at start.'
+dropoffstr_0 = 'Driver will pick up at start.'
+pickupstr_1 = 'Sender will pick up at destination.'
+pickupstr_0 = 'Driver will deliver to destination.'
+
 class Reservation(ndb.Model):
     """ Make a Reservation for existing route """
     sender = ndb.KeyProperty(required=True)      # user_prefs of reserver and reservee
@@ -69,6 +74,14 @@ class Reservation(ndb.Model):
             'pickup' : cls.pickup,
             'dropoff' : cls.dropoff
         }
+        if cls.dropoff:
+            route.update( { 'dropoffstr' : dropoffstr_1 } )
+        else:
+            route.update( { 'dropoffstr' : dropoffstr_0 } )
+        if cls.pickup: 
+            route.update( { 'pickupstr' : pickupstr_1 } )
+        else:
+            route.update( { 'pickupstr' : pickupstr_0 } )        
         return route
         
     def print_html(cls):
@@ -143,6 +156,14 @@ class DeliveryOffer(ndb.Model):
             'price' : cls.price,
             'confirmed' : cls.confirmed            
         }
+        if cls.dropoff:
+            route.update( { 'dropoffstr' : dropoffstr_1 } )
+        else:
+            route.update( { 'dropoffstr' : dropoffstr_0 } )
+        if cls.pickup: 
+            route.update( { 'pickupstr' : pickupstr_1 } )
+        else:
+            route.update( { 'pickupstr' : pickupstr_0 } )             
         return route
         
     def print_html(cls):
