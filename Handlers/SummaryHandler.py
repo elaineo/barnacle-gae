@@ -15,6 +15,24 @@ class SummaryHandler(BaseHandler):
     def number_of_new_users(self):
         return UserPrefs.query(UserPrefs.creation_date > self.day_ago()).count()
 
+    def new_users_report(self):
+        buf = ''
+        for user_pref in UserPrefs.query(UserPrefs.creation_date > self.day_ago()).iter():
+            buf += ', '.join([user_pref.first_name, user_pref.last_name, user_pref.email]) + '\n'
+        return buf
+
+    def new_routes_report(self):
+        buf = ''
+        for route in Route.query(Route.created > self.day_ago()).iter():
+            buf += ', '.join([route.locstart, route.locend]) + '\n'
+        return buf
+
+    def new_requests_report(self):
+        buf = ''
+        for request in Request.query(Request.created > self.day_ago()).iter():
+            buf += ', '.join([request.locstart, request.locend]) + '\n'
+        return buf
+
     def number_of_new_routes(self):
         return Route.query(Route.created > self.day_ago()).count()
 
@@ -35,7 +53,13 @@ class SummaryHandler(BaseHandler):
         d['new_reservations'] = self.number_of_new_reservations()
         d['new_messages'] = self.number_of_new_messages()
         buf = 'In Past Day\n'
-        return '\n'.join([k + ' : ' + str(d[k]) for k in d])
+        buf += '\n'.join([k + ' : ' + str(d[k]) for k in d]) + '\n'
+        buf += '\nNew Users\n' + self.new_users_report()
+        buf += '\nNew Routes\n' + self.new_routes_report()
+        buf += '\nNew Requests\n' + self.new_requests_report()
+        import logging
+        logging.info(buf)
+        return buf
 
     def email_report(self, to_address, body):
         sender_address = 'summary@p2ppostal.appspotmail.com'
