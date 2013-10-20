@@ -93,7 +93,7 @@ function populateZSearch(searchURL) {
         $('table#waiting').hide();
         $('table#outresults').show();
         for (i in q.results) {      
-          var rowhtml = '<tr class="clicky" data-fb="' + q.results[i]['fbid'] + '" onclick="document.location.href = /scraped/' +  q.results[i]['routekey'] + ';">';
+          var rowhtml = '<tr class="clicky" data-fb="' + q.results[i]['fbid'] + '" onclick="document.location.href = \'/scraped/' +  q.results[i]['routekey'] + '\';">';
           rowhtml +='<td ';
           if (q.results[i]['fbid'] != 'undefined')  
             rowhtml += 'class="dumpthumb" rowspan="2"';
@@ -122,7 +122,7 @@ function populateCLSearch(searchURL) {
     success: function(q) {
         console.log(q);
         for (i in q.results) {      
-          var rowhtml = '<tr class="clicky" onclick="document.location.href = /scraped/' +  q.results[i]['routekey'] + ';">';
+          var rowhtml = '<tr class="clicky" onclick="document.location.href = \'/scraped/' +  q.results[i]['routekey'] + '\';">';
           rowhtml +='<td>';
           rowhtml +='</td><td>' + q.results[i]['start'] + '</td>';
           rowhtml +='<td>' + q.results[i]['dest'] + '</td>';

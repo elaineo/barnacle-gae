@@ -22,11 +22,15 @@ class CheckoutHandler(BaseHandler):
         else:
             self.redirect('/res')
                             
-    def post(self, key=None):
+    def post(self, action=None, key=None):
         if not key:
-            self.redirect('/res')
-        else:
-            self.__process(key)                       
+            self.redirect('/request')
+        elif not action:
+            self.__process(key)
+        elif action=='confirm':
+            self.__confirm(key)
+        elif action=='hold':
+            self.__hold(key)
             
     def __checkout(self,key):
         try:
@@ -35,6 +39,7 @@ class CheckoutHandler(BaseHandler):
             self.abort(400)
         self.params['d'] = fill_driver_params(res.driver.get())
         self.params.update(fill_res_params(res))
+        self.params['checkout_action'] = '/checkout'
         self.render('launch/checkout.html', **self.params)        
                 
     def __process(self,key):
@@ -70,6 +75,38 @@ class CheckoutHandler(BaseHandler):
         self.render('launch/receipt.html', **self.params)
         self.send_receipt(email, res, eparams)
         
+    def __confirm(self,key):
+        try:
+            res = ndb.Key(urlsafe=key).get()                
+        except:
+            self.abort(400)    
+        email = self.request.get('email')
+        details = self.request.get('details')
+        uri = self.request.get('balancedCreditCardURI')        
+        
+        if details:
+            res.details = details
+            res.put()
+        
+        #create customer
+        # test balanced.configure('a966dc28048411e3aa4e026ba7f8ec28')
+        balanced.configure(baccount)
+        if not self.user_prefs.cust_id:
+            customer = balanced.Customer(email=email, facebook=self.user_prefs.userid, card_uri = uri).save()
+            u = self.user_prefs.key.get()
+            u.cust_id = customer.id
+            u.put()
+        else:
+            customer = balanced.Customer.find('/v1/customers/' + self.user_prefs.cust_id)
+            customer.add_card(uri)
+        charge = res.rates*100
+        customer.debit(amount=charge)
+        self.params['d'] = fill_driver_params(res.driver.get())
+        self.params.update(fill_res_params(res))
+        eparams = self.params
+        eparams.update(self.params['d'])
+        self.render('launch/receipt.html', **self.params)
+        self.send_receipt(email, res, eparams)        
         
     def __test(self):
         balanced.configure('a966dc28048411e3aa4e026ba7f8ec28')

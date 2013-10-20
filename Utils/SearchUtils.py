@@ -17,6 +17,7 @@ def search_pathpts(dist, index_name, date, datefield, center):
        options=search.QueryOptions(limit=limit,
         sort_options=search.SortOptions(expressions=[sortexpr, dateexpr])))
     results = index.search(search_query)  
+    # logging.debug(results)
     return results        
 
 def search_points_start(dist, index_name, enddate, startdate, fieldd,field,center):

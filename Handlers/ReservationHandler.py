@@ -142,17 +142,23 @@ class ReservationHandler(BaseHandler):
             try:
                 r = ndb.Key(urlsafe=key).get()
                 if r and r.receiver==self.user_prefs.key:
-                    r.confirmed=True
-                    r.put()
                     #Notify and send message
                     n = r.sender.get().get_notify()
                     if 1 in n:
                         if r.__class__.__name__== 'Reservation':
                             msg = self.user_prefs.first_name + confirm_res_msg % key
                             create_note(r.sender, confirm_res_sub, msg)
+                            # charge the cc
+                            r.confirmed=True
+                            r.put()                            
                         else:
                             msg = self.user_prefs.first_name + confirm_do_msg % key
                             create_note(r.sender, confirm_do_sub, msg)
+                            # go to checkout
+                            self.params['d'] = fill_driver_params(r.driver.get())
+                            self.params.update(fill_res_params(res))
+                            self.params['checkout_action'] = '/checkout/confirm'
+                            self.render('launch/checkout.html', **self.params)     
                     self.redirect('/reserve/'+key)
                     return
             except:

@@ -4,8 +4,8 @@
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
 <script type="text/javascript">
-    //balanced.init('/v1/marketplaces/TEST-MP59PrHkpa0ko7BaYwp0CkH5');
-    balanced.init('/v1/marketplaces/MPzQH7Kg11jaH5eTYoFxMVg');
+    balanced.init('/v1/marketplaces/TEST-MP59PrHkpa0ko7BaYwp0CkH5');
+    //balanced.init('/v1/marketplaces/MPzQH7Kg11jaH5eTYoFxMVg');
 </script>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -46,27 +46,25 @@ $(document).ready(function(){
       </div>
     </div>
     <div class="row-fluid">
- <form enctype="multipart/form-data" method="post" id='cc_form' class="form-horizontal">
+ <form enctype="multipart/form-data" method="post" id='cc_form' class="form-horizontal" action="{{checkout_action}}">
     <h2>Checkout</h2>
     <div class="row-fluid">
-      <div class='span2'><p>Origin:</p></div>
+      <div class='span2'>Origin:</div>
       <div class='span6'><p>{{ locstart }}
       <br><small>{{ delivstart }}</small></p></div>
     </div>  
     <div class="row-fluid">
-      <div class='span2'><p>Destination:</p></div>
+      <div class='span2'>Destination:</div>
       <div class='span8'><p>{{ locend }}
       <br><small>{{ delivend }}</small></p></div>
     </div>                
     <div class="row-fluid">
-      <div class='span2'><p>Email:</p></div>
+      <div class='span2'>Email:</div>
       <div class='span8'><input name='email' type='email' required></div>
     </div>        
     <div class="row-fluid">
-      <div class='span2'><p>Special instructions:</p></div>
-      <div class='span6'><textarea class="span12" name="details" rows="3" placeholder="Please specify any preferences for pickup and delivery times here."></textarea><br>
-       <small>Unless otherwise instructed, driver will require signature upon delivery.</small>
-      </div>
+      <div class='span2'>Phone Number:</div>
+      <div class='span6'><input name='tel' type='tel' required></div>
     </div>  
     <div class="row-fluid" style='height:20px'></div>
     <h4>Payment Information</h4>
@@ -81,25 +79,32 @@ $(document).ready(function(){
       </div>
     </div>
     <div class="row-fluid"> 
-      <div class='span2'><p>Card Number:</p></div>
+      <div class='span2'>Card Number:</div>
       <div class='span4'><input type='text' class='card-number span12' maxlength='16'></div>
       <div class='span4'><span class="text-error" id='cc-err'></span></div>
     </div>
     <div class="row-fluid"> 
-      <div class='span2'><p>Expiration:</p></div>
+      <div class='span2'>Expiration:</div>
       <div class='span4'>
       <select class='input-mini cc-em'>{% include 'month_opts.txt' %}</select> / 20<input type='number' class='input-mini cc-ey' min="13"></div>
       <div class="span4 text-error" id='ccexp-err'></div>
     </div>    
     <div class="row-fluid"> 
-      <div class='span2'><p>Security Code:</p></div>
+      <div class='span2'>Security Code:</div>
       <div class='span1'><input type='text' class='input-mini cc-csc' maxlength="4"></div>
       <div class='span4 hidden-phone' style='padding-left:20px'><div id='cvc_card' class='visa_back'></div></div>
     </div>      
     <div class="row-fluid hidden-phone" style='height:20px'></div> 
+    <div class="row-fluid" >
+      <div class='span8'>
+      <label class="checkbox inline">
+        <input type='checkbox' id='tos'> I have read and agree to the <a href='/tos'>Terms of Service</a>.
+      </label>
+      </div>
+    </div> 
     <div class="row-fluid"> 
       <div class='span2 offset2'>
-	<button type="submit" class="btn" id='request_btn'>Checkout</button>
+	<button type="submit" class="btn" id='request_btn' disabled='disabled'>Book It</button>
       </div>
       <div class='span4 text-error' id='check-err'></div>
     </div>
@@ -117,6 +122,14 @@ $(document).ready(function(){
     //click_submit('#request_btn','#request_form');
     var mapURL = '/res/json/{{reskey}}';
     initialize_map(mapURL);    
+    
+    $("#tos").click(function(){
+        var agree = $("input#tos:checked").val();
+        if (typeof agree!='undefined') 
+            $('#request_btn').removeAttr('disabled'); 
+        else
+            $('#request_btn').attr('disabled', 'disabled'); 
+    });
 });
   </script>
   <script type="text/javascript" src="/static/js/validation.js"></script>
