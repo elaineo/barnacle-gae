@@ -39,11 +39,25 @@ class SummaryHandler(BaseHandler):
     def number_of_new_requests(self):
         return Request.query(Request.created > self.day_ago()).count()
 
+    def number_of_routes(self):
+        return Route.query().count()
+
+    def number_of_requests(self):
+        return Request.query().count()
+
     def number_of_new_reservations(self):
         return Reservation.query(Reservation.created > self.day_ago()).count()
 
     def number_of_new_messages(self):
         return Message.query(Message.created > self.day_ago()).count()
+
+    def total_report(self):
+        d = {}
+        d['total_routes'] = self.number_of_routes()
+        d['total_requests'] = self.number_of_requests()
+        buf = 'Total\n'
+        buf += '\n'.join([k + ' : ' + str(d[k]) for k in d]) + '\n'
+        return buf
 
     def generate_report(self):
         d = {}
@@ -57,8 +71,7 @@ class SummaryHandler(BaseHandler):
         buf += '\nNew Users\n' + self.new_users_report()
         buf += '\nNew Routes\n' + self.new_routes_report()
         buf += '\nNew Requests\n' + self.new_requests_report()
-        import logging
-        logging.info(buf)
+        buf += self.total_report()
         return buf
 
     def email_report(self, to_address, body):
