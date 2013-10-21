@@ -4,9 +4,6 @@
 {% block heading%}{{first_name}}{% endblock %}
 {% block content %}
 {% include "forms/stubspop/profile_stub.html" %}
-{% if fbfriend==True %}
-{% include "msg_link.html" %}
-{% endif %}
   <script>
 $(document).ready(function(){
     click_redirect('#review_btn','{{review_url}}');

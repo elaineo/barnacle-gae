@@ -78,7 +78,6 @@ class SearchHandler(BaseHandler):
             ### Get a set of low-res pathpts
             pathpts, precision = RouteUtils().estPath(start, dest,dist)
             results = Request.search_route(pathpts, delivstart, delivend, precision)
-            logging.info(results)        
             for r in results:
                 posts.append(r.to_search())
         else:

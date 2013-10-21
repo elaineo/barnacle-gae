@@ -64,4 +64,4 @@ class ReviewHandler(BaseHandler):
         if 2 in n:        
             msg = self.user_prefs.first_name + review_msg
             create_note(recv, review_sub, msg)
-        self.redirect(rr.profile_url())
+        self.redirect(rr.profile_url()+'?msg=2')

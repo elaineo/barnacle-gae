@@ -77,7 +77,7 @@ class RouteUtils():
         req = urlfetch.fetch(dir_url)
         results = json.loads(req.content)['routes'][0]['legs'][0]
         dist = results['distance']['value']   #dist in metres
-        precision = precisionDist(dist/1609 + fudge)
+        precision = precisionDist(dist/1609 * fudge)
         pathpts = [roundPoint(start,precision)]        
         for s in results['steps']:
             polyline = s['polyline']['points']

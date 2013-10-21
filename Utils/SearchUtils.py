@@ -36,7 +36,8 @@ def search_points_start(dist, index_name, enddate, startdate, fieldd,field,cente
         sort_options=search.SortOptions(expressions=[sortexpr])))
     results = index.search(search_query)
     return results    
-    
+
+
 def expire_pathpts(index_name, date, datefield):
     index = search.Index(index_name)
     query = datefield+ ' < ' + date        
