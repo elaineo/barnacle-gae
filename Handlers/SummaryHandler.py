@@ -83,4 +83,4 @@ class SummaryHandler(BaseHandler):
     def get(self):
         body = self.generate_report()
         self.email_report('warren.mar@gmail.com', body)
-        self.email_report('elaine.ou@gmail.com', body)
+        self.email_report('help@gobarnacle.com', body)

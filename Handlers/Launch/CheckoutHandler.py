@@ -89,7 +89,8 @@ class CheckoutHandler(BaseHandler):
 
         # notify the driver -- add message
         res_msg = new_res_msg % key
-        res_msg = res_msg + '\n\n----Message----\n\n' + msg
+        if msg:
+            res_msg = res_msg + '\n\n----Message from Sender----\n\n' + msg
         create_note(res.receiver, new_res_sub, res_msg)    
         self.redirect('/reserve/' + key)  
 
