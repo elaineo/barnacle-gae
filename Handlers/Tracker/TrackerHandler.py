@@ -11,12 +11,22 @@ from Utils.ConfirmUtils import *
 
 class TrackerHandler(BaseHandler):
     def get(self, action=None, key=None):
+        if not self.user_prefs:
+            self.render('track/web/main.html', **self.params)
+            return
         if action=='update':
+            # show active routes
             self.render('track/web/update.html', **self.params)
         elif action=='create':
             self.render('track/web/create.html', **self.params)
+        elif action=='manage':
+            self.render('track/web/manage.html', **self.params)            
+        elif action=='confirm':
+            # show active routes
+            self.params['routes'] = self.__getroutes(0)
+            self.render('track/web/confirm.html', **self.params)               
         elif action=='getroutes':
-            self.__getroutes()
+            self.__dumproutes()
         elif action=='jsonroute' and key:
             try:
                 route=ndb.Key(urlsafe=key).get()
@@ -189,18 +199,25 @@ class TrackerHandler(BaseHandler):
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))              
 
-    def __getroutes(self):
+    def __dumproutes(self, status=None):
         if not self.user_prefs.key:
-            response = { 'status': 'fail'}            
+            response = { 'status': 'fail'}     
         else:
-            routes=[]
-            tracks = TrackerModel.by_driver(self.user_prefs.key)
-            for t in tracks:
-                routes.append(t.to_dict(True))
+            routes = self.__getroutes(status)
             response = { 'status': 'ok'}
             response['routes'] = routes
         self.response.headers['Content-Type'] = "application/json"
-        self.write(json.dumps(response)) 
+        self.write(json.dumps(response))              
+        
+    def __getroutes(self, status=None):   
+        routes=[]
+        if status is not None:
+            tracks = TrackerModel.by_driver(self.user_prefs.key, status)
+        else:
+            tracks = TrackerModel.by_driver(self.user_prefs.key)
+        for t in tracks:
+            routes.append(t.to_dict(True))            
+        return routes
 
     def __sendconfirm(self):
         data = json.loads(self.request.body)

@@ -1,0 +1,66 @@
+{% extends "track/base.html" %}
+{# Manage Routes #}
+{% block title%}Routes{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/jquery-ui.css" />
+   
+<div class="row">
+    <div class="span10 offset1">
+ <form enctype="multipart/form-data" method="post" id='route_form' class="form-horizontal">
+   Select the destination you would like to confirm.
+    <div class="control-group">
+        {% for r in routes %}
+        <label class="radio">        
+          <input type="radio" name="routeDest" value="{{r.routekey}}">
+          {{r.locend}}
+        </label>
+        {% endfor %}
+    </div>
+    Please enter your confirmation code. The recipient should provide this to you.
+    <div class="control-group">
+        <div class="controls">
+          <input class="input" type="text" name="code" id='confcode'>     
+          <button class="btn" id='confirm_btn' >confirm</button>          
+        </div>
+    </div>
+    Or, click below and we will notify the sender with instructions to confirm your delivery.
+    <div class='row-fluid'>
+      <div class='span2 offset1'>
+	<button type="submit" class="btn" id='submit_btn' >Submit</button>
+      </div>
+    </div>	
+</form>
+</div>
+</div>
+  <script>
+$(document).ready(function(){
+    $('#confirm_btn').click(function(event) {
+      event.preventDefault();
+      loggedIn = checkLoginStatus();      
+      if (loggedIn) {    
+        data={};
+        data.code=$('input#confcode').val();
+        data.routekey=$("input[name=routeDest]:checked").val();
+        $.ajax({
+            type: "POST",
+            dataType: "json",  
+            contentType: "json",
+            data: JSON.stringify(data),
+            url: '/track/confirm',
+            success: function(response) {
+                if (response.status == "ok") {
+                    alert("Delivery confirmed.");
+                    window.location.replace('/track/manage');
+                } else 
+                    alert(response.status);
+            }
+          });    
+      } else {
+        loginPlease();
+      }
+    });    
+});
+
+  </script>
+{% endblock %}

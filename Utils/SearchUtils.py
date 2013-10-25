@@ -4,7 +4,7 @@ import re
 import logging
 
 def search_pathpts(dist, index_name, date, datefield, center):
-    limit = 200
+    limit = 500
     meters = dist * miles2m
     index = search.Index(index_name)
     query = 'distance(point, geopoint('+str(center.lat)+', '+str(center.lon)+')) < '+str(meters) + ' AND ' + datefield+ ' < ' + date
@@ -21,13 +21,13 @@ def search_pathpts(dist, index_name, date, datefield, center):
     return results        
 
 def search_points_start(dist, index_name, enddate, startdate, fieldd,field,center):
-    limit = 100
+    limit = 10
     meters = dist * miles2m
     index = search.Index(index_name)
-    query = '(distance('+field+', geopoint('+str(center.lat)+', '+str(center.lon)+')) < '+str(meters) + ')'
-    query = query + ' AND (('+fieldd+' >= ' + startdate + ') AND ('+fieldd+' <= ' + enddate + '))'
+    #query = '(distance('+field+', geopoint('+str(center.lat)+', '+str(center.lon)+')) < '+str(meters) + ')'
+    query = '(('+fieldd+' >= ' + startdate + ') AND ('+fieldd+' <= ' + enddate + '))'
     loc_expr = 'distance('+field+', geopoint('+str(center.lat)+', '+str(center.lon)+'))'
-    logging.info(query)
+    logging.info(loc_expr)
        
     sortexpr = search.SortExpression( expression=loc_expr,
       direction=search.SortExpression.ASCENDING, default_value=meters)

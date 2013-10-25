@@ -63,7 +63,13 @@ class SearchHandler(BaseHandler):
             delivend = delivstart + timedelta(days=90)
             
         start, startstr = self.__get_search_form('start')
-        dest, deststr = self.__get_search_form('dest')            
+        # this is optional
+        checkdest = self.request.get('dest')
+        if checkdest:
+            dest, deststr = self.__get_search_form('dest')     
+        else:
+            deststr=''
+            dest = None
         logging.info('Search req: '+startstr+' to '+deststr+' from '+startdate+' to '+enddate)
         if not start:
             self.params['delivstart'] = startdate
@@ -189,7 +195,6 @@ class SearchHandler(BaseHandler):
         destres = search_pathpts(sr.dist,'ZIM_INDEX',sr.delivby.strftime('%Y-%m-%d'),'delivend',sr.dest).results
         #get intersection
         results = search_intersect(startres, destres)
-
         keepers = []
         for z in results:
             startpt = field_byname(z, "start")

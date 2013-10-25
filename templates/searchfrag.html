@@ -15,8 +15,10 @@ function loadFBdata() {
         if (response.status === 'connected') {
           $('.clicky').each(function() {
             var fbid = $(this).attr('data-fb');
-            dumpFriends(fbid, $(this).next().find('.dumpfriends'),3);
-            dumpThumb(fbid, $(this).find('td.dumpthumb'));
+            if (fbid != 'undefined') {
+              dumpFriends(fbid, $(this).next().find('.dumpfriends'),3);
+              dumpThumb(fbid, $(this).find('td.dumpthumb'));
+            }
           });
         }
     });
@@ -90,6 +92,7 @@ function populateZSearch(searchURL) {
     contentType: "json", 
     url: searchURL,
     success: function(q) {
+        console.log(q);
         $('table#waiting').hide();
         $('table#outresults').show();
         for (i in q.results) {      

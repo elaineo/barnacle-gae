@@ -137,7 +137,6 @@ function handleNoGeolocation(errorFlag) {
     content: content
   };
 
-  var infowindow = new google.maps.InfoWindow(options);
   map.setCenter(options.position);
 }    
     

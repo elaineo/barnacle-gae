@@ -1,6 +1,6 @@
 {% extends "track/base.html" %}
 {# Create a Route #}
-{% block title%}{{route_title}}{% endblock %}
+{% block title%}Create Route{% endblock %}
 
 {% block content %}
 
@@ -72,23 +72,28 @@ $(document).ready(function(){
                     TimeZone = response.rawOffset;
                 }
             }
-          }).always(function() {
-          
-                        tzoffset = int(data['tzoffset'])
-            startlat = float(data['startlat'])
-            startlon = float(data['startlon'])
-            destlat = float(data['destlat'])
-            destlon = float(data['destlon'])
-            locstart = data['locstart']
-            locend = data['locend']
-            delivend = parse_date(data['delivend'])
+          }).always(function() {          
+            data = {};
+            data.tzoffset = TimeZone;
+            data.startlat = $('#startlat').val();
+            data.startlon = $('#startlon').val();
+            data.destlat = $('#destlat').val();
+            data.destlon = $('#destlon').val();
+            data.locstart = $('#startstr').val();
+            data.locend = $('#deststr').val();
+            data.delivend = $('#enddate').val();
+            
             $.ajax({
             type: "POST",
+            dataType: "json",  
+            contentType: "json",
+            data: JSON.stringify(data),
             url: '/track/create',
             success: function(response) {
-                if (response.status == "OK") {
-                    TimeZone = response.rawOffset;
-                }
+              console.log(response);
+                //if (response.status == "OK") {
+                    // redirect to share page
+                //}
               }
             })
           });    
@@ -108,23 +113,6 @@ function validForm() {
     else { 
       $('#route_btn').removeAttr('disabled'); }
 }    
-
-    var tzURL = "https://maps.googleapis.com/maps/api/timezone/json?location=";
-    tzURL = tzURL + $('#destlat').val() + "," + $('#destlon').val() + "&timestamp=";
-    var ts = Date.now();
-    tzURL = tzURL + ts + "&sensor=true";
-    
-      $.ajax({
-        type: "GET",
-        url: "https://maps.googleapis.com/maps/api/timezone/json",
-        data: "location=" + $('#destlat').val() + "," + $('#destlon').val() + "&timestamp=" + Date.now() + "&sensor=true",
-        success: function(response) {
-            console.log(response);
-            //if (response.status == "OK") {
-              //  TimeZone = response.rawOffset;
-            //}
-        }
-      });    
 
 
   </script>

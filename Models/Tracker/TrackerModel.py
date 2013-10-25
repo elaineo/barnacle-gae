@@ -64,6 +64,7 @@ class TrackerModel(ndb.Model):
     
     @classmethod
     def by_driver(cls,userkey,status=None):
+        logging.info(status)
         if status is not None:
             return cls.query(ndb.AND(cls.driver==userkey, cls.status==status)) 
         else:

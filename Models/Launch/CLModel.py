@@ -52,13 +52,15 @@ class ZimModel(ndb.Model):
     locstart = ndb.StringProperty(required=True) #text descr of location
     locend = ndb.StringProperty(required=True) #text descr of location
     pathpts = ndb.GeoPtProperty(repeated=True)        
+    distance = ndb.IntegerProperty()
     creation_date = ndb.DateTimeProperty(auto_now_add=True)    
     
 
     def _pre_put_hook(self):
-        p = RouteUtils().setloc(self, self.locstart, self.locend)        
+        p, d = RouteUtils().setloc(self, self.locstart, self.locend)        
         if p:
             self = p
+            self.distance = d
         else:
             raise Exception('error')                
     

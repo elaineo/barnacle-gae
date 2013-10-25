@@ -14,8 +14,8 @@ class RouteUtils():
         # route.start,route.locstart=self.getGeoLoc(startstr)
         # route.dest,route.locend=self.getGeoLoc(endstr)
         if route.start and route.dest: 
-            route.pathpts = self.getPath(route.start,route.dest)
-        return route
+            route.pathpts, d = self.getPath(route.start,route.dest)
+        return route, d
 
     def setpoints(self,p,startstr,endstr):
         route=p
@@ -59,6 +59,7 @@ class RouteUtils():
         req = urlfetch.fetch(dir_url)
         results = json.loads(req.content)['routes'][0]['legs'][0]
         precision = -1
+        distance = results['distance']['value']
         for s in results['steps']:
             # distance = s['distance']['value']   #dist in metres
             polyline = s['polyline']['points']
@@ -67,7 +68,7 @@ class RouteUtils():
             lon = s['end_location']['lng']
             pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
             pathpts = pathpts + pathsegment
-        return pathpts
+        return pathpts, distance
 
     def estPath(self,start,dest, fudge):
         """ Precision of path determined by total dist.
@@ -100,8 +101,10 @@ class RouteUtils():
 
     def dumproutepts(self,r,pts):
         route = {}
-        lat = sum([r.start.lat,r.dest.lat])/2
-        lng = sum([r.start.lon,r.dest.lon])/2
+        qstart = pts[0]
+        qdest = pts[-1]
+        lat = sum([qstart.lat,qdest.lat])/2
+        lng = sum([qstart.lon,qdest.lon])/2
         route['center'] = [lat,lng]
         pathpts = []
         markers = []

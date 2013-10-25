@@ -6,16 +6,21 @@
 <script type="text/javascript">
 $(document).ready(function(){
     $(document).on('fbload', function(){
-        FB.getLoginStatus(function(response) {
-            if (response.status === 'connected') {
-              $('.clicky').each(function() {
-                var fbid = $(this).attr('data-fb');
-                 dumpFriends(fbid, $(this).next().find('.dumpfriends'),3);
-              });
-            }
-        });
+        loadFBdata();
     });
 });
+
+function loadFBdata() {
+    FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          $('.clicky').each(function() {
+            var fbid = $(this).attr('data-fb');
+            dumpFriends(fbid, $(this).next().find('.dumpfriends'),3);
+            dumpThumb(fbid, $(this).find('td.dumpthumb'));
+          });
+        }
+    });
+}
 </script>
 
 <div class="row">
@@ -29,7 +34,7 @@ $(document).ready(function(){
         <th>Deliver By</th>
     </tr></thead>
         {% for post in posts %}
-    <tr class='clicky' onclick="document.location.href = '/post/request/{{post.routekey}}';">
+    <tr class='clicky' data-fb='{{post.fbid}}' onclick="document.location.href = '/post/request/{{post.routekey}}';">
         <td {% if post.fbid %}rowspan='2'{% endif %}>
         <img height="50px" src="{{post.thumb_url}}"><br>
         {{post.first_name}}</td>

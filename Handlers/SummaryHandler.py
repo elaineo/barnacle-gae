@@ -18,7 +18,7 @@ class SummaryHandler(BaseHandler):
     def new_users_report(self):
         buf = ''
         for user_pref in UserPrefs.query(UserPrefs.creation_date > self.day_ago()).iter():
-            buf += ', '.join([user_pref.first_name, user_pref.last_name, user_pref.email]) + '\n'
+            buf += ' '.join([user_pref.first_name, user_pref.last_name, user_pref.email]) + '\n'
         return buf
 
     def new_routes_report(self):
@@ -65,7 +65,6 @@ class SummaryHandler(BaseHandler):
         d['new_routes'] = self.number_of_new_routes()
         d['new_requests'] = self.number_of_new_requests()
         d['new_reservations'] = self.number_of_new_reservations()
-        d['new_messages'] = self.number_of_new_messages()
         buf = 'In Past Day\n'
         buf += '\n'.join([k + ' : ' + str(d[k]) for k in d]) + '\n'
         buf += '\nNew Users\n' + self.new_users_report()

@@ -3,6 +3,7 @@ import dateutil.parser
 import csv
 from google.appengine.ext import ndb
 from google.appengine.api import search
+from google.appengine.api import taskqueue
 
 from Handlers.BaseHandler import *
 from Models.ImageModel import ImageStore
@@ -31,8 +32,11 @@ class DebugUtils(BaseHandler):
     def get(self, action=None):
         if action=='clearall':
             delete_all_in_index(ZIM_INDEX)
+            ndb.delete_multi( ZimModel.query().fetch(keys_only=True))
             # delete_all_in_index(ROUTE_INDEX)
             # delete_all_in_index(REQUEST_INDEX)
+        elif action=='qtask':
+            taskqueue.add(url='/debug/clearall')
         elif action=='clearusers':
             data = ImageStore.query()
             for d in data:
@@ -229,7 +233,11 @@ class DebugUtils(BaseHandler):
                 dest = ndb.GeoPt(lat=destlat, lon=destlng),
                 details = details)
             z.put()
-            create_zim_doc(z.key.urlsafe(), z)                
+            if z.distance > 160900:
+                create_zim_doc(z.key.urlsafe(), z) 
+            else:
+                z.key.delete()
+                rtdate = None
             if rtdate:
                 z2 = ZimModel(fbid = fbid, 
                 clurl = url, delivend = rtdate,
