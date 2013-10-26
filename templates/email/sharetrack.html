@@ -1,0 +1,9 @@
+{% extends "email/ebase.html" %}
+{% block content %}
+        <h4><font color='#666'>{{first_name}} has shared a route with you</font></h4>
+        <p>Track {{first_name}}'s progress in real time with the <a href="http://www.gobarnacle.com/tracker">Barnacle Driver Tracker</a>. 
+        </p>
+        <br>        
+        <a href="{{url}}">{{first_name}}'s Tracking Page</a>
+        <br>
+{% endblock %}        

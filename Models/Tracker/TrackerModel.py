@@ -25,6 +25,10 @@ class TrackerModel(ndb.Model):
     def post_url(self):
         """ url for public view of post """
         return '/track/view/' + self.key.urlsafe()
+        
+    def mobile_url(self):
+        """ url for mobile view of post """
+        return '/track/mobile/' + self.key.urlsafe()        
             
     def to_dict(cls,abbrev=False):
         route = {  
@@ -63,10 +67,11 @@ class TrackerModel(ndb.Model):
         return route
     
     @classmethod
-    def by_driver(cls,userkey,status=None):
-        logging.info(status)
+    def by_driver(cls,userkey,status=None,comp=False):
         if status is not None:
-            return cls.query(ndb.AND(cls.driver==userkey, cls.status==status)) 
+            return cls.query(ndb.AND(cls.driver==userkey, cls.status==status))
+        elif comp:
+            return cls.query().filter(cls.status!=99)
         else:
             return cls.query().filter(cls.driver==userkey)  
         

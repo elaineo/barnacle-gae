@@ -1,0 +1,77 @@
+{% extends "track/base.html" %}
+{# Confirm Arrival #}
+{% block title%}Confirm Arrival{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/jquery-ui.css" />
+  <div data-role="fieldcontain">
+    <input type="email" name="email" data-inline="true" placeholder="Enter an Email">
+    <a data-role="button" data-mini="true" data-inline="true" id='add_btn'>Add</a>
+  </div>
+<div class="row">
+  <table id='sharelist'></table>
+</div>
+ <div data-role="fieldcontain" class="ui-grid-a">
+  <div class="ui-block-a">
+    <a data-role="button" id='submit_btn' class='btn'>Submit</a>
+  </div>
+  <div class="ui-block-b">
+    <input id="fb" data-theme="f" data-inline="true" data-mini="true" type="checkbox" value="1">
+    <label for="fb"  data-inline="true">
+        Share on Facebook
+    </label>
+  </div>
+</div>
+
+<input type='hidden' value='{{routekey}}' id='routekey'>
+  <script>
+var urlParams;
+(window.onpopstate = function () {
+    var match,
+        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query  = window.location.search.substring(1);
+
+    urlParams = {};
+    while (match = search.exec(query))
+       urlParams[decode(match[1])] = decode(match[2]);
+})();
+  
+$(document).ready(function(){
+  var emails = [];
+  $('#add_btn').click(function(event) {
+    email = $('input').val();
+    var row = '<tr><td>'+email+'</td></tr>';
+    $('table#sharelist').append(row);
+    emails.push(email);
+    email = $('input').val('');
+  });
+    $('#submit_btn').click(function(event) {
+      loggedIn = checkLoginStatus();      
+      if (loggedIn) {    
+        data={};     
+        data.emails=emails;
+        data.routekey=urlParams['routekey'];
+        data.fbshare = $("input#fb:checked").val();
+        $.ajax({
+            type: "POST",
+            dataType: "json",  
+            contentType: "json",
+            data: JSON.stringify(data),
+            url: '/track/share',
+            success: function(response) {
+                if (response.status == "ok") {
+                    window.location.replace(response.route_url);
+                } else 
+                    alert(response.status);
+            }
+          });    
+      } else {
+        loginPlease();
+      }
+    });    
+});
+
+  </script>
+{% endblock %}

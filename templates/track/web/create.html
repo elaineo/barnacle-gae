@@ -91,9 +91,10 @@ $(document).ready(function(){
             url: '/track/create',
             success: function(response) {
               console.log(response);
-                //if (response.status == "OK") {
-                    // redirect to share page
-                //}
+                if (response.status == "ok") {
+                  var routekey = response.route.routekey;
+                  window.location.replace('/track/share?routekey='+routekey);
+                }
               }
             })
           });    

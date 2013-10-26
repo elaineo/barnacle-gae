@@ -8,6 +8,8 @@ from Handlers.BaseHandler import *
 from Models.Tracker.TrackerModel import *
 from Utils.ValidUtils import parse_date
 from Utils.ConfirmUtils import *
+from Utils.EmailUtils import send_info
+from Utils.DefsEmail import sharetrack_txt
 
 class TrackerHandler(BaseHandler):
     def get(self, action=None, key=None):
@@ -16,15 +18,20 @@ class TrackerHandler(BaseHandler):
             return
         if action=='update':
             # show active routes
+            self.params['routes'] = self.__getroutes(0)
             self.render('track/web/update.html', **self.params)
         elif action=='create':
             self.render('track/web/create.html', **self.params)
         elif action=='manage':
+            self.params['routes'] = self.__getroutes(None,True)
+            self.params['completed'] = self.__getroutes(99)
             self.render('track/web/manage.html', **self.params)            
         elif action=='confirm':
             # show active routes
             self.params['routes'] = self.__getroutes(0)
             self.render('track/web/confirm.html', **self.params)               
+        elif action=='share':
+            self.render('track/web/share.html', **self.params)    
         elif action=='getroutes':
             self.__dumproutes()
         elif action=='jsonroute' and key:
@@ -62,6 +69,8 @@ class TrackerHandler(BaseHandler):
             self.__confirm()
         elif action=='sendconfirm':
             self.__sendconfirm()
+        elif action=='share':
+            self.__share()
         else:
             return
 
@@ -209,10 +218,12 @@ class TrackerHandler(BaseHandler):
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))              
         
-    def __getroutes(self, status=None):   
+    def __getroutes(self, status=None, comp=False):   
         routes=[]
         if status is not None:
             tracks = TrackerModel.by_driver(self.user_prefs.key, status)
+        elif comp:
+            tracks = TrackerModel.by_driver(self.user_prefs.key, None, True)
         else:
             tracks = TrackerModel.by_driver(self.user_prefs.key)
         for t in tracks:
@@ -239,6 +250,27 @@ class TrackerHandler(BaseHandler):
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))   
         
+    def __share(self):
+        data = json.loads(self.request.body)
+        logging.info(data)
+        try:
+            key = data['routekey']
+            r = ndb.Key(urlsafe=key).get()        
+            if not r:
+                response = { 'status': 'Route not found.'}            
+            else:
+                response = { 'status': 'ok'}       
+                fbshare = bool(data['fbshare'])
+                self.params['share_onload'] = fbshare 
+                url = r.post_url()
+                emails = data['emails']
+                self.send_tracking(emails, url)
+                response['route_url'] = r.mobile_url() + '?fbshare=1'
+        except:
+            response = { 'status': 'Failed.'}            
+        self.response.headers['Content-Type'] = "application/json"
+        self.write(json.dumps(response))   
+        
     def __debug(self):
         locstart='Mountain View, CA'
         locend = 'San Gabriel, CA'        
@@ -257,3 +289,11 @@ class TrackerHandler(BaseHandler):
             r.put()
         return
         
+    def send_tracking(self, emails, url):
+        self.params['first_name'] = self.user_prefs.first_name
+        self.params['url'] = url
+        htmlbody =  self.render_str('email/sharetrack.html', **self.params)
+        textbody = sharetrack_txt % self.params
+        share_sub = self.params['first_name'] + " has shared a route with you"
+        for email in emails:
+            send_info(email, share_sub, textbody, htmlbody)        

@@ -58,3 +58,9 @@ routenote_txt = """
         %(posts)s\n\n
         Change your notification settings and view your requests by going to your account page: http://www.gobarnacle.com/account.
 """
+
+sharetrack_txt = """
+        %(first_name)s has shared a route with you\n\n
+        Track %(first_name)s\'s progress in real time with the Barnacle Driver Tracker.\n\n 
+        %(first_name)s\'s Tracking Page: %(url)s
+"""

@@ -5,61 +5,112 @@
 {% block content %}
 <link rel="stylesheet" href="/static/css/jquery-ui.css" />
    
-<div class="row">
-    <div class="span10 offset1">
- <form enctype="multipart/form-data" method="post" id='route_form' class="form-horizontal">
-   Select the destination you would like to confirm.
-    <div class="control-group">
+<p>Tap to view route. Hold to update status. </p>
+<table class="table table-condensed manage">
+  <tr><th></th><th>Origin</th><th>Destination</th><th colspan='2'>Arrival Date</th></tr>
         {% for r in routes %}
-        <label class="radio">        
-          <input type="radio" name="routeDest" value="{{r.routekey}}">
-          {{r.locend}}
-        </label>
+        <tr data-key='{{r.routekey}}' data-url='{{r.post_url}}' class='route'><td>
+            {% if r.statusint ==0 %}
+            <img src='/static/img/icons/btn_active.png'>
+            {% elif r.statusint==1 %}
+            <img src='/static/img/icons/btn_inactive.png'>
+            {% elif r.statusint==2 %}
+            <img src='/static/img/icons/btn_wait.png'>
+            {% endif %}
+        </td><td>
+          {{ r.locstart }}
+        </td><td>
+          {{ r.locend }}
+        </td><td>
+          {{ r.delivend }}
+        </td><td>
+          <button class='delete_btn'><img src='/static/img/icons/trash.png'>
+        </td></tr>
         {% endfor %}
-    </div>
-    Please enter your confirmation code. The recipient should provide this to you.
-    <div class="control-group">
-        <div class="controls">
-          <input class="input" type="text" name="code" id='confcode'>     
-          <button class="btn" id='confirm_btn' >confirm</button>          
-        </div>
-    </div>
-    Or, click below and we will notify the sender with instructions to confirm your delivery.
-    <div class='row-fluid'>
-      <div class='span2 offset1'>
-	<button type="submit" class="btn" id='submit_btn' >Submit</button>
-      </div>
-    </div>	
-</form>
-</div>
-</div>
+  <tr><th colspan='5'>Completed</th></tr>
+        {% for r in completed %}
+        <tr data-key='{{r.routekey}}' onclick="document.location.href ='{{r.post_url}}';"><td>
+        </td><td>
+          {{ r.locstart }}
+        </td><td>
+          {{ r.locend }}
+        </td><td>
+          {{ r.delivend }}
+        </td><td>
+          <button class='delete_btn'><img src='/static/img/icons/trash.png'></button>
+        </td></tr>
+        {% endfor %}  
+</table>
   <script>
 $(document).ready(function(){
-    $('#confirm_btn').click(function(event) {
+    $('.delete_btn').click(function(event) {
       event.preventDefault();
       loggedIn = checkLoginStatus();      
       if (loggedIn) {    
+        var routekey = $(this).parents('tr').attr('data-key');
         data={};
-        data.code=$('input#confcode').val();
-        data.routekey=$("input[name=routeDest]:checked").val();
+        data.status=0;
+        data.routekey=routekey;
         $.ajax({
             type: "POST",
             dataType: "json",  
             contentType: "json",
             data: JSON.stringify(data),
-            url: '/track/confirm',
+            url: '/track/status',
             success: function(response) {
                 if (response.status == "ok") {
-                    alert("Delivery confirmed.");
-                    window.location.replace('/track/manage');
+                  $(this).parents('tr').hide();
                 } else 
-                    alert(response.status);
+                  alert(response.status);
             }
           });    
       } else {
         loginPlease();
       }
     });    
+  var tapTime = 0;
+  $('tr.route').bind('vmousedown vmouseup', function (event) {
+    if (event.type == 'vmousedown') {
+      tapTime = new Date().getTime();
+    } else {
+        var duration = (new Date().getTime() - tapTime);
+        if (duration > 800) {
+            //this is a tap-hold
+          var key = $(this).attr('data-key');
+          var td = $(this).children(":first");
+          loggedIn = checkLoginStatus();      
+          if (loggedIn) {    
+            data={};
+            data.status=1;
+            data.routekey=key;
+            $.ajax({
+                type: "POST",
+                dataType: "json",  
+                contentType: "json",
+                data: JSON.stringify(data),
+                url: '/track/status',
+                success: function(response) {                  
+                    if (response.status == "ok") {
+                      if (response.newstat == 0) {
+                         td.html('<img src="/static/img/icons/btn_active.png">');
+                      } else if (response.newstat == 1) {
+                         td.html('<img src="/static/img/icons/btn_inactive.png">');
+                      } else if (response.newstat == 2) {
+                         td.html('<img src="/static/img/icons/btn_wait.png">');
+                      }
+                    } else 
+                      alert(response.status);
+                }
+              });    
+          } else {
+            loginPlease();
+          }          
+        } else {
+          var url = '/track/mobile/' + $(this).attr('data-key');
+          window.location.href(url);
+        }
+    }
+  });    
 });
 
   </script>
