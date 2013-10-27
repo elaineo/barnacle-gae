@@ -16,6 +16,7 @@ from Handlers.SettingsHandler import *
 from Handlers.DriverHandler import *
 from Handlers.Tracker.TrackerHandler import *
 from Handlers.Launch.MobileHandler import *
+from Handlers.Launch.ExternalHandler import *
 from Utils.DebugUtils import *
 from Utils.EmailUtils import *
 from Utils.CloseUtils import *
@@ -107,7 +108,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
     webapp2.Route('/debug/<action>', handler=DebugUtils),
     webapp2.Route('/notify/<action>', handler=NotifyHandler),
    ('/summary', SummaryHandler),
-   ('/kickstart', Kickstarter),
+   webapp2.Route('/external/<action>', ExternalHandler),
    ('/expire', ExpireHandler), EmailHandler.mapping()],
   debug=True)
 
