@@ -71,10 +71,18 @@ class MatchHandler(BaseHandler):
                     
     def post(self, action=None):
         if action=='dumprequests':
+            if not self.user_prefs:
+                return
             # retrieve user's real location
-            self.response.headers['Content-Type'] = "application/json"
+            data = json.loads(self.request.body)
+            logging.info(data)
             try:
+                lat = data['startlat']
+                lon = data['startlon']
+                here = ndb.GeoPt(float(lat), float(lon))
+            except:
                 here = self.user_prefs.locpt
+            try:
                 now = datetime.now().strftime('%Y-%m-%d')
                 later = (datetime.now() + timedelta(365)).strftime('%Y-%m-%d')
                 results = search_points_start(dist,'REQUEST_INDEX',later,now,'delivby','start',start)
@@ -83,6 +91,7 @@ class MatchHandler(BaseHandler):
                 # rdump['link'] = link to search/request/major city
             except:
                 rdump = {'status':'fail'}
+            self.response.headers['Content-Type'] = "application/json"                
             self.write(json.dumps(rdump))
             
     def __send_match2d(self, driver):
