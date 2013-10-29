@@ -82,15 +82,15 @@ class MatchHandler(BaseHandler):
                 here = ndb.GeoPt(float(lat), float(lon))
             except:
                 here = self.user_prefs.locpt
-            try:
-                now = datetime.now().strftime('%Y-%m-%d')
-                later = (datetime.now() + timedelta(365)).strftime('%Y-%m-%d')
-                results = search_points_start(dist,'REQUEST_INDEX',later,now,'delivby','start',start)
-                rdump = {'status':'ok'}
-                rdump['count'] = len(results)
-                # rdump['link'] = link to search/request/major city
-            except:
-                rdump = {'status':'fail'}
+            # try:
+            now = datetime.now().strftime('%Y-%m-%d')
+            later = (datetime.now() + timedelta(365)).strftime('%Y-%m-%d')
+            results = search_points_start(dist,'REQUEST_INDEX',later,now,'delivby','start',here)
+            rdump = {'status':'ok'}
+            rdump['count'] = len(results.results)
+            rdump['link'] = '/search/request?startlat='+str(here.lat)+'&startlon='+str(here.lon)
+            # except:
+                # rdump = {'status':'fail'}
             self.response.headers['Content-Type'] = "application/json"                
             self.write(json.dumps(rdump))
             
