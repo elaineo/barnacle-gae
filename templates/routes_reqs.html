@@ -23,7 +23,11 @@
     </tr></thead>
     {% for route in routedump %}
     <tr>
-        <td class='clicky' onclick="document.location.href = '{{route.post_url}}';">{{route.locstart}} to {{route.locend}}</td>
+        <td class='clicky' onclick="document.location.href = '{{route.post_url}}';">{{route.locstart}} to {{route.locend}}
+        {% if route.num_matches!=0 %}
+        <br><span class='tiny' style='color:#A00000'>{{route.num_matches}} matching delivery requests!</span>
+        {% endif %}
+        </td>
         <td>{{route.delivstart}}</td>
         <td>{{route.delivend}}</td>
         {% if route.num_requests!=0 %}
@@ -71,7 +75,11 @@
     </tr></thead>
     {% for req in reqdump %}
     <tr>
-        <td class='clicky' onclick="document.location.href = '{{req.post_url}}';">{{req.locstart}} to {{req.locend}}</td>
+        <td class='clicky' onclick="document.location.href = '{{req.post_url}}';">{{req.locstart}} to {{req.locend}}
+        {% if req.num_matches!=0 %}
+        <br><span class='tiny' style='color:#A00000'>{{req.num_matches}} matching routes!</span>
+        {% endif %}        
+        </td>
         <td>{{req.delivby}}</td>
         {% if req.num_offers!=0 %}
         <td style='text-align:center'><button class='btn btn-small btn-primary showoff'>{{req.num_offers}}</button></td>

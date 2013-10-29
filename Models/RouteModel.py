@@ -81,7 +81,8 @@ class Route(ndb.Model):
             'delivend' : cls.delivend.strftime('%m/%d/%Y'),
             'locstart' : cls.locstart,
             'locend' : cls.locend,
-            'num_requests': cls.num_requests()
+            'num_requests': cls.num_requests(),
+            'num_matches' : len(cls.matches)
         }
         return route
     

@@ -273,6 +273,8 @@ class RouteHandler(BaseHandler):
                 self.params['edit_allow'] = True
                 if p.num_confirmed > 0:
                     self.params['resdump'] = route_resdump(p.key, p.__class__.__name__)
+                if len(p.matches) > 0:
+                    self.params['matchdump'] = route_matchdump(p)                    
             else:
                 self.params['edit_allow'] = False      
             if self.user_prefs and self.user_prefs.account_type == 'fb':
@@ -324,6 +326,7 @@ def fill_route_params(key,is_route=False):
         'locend' : p.locend,
         'capacity' : p.capacity,
         'num_confirmed' : p.num_confirmed(),
+        'num_matches' : len(p.matches),
         'msg_ok' : True #(0 in u.get_notify())
         }
     params.update(u.params_fill_sm(params))
@@ -441,3 +444,9 @@ def route_resdump(key, name):
         for q in DeliveryOffer.by_route(key):
             resdump.append(q.to_dict())           
     return resdump                
+    
+def route_matchdump(route):
+    resdump = []
+    for q in route.matches:
+        resdump.append(q.get().to_dict())
+    return resdump      

@@ -120,11 +120,15 @@ function pausecomp(ms) {
       if (status == google.maps.GeocoderStatus.OK) {
         postaddr.startlat = results[0].geometry.location.lat();
         postaddr.startlng = results[0].geometry.location.lng();
+        if (postaddr.startlng > -100.0)
+          return
         geocoder1.geocode( { 'address': address.dest}, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             console.log(results[0]);
             postaddr.destlat = results[0].geometry.location.lat();
             postaddr.destlng = results[0].geometry.location.lng();
+            if (postaddr.destlng > -100.0)
+                return
             console.log(postaddr);
             djson = JSON.stringify(postaddr);
             $.ajax({

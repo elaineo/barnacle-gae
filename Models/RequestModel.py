@@ -64,7 +64,8 @@ class Request(ndb.Model):
             'rates' : cls.rates,
             'capacity' : cls.capacity,
             'reqitems' : cls.items,
-            'num_offers' : cls.num_offers()
+            'num_offers' : cls.num_offers(),
+            'num_matches' : len(cls.matches)
         }
         if incl_user:
             u = cls.userkey.get()

@@ -33,7 +33,25 @@
         <td>${{res.price}}</td>
         <td>{% if res.confirmed==True %}<span class="text-error">Yes</span>{% else %}No{% endif %}</td>
     </tr>
-    {% endfor %}
+    {% endfor %}   
+    </table>
+    {% endif %}
+    {% if num_matches!=0 and edit_allow==True %}
+    <table class='table table-striped table-hover table-condensed table-mini'>
+    <thead><tr>
+    <td colspan=2><span class="text-error">Matching Requests</span></td>
+    <td>Destination</td>
+    <td>Deliver By</td>    
+    <td>Offer</td>
+    </tr></thead>
+    {% for m in matchdump %}
+    <tr class='clicky' onclick="document.location.href = '{{m.post_url}}';">
+        <td></td>
+        <td>{{m.locstart}}</td><td>{{m.locend}}</td>
+        <td>{{m.delivby}}</td>
+        <td>${{m.rates}}</td>
+    </tr>
+    {% endfor %} 
     </table>
     {% endif %}
 </div></div>
