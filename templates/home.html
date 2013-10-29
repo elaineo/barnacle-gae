@@ -3,14 +3,7 @@
 {% block heading %}{% include "quicksearch.html" %}
 {% endblock %}
 {% block content %}
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=540602052657989";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+
 <div class="row-fluid" style='margin-left:40px'>
   <div class="span8">  
     <div class="row hidden-phone">
@@ -32,7 +25,7 @@
   </div>
   <div class="span4 contentpad10">
  
-    <table class="table table-hover table-bordered" style="background-color:#eee; height:100%; width:90%">
+    <table class="table table-hover table-bordered" style="background-color:#eee; height:100%; width:90%" id="newsTable">
     <tr><th>
     News
     </th></tr>
@@ -73,9 +66,47 @@ $(document).ready(function(){
     
     /* Get notifications */
     //Matches
+  $.ajax({
+    type: "GET",
+    contentType: "json", 
+    url: '/match/matches',
+    success: function(q) {
+      console.log(q);
+      if (q.status=='ok') {
+        matchstr='';
+        if (parseInt(q.reqcount) > 0) 
+          matchstr+='<tr class="clicky" onclick="document.location.href = \'/routes\';"><td>There are '+q.reqcount+ ' driver matches for your delivery requests.</td></tr>';
+        if (parseInt(q.routecount) > 0) 
+          matchstr+='<tr class="clicky" onclick="document.location.href = \'/routes\';"><td>There are '+q.routecount+ ' delivery requests that match your upcoming routes.</td></tr>';
+        if (matchstr != '') {
+          console.log(matchstr);
+          $('#newsTable tr:last').before(matchstr);
+        }
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus);
+      console.log(jqXHR);
+     }
+  });        
     
     //If driver, people who need help from your location
-    
+    // use google maps to guess location
+  $.ajax({
+    type: "POST",
+    dataType: "json",
+    contentType: "json",     
+    url: '/match/dumprequests',
+    success: function(q) {
+        console.log(q);
+        if (q.status == 'ok') {
+          if (parseInt(q.count) > 0) {
+            matchstr = '<tr><td>'+q.count+ ' users need to send packages from your location. Click to view.</td></tr>';
+            $('table#newsTable tr:last').after(matchstr);
+          }
+        }
+      }
+  });            
 });
 </script>
 {% endblock %}

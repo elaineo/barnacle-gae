@@ -49,6 +49,41 @@ class MatchHandler(BaseHandler):
             for d in senders:
                 if 3 in d.get().settings.notify:
                     self.__send_match2s(d)
+        elif action=='matches':
+            routecount = 0
+            reqcount = 0
+            try:
+                # check routes
+                routes = Route.by_userkey(self.user_prefs.key)            
+                for r in routes:
+                    routecount = routecount + len(r.matches)
+                # check requests
+                reqs = Request.by_userkey(self.user_prefs.key)            
+                for r in reqs:
+                    reqcount = reqcount + len(r.matches)
+                rdump={'status':'ok'}
+            except:
+                rdump={'status':'fail'}
+            rdump['routecount'] = routecount
+            rdump['reqcount'] = reqcount
+            self.response.headers['Content-Type'] = "application/json"
+            self.write(json.dumps(rdump))
+                    
+    def post(self, action=None):
+        if action=='dumprequests':
+            # retrieve user's real location
+            self.response.headers['Content-Type'] = "application/json"
+            try:
+                here = self.user_prefs.locpt
+                now = datetime.now().strftime('%Y-%m-%d')
+                later = (datetime.now() + timedelta(365)).strftime('%Y-%m-%d')
+                results = search_points_start(dist,'REQUEST_INDEX',later,now,'delivby','start',start)
+                rdump = {'status':'ok'}
+                rdump['count'] = len(results)
+                # rdump['link'] = link to search/request/major city
+            except:
+                rdump = {'status':'fail'}
+            self.write(json.dumps(rdump))
             
     def __send_match2d(self, driver):
         routes = Route.by_userkey(driver)
