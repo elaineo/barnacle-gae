@@ -20,7 +20,7 @@ class NotifyHandler(BaseHandler):
     def __send_match2d(self):
         # Do some sort of search for each outstanding route lalala
         matches = []
-        matches = [ndb.Key(urlsafe='agtzfnAycHBvc3RhbHIUCxIHUmVxdWVzdBiAgICA0LDtCww')]
+        matches = [ndb.Key(urlsafe='agtzfnAycHBvc3RhbHIUCxIHUmVxdWVzdBiAgICAmL3XCww')]
         posts = []
         unroll=""
         for m in matches:
@@ -31,13 +31,13 @@ class NotifyHandler(BaseHandler):
             unroll=unroll + "\n" + p['start'] + "\t" + p['dest'] + "\t" + p['delivby'] + "\t" + www_home + "/post/request/"+p['routekey']
         params = {'posts': posts}
         unrollparams = {'posts': unroll}
-        self.send_match2d('elaine.ou@gmail.com', params, unrollparams)
+        self.send_match2d('gerrit.hall@gmail.com', params, unrollparams)
         self.write(requestnote_txt % unrollparams)
 
     def __send_match2s(self):
         # Do some sort of search for each outstanding route lalala
         matches = []
-        matches = [ndb.Key(urlsafe='agtzfnAycHBvc3RhbHISCxIFUm91dGUYgICAgJCGiQgM')]
+        matches = [ndb.Key(urlsafe='agtzfnAycHBvc3RhbHISCxIFUm91dGUYgICAgIS7hggM')]
         posts = []
         unroll=""
         for m in matches:
@@ -48,7 +48,7 @@ class NotifyHandler(BaseHandler):
             unroll=unroll + "\n" + p['start'] + "\t" + p['dest'] + "\t" + p['delivend'] + "\t" + www_home + "/post/"+p['routekey']
         params = {'posts': posts}
         unrollparams = {'posts': unroll}
-        self.send_match2s('joel@gobarnacle.com', params, unrollparams)
+        self.send_match2s('gerrit.hall@gmail.com', params, unrollparams)
         
     def send_match2d(self, email, params, unrollparams):
         htmlbody =  self.render_str('email/requestnote.html', **params)

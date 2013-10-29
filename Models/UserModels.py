@@ -43,7 +43,7 @@ class UserAccounts(ndb.Model):
         return message
 
 class UserSettings(ndb.Model):
-    """ 0.Messages 1.Reservation updates 2.Review notify 3.Matching Delivery requests """
+    """ 0.Messages 1.Reservation updates 2.Review notify 3.Matching Delivery requests    4. Newsletter """ 
     notify = ndb.IntegerProperty(repeated=True) 
     permission = ndb.IntegerProperty(default=0) 
     

@@ -5,6 +5,11 @@
   </div>
   <div class="span6">
     <div class="row-fluid">
+      <div class="span6">
+      <button type="submit" class="btn btn-primary btn-mini" id='fb_btn'>Facebook Share</button>
+      </div>
+    </div>
+    <div class="row-fluid">
       <div class="span6"><p class="plabel">
         Departure Location:
       </p></div>
@@ -68,5 +73,10 @@
 $(document).ready(function(){
     var mapURL = '/track/jsonroute/{{routekey}}';
     initialize_map(mapURL);
+    
+    caption = '{{first_name}} has a new Route on Barnacle';
+    description = '{{first_name}} will be driving from {{ locstart }} to {{ locend }}. Track {{first_name}}\'s progress here.'
+    fb_url='https://www.facebook.com/dialog/feed?app_id=540602052657989&link=http://www.gobarnacle.com/track/view/{{routekey}}&picture=http://www.gobarnacle.com/static/img/barnacle.png&name=Barnacle&caption='+escape(caption)+'&description='+escape(description)+'&redirect_uri=http://www.gobarnacle.com/suicide'
+    click_facebook('#fb_btn',fb_url);    
     });
 </script>

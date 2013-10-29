@@ -13,9 +13,6 @@ from Utils.DefsEmail import sharetrack_txt
 
 class TrackerHandler(BaseHandler):
     def get(self, action=None, key=None):
-        if not self.user_prefs:
-            self.render('track/web/main.html', **self.params)
-            return
         if action=='update':
             # show active routes
             self.params['routes'] = self.__getroutes(0)
@@ -173,6 +170,7 @@ class TrackerHandler(BaseHandler):
         try:
             p = ndb.Key(urlsafe=key).get()
             self.params.update(p.to_dict())
+            self.params['first_name'] = p.driver.get().first_name
             if mobile:
                 self.render('mobile/track.html', **self.params)
             else:

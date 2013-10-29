@@ -122,12 +122,7 @@ class DebugUtils(BaseHandler):
                     create_route_doc(p.key.urlsafe(), p)                    
                 except:
                     continue
-            self.write('routes created.')
-        elif action=='repairrouteindex':
-            delete_all_in_index(ROUTE_INDEX) 
-            routes = Route.query().fetch()
-            for r in routes:
-                create_route_doc(r.key.urlsafe(), r)              
+            self.write('routes created.')         
         elif action=='createreqs':  
             users = UserPrefs.query().fetch()
             for r in fakereqs:
@@ -155,6 +150,8 @@ class DebugUtils(BaseHandler):
             # need to make a dummy call because strptime has problems with multithreading
             datetime.strptime('2012-01-01', '%Y-%m-%d')
             self.render('share/cldata.html', **self.params)
+        elif action=='test':
+            self.render('test.html', **self.params)
     
     def post(self, action=None):        
         if action=='createcl':

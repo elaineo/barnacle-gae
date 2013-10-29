@@ -70,7 +70,7 @@ class RouteUtils():
             pathpts = pathpts + pathsegment
         return pathpts, distance
 
-    def estPath(self,start,dest, fudge):
+    def estPath(self,start,dest, fudge=100):
         """ Precision of path determined by total dist.
           0.1 ~ 10 miles <-- improve later """
         locs='origin=' + str(start) + '&destination=' + str(dest)

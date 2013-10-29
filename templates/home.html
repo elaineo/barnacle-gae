@@ -37,8 +37,8 @@
     News
     </th></tr>
     <tr><td>Welcome to Barnacle!</td></tr>
-    <tr class='clicky' onclick="document.location.href = '/account';"><td>
-    You have no new delivery updates.</td></tr>
+    <tr class='clicky' onclick="document.location.href = '/account';" id='updates'>
+    <td>You have no new delivery updates.</td></tr>
     </table>
     <div class="fb-follow" data-href="https://www.facebook.com/GoBarnacle" data-width="250" data-show-faces="false" style='padding-top:10px;padding-left:10px;'></div>
     
@@ -70,6 +70,12 @@ $(document).ready(function(){
     var mapURL = '/post/jsonall';
     initialize_home(mapURL);
     click_redirect('#post_btn','/drive');
+    
+    /* Get notifications */
+    //Matches
+    
+    //If driver, people who need help from your location
+    
 });
 </script>
 {% endblock %}

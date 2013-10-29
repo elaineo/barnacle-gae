@@ -16,6 +16,7 @@ class Request(ndb.Model):
     dest = ndb.GeoPtProperty(required=True)
     locstart = ndb.StringProperty(required=True) #text descr of location
     locend = ndb.StringProperty(required=True) #text descr of location    
+    matches = ndb.KeyProperty(repeated=True)  #store keys of matches
     
     def post_url(self):
         """ url for public view of post """
@@ -95,7 +96,6 @@ class Request(ndb.Model):
     def search_route(cls, pathpts, delivstart, delivend, precision):
         results = []
         qall = cls.query().filter(cls.delivby > delivstart and cls.delivby < delivend)
-        logging.info(pathpts)
         for q in qall:            
             start = roundPoint(q.start, precision)
             dest = roundPoint(q.dest, precision)

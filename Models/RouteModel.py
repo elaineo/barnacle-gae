@@ -23,6 +23,7 @@ class Route(ndb.Model):
     locstart = ndb.StringProperty(required=True) #text descr of location
     locend = ndb.StringProperty(required=True) #text descr of location
     pathpts = ndb.GeoPtProperty(repeated=True)     
+    matches = ndb.KeyProperty(repeated=True)  #store keys of matches
 
     def _pre_put_hook(self):
         p = RouteUtils().setloc(self, self.locstart, self.locend)        

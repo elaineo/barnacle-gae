@@ -10,8 +10,9 @@ from Handlers.RouteHandler import *
 from Handlers.Launch.CLHandler import *
 from Handlers.ReservationHandler import *
 from Handlers.SearchHandler import *
-from Handlers.ExpireHandler import *
-from Handlers.SummaryHandler import SummaryHandler
+from Handlers.Cron.ExpireHandler import *
+from Handlers.Cron.MatchHandler import *
+from Handlers.Cron.SummaryHandler import SummaryHandler
 from Handlers.SettingsHandler import *
 from Handlers.DriverHandler import *
 from Handlers.Tracker.TrackerHandler import *
@@ -107,6 +108,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
 # Admin
     webapp2.Route('/debug/<action>', handler=DebugUtils),
     webapp2.Route('/notify/<action>', handler=NotifyHandler),
+    webapp2.Route('/match/<action>', handler=MatchHandler),
    ('/summary', SummaryHandler),
    webapp2.Route('/external/<action>', ExternalHandler),
    ('/expire', ExpireHandler), EmailHandler.mapping()],

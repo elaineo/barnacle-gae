@@ -2,6 +2,17 @@ import urllib2
 import logging
 from bs4 import BeautifulSoup
 
+def fetch_profile(fbid):
+    # get user profile
+    prof_url = 'http://www.zimride.com/user/profile?user='+fbid
+    opener = urllib2.build_opener()
+    opener.addheaders.append(('Cookie', 'PHPSESSID=bg1njpm133j74miqkd4nieulq3'))
+    f = opener.open(prof_url)
+    soup = BeautifulSoup(f)
+    label = soup.find("div", {"class":"label"})
+    url = label.find('a')['href']
+    return url
+    
 def fetch_routes(url):
     opener = urllib2.build_opener()
     # this isn't a good permanent solution. Will have to update... daily?
