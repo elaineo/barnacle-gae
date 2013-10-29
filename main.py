@@ -1,3 +1,4 @@
+
 import webapp2
 import sys
 
@@ -18,6 +19,8 @@ from Handlers.DriverHandler import *
 from Handlers.Tracker.TrackerHandler import *
 from Handlers.Launch.MobileHandler import *
 from Handlers.Launch.ExternalHandler import *
+from Handlers.Seo.SitemapHandler import SitemapHandler
+from Handlers.Seo.SearchableRouteHandler import SearchableRouteHandler
 from Utils.DebugUtils import *
 from Utils.EmailUtils import *
 from Utils.CloseUtils import *
@@ -37,7 +40,6 @@ from Handlers.MessageHandler import *
 from Handlers.ReviewHandler import *
 
 sys.path.append('/Pages')
-
 
 app = webapp2.WSGIApplication([('/', HomePage),
                                 ('/home', GuestPage),
@@ -64,6 +66,8 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/search', handler=SearchHandler),
    webapp2.Route('/search/<action>', handler=SearchHandler),
    webapp2.Route('/search/<action>/<key:[\w\-]{20,}>', handler=SearchHandler),
+# seo
+   webapp2.Route('/route/from/<origin>/to/<dest>', handler=SearchableRouteHandler),
 # accounts
    webapp2.Route('/signup', handler=SignupPage),
    webapp2.Route('/signup/<action>', handler=SignupPage),
@@ -92,6 +96,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
 # reviews
    webapp2.Route('/review', handler=ReviewHandler),
    webapp2.Route('/review/<action>', handler=ReviewHandler),
+   ('/sitemap.xml', SitemapHandler),
 # Utils
    ('/navhead',NavHelper),
    ('/suicide',CloseHelper),
