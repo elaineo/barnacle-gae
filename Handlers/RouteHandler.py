@@ -166,7 +166,7 @@ class RouteHandler(BaseHandler):
                 items=items, delivby=delivby, locstart=startstr, locend=deststr)
         try:
             p.put() 
-            taskqueue.add(url='/match/updatereq/'+p.key)
+            taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
             create_request_doc(p.key.urlsafe(), p)
             fbshare = bool(self.request.get('fbshare'))
             self.params['share_onload'] = fbshare               
@@ -242,7 +242,7 @@ class RouteHandler(BaseHandler):
             p.repeatr = None
         # try:                
         p.put()            
-        taskqueue.add(url='/match/updateroute/'+p.key)
+        taskqueue.add(url='/match/updateroute/'+p.key.urlsafe(), method='get')
         create_route_doc(p.key.urlsafe(), p)
         if rtr:
             add_roundtrip(p)
