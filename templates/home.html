@@ -96,9 +96,26 @@ $(document).ready(function(){
     navigator.geolocation.getCurrentPosition(function(position) {
     data.startlat = position.coords.latitude;
     data.startlon = position.coords.longitude;
+    getRequestDump(data); 
+    }, function() {
+      getRequestDump(data); 
     });
-  } 
-    
+  } else 
+    getRequestDump(data);     
+});
+
+function postRedir(url) {
+  $.ajax({
+    type: "POST",
+    url: url,
+    success: function(q) {
+      document.open();
+      document.write(q);
+      document.close();
+    }
+  });
+}
+function getRequestDump(data) {
   $.ajax({
     type: "POST",
     dataType: "json",
@@ -115,18 +132,6 @@ $(document).ready(function(){
         }
       }
   });            
-});
-
-function postRedir(url) {
-  $.ajax({
-    type: "POST",
-    url: url,
-    success: function(q) {
-      document.open();
-      document.write(q);
-      document.close();
-    }
-  });
 }
 </script>
 {% endblock %}

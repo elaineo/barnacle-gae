@@ -57,57 +57,12 @@ class DebugUtils(BaseHandler):
                 d.settings.notify.append(4)
                 d.put()
             return
-        elif action=='clearreqs':
-            data = DeliveryOffer.query()
-            for d in data:
-                d.key.delete()
-            data = Request.query()
-            for d in data:
-                d.key.delete()
-            delete_all_in_index(REQUEST_INDEX)                
-            self.write('reqs gone.')            
-        elif action=='clearroutes':
-            data = Reservation.query()
-            for d in data:
-                d.key.delete()
-            data = Route.query()
-            for d in data:
-                d.key.delete()
-            delete_all_in_index(ROUTE_INDEX)                               
-            self.write('routes gone.')
         elif action=='clearcl':
             data = CLModel.query()
             for d in data:
                 d.key.delete()
             delete_all_in_index(CL_INDEX)                               
-            self.write('cl stuff gone.')            
-        elif action=='populate':        
-            for p in fakefb:
-                p = p.split()
-                acct_type = p[0]
-                email = p[1]
-                first_name = p[3]
-                last_name = p[4]
-                userid = p[2]
-                about = p[5]
-                loc = p[6]            
-                sett = UserSettings(notify=[1,2],permission=1)
-                u = UserPrefs(account_type = 'fb', email = email, userid = userid, first_name = first_name, last_name = last_name, about = about, location = loc, img_id = -1, settings=sett)
-                u.put()
-            self.write('done.')
-        elif action=='drivers':        
-            for p in fakefb:
-                p = p.split()
-                email = p[1]
-                first_name = p[3]
-                last_name = p[4]
-                fbid = p[2]
-                about = p[5]    
-                seed = random.randint(-5,10)
-                u = BarnacleModel( email = email, userid=fbid, first_name = first_name, last_name = last_name, about = about, img_id=-1, seed=seed, 
-                completed=0, fbnetworks = [''], fblocation = 'Mountain View, California')
-                u.put()
-            self.write('done.')            
+            self.write('cl stuff gone.')                     
         elif action=='createroutes':  
             users = BarnacleModel.query().fetch()
             for r in fakeroutes2:
@@ -150,8 +105,6 @@ class DebugUtils(BaseHandler):
             # need to make a dummy call because strptime has problems with multithreading
             datetime.strptime('2012-01-01', '%Y-%m-%d')
             self.render('share/cldata.html', **self.params)
-        elif action=='test':
-            self.render('test.html', **self.params)
     
     def post(self, action=None):        
         if action=='createcl':

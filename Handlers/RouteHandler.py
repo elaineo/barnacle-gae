@@ -1,5 +1,6 @@
 from datetime import *
 from google.appengine.ext import ndb
+from google.appengine.api import taskqueue
 
 from Handlers.BaseHandler import *
 from Models.RouteModel import *
@@ -38,19 +39,19 @@ class RouteHandler(BaseHandler):
             except:
                 self.abort(400)
                 return  
-            try:
-                if p.userkey == self.user_prefs.key:
-                    if p.__class__.__name__ == 'Route':
-                        self.params.update(fill_route_params(key,True))
-                        self.params['route_title'] = 'Edit Route'
-                        self.render('forms/fillpost.html', **self.params)
-                    else:
-                        self.params.update(fill_route_params(key,False))
-                        self.params['route_title'] = 'Edit Delivery Request'
-                        self.render('forms/fillrequest.html', **self.params)      
-                    return
-            except: 
-                logging.error(p)
+            if not self.user_prefs:
+                self.redirect('/post#signin-box')
+                return                    
+            if p.userkey == self.user_prefs.key:
+                if p.__class__.__name__ == 'Route':
+                    self.params.update(fill_route_params(key,True))
+                    self.params['route_title'] = 'Edit Route'
+                    self.render('forms/fillpost.html', **self.params)
+                else:
+                    self.params.update(fill_route_params(key,False))
+                    self.params['route_title'] = 'Edit Delivery Request'
+                    self.render('forms/fillrequest.html', **self.params)      
+                return
             logging.error(p)
             self.abort(403)
             return  
@@ -83,20 +84,16 @@ class RouteHandler(BaseHandler):
             except:
                 self.abort(400)
                 return          
-            try:
-                if not self.user_prefs:
-                    self.redirect('/post#signin-box')
-                    return    
-                if p.userkey == self.user_prefs.key:
-                    if p.__class__.__name__ == 'Route':
-                        self.__create_route(key)   
-                    else:
-                        self.__create_request(key)   
-                    return
-            except: 
-                logging.error(p)
-                self.abort(403)
-                return  
+
+            if not self.user_prefs:
+                self.redirect('/post#signin-box')
+                return    
+            if p.userkey == self.user_prefs.key:
+                if p.__class__.__name__ == 'Route':
+                    self.__create_route(key)   
+                else:
+                    self.__create_request(key)   
+                return
             logging.error(p)
             self.abort(403)
             return  
@@ -169,6 +166,7 @@ class RouteHandler(BaseHandler):
                 items=items, delivby=delivby, locstart=startstr, locend=deststr)
         try:
             p.put() 
+            taskqueue.add(url='/match/updatereq/'+p.key)
             create_request_doc(p.key.urlsafe(), p)
             fbshare = bool(self.request.get('fbshare'))
             self.params['share_onload'] = fbshare               
@@ -244,6 +242,7 @@ class RouteHandler(BaseHandler):
             p.repeatr = None
         # try:                
         p.put()            
+        taskqueue.add(url='/match/updateroute/'+p.key)
         create_route_doc(p.key.urlsafe(), p)
         if rtr:
             add_roundtrip(p)

@@ -18,16 +18,14 @@ class MatchHandler(BaseHandler):
     def day_ago(self):
         return datetime.now() - timedelta(1)
         
-    def get(self, action=None):
+    def get(self, action=None, key=None):
         if action=='routes':
             routes = Route.query()
             drivers =[]
             for r in routes:
-                matches = find_reqmatch(r)
-                r.matches = matches
-                if (True in [m.get().created > self.day_ago() for m in matches]):
+                self.__updateroute(r)
+                if (True in [m.get().created > self.day_ago() for m in r.matches]):
                     drivers.append(r.userkey)
-                r.put()
             drivers = list(set(drivers))
             logging.info(drivers)
             # go through the list and send notifications
@@ -38,11 +36,9 @@ class MatchHandler(BaseHandler):
             requests = Request.query()
             senders = []       
             for r in requests:
-                matches = find_routematch(r)
-                r.matches = matches
-                if (True in [m.get().created > self.day_ago() for m in matches]):
+                self.__updatereq(r)
+                if (True in [m.get().created > self.day_ago() for m in r.matches]):
                     senders.append(r.userkey)
-                r.put()
             drivers = list(set(senders))
             logging.info(senders)
             # go through the list and send notifications
@@ -68,6 +64,12 @@ class MatchHandler(BaseHandler):
             rdump['reqcount'] = reqcount
             self.response.headers['Content-Type'] = "application/json"
             self.write(json.dumps(rdump))
+        elif action=='updatereq' and key:
+            r = ndb.Key(urlsafe=key).get()
+            self.__updatereq(r)
+        elif action=='updateroute' and key:
+            r = ndb.Key(urlsafe=key).get()
+            self.__updateroute(r)
                     
     def post(self, action=None):
         if action=='dumprequests':
@@ -140,6 +142,13 @@ class MatchHandler(BaseHandler):
         send_info(to_email=email, subject=request_note_sub, 
             body=textbody, html=htmlbody)          
         
+    def __updatereq(self,r):
+        r.matches =  find_routematch(r)
+        r.put()
+    def __updateroute(self,r):
+        r.matches =  find_reqmatch(r)
+        r.put()
+    
 def find_reqmatch(route):
     # for a given route, get all matching requests
     pathpts, precision = RouteUtils().estPath(route.start, route.dest, dist)

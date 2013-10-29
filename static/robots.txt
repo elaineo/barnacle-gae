@@ -6,5 +6,6 @@ Disallow: /drive
 Disallow: /debug/
 Disallow: /account
 Disallow: /settings/
+Disallow: /edit/
 Disallow: /kickstart
 Sitemap: http://www.gobarnacle.com/sitemap.xml
