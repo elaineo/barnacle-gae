@@ -171,7 +171,25 @@ class RouteUtils():
         route['zoom'] = zoom_max(maxh,maxw)
         route['center'] = [lat,lng]        
         route['paths'] = paths
-        return json.dumps(route)
+        return json.dumps(route)  
+        
+    def dumpreqs(self,reqs):        
+        route = {}
+        markers = []
+        for r in reqs:
+            q = r.start
+            a = r.locend.split(',')
+            abbrevloc = a[-3]+','+a[-2].split()[0]
+            m = {'lat': q.lat,
+                'lon':q.lon,
+                'loc':abbrevloc,
+                'rates':r.rates,
+                'url': r.post_url(),
+                'delivby' : r.delivby.strftime('%m/%d/%Y') }
+            markers.append(m)
+        route['markers'] = markers
+        return route
+        
     def debugloc(self,r,startstr,endstr):
         route=r
         route.start,route.locstart=self.getGeoLoc(startstr)

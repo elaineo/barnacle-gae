@@ -6,6 +6,7 @@ from Utils.SearchUtils import *
 from Utils.SearchScraped import *
 from Utils.SearchDocUtils import *
 import logging
+import json
 from google.appengine.ext import ndb
 from Utils.ValidUtils import *
 from datetime import *
@@ -15,6 +16,8 @@ class SearchHandler(BaseHandler):
     def get(self, action=None, key=None):
         if action=='request':
             self.render('search_requests.html', **self.params)
+        elif action=='requestseo':
+            self.render('search_requests_sfo.html', **self.params)
         elif action=='scrapez':
             sdump = {}
             if not key:
@@ -43,9 +46,53 @@ class SearchHandler(BaseHandler):
     def post(self,action=None):
         if action=='request':
             self.__search_requests()
+        elif action=='reqseo':
+            self.__search_requests_seo()
         else:
             self.__search_routes()
+            
+    def __search_requests_seo(self):
+        self.response.headers['Content-Type'] = "application/json"
+        start,startstr = self.__get_search_form('start')
+        if not start:
+            r = Request.get_all()
+            rdump = RouteUtils().dumpreqs(r)
+            self.write(rdump)         
+            return
+        # this is optional
+        dest,deststr = self.__get_search_form('dest')     
 
+        if not start:
+            self.params['error_route'] = 'Invalid Location'
+            self.render('search_requests_sfo.html', **self.params)
+            return
+        dist=100
+        delivstart = datetime.now()
+        delivend = delivstart + timedelta(days=365)
+
+        posts = []
+        ## find nearest major cities
+        startc = search_points(start, 'loc', CITY_INDEX)
+        if dest:
+            destc = search_points(dest, 'loc', CITY_INDEX)
+            ### Get a set of low-res pathpts
+            pathpts, precision = RouteUtils().estPath(start, dest,dist)
+            pp = []
+            for p in pathpts:
+                pp.append([p.lat,p.lon])
+            results = Request.search_route(pathpts, delivstart, delivend, precision)
+            rdump = RouteUtils().dumpreqs(results)
+            rdump['waypts'] = pp
+        else:
+            results = search_points_start(dist,'REQUEST_INDEX',delivend.strftime('%Y-%m-%d'),delivstart.strftime('%Y-%m-%d'),'delivby','start',start)
+            logging.info(results)
+
+            r = []
+            for doc in results.results:
+                r.append(ndb.Key(urlsafe=doc.doc_id).get())
+            rdump = RouteUtils().dumpreqs(r)
+        self.write(json.dumps(rdump))
+        
     def __search_requests(self):
         dist = self.request.get('dist')
         if not dist:

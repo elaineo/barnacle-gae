@@ -5,6 +5,7 @@ from Models.RequestModel import *
 import logging
 ROUTE_INDEX = 'ROUTE_INDEX'
 REQUEST_INDEX = 'REQUEST_INDEX'
+CITY_INDEX = 'CITY_INDEX'
 
 def create_route_doc(keysafe, route):
     index = search.Index(name=ROUTE_INDEX)
@@ -48,7 +49,19 @@ def create_request_doc(keysafe, route):
     try:
         index.put(doc)
     except search.Error,e:
-        logging.error(e)            
+        logging.error(e)  
+
+def create_city_doc(city, point):
+    index = search.Index(name=CITY_INDEX)
+    locpoint = search.GeoPoint(point.lat,point.lon)
+
+    fields=[search.GeoField(name='loc', value=locpoint),
+            search.TextField(name='city', value=city)]
+    doc = search.Document(fields=fields)                
+    try:
+        index.put(doc)
+    except search.Error,e:
+        logging.error(e)           
 
 def delete_doc(keysafe, r_name):
     if r_name == 'Route':

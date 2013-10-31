@@ -27,6 +27,8 @@ function loadFBdata() {
 
 <div class="row">
   <div class="span10 offset1">
+  <span class="text-info">
+  Routes that start or end beyond your search locations will pass the origin and destination along the way.</span>
   <br>
   <table class="table table-striped table-hover">
     <thead><tr>
@@ -98,12 +100,12 @@ function populateZSearch(searchURL) {
         for (i in q.results) {      
           var rowhtml = '<tr class="clicky" data-fb="' + q.results[i]['fbid'] + '" onclick="document.location.href = \'/scraped/' +  q.results[i]['routekey'] + '\';">';
           rowhtml +='<td ';
-          if (q.results[i]['fbid'] != 'undefined')  
+          if (q.results[i]['fbid'] != '')  
             rowhtml += 'class="dumpthumb" rowspan="2"';
-          rowhtml +='</td><td>' + q.results[i]['start'] + '</td>';
+          rowhtml +='></td><td>' + q.results[i]['start'] + '</td>';
           rowhtml +='<td>' + q.results[i]['dest'] + '</td>';
           rowhtml +='<td>' + q.results[i]['delivend'] + '</td>';
-          if (q.results[i]['fbid'] != 'undefined')  
+          if (q.results[i]['fbid'] != '')  
             rowhtml += '<tr><td colspan="4">Mutual Friends: <div class="dumpfriends">None.</div></td></tr>';
           rowhtml += '</tr>';
           $('#outresults tr:first').after(rowhtml);

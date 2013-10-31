@@ -48,13 +48,13 @@ def expire_pathpts(index_name, date, datefield):
         index.delete(r.doc_id)
     return 
 
-def search_points(center, field, dist, index_name):
-    limit = 10
-    meters = dist * miles2m
+def search_points(center, field, index_name):
+    # find nearest matching point
+    limit = 1
+    meters = 500 * miles2m
     index = search.Index(index_name)
     query = 'distance('+field+', geopoint('+str(center.lat)+', '+str(center.lon)+')) < '+str(meters)
     loc_expr = 'distance('+field+', geopoint('+str(center.lat)+', '+str(center.lon)+'))'
-    logging.info(query)
         
     sortexpr = search.SortExpression( expression=loc_expr,
       direction=search.SortExpression.ASCENDING, default_value=meters)
@@ -77,7 +77,11 @@ def search_todict(s):
     d = {}
     for f in s.fields:
         d[f.name] = f.value
-    d['routekey'] = s.doc_id
+    rk = s.doc_id
+    if rk.endswith('_RT'):
+        d['routekey'] = rk[:-3]
+    else:
+        d['routekey'] = rk
     return d
     
 def search_intersect(s0,s1):

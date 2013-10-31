@@ -21,4 +21,6 @@ class ImagePage(BaseHandler):
         else:
             self.error(404)
 
-
+class ImageHandler(BaseHandler):
+    def get(self, action=None, key=None):
+        return

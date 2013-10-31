@@ -98,7 +98,7 @@ class RouteHandler(BaseHandler):
             self.abort(403)
             return  
         elif action=='delete' and key:
-            self.__delete(key)
+            self.__delete(key)           
         else:
             self.__create_route(key)
             

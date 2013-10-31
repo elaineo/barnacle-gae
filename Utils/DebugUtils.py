@@ -1,6 +1,5 @@
 from datetime import *
 import dateutil.parser
-import csv
 from google.appengine.ext import ndb
 from google.appengine.api import search
 from google.appengine.api import taskqueue
@@ -16,6 +15,7 @@ from Models.UserModels import *
 from Models.Launch.BarnacleModel import *
 from Models.Launch.CLModel import *
 from Utils.data.fakedata import *
+from Utils.data.citylist import *
 from Utils.SearchUtils import *
 from Utils.SearchDocUtils import *
 from Utils.SearchScraped import *
@@ -23,6 +23,7 @@ from Utils.RouteUtils import *
 
 import json
 import random
+import logging
 
 class TestUtils(BaseHandler):
     def get(self):
@@ -37,6 +38,11 @@ class DebugUtils(BaseHandler):
             # delete_all_in_index(REQUEST_INDEX)
         elif action=='qtask':
             taskqueue.add(url='/debug/clearall')
+        elif action=='cities':
+            for c in cities:
+                point = ndb.GeoPt(c['lat'],c['lon'])
+                create_city_doc(c['city'],point)
+            self.write('cities created')
         elif action=='clearusers':
             data = ImageStore.query()
             for d in data:
