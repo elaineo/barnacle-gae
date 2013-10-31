@@ -18,6 +18,8 @@ class SearchHandler(BaseHandler):
             self.render('search_requests.html', **self.params)
         elif action=='requestseo':
             self.render('search_requests_sfo.html', **self.params)
+        elif action=='requestsfo':
+            self.render('search_requests_sfo.html', **self.params)            
         elif action=='scrapez':
             sdump = {}
             if not key:

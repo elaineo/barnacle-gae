@@ -112,6 +112,7 @@ function postRedir(url) {
       document.open();
       document.write(q);
       document.close();
+      loadFBdata();
     }
   });
 }
@@ -132,6 +133,18 @@ function getRequestDump(data) {
         }
       }
   });            
+}
+function loadFBdata() {
+    FB.getLoginStatus(function(response) {
+      console.log(response);
+        if (response.status === 'connected') {
+          $('.clicky').each(function() {
+            var fbid = $(this).attr('data-fb');
+            dumpFriends(fbid, $(this).next().find('.dumpfriends'),3);
+            dumpThumb(fbid, $(this).find('td.dumpthumb'));
+          });
+        }
+    });
 }
 </script>
 {% endblock %}

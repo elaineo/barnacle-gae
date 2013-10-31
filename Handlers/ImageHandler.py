@@ -23,4 +23,4 @@ class ImagePage(BaseHandler):
 
 class ImageHandler(BaseHandler):
     def get(self, action=None, key=None):
-        return
+        return 
