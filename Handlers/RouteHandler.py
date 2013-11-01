@@ -447,5 +447,7 @@ def route_resdump(key, name):
 def route_matchdump(route):
     resdump = []
     for q in route.matches:
-        resdump.append(q.get().to_dict())
+        k = q.get()
+        if k:
+            resdump.append(k.to_dict())
     return resdump      

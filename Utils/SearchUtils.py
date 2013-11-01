@@ -53,7 +53,7 @@ def search_points(center, field, index_name):
     limit = 1
     meters = 500 * miles2m
     index = search.Index(index_name)
-    query = 'distance('+field+', geopoint('+str(center.lat)+', '+str(center.lon)+')) < '+str(meters)
+    query = ''
     loc_expr = 'distance('+field+', geopoint('+str(center.lat)+', '+str(center.lon)+'))'
         
     sortexpr = search.SortExpression( expression=loc_expr,

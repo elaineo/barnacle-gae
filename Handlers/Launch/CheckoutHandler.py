@@ -102,7 +102,11 @@ class CheckoutHandler(BaseHandler):
 
         p = HoldAccount.by_reskey(res.key)
         
-        customer = self.__create_cust(p.uri)
+        balanced.configure(baccount)
+        cust_id = p.userkey.get().cust_id
+        customer = balanced.Customer.find('/v1/customers/' + cust_id)
+        customer.add_card(p.uri)
+            
         charge = res.price*100
         customer.debit(amount=charge)
         
@@ -112,7 +116,7 @@ class CheckoutHandler(BaseHandler):
         
         res.confirmed=True
         res.put()        
-        d = Driver.by_userkey(res.sender)
+        d = Driver.by_userkey(res.receiver)
         self.params = d.params_fill(self.params)
         self.params['reskey'] = key
         self.params.update(res.to_dict())        

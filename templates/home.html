@@ -111,8 +111,8 @@ function postRedir(url) {
     success: function(q) {
       document.open();
       document.write(q);
-      document.close();
-      loadFBdata();
+      document.close(); 
+      loadFBdata();      
     }
   });
 }
@@ -135,8 +135,7 @@ function getRequestDump(data) {
   });            
 }
 function loadFBdata() {
-    FB.getLoginStatus(function(response) {
-      console.log(response);
+    FB.getLoginStatus(function(response) {      
         if (response.status === 'connected') {
           $('.clicky').each(function() {
             var fbid = $(this).attr('data-fb');
