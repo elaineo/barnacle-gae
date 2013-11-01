@@ -143,6 +143,7 @@ class TrackerHandler(BaseHandler):
             # todo: add speed
             loc =  ndb.GeoPt(lat=lat,lon=lon)  
         except:
+            loc = None
             response = { 'status': 'Failed.'}
         try:
             locstr = data['locstr']

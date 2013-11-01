@@ -174,6 +174,8 @@ class CheckoutHandler(BaseHandler):
         logging.info(customer.id)
 
     def send_receipt(self, email, res, params):
+        self.params['action'] = 'receipt'
+        self.params['userkey'] = self.user_prefs.key.urlsafe()
         htmlbody =  self.render_str('email/receipt.html', **params)
         textbody = resreceipt_txt % params
         send_info(to_email=email, subject=confirm_res_sub, 

@@ -37,7 +37,7 @@
         </td><td>
           {{ r.delivend }}
         </td><td>
-          <button class='delete_btn'><img src='/static/img/icons/trash.png'></button>
+          <button class='delete_btn'><img id='trash_img' src='/static/img/icons/trash.png'></button>
         </td></tr>
         {% endfor %}  
 </table>
@@ -47,6 +47,7 @@ $(document).ready(function(){
       event.preventDefault();
       loggedIn = checkLoginStatus();      
       if (loggedIn) {    
+        var row = $(this).parents('tr');
         var routekey = $(this).parents('tr').attr('data-key');
         data={};
         data.status=0;
@@ -59,7 +60,8 @@ $(document).ready(function(){
             url: '/track/status',
             success: function(response) {
                 if (response.status == "ok") {
-                  $(this).parents('tr').hide();
+                  console.log(row);
+                  row.hide();
                 } else 
                   alert(response.status);
             }
@@ -71,6 +73,10 @@ $(document).ready(function(){
   var tapTime = 0;
   $('tr.route').bind('vmousedown vmouseup', function (event) {
     console.log(event);
+    if(event.target == $('.delete_btn')[0] || event.target == $('.delete_btn'))
+        return
+    if(event.target == $('#trash_img')[0] || event.target == $('#trash_img'))
+        return
     if (event.type == 'vmousedown') {
       tapTime = new Date().getTime();
     } else {
@@ -106,7 +112,7 @@ $(document).ready(function(){
           } else {
             loginPlease();
           }          
-        } else { //end this stuff before the trash can
+        } else { 
           var url = '/track/mobile/' + $(this).attr('data-key');
           window.location.href=url;
         }

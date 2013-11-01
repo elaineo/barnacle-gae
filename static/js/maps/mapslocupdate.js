@@ -66,15 +66,15 @@ function updatePos() {
             formAddr = results[0].formatted_address;
             console.log(formAddr);
             data = {};
-            data.startlat = poslat;
-            data.startlon = poslon;
-            data.startstr = formAddr;
+            data.lat = poslat;
+            data.lon = poslon;
+            data.locstr = formAddr;
             $.ajax({
             type: "POST",
             dataType: "json",  
             contentType: "json",
             data: JSON.stringify(data),
-            url: '/track/update',
+            url: '/track/updateloc',
             success: function(response) {
               console.log(response);
                 if (response.status == "ok") {

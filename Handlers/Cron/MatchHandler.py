@@ -111,6 +111,8 @@ class MatchHandler(BaseHandler):
             unroll=unroll + "\n" + p['start'] + "\t" + p['dest'] + "\t" + p['delivby'] + "\t" + www_home + "/post/request/"+p['routekey']
         params = {'posts': posts}
         unrollparams = {'posts': unroll}
+        self.params['action'] = 'match2driver'
+        self.params['userkey'] = driver.urlsafe()
         self.send_match2d(driver.get().email, params, unrollparams)
 
     def __send_match2s(self,sender):
@@ -128,6 +130,8 @@ class MatchHandler(BaseHandler):
             unroll=unroll + "\n" + p['start'] + "\t" + p['dest'] + "\t" + p['delivend'] + "\t" + www_home + "/post/"+p['routekey']
         params = {'posts': posts}
         unrollparams = {'posts': unroll}
+        self.params['action'] = 'match2sender'
+        self.params['userkey'] = sender.urlsafe()
         self.send_match2s(sender.get().email, params, unrollparams)
         
     def send_match2d(self, email, params, unrollparams):
