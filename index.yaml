@@ -42,3 +42,8 @@ indexes:
   - name: remoteip
   - name: created
     direction: desc
+
+- kind: TrackerModel
+  properties:
+  - name: driver
+  - name: status

@@ -71,7 +71,7 @@ class TrackerModel(ndb.Model):
         if status is not None:
             return cls.query(ndb.AND(cls.driver==userkey, cls.status==status))
         elif comp:
-            return cls.query().filter(cls.status!=99)
+            return cls.query(cls.status!=99).filter(cls.driver==userkey)
         else:
             return cls.query().filter(cls.driver==userkey)  
         

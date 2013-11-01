@@ -10,6 +10,7 @@ from Utils.ValidUtils import parse_date
 from Utils.ConfirmUtils import *
 from Utils.EmailUtils import send_info
 from Utils.DefsEmail import sharetrack_txt
+from Utils.Defs import www_home
 
 class TrackerHandler(BaseHandler):
     def get(self, action=None, key=None):
@@ -250,22 +251,25 @@ class TrackerHandler(BaseHandler):
         
     def __share(self):
         data = json.loads(self.request.body)
-        logging.info(data)
-        try:
-            key = data['routekey']
-            r = ndb.Key(urlsafe=key).get()        
-            if not r:
-                response = { 'status': 'Route not found.'}            
-            else:
-                response = { 'status': 'ok'}       
-                fbshare = bool(data['fbshare'])
-                self.params['share_onload'] = fbshare 
-                url = r.post_url()
-                emails = data['emails']
-                self.send_tracking(emails, url)
-                response['route_url'] = r.mobile_url() + '?fbshare=1'
+        logging.info(data)        
+        try: 
+            fbshare = bool(data['fbshare'])
         except:
-            response = { 'status': 'Failed.'}            
+            fbshare=False
+        # try:
+        key = data['routekey']
+        r = ndb.Key(urlsafe=key).get()        
+        if not r:
+            response = { 'status': 'Route not found.'}            
+        else:
+            response = { 'status': 'ok'}   
+            self.params['share_onload'] = fbshare 
+            url = www_home + r.post_url()
+            emails = data['emails']
+            self.send_tracking(emails, url)
+            response['route_url'] = r.mobile_url() + '?fbshare=1'
+        # except:
+            # response = { 'status': 'Failed.'}            
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))   
         
@@ -290,8 +294,13 @@ class TrackerHandler(BaseHandler):
     def send_tracking(self, emails, url):
         self.params['first_name'] = self.user_prefs.first_name
         self.params['url'] = url
+        self.params['action'] = 'sharetracking'
+        self.params['userkey'] = self.user_prefs.key.urlsafe()
         htmlbody =  self.render_str('email/sharetrack.html', **self.params)
         textbody = sharetrack_txt % self.params
         share_sub = self.params['first_name'] + " has shared a route with you"
         for email in emails:
-            send_info(email, share_sub, textbody, htmlbody)        
+            try:
+                send_info(email, share_sub, textbody, htmlbody)        
+            except:
+                continue                
