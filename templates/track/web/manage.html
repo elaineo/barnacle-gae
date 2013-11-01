@@ -70,6 +70,7 @@ $(document).ready(function(){
     });    
   var tapTime = 0;
   $('tr.route').bind('vmousedown vmouseup', function (event) {
+    console.log(event);
     if (event.type == 'vmousedown') {
       tapTime = new Date().getTime();
     } else {
@@ -105,9 +106,9 @@ $(document).ready(function(){
           } else {
             loginPlease();
           }          
-        } else {
+        } else { //end this stuff before the trash can
           var url = '/track/mobile/' + $(this).attr('data-key');
-          window.location.href(url);
+          window.location.href=url;
         }
     }
   });    

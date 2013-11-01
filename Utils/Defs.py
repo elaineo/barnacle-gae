@@ -57,5 +57,5 @@ ins_str_email = 'Insured up to $500'
 bank_str = '<i class="icon-ok"></i> Bank Account Verified'
 
 blank_img = '/static/img/blank.png'
-blank_id = '4665155895951360'
-blank_key = 'agtzfnAycHBvc3RhbHIXCxIKSW1hZ2VTdG9yZRiAgICA9N2kCAw'
+blank_id = '6164202561470464'
+blank_key = 'agtzfnAycHBvc3RhbHIXCxIKSW1hZ2VTdG9yZRiAgICA9Mn5Cgw'

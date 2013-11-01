@@ -26,9 +26,24 @@ class ImagePage(BaseHandler):
             self.error(404)
 
 class ImageHandler(BaseHandler):
-    def get(self, action=None, key=None):  
-        u = ndb.Key(urlsafe-key).id()
-        logging.info('email open: '+ action + ' by '+str(u))
+    def get(self, action=None, key=None): 
+        if action=='blank':
+            self.render('forms/temp.html', **self.params)
+            return
         self.response.headers['Content-Type'] = "image/png"
-        img = ImageStore.get_by_id(int(blank_id))
+        img = ImageStore.get_by_id(4811188005240832)
         self.write(img.image_small)
+    def post(self, action=None, key=None):  
+        if action=='blank':
+            img = self.request.get("file")
+            if img: 
+                imgstore = ImageStore.new(img)
+                imgstore.put()
+                logging.info(imgstore.key.id())
+                logging.info(imgstore.key.urlsafe())
+    # def get(self, action=None, key=None):  
+        # u = ndb.Key(urlsafe=key).id()
+        # logging.info('email open: '+ action + ' by '+str(u))
+        # self.response.headers['Content-Type'] = "image/png"
+        # img = ImageStore.get_by_id(int(blank_id))
+        # self.write(img.image_small)
