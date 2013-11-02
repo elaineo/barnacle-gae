@@ -15,7 +15,7 @@ function initialize() {
     draggable: false,
     visible: true,
     clickable: false,
-    icon: 'http://www.gobarnacle.com:8080/static/img/icons/dot.png',
+    icon: 'http://www.gobarnacle.com/static/img/icons/dot.png',
     raiseOnDrag: false
    });       
     
@@ -55,6 +55,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 function updatePos() {
     var poslat = $('input#startlat').val();
     var poslon = $('input#startlon').val();
+    var msg = $('input#msg').val();
     var pos = new google.maps.LatLng(poslat,poslon);
     var geocoder = new google.maps.Geocoder(); 
     console.log(pos);
@@ -68,6 +69,7 @@ function updatePos() {
             data = {};
             data.lat = poslat;
             data.lon = poslon;
+            data.msg = msg;
             data.locstr = formAddr;
             $.ajax({
             type: "POST",

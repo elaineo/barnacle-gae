@@ -11,8 +11,7 @@ class ImageStore(ndb.Model):
     date = ndb.DateTimeProperty(auto_now_add=True)
     def update(self, img):
         """ Automatially crop and resize """
-        image_orig = img
-        i = images.Image(img)
+        i = images.Image(img)               
         h = float(i.height)
         w = float(i.width)
 
@@ -20,16 +19,18 @@ class ImageStore(ndb.Model):
         if h < w:
             ratio = h/w
             i.crop(0.5 - 0.5*ratio, 0.0, 0.5 + 0.5*ratio, 1.0)
+            i.resize(int(h),int(h))
         else:
             ratio = w/h
             i.crop(0.0, 0.5 - 0.5*ratio, 1.0, 0.5 + 0.5*ratio)
-
+            i.resize(int(w),int(w))
+        self.image_orig = i.execute_transforms()
         # resize images
         i.resize(360, 360)
         self.image_medium = i.execute_transforms()
         i.resize(100, 100)
         self.image_small = i.execute_transforms()
-
+        
         # generate fakehash        
         self.fakehash = make_salt() + make_salt()
 
