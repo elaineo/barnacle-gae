@@ -296,11 +296,12 @@ class TrackerHandler(BaseHandler):
         self.params['first_name'] = self.user_prefs.first_name
         self.params['url'] = url
         self.params['action'] = 'sharetracking'
-        self.params['userkey'] = self.user_prefs.key.urlsafe()
+        self.params['senderid'] = self.user_prefs.key.id()        
         htmlbody =  self.render_str('email/sharetrack.html', **self.params)
         textbody = sharetrack_txt % self.params
         share_sub = self.params['first_name'] + " has shared a route with you"
         for email in emails:
+            self.params['receiverid'] = email
             try:
                 send_info(email, share_sub, textbody, htmlbody)        
             except:

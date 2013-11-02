@@ -26,9 +26,8 @@ class ImagePage(BaseHandler):
             self.error(404)
 
 class ImageHandler(BaseHandler):
-    def get(self, action=None, key=None):  
-        u = ndb.Key(urlsafe=key).id()
-        logging.info('email open: '+ action + ' by '+str(u))
+    def get(self, action=None, sender=None, receiver=None):  
+        logging.info('email open: '+ action + ' from ' + sender + ' to '+receiver)
         self.response.headers['Content-Type'] = "image/png"
         img = ImageStore.get_by_id(int(blank_id))
         self.write(img.image_orig)

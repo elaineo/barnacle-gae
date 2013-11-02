@@ -123,7 +123,8 @@ class ProfileHandler(BaseHandler):
 
     def send_driver_info(self, email):
         self.params['action'] = 'driverinfo'
-        self.params['userkey'] = self.user_prefs.key.urlsafe()    
+        self.params['senderid'] = 'barnacle'
+        self.params['receiverid'] = self.user_prefs.key.id()    
         htmlbody =  self.render_str('email/welcome.html', **self.params)
         textbody = welcome_txt 
         send_info(email, welcome_sub, textbody, htmlbody)

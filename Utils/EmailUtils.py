@@ -2,6 +2,7 @@ from google.appengine.api import mail
 
 import logging
 import re
+from Handlers.BaseHandler import *
 from Models.UserModels import *
 from Utils.Defs import noreply_email, email_domain, msg_start
 from Utils.Defs import confirm_res_sub, info_email, bcc_email, noreply_email
@@ -26,8 +27,16 @@ class EmailHandler(InboundMailHandler):
         plain_body = ''
         for content_type, body in plaintext_bodies:
             plain_body = plain_body + body.decode()
+        htmltext_bodies = mail_message.bodies('text/html')
+        html_body = ''
+        for content_type, body in htmltext_bodies:
+            html_body = html_body + body.decode()            
 
-        send_mail(sender_email, to_email, mail_message.subject, plain_body)
+        mail.send_mail(sender=sender_email, bcc=bcc_email,
+                  reply_to=sender_email,
+                  to=to_email, 
+                  subject = mail_message.subject, body=plain_body,
+                  html=html_body)
 
 def extract_email(email):
     buf = re.findall('<.+>',email)
@@ -61,27 +70,26 @@ def decode_email_address(email):
     else:
         return up.email
 
-def create_msg(sender, receiver, subject, msg):
-    send_name = sender.get().first_name
-    send_email = send_name + ' via Barnacle <' + str(sender.id()) + email_domain + '>'
+def create_msg(self, sender, receiver, subject, msg):
+    params = {}
+    params['send_name'] = sender.get().first_name
+    send_email = params['send_name'] + ' via Barnacle <' + str(sender.id()) + email_domain + '>'
     recv_email = str(receiver.id()) + email_domain
-    body = (msg_start % send_name) + msg
+    body = (msg_start % params['send_name']) + msg
+    params['msg'] = msg
+    params['action'] = 'usermsg'
+    params['senderid'] = sender.id()
+    params['receiverid'] = receiver.id()
+    html =  self.render_str('email/usermsg.html', **params)
     mail.send_mail(sender=send_email, bcc=bcc_email,
                     to=recv_email,
                     subject=subject,
-                    body=body)
+                    body=body,html=html)
 
 def create_note(receiver, subject, body):
     recv_email = str(receiver.id()) + email_domain
     mail.send_mail(sender=noreply_email, bcc=bcc_email,
                   to=recv_email,
-                  subject=subject,
-                  body=body)
-
-def send_mail(sender_email, to_email, subject, body):
-    mail.send_mail(sender=sender_email, bcc=bcc_email,
-                  reply_to=sender_email,
-                  to=to_email,
                   subject=subject,
                   body=body)
 

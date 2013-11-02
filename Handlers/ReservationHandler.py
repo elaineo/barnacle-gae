@@ -117,7 +117,7 @@ class ReservationHandler(BaseHandler):
                     receiver = p.sender
                 else:
                     receiver = p.receiver
-                create_msg(sender=self.user_prefs.key, receiver=receiver, 
+                create_msg(self, sender=self.user_prefs.key, receiver=receiver, 
                                 subject=subject, msg=body)
                 return  
             except:
@@ -249,7 +249,7 @@ class ReservationHandler(BaseHandler):
 
         if msg:
             subject = 'Delivery Offer from ' + self.user_prefs.nickname()
-            create_msg(sender=self.user_prefs.key, receiver=route.userkey, 
+            create_msg(self, sender=self.user_prefs.key, receiver=route.userkey, 
                             subject=subject, msg=msg)
         try:
             p.put() 

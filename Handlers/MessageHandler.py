@@ -35,14 +35,14 @@ class MessageHandler(BaseHandler):
             subject = '(no subject)'
         msg = self.request.get('msg')
         sender = self.user_prefs.key
-        create_msg(sender, receiver, subject, msg)
+        create_msg(self, sender, receiver, subject, msg)
         if cc:  # cuz cc doesn't work. i'm too sick to figure it out.
-            create_msg(sender, sender, subject, msg)
+            create_msg(self, sender, sender, subject, msg)
         recv = receiver.get()
         self.redirect(recv.profile_url() + '?msg=1')
         # response = { 'status': 'ok',
                     # 'next_url': recv.profile_url() + '?msg=1' }
-        logging.info('New Message from ' + sender.urlsafe() + ' to ' + receiver.urlsafe())
+        logging.info('New Message from ' + str(sender.id()) + ' to ' + str(receiver.id()))
         # self.response.headers['Content-Type'] = "application/json"
         # self.write(json.dumps(response))            
 

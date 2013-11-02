@@ -99,7 +99,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
 # Utils
    ('/navhead',NavHelper),
    ('/suicide',CloseHelper),
-    webapp2.Route('/img/<action>/<key:[\w\-]{20,}>', handler=ImageHandler),   
+    webapp2.Route('/img/<action>/<sender>/<receiver>', handler=ImageHandler),   
 # Footer
    ('/loc', LocationPage),
    ('/about', AboutPage),

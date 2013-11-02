@@ -11,6 +11,7 @@ from Models.Launch.Driver import *
 from Models.Launch.ResModel import *
 from Models.Launch.BarnacleModel import *
 from Models.PaymentModel import *
+from Models.UserModels import *
 
 from Utils.data.paydefs import *
 from Utils.Defs import *
@@ -175,7 +176,12 @@ class CheckoutHandler(BaseHandler):
 
     def send_receipt(self, email, res, params):
         self.params['action'] = 'receipt'
-        self.params['userkey'] = self.user_prefs.key.urlsafe()
+        self.params['senderid'] = 'barnacle'
+        u = UserPrefs.by_email(email)
+        if u:
+            self.params['receiverid'] = u.key.id()
+        else:
+            self.params['receiverid'] = email
         htmlbody =  self.render_str('email/receipt.html', **params)
         textbody = resreceipt_txt % params
         send_info(to_email=email, subject=confirm_res_sub, 

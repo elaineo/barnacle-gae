@@ -112,7 +112,8 @@ class MatchHandler(BaseHandler):
         params = {'posts': posts}
         unrollparams = {'posts': unroll}
         self.params['action'] = 'match2driver'
-        self.params['userkey'] = driver.urlsafe()
+        self.params['senderid'] = 'barnacle'
+        self.params['receiverid'] = driver.id() 
         self.send_match2d(driver.get().email, params, unrollparams)
 
     def __send_match2s(self,sender):
@@ -131,7 +132,8 @@ class MatchHandler(BaseHandler):
         params = {'posts': posts}
         unrollparams = {'posts': unroll}
         self.params['action'] = 'match2sender'
-        self.params['userkey'] = sender.urlsafe()
+        self.params['senderid'] = 'barnacle'
+        self.params['receiverid'] = sender.id() 
         self.send_match2s(sender.get().email, params, unrollparams)
         
     def send_match2d(self, email, params, unrollparams):
