@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Delivery routes from {{origin}} to {{dest}} | gobarnacle.com{% endblock %}
 {% block heading %}{{origin}} to {{dest}}{% endblock %}
-
+{% block head %}
+<meta name="description" content="Use Barnacle to deliver packages from {{origin}} to {{dest}}. Our users have shipped automotive parts, pets, sports equipment, marketing materials, etc.">
+{$ endblock %}
 {% block content %}
 </script>
 <div class="row">
@@ -25,9 +27,11 @@
             <td>{{post.delivstart}}</td>
             <td>{{post.delivend}}</td>
         </tr>
-                {% endfor %}
+        <tr></tr>
+            {% endfor %}
       </table>
     </div>
+    <div class="span1"></div>
 </div>
 
 {% endblock %}

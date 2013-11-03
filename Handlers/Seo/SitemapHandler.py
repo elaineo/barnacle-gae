@@ -1,5 +1,8 @@
 from Handlers.BaseHandler import *
 from Models.RouteModel import Route
+from google.appengine.ext import ndb
+from Utils.SearchUtils import search_points
+from Utils.SearchDocUtils import closest_city
 import urllib
 import logging
 
@@ -20,5 +23,8 @@ class SitemapHandler(BaseHandler):
     def get_route_urls(self):
         urls = []
         for route in Route.query():
-            urls.append('http://' + urllib.quote('www.gobarnacle.com/route/from/' + route.locstart + '/to/' + route.locend))
+            start_nearest_city = closest_city(route.pathpts[0])['city']
+            end_nearest_city = closest_city(route.pathpts[-1])['city']
+            urls.append('http://' + urllib.quote('www.gobarnacle.com/route/from/' + start_nearest_city + '/to/' + end_nearest_city))
         return urls
+
