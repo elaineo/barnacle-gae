@@ -12,6 +12,7 @@ class TrackPt(ndb.Model):
     msg = ndb.StringProperty()
 
 class TrackerModel(ndb.Model):
+    reservation = ndb.KeyProperty()   #allow this thing to be attached to a reservation 
     driver = ndb.KeyProperty(required=True)
     points = ndb.StructuredProperty(TrackPt, repeated=True)
     start = ndb.GeoPtProperty(required=True)
@@ -74,6 +75,10 @@ class TrackerModel(ndb.Model):
             return cls.query(cls.status!=99).filter(cls.driver==userkey)
         else:
             return cls.query().filter(cls.driver==userkey)  
-        
+
+    @classmethod
+    def by_reservation(cls,rezkey):
+        return cls.query().filter(cls.reservation==rezkey)  
+            
     def tzdelta(self):
         return timedelta(0,self.tzoffset)

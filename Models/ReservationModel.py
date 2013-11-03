@@ -1,5 +1,6 @@
 from google.appengine.ext import ndb
 from Handlers.BaseHandler import *
+from Models.Tracker.TrackerModel import *
 from Utils.RouteUtils import *
 
 dropoffstr_1 = 'Sender will drop off at start.'
@@ -27,6 +28,13 @@ class Reservation(ndb.Model):
     def reserve_url(self):
         """ url for public view of reservation """
         return '/reserve/' + self.key.urlsafe()
+    def track_url(self):
+        """ if confirmed url for tracking page """
+        t = TrackerModel.by_reservation(self.key).get()
+        if t:
+            return t.get().post_url()
+        else:
+            return ''
     def edit_url(self):
         """ url for editing reservation"""
         return '/reserve/edit/' + self.key.urlsafe()

@@ -6,6 +6,7 @@ from google.appengine.api import mail
 
 from Handlers.BaseHandler import *
 from Handlers.Launch.ReserveHandler import fill_driver_params, fill_res_params
+from Handlers.Tracker.TrackerHandler import create_from_res
 
 from Models.Launch.Driver import *
 from Models.Launch.ResModel import *
@@ -139,6 +140,7 @@ class CheckoutHandler(BaseHandler):
         customer.debit(amount=charge)
         res.confirmed=True
         res.put()        
+        create_from_res(res)
         d = Driver.by_userkey(res.sender)
         self.params['d'] = d.params_fill({})
         self.params['reskey'] = key

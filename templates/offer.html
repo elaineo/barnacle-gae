@@ -9,6 +9,9 @@
 <button type="submit" class="btn btn-inverse" id="editres_btn">Edit Offer</button>
 <button type="submit" class="btn btn-danger" id='delete_btn'>Delete Offer</button>
     {% endif %}
+    {% if confirmed == True %} 
+<a href="{{track_url}}"><button class="btn btn-inverse">Track Delivery</button></a>
+    {% endif %}
 </div></div>
     {% include "forms/stubspop/offer_stub.html" %}
     {% include "off_buttons_stub.html" %}

@@ -4,8 +4,10 @@ from google.appengine.ext import ndb
 from Handlers.BaseHandler import *
 from Handlers.Launch.CheckoutHandler import *
 from Handlers.RouteHandler import fill_route_params
+from Handlers.Tracker.TrackerHandler import create_from_res
 from Models.ReservationModel import *
 from Models.Launch.Driver import *
+from Models.Tracker.TrackerModel import *
 from Utils.RouteUtils import *
 from Utils.ValidUtils import *
 from Utils.EmailUtils import create_note, create_msg
@@ -151,6 +153,8 @@ class ReservationHandler(BaseHandler):
                     if 1 in n:
                         msg = self.user_prefs.first_name + confirm_res_msg % key
                         create_note(r.sender, confirm_res_sub, msg)
+                    # create associated tracker
+                    create_from_res(r)
                     # charge the cc
                     self.redirect('/checkout/confirmhold/'+key)
                     return
@@ -347,30 +351,30 @@ class ReservationHandler(BaseHandler):
             self.redirect('/reserve/' + p.key.urlsafe())  
             
     def view_reserve_page(self,key):
-        try:
-            p = ndb.Key(urlsafe=key).get()
-            resoffer=(p.__class__.__name__ == 'Reservation')
-            self.params.update(fill_reserve_params(key,resoffer))
-            if self.user_prefs and self.user_prefs.key == p.sender and not p.confirmed:
-                self.params['edit_allow'] = True
-            else:
-                self.params['edit_allow'] = False
-            self.params['confirm_allow'] = False
-            self.params['is_receiver'] = False
-            self.params['is_sender'] = False
-            if self.user_prefs and self.user_prefs.key == p.receiver:
-                self.params['is_receiver'] = True
-                if not p.confirmed:
-                    self.params['confirm_allow'] = True
-            if self.user_prefs and self.user_prefs.key == p.sender:                
-                self.params['is_sender'] = True
-            if resoffer:
-                self.render('reserve.html', **self.params)
-            else:
-                self.render('offer.html', **self.params)
-        except:
-            self.abort(409)
-            return       
+        # try:
+        p = ndb.Key(urlsafe=key).get()
+        resoffer=(p.__class__.__name__ == 'Reservation')
+        self.params.update(fill_reserve_params(key,resoffer))
+        if self.user_prefs and self.user_prefs.key == p.sender and not p.confirmed:
+            self.params['edit_allow'] = True
+        else:
+            self.params['edit_allow'] = False
+        self.params['confirm_allow'] = False
+        self.params['is_receiver'] = False
+        self.params['is_sender'] = False
+        if self.user_prefs and self.user_prefs.key == p.receiver:
+            self.params['is_receiver'] = True
+            if not p.confirmed:
+                self.params['confirm_allow'] = True
+        if self.user_prefs and self.user_prefs.key == p.sender:                
+            self.params['is_sender'] = True
+        if resoffer:
+            self.render('reserve.html', **self.params)
+        else:
+            self.render('offer.html', **self.params)
+        # except:
+            # self.abort(409)
+            # return       
             
     def __get_map_form(self,pt):
         ptlat = self.request.get(pt+'lat')
@@ -428,4 +432,6 @@ def fill_reserve_params(key,resoffer=False):
         params.update( {'items' : p.items })
     else:
         params.update( {'delivok' : int(p.deliverby != r.delivby) })
+    if p.confirmed:
+        params['track_url'] = p.track_url()
     return params

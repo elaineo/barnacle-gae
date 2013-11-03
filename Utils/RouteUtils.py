@@ -2,10 +2,11 @@ import urllib2
 import json
 import logging
 import math
+import time
 from google.appengine.api import search
 from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
-from Utils.Defs import geocode_url, directions_url
+from Utils.Defs import geocode_url, directions_url, tz_url
 from Utils.PolylineCode import poly_decode
 
 class RouteUtils():            
@@ -49,6 +50,13 @@ class RouteUtils():
             logging.error(req.content)
             logging.error('IndexError' + location)
             return None, 'invalid' 
+            
+    def getTZ(self,loc):
+        ts = int(time.time())
+        data = "location=" + str(loc.lat) + "," + str(loc.lon) + "&timestamp=" + ts + "&sensor=true"
+        req = urlfetch.fetch(tz_url+data)
+        results = json.loads(req.content)['rawOffset'] 
+        return int(results)
     
     def getPath(self,start,dest):
         pathpts = [start]

@@ -11,6 +11,7 @@ from Utils.ConfirmUtils import *
 from Utils.EmailUtils import send_info
 from Utils.DefsEmail import sharetrack_txt
 from Utils.Defs import www_home
+from Utils.RouteUtils import *
 
 class TrackerHandler(BaseHandler):
     def get(self, action=None, key=None):
@@ -306,3 +307,10 @@ class TrackerHandler(BaseHandler):
                 send_info(email, share_sub, textbody, htmlbody)        
             except:
                 continue                
+                
+def create_from_res(r):
+    tzoffset = RouteUtils.getTZ(r.locend)
+    track = TrackerModel(driver = r.receiver, start = r.start, 
+    dest=r.dest, delivend=r.deliverby, locstart=r.locstart, 
+    locend=r.locend, tzoffset=tzoffset, reservation=r.key)
+    track.put()                
