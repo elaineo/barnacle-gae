@@ -2,13 +2,13 @@
 {% block title %}How It Works{% endblock %}
 {% block heading %}How It Works{% endblock %}
 {% block content %}
-<a id="howtop"></a>
+<a id='howtop'></a>
 <div class="row-fluid">
   <div class="span2 offset1">
     <table class="table table-bordered table-condensed table-hover dropshadow">
-    <tr class="clicky" onclick="document.location.href = '#senders';"><td><h2><small>&nbsp; Senders</td></tr>
-    <tr class="clicky" onclick="document.location.href = '#drivers';"><td><h2><small>&nbsp; Drivers</td></tr>
-    <tr class="clicky" onclick="document.location.href = '#others';"><td><h2><small>&nbsp; Everyone</td></tr>
+    <tr class='clicky' onclick="document.location.href = '#senders';"><td><h2><small>&nbsp; Senders</td></tr>
+    <tr class='clicky' onclick="document.location.href = '#drivers';"><td><h2><small>&nbsp; Drivers</td></tr>
+    <tr class='clicky' onclick="document.location.href = '#others';"><td><h2><small>&nbsp; Everyone</td></tr>
     </small></h2>
     </table>
   </div>
@@ -17,45 +17,45 @@
 <br>
     <div class="row-fluid  hidden-phone"><div class="span7 offset1">
         Current Driver Network:
-        <div id="map-canvas" style="height:300px;width:450px"></div>
+        <div id="map-canvas" style='height:300px;width:450px'></div>
     </div></div>
   </div>
 </div>
-
- <div class="row bottom">&nbsp;<br>&nbsp;<hr><br></div>
+ 
+ <div class="row bottom">&nbsp;<br>&nbsp;<hr><br></div>    
 <div class="row-fluid">
   <div class="span10 offset1">
-    <a id="senders"></a><h3>Senders</h3>
+    <a id='senders'></a><h3>Senders</h3>
     <div class="row-fluid driverinfo">
         <div class="span3">
-        <div class="drivernum">1</div>
-        <div class="driverlabel"><a href="/search">Search</a> for your route by selecting dates and locations.<br>
-        <a href="/search"><img src="/static/img/how_search.png"></a>
+        <div class='drivernum'>1</div>
+        <div class='driverlabel'><a href="/search">Search</a> for your route by selecting dates and locations.<br>
+        <a href="/search"><img src='/static/img/how_search.png'></a>
         </div>
         </div>
         <div class="span3">
-        <div class="drivernum">2</div>
-        <div class="driverlabel"> Reserve a driver from the results.<br><br>
-        <img src="/static/img/how_reserve.png">
+        <div class='drivernum'>2</div>
+        <div class='driverlabel'> Reserve a driver from the results.<br><br>
+        <img src='/static/img/how_reserve.png'>
         </div>
         </div>
         <div class="span3">
-        <div class="drivernum">3</div>
-        <div class="driverlabel">
+        <div class='drivernum'>3</div>
+        <div class='driverlabel'>
         The driver will pick up your items at the selected location.<br><br>
-        <img src="/static/img/how_it_works.png" width="130px">
+        <img src='/static/img/how_it_works.png' width="130px">
         </div>
         </div>
         <div class="span3">
-        <div class="drivernum">4</div>
-        <div class="driverlabel">
+        <div class='drivernum'>4</div>
+        <div class='driverlabel'>
         Track your package from your account page.<br>
-        <img src="/static/img/how_track.png" width="150px" class="img-polaroid">
+        <img src='/static/img/how_track.png' width='150px' class='img-polaroid'>
         <br><br> Be sure to leave a review for the driver!<br>
         </div>
         </div>
     </div>
-    <div class="row">&nbsp;<br></div>
+    <div class="row">&nbsp;<br></div>     
     <div class="accordion-group">
       <div class="accordion-heading">
         <a class="accordion-toggle question" data-toggle="collapse" href="#collapse0">Why should I use Barnacle instead of USPS?</a>
@@ -75,18 +75,18 @@
         <div class="accordion-inner">Anything, as long as the driver approves your request.</div>
       </div>
     </div>
-
+    
     <div class="accordion-group">
       <div class="accordion-heading">
         <a class="accordion-toggle question" data-toggle="collapse" href="#collapse2">
         I don't have any packages to send. Can I use Barnacle to hitch a ride?</a>
       </div>
       <div id="collapse2" class="accordion-body collapse">
-        <div class="accordion-inner">You may arrange a ride with our drivers by <a href="/search">searching for a driver</a> or submitting a <a href="/post/request">request</a>. Please note that Barnacle does not provide insurance for human cargo.
+        <div class="accordion-inner">You may arrange a ride with our drivers by <a href='/search'>searching for a driver</a> or submitting a <a href='/post/request'>request</a>. Please note that Barnacle does not provide insurance for human cargo.
         </div>
       </div>
     </div>
-
+    
     <div class="accordion-group">
       <div class="accordion-heading">
         <a class="accordion-toggle question" data-toggle="collapse" href="#collapse3">How do I know my stuff is in safe hands?</a>
@@ -94,62 +94,62 @@
       <div id="collapse3" class="accordion-body collapse">
         <div class="accordion-inner">
         Users are required to link their Facebook accounts to establish a community of trust. You are encouraged to inspect driver profiles for shared social networks.
-        <br> For additional peace of mind, drivers who have been verified by the Barnacle team can provide insurance on your delivery for up to $500. These drivers are identified with an icon on their profile:
-        <img style="vertical-align:text-top;" src="/static/barnacle75.png"> <br>
+        <br> For additional peace of mind, drivers who have been verified by the Barnacle team can provide insurance on your delivery for up to $500. These drivers are identified with an icon on their profile: 
+        <img style='vertical-align:text-top;' src='/static/barnacle75.png'> <br>
         Higher coverage is available by arrangement.</div>
       </div>
     </div>
-
+    
    <div class="accordion-group">
       <div class="accordion-heading">
         <a class="accordion-toggle question" data-toggle="collapse" href="#collapse4">I can't find any drivers traveling to my destination. What should I do?</a>
       </div>
       <div id="collapse4" class="accordion-body collapse">
-        <div class="accordion-inner">
-        Please submit a <a href="/post/request">delivery request</a>.
-        We will notify you if we find an available driver. When we find a match, we will send you a link to confirm your reservation.
-        </div>
+        <div class="accordion-inner">      
+        Please submit a <a href='/post/request'>delivery request</a>. 
+        We will notify you if we find an available driver. When we find a match, we will send you a link to confirm your reservation. 
+        </div>    
       </div>
     </div>
     <br>
-    <p style="padding-left:20px"><i class="icon-chevron-up"></i>
-      <a href="#howtop" style="text-decoration:none; color:#000">To Top</a>
+    <p style='padding-left:20px'><i class="icon-chevron-up"></i>
+      <a href='#howtop' style='text-decoration:none; color:#000'>To Top</a>
     </p>
   </div>
 </div>
-<div class="row bottom">&nbsp;<br>&nbsp;<hr><br></div>
+<div class="row bottom">&nbsp;<br>&nbsp;<hr><br></div>     
 <div class="row-fluid">
   <div class="span10 offset1">
-    <a id="drivers"></a><h3><br>Drivers</h3>
+    <a id='drivers'></a><h3><br>Drivers</h3>
     <div class="row-fluid driverinfo">
         <div class="span3">
-        <div class="drivernum">1</div>
-        <div class="driverlabel"><span style="text-decoration:underline" class="clicky post_btn">Post</span> your driving route.<br>
-        <img src="/static/img/how_post.png" class="post_btn clicky">
+        <div class='drivernum'>1</div>
+        <div class='driverlabel'><span style='text-decoration:underline' class='clicky post_btn'>Post</span> your driving route.<br>
+        <img src='/static/img/how_post.png' class='post_btn clicky'>
         </div>
         </div>
         <div class="span3">
-        <div class="drivernum">2</div>
-        <div class="driverlabel">
-        You will be notified of any delivery requests.
+        <div class='drivernum'>2</div>
+        <div class='driverlabel'>
+        You will be notified of any delivery requests. 
         Confirm or decline any requests.<br>
-        <img src="/static/img/how_confirm.png" ></div>
+        <img src='/static/img/how_confirm.png' ></div>
         </div>
         <div class="span3">
-        <div class="drivernum">3</div>
-        <div class="driverlabel">
+        <div class='drivernum'>3</div>
+        <div class='driverlabel'>
         Meet with the senders to receive items for delivery. <br><br>Or, pick up the item from our warehouse.
         </div>
         </div>
         <div class="span3">
-        <div class="drivernum">4</div>
-        <div class="driverlabel">
+        <div class='drivernum'>4</div>
+        <div class='driverlabel'>
         Drive off and deliver the goods!<br><br>
-        <img class="hidden-phone" src="/static/img/how_drive.png">
+        <img class='hidden-phone' src='/static/img/how_drive.png'>        
         </div>
         </div>
     </div>
-    <div class="row">&nbsp;<br></div>
+    <div class="row">&nbsp;<br></div> 
     <div class="accordion-group">
       <div class="accordion-heading">
         <a class="accordion-toggle question" data-toggle="collapse" href="#drive0">What are my responsibilities as a driver?</a>
@@ -157,18 +157,18 @@
       <div id="drive0" class="accordion-body collapse">
         <div class="accordion-inner">You are expected to deliver whatever items have been confirmed for delivery, of course. We also encourage you to maintain open communication with the senders and receivers. </div>
       </div>
-    </div>
+    </div>    
 
     <div class="accordion-group">
       <div class="accordion-heading">
         <a class="accordion-toggle question" data-toggle="collapse" href="#drive1">What if something comes up and my schedule changes?</a>
       </div>
       <div id="drive1" class="accordion-body collapse">
-        <div class="accordion-inner">If you cannot make the delivery deadline, <a href="/contact">contact us</a> immediately.
+        <div class="accordion-inner">If you cannot make the delivery deadline, <a href='/contact'>contact us</a> immediately.   
     We will arrange for another driver to complete your delivery.</div>
       </div>
-    </div>
-
+    </div>   
+    
     <div class="accordion-group">
       <div class="accordion-heading">
         <a class="accordion-toggle question" data-toggle="collapse" href="#drive2">How do I become a verified driver and provide insurance coverage for my deliveries?</a>
@@ -176,19 +176,19 @@
       <div id="drive2" class="accordion-body collapse">
         <div class="accordion-inner"><a href="/apply">Apply here.</a></div>
       </div>
-    </div>
+    </div> 
     <br>
-    <p style="padding-left:20px"><i class="icon-chevron-up"></i>
-      <a href="#howtop" style="text-decoration:none; color:#000">To Top</a>
-    </p>
+    <p style='padding-left:20px'><i class="icon-chevron-up"></i>
+      <a href='#howtop' style='text-decoration:none; color:#000'>To Top</a>
+    </p>    
   </div>
 </div>
 
-<div class="row bottom">&nbsp;<br>&nbsp;<hr><br></div>
+<div class="row bottom">&nbsp;<br>&nbsp;<hr><br></div>     
 <div class="row-fluid">
-  <div class="span10 offset1">
-    <a id="others"></a><h3>Other</h3>
-
+  <div class="span10 offset1">    
+    <a id='others'></a><h3>Other</h3>    
+    
     <div class="accordion-group">
       <div class="accordion-heading">
         <a class="accordion-toggle question" data-toggle="collapse" href="#other0">How are payments handled?</a>
@@ -196,7 +196,7 @@
       <div id="other0" class="accordion-body collapse">
         <div class="accordion-inner">Payments are made at the time of reservation and held in escrow. Barnacle will disburse payment to the driver's account upon delivery confirmation.</div>
       </div>
-    </div>
+    </div> 
 
     <div class="accordion-group">
       <div class="accordion-heading">
@@ -206,8 +206,8 @@
         <div class="accordion-inner">Nope. Drivers and senders are welcome to arrange their own payment methods. However, using our escrow service gives added security for the sender because drivers are required to provide their bank account information in order to receive payment.<br>
         <br>Also, Barnacle's escrow service is required for insured deliveries. </div>
       </div>
-    </div>
-
+    </div>     
+    
     <div class="accordion-group">
       <div class="accordion-heading">
         <a class="accordion-toggle question" data-toggle="collapse" href="#other1">How does insurance work?</a>
@@ -215,16 +215,16 @@
       <div id="other1" class="accordion-body collapse">
         <div class="accordion-inner">If you are sending an insured delivery, we will document your shipment at the time of pickup, or dropoff if you are bringing your item to Barnacle. Insurance obligations are terminated when the recipient accepts the delivery at the destination.</div>
       </div>
-    </div>
+    </div> 
 
     <div class="accordion-group">
       <div class="accordion-heading">
         <a class="accordion-toggle question" data-toggle="collapse" href="#other2">Is there a fee for dropping off or picking up deliveries at the Barnacle office?</a>
       </div>
       <div id="other2" class="accordion-body collapse">
-        <div class="accordion-inner">No. In fact, we encourage this for the security of our users. For more information about our locations, <a href="/loc">click here</a>.</div>
+        <div class="accordion-inner">No. In fact, we encourage this for the security of our users. For more information about our locations, <a href='/loc'>click here</a>.</div>
       </div>
-    </div>
+    </div>     
 
     <div class="accordion-group">
       <div class="accordion-heading">
@@ -232,38 +232,38 @@
         I had a bad experience and am not happy. Do something about this.</a>
       </div>
       <div id="other3" class="accordion-body collapse">
-        <div class="accordion-inner">Whether you are a driver or a sender, Barnacle will take care of you. <a href="/contact">Contact us</a>.</div>
+        <div class="accordion-inner">Whether you are a driver or a sender, Barnacle will take care of you. <a href='/contact'>Contact us</a>.</div>
       </div>
-    </div>
-
+    </div>         
+    
     <div class="accordion-group">
       <div class="accordion-heading">
         <a class="accordion-toggle question" data-toggle="collapse" href="#other4">
         This is cool! Are you hiring?</a>
       </div>
       <div id="other4" class="accordion-body collapse">
-        <div class="accordion-inner"><a href="/jobs">Yes</a>.</div>
+        <div class="accordion-inner"><a href='/jobs'>Yes</a>.</div>
       </div>
-    </div>
-
-    <div class="row contentpad10">
-    Any questions we missed? <a href="/contact">Contact us</a>.
+    </div>          
+    
+    <div class="row contentpad10">    
+    Any questions we missed? <a href='/contact'>Contact us</a>.
     </div>
     <br>
-    <p style="padding-left:20px"><i class="icon-chevron-up"></i>
-      <a href="#howtop" style="text-decoration:none; color:#000">To Top</a>
-    </p>
-
+    <p style='padding-left:20px'><i class="icon-chevron-up"></i>
+      <a href='#howtop' style='text-decoration:none; color:#000'>To Top</a>
+    </p>       
+    
   </div>
 </div>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 <script type="text/javascript" src="/static/js/maps/maphomesm.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    var mapURL = "/post/jsonall";
+    var mapURL = '/post/jsonall';
     initialize_home(mapURL);
-    click_redirect("#post_btn","/drive");
+    click_redirect('#post_btn','/drive');
 });
 </script>
 {% endblock %}
-
+  
