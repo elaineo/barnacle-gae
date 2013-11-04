@@ -1,3 +1,4 @@
+from itertools import chain
 from datetime import *
 from google.appengine.ext import ndb
 from google.appengine.api import search
@@ -30,14 +31,14 @@ class NewsHandler(BaseHandler):
             # all completed deliveries should have a review
             try:
                 exp = ExpiredReservation.by_user(self.user_prefs.key)
-                exp.append(ExpiredOffer.by_user(self.user_prefs.key))
+                exp = list(chain(exp, ExpiredOffer.by_user(self.user_prefs.key)))
             except:
                 return
             needrevs = []
             for x in exp:
                 r = Review.by_reservation(x.key, self.user_prefs.key)
                 if not r:
-                    review_url = '/review/'+x.key+'?receiver='
+                    review_url = '/review/'+x.key.urlsafe()+'?receiver='
                     if x.sender==self.user_prefs.key:
                         review_url = review_url + x.receiver.urlsafe()
                     else:

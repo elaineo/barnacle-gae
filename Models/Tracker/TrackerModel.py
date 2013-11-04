@@ -44,7 +44,7 @@ class TrackerModel(ndb.Model):
         if abbrev:
             return route
         if cls.points:
-            route['last_seen'] = cls.points[-1].created.strftime('%m/%d/%Y %H:%M')
+            route['last_seen'] = (cls.points[-1].created + cls.tzdelta()).strftime('%m/%d/%Y %H:%M')
             route['disppoints'] = True
             points = []
             for px in cls.points:
@@ -58,8 +58,13 @@ class TrackerModel(ndb.Model):
         else:
             route['last_seen'] = ''
             route['disppoints'] = False
+        route['dispeta'] = False
         if cls.status==0:
-            route['status'] = 'Active'
+            route['status'] = 'Active'            
+            if cls.points:
+                route['dispeta'] = True
+                route['lastpt'] = str(cls.points[-1].loc.lat) + ',' + str(cls.points[-1].loc.lon)
+                route['destpt'] = str(cls.dest.lat) + ',' + str(cls.dest.lon)
         elif cls.status==2:
             route['status'] = 'Awaiting Confirmation'
         elif cls.status==99:

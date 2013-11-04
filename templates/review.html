@@ -6,20 +6,7 @@
     $(function() {
         $('#faceRate').rater();
     	});
-    
-    function submit_review(){
-        //event.preventDefault();
-        var receiver = {{receiver}};
-        var content = $("textarea#content").val();
-        var data = "receiver="+receiver+"&rating="+Rating+"&content="+content;
-        $.ajax({
-            type: "POST",
-            url: "/review",
-            data: data,
-            success: function() {
-            }
-        });
-    };
+   
             
 $.fn.rater = function(options) {
     var opts = $.extend({}, $.fn.rater.defaults, options);

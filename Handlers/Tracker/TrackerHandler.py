@@ -70,6 +70,8 @@ class TrackerHandler(BaseHandler):
             self.__sendconfirm()
         elif action=='share':
             self.__share()
+        elif action=='eta':
+            self.__eta(key) 
         else:
             return
 
@@ -175,6 +177,7 @@ class TrackerHandler(BaseHandler):
             self.params.update(p.to_dict())
             self.params['first_name'] = p.driver.get().first_name
             if mobile:
+                self.params['dispeta'] = False
                 self.render('mobile/track.html', **self.params)
             else:
                 self.render('track/track.html', **self.params)
@@ -272,6 +275,20 @@ class TrackerHandler(BaseHandler):
             response['route_url'] = r.mobile_url() + '?fbshare=1'
         # except:
             # response = { 'status': 'Failed.'}            
+        self.response.headers['Content-Type'] = "application/json"
+        self.write(json.dumps(response))   
+
+    def __eta(self, key):
+        # this is probably the easiest way to do it. but i don't like it
+        try:
+            t = ndb.Key(urlsafe=key).get()
+            eta = int(self.request.get('eta'))
+        except:
+            return
+        response = {'status': 'ok'}
+        if t.points:
+            raweta = t.points[-1].created + t.tzdelta() + timedelta(0,eta)
+            response['eta'] = raweta.strftime('%m/%d/%Y %H:%M')
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))   
         

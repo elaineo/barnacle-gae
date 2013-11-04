@@ -1,3 +1,6 @@
+var map;
+var trafficLayer;
+
 function initialize_map(mapURL) {
     $.getJSON(mapURL, function(route){   
       console.log(route)
@@ -8,8 +11,9 @@ function initialize_map(mapURL) {
         mapTypeId: google.maps.MapTypeId.TERRAIN
       };
 
-      var map = new google.maps.Map(document.getElementById("map-canvas"),
+      map = new google.maps.Map(document.getElementById("map-canvas"),
           mapOptions);
+      trafficLayer = new google.maps.TrafficLayer();
 
       var waypoints = [];
       var routePaths=[];
@@ -110,4 +114,12 @@ function initialize_home(mapURL) {
           routePaths[q].setMap(map);
         }
     });
+}
+function addTraffic() {
+  trafficLayer.setMap(map);
+  map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+}
+function hideTraffic() {  
+  trafficLayer.setMap(null);
+  map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
 }
