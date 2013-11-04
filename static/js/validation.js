@@ -75,6 +75,7 @@ function click_validloc(btn_id,fields,inputs,vtest,form,clickver) {
       var oksubmit = true;
       var wait = false;
       var d = 0;
+      /**
       for (f in fields) {
         var ff = fields[f];
         var test = false;
@@ -104,6 +105,7 @@ function click_validloc(btn_id,fields,inputs,vtest,form,clickver) {
             });
         } else { $('#'+ff+'Err').html(''); d++; }
       }
+      **/
       if (wait==false) {
         if (clickver) {
             loggedIn = checkLoginStatus();
