@@ -310,7 +310,14 @@ class TrackerHandler(BaseHandler):
                 
 def create_from_res(r):
     tzoffset = RouteUtils.getTZ(r.locend)
-    track = TrackerModel(driver = r.receiver, start = r.start, 
+    track = TrackerModel(start = r.start, 
     dest=r.dest, delivend=r.deliverby, locstart=r.locstart, 
     locend=r.locend, tzoffset=tzoffset, reservation=r.key)
+    # I wish I hadn't done it like this...
+    if r.__class__.__name__== 'Reservation':
+        track.driver = r.receiver
+        track.sender = r.sender
+    else:
+        track.driver = r.sender
+        track.sender = r.receiver    
     track.put()                

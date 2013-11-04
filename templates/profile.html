@@ -6,8 +6,6 @@
 {% include "forms/stubspop/profile_stub.html" %}
   <script>
 $(document).ready(function(){
-    click_redirect('#review_btn','{{review_url}}');
-    click_redirect('#msg_btn','{{message_url}}');
     {% if m==1 %}
       window.location.hash = 'notif-msg';
     {% endif %}

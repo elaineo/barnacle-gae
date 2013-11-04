@@ -79,8 +79,8 @@ class BarnacleModel(ndb.Model):
         #    params['msg_ok'] = False
         params['profile_full'] = self.profile_image_url()
         params['message_url'] = '/message?receiver='+self.key.urlsafe()
-        params['review_url'] = '/review?receiver='+self.key.urlsafe()
-        params['review_json'] = '/review/json?user='+self.key.urlsafe()
+        #params['review_url'] = '/review?receiver='+self.key.urlsafe()
+        params['review_json'] = '/review/json/'+self.key.urlsafe()
         params['email'] = self.email
         params['created'] = str(self.creation_date)[0:16]
         params['deliv_completed'] = self.completed

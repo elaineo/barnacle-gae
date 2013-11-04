@@ -7,5 +7,6 @@ Disallow: /debug/
 Disallow: /account
 Disallow: /settings/
 Disallow: /edit/
+Disallow: /delete/
 Disallow: /kickstart
 Sitemap: http://www.gobarnacle.com/sitemap.xml

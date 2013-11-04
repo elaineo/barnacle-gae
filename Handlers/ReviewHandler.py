@@ -7,16 +7,15 @@ import logging
 
 class ReviewHandler(BaseHandler):
     def get(self,action=None,key=None):
-        if action=='json':
-            self.__json()
-        else:
-            self.__index()
-    def __json(self):
+        if action=='json' and key:
+            self.__json(key)
+        elif key:
+            self.__index(key)
+    def __json(self, key):
         self.response.headers['Content-Type'] = "application/json"
-        p=self.request.get('user')
-        reviews = Review.by_receiver(ndb.Key(urlsafe=p))
+        reviews = Review.by_receiver(ndb.Key(urlsafe=key))
         self.write(json.dumps([r.to_jdict() for r in reviews]))
-    def __index(self):
+    def __index(self, key):
         receiver = self.request.get('receiver')            
         if not self.user_prefs:
             self.redirect('/profile/'+receiver+'#signin-box')
@@ -26,13 +25,15 @@ class ReviewHandler(BaseHandler):
             return
         try:
             r = ndb.Key(urlsafe=receiver).get()
+            res = ndb.Key(urlsafe=key).get()
         except:
             self.abort(400)
             return              
         self.params['recv_name'] = r.first_name
-        self.params['receiver'] = receiver
+        self.params.update(res.to_dict())
+        self.params = r.params_fill_sm(self.params)
         self.render('review.html', **self.params)
-    def post(self):
+    def post(self, key=None):
         receiver = self.request.get('receiver')
         ratingstr = self.request.get('rating')
         if ratingstr:
@@ -51,13 +52,14 @@ class ReviewHandler(BaseHandler):
         except:
             self.abort(403)
             return 
-        # check for existing review
-        r = Review.sender_and_receiver(sender, recv)
+        # check for existing review for res
+        res = ndb.Key(urlsafe=key)
+        r = Review.by_reservation(res,sender)
         if r:
             r.rating = rating
             r.content = content + '\n\n' + r.content
         else:
-            r = Review(sender = sender, receiver = recv, rating = rating, content = content)
+            r = Review(sender = sender, receiver = recv, rating = rating, content = content, reservation=res)
         r.put()
         #Notify and send message
         n = self.user_prefs.get_notify()

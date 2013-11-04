@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title%}Review {{first_name}}{% endblock %}
+{% block title%}Review {{recv_name}}{% endblock %}
 {% block heading%}Review {{recv_name}}{% endblock %}
 {% block content %}
 <script type="text/javascript">
@@ -61,8 +61,11 @@ $.fn.rater.defaults = {
 
 <div class="row-fluid">
   <div class="span8 offset2">
+  <h4>Delivery to {{locend}} on {{deliverby}}</h4>
+  {% include "forms/stubspop/prof_badge.html" %}
+  <br>
 <form name="review" enctype="multipart/form-data" method="post" id="review_form" class="form-horizontal">
-    <input type="hidden" name="receiver" value="{{receiver}}">
+    <input type="hidden" name="receiver" value="{{receiverkey}}">
     <div class="control-group">
         <div id="hide_rate"></div>
         <label class="control-label">Rating:</label>

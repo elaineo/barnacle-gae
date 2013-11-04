@@ -160,8 +160,8 @@ class UserPrefs(ndb.Model):
         #    params['msg_ok'] = False
         params['profile_full'] = self.profile_image_url()
         params['message_url'] = '/message?receiver='+self.key.urlsafe()
-        params['review_url'] = '/review?receiver='+self.key.urlsafe()
-        params['review_json'] = '/review/json?user='+self.key.urlsafe()
+        #params['review_url'] = '/review?receiver='+self.key.urlsafe()
+        params['review_json'] = '/review/json/'+self.key.urlsafe()
         params['email'] = self.email
         params['deliv_completed'] = self.deliveries_completed()+self.deliveries_sent()
         params['notify'] = {'notify' : self.get_notify() }
@@ -175,10 +175,11 @@ class UserPrefs(ndb.Model):
     @classmethod
     def by_email(cls, email):
         u = cls.query().filter(cls.email == email).get()
-        return u 
-        
+        return u        
+    
 class Review(ndb.Model):
     """ Reviews about users """
+    reservation = ndb.KeyProperty()     #associated reservation
     sender = ndb.KeyProperty()
     receiver = ndb.KeyProperty()
     rating = ndb.IntegerProperty()
@@ -193,6 +194,13 @@ class Review(ndb.Model):
     @classmethod
     def by_receiver(cls, receiver):
         return cls.query().filter(cls.receiver==receiver).order(-cls.created)
+    @classmethod
+    def by_reservation(cls, reservation, sender=None):
+        if sender:
+            r =  cls.query().filter(ndb.AND(cls.sender == sender, cls.reservation == reservation))
+            return r.get()
+        else:
+            return cls.query().filter(cls.reservation==reservation)
     @classmethod
     def sender_and_receiver(cls, sender, receiver):
         exist_r =  cls.query().filter(ndb.AND(cls.sender == sender, cls.receiver == receiver))

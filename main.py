@@ -14,6 +14,7 @@ from Handlers.Cron.ExpireHandler import *
 from Handlers.Cron.MatchHandler import *
 from Handlers.Cron.SummaryHandler import SummaryHandler
 from Handlers.SettingsHandler import *
+from Handlers.NewsHandler import *
 from Handlers.DriverHandler import *
 from Handlers.Tracker.TrackerHandler import *
 from Handlers.Launch.MobileHandler import *
@@ -93,8 +94,8 @@ app = webapp2.WSGIApplication([('/', HomePage),
     webapp2.Route('/message/<action>', handler=MessageHandler),
     webapp2.Route('/message/<action>/<key:[\w\-]{20,}>', handler=MessageHandler),
 # reviews
-   webapp2.Route('/review', handler=ReviewHandler),
-   webapp2.Route('/review/<action>', handler=ReviewHandler),
+   webapp2.Route('/review/<action>/<key:[\w\-]{20,}>', handler=ReviewHandler),
+   webapp2.Route('/review/<key:[\w\-]{20,}>', handler=ReviewHandler),
    ('/sitemap.xml', SitemapHandler),
 # Utils
    ('/navhead',NavHelper),
@@ -115,6 +116,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
     webapp2.Route('/notify/<action>', handler=NotifyHandler),
     webapp2.Route('/match/<action>', handler=MatchHandler),
     webapp2.Route('/match/<action>/<key:[\w\-]{20,}>', handler=MatchHandler),
+    webapp2.Route('/news/<action>', handler=NewsHandler),
    ('/summary', SummaryHandler),
    webapp2.Route('/external/<action>', ExternalHandler),
    ('/expire', ExpireHandler), EmailHandler.mapping()],

@@ -7,7 +7,6 @@ from Handlers.RouteHandler import fill_route_params
 from Handlers.Tracker.TrackerHandler import create_from_res
 from Models.ReservationModel import *
 from Models.Launch.Driver import *
-from Models.Tracker.TrackerModel import *
 from Utils.RouteUtils import *
 from Utils.ValidUtils import *
 from Utils.EmailUtils import create_note, create_msg

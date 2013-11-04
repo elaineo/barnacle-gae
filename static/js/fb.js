@@ -94,6 +94,8 @@
   }
 
   function dumpFriends(fb_id, dumpsite, max) {
+    if (fb_id=='')
+        return;
     FB.api('/me/mutualfriends/'+fb_id, function(response) {
       console.log(response);
       var friends = response.data;
@@ -122,6 +124,8 @@
   }
 
   function dumpThumb(fb_id, dumpsite) {
+    if (fb_id=='')
+        return;
     FB.api('/'+fb_id, function(response) {
       console.log(response);
       var first_name = response.first_name;
@@ -142,6 +146,8 @@
   }
 
   function dumpResponse(fb_id) {
+    if (fb_id=='')
+        return;
     FB.api('/'+fb_id, function(response) {
       console.log(response);
       var first_name = response.first_name;

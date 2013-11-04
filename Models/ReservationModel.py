@@ -10,8 +10,8 @@ pickupstr_0 = 'Driver will deliver to destination.'
 
 class Reservation(ndb.Model):
     """ Make a Reservation for existing route """
-    sender = ndb.KeyProperty(required=True)      # user_prefs of reserver and reservee
-    receiver = ndb.KeyProperty(required=True)
+    sender = ndb.KeyProperty(required=True)      # this is the sender
+    receiver = ndb.KeyProperty(required=True)    # this is the driver
     route = ndb.KeyProperty(required=True)       # route being reserved
     items = ndb.TextProperty()    # description of goods
     price = ndb.IntegerProperty()   # Offer price
@@ -55,8 +55,11 @@ class Reservation(ndb.Model):
     def receiver_name(self):
         return self.receiver.get().nickname()        
     @classmethod
-    def by_sender(cls,userkey):
-        return cls.query().filter(cls.sender==userkey)
+    def by_sender(cls,userkey,confirmed=False):
+        if confirmed:
+            return cls.query().filter(ndb.AND(cls.sender==userkey, cls.confirmed==True))
+        else:
+            return cls.query().filter(cls.sender==userkey)
     @classmethod
     def by_receiver(cls,userkey):
         return cls.query().filter(cls.receiver==userkey)
@@ -101,8 +104,8 @@ class Reservation(ndb.Model):
         
 class DeliveryOffer(ndb.Model):
     """ Make an offer to deliver """
-    sender = ndb.KeyProperty()      # user_prefs of reserver and reservee
-    receiver = ndb.KeyProperty()
+    sender = ndb.KeyProperty()      # this is the driver
+    receiver = ndb.KeyProperty()    # this is the sender. I should have planned this better
     route = ndb.KeyProperty()       # route being reserved
     price = ndb.IntegerProperty()   # Offer price
     pickup = ndb.BooleanProperty(default=False)     # sender picks up shit at dest
@@ -143,8 +146,11 @@ class DeliveryOffer(ndb.Model):
     def by_sender(cls,userkey):
         return cls.query().filter(cls.sender==userkey)
     @classmethod
-    def by_receiver(cls,userkey):
-        return cls.query().filter(cls.receiver==userkey)
+    def by_receiver(cls,userkey,confirmed=False):
+        if confirmed:
+            return cls.query().filter(ndb.AND(cls.receiver==userkey,cls.confirmed==True))
+        else:
+            return cls.query().filter(cls.receiver==userkey)            
     @classmethod
     def by_route(cls,rkey):
         return cls.query().filter(cls.route==rkey)
@@ -209,6 +215,9 @@ class ExpiredReservation(ndb.Model):
     @classmethod
     def by_receiver(cls,userkey):
         return cls.query().filter(cls.receiver==userkey)
+    @classmethod
+    def by_user(cls,userkey):
+        return cls.query().filter(ndb.OR(cls.receiver==userkey,cls.sender==userkey))
         
     def to_dict(cls):
         res = {
@@ -241,13 +250,13 @@ class ExpiredOffer(ndb.Model):
     def to_dict(cls):
         r = cls.route.get()
         res = {
-            'senderkey': cls.sender.urlsafe(),
-            'receiverkey': cls.receiver.urlsafe(),
+            'senderkey': cls.receiver.urlsafe(),
+            'receiverkey': cls.sender.urlsafe(),
             'route': cls.route.urlsafe(),
             'locstart': cls.locstart,
             'locend': cls.locend,
-            'sender_name':cls.sender_name,
-            'receiver_name':cls.rcvr_name, 
+            'sender_name':cls.rcvr_name,
+            'receiver_name':cls.sender_name, 
             'price' : cls.price,
             'deliverby' : cls.deliverby.strftime('%m/%d/%Y')
         }
@@ -267,3 +276,6 @@ class ExpiredOffer(ndb.Model):
     @classmethod
     def by_receiver(cls,userkey):
         return cls.query().filter(cls.receiver==userkey)        
+    @classmethod
+    def by_user(cls,userkey):
+        return cls.query().filter(ndb.OR(cls.receiver==userkey,cls.sender==userkey))        

@@ -88,6 +88,34 @@ $(document).ready(function(){
       console.log(jqXHR);
      }
   });        
+  //Delivery status
+  $.ajax({
+    type: "GET",
+    contentType: "json", 
+    url: '/news/status',
+    success: function(q) {
+      console.log(q);
+      for (t in q) {
+        rowstr = '<tr class="clicky" onclick="document.location.href = \''+ q[t].post_url + '\';"><td>';
+        rowstr += 'Tracking information is available for your delivery to ' + q[t].locend + '.</td></tr>';
+        $('#newsTable tr:last').after(rowstr);        
+      }
+    }
+  });            
+  //Review reminders
+  $.ajax({
+    type: "GET",
+    contentType: "json", 
+    url: '/news/reviews',
+    success: function(q) {
+      console.log(q);
+      for (t in q) {
+        rowstr = '<tr class="clicky" onclick="document.location.href = \''+ q[t].review_url + '\';"><td>';
+        rowstr += 'Please leave a review for your delivery to ' + q[t].locend + '.</td></tr>';
+        $('#newsTable tr:last').after(rowstr);        
+      }
+    }
+  });    
     
     //If driver, people who need help from your location
   // Try HTML5 geolocation
