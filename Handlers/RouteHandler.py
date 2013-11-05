@@ -228,7 +228,7 @@ class RouteHandler(BaseHandler):
                 if not p.roundtrip and rtr: #added a return trip
                     add_roundtrip(p)
                 if p.roundtrip and not rtr: #deleted return trip
-                    delete_doc(r.key.urlsafe()+'_RT',p.__class__.__name__)
+                    delete_doc(p.key.urlsafe()+'_RT',p.__class__.__name__)
                 p.roundtrip = rtr
             else:
                 self.redirect('/post')

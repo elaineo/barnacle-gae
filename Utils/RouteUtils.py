@@ -33,7 +33,6 @@ class RouteUtils():
         try:
             req = urlfetch.fetch(geo_url)
             results = json.loads(req.content)['results']
-            logging.info(req.content)
         except:
             logging.error('HTTPError from google geo')
             raise HTTPError 

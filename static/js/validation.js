@@ -41,41 +41,14 @@ function change_validity (x){
         document.forms[0].classList.remove('valid')
     }
 }
-
-function validate_loc(locstr, i,o) {
-    var gmapURL = 'http://maps.googleapis.com/maps/api/geocode/json';
-    var data = 'address='+locstr+'&sensor=false';
-    var output = $.ajax({
-        type: "GET",
-        url: gmapURL,
-        data: data
-    }).pipe(function(data) {
-        if (data.status=='OK') {
-            // fill in form fields
-            $('input#'+o+'Field').val(data.results[0].formatted_address);
-            $('input#'+i+'str').val(data.results[0].formatted_address);
-            $('input#'+i+'lat').val(data.results[0].geometry.location.lat);
-            $('input#'+i+'lon').val(data.results[0].geometry.location.lng);
-            $('#'+o+'Err').html('');
-            return true;
-        } else {
-            $('input#'+i+'str').val('');
-            $('input#'+i+'lat').val('');
-            $('input#'+i+'lon').val('');
-            $('#'+o+'Err').html('Invalid Location');
-            return false;
-        }    
-    });
-    return output;
-}
+ 
 
 function click_validloc(btn_id,fields,inputs,vtest,form,clickver) {
+    var oksubmit = true;
+    var d = 0;          
     $(btn_id).click(function(event) {
       event.preventDefault();
-      var oksubmit = true;
       var wait = false;
-      var d = 0;
-      /**
       for (f in fields) {
         var ff = fields[f];
         var test = false;
@@ -85,27 +58,12 @@ function click_validloc(btn_id,fields,inputs,vtest,form,clickver) {
             test = true;
         if (test) {
             var locstr = $('#'+ff+'Field').val();
-            console.log(locstr, inputs[f], ff);
-            var g = validate_loc(locstr, inputs[f], ff);
+            console.log(locstr, inputs[f], ff, d);
+            validate_loc(locstr, inputs[f], ff, fields, clickver);
             wait = true;
-            g.done(function(ok) {
-                if (ok==false) oksubmit = false;
-                else if (d==fields.length-1 && oksubmit) { 
-                    if (clickver) {
-                        loggedIn = checkLoginStatus();
-                        if (loggedIn) $(form).submit();
-                        else loginPlease();
-                    } else $(form).submit();
-                }
-                d++;
-            });
-            g.fail(function() { 
-                $('#'+ff+'Err').html('GoogleMaps is thinking...'); 
-                oksubmit = false;
-            });
         } else { $('#'+ff+'Err').html(''); d++; }
       }
-      **/
+      
       if (wait==false) {
         if (clickver) {
             loggedIn = checkLoginStatus();
@@ -114,4 +72,32 @@ function click_validloc(btn_id,fields,inputs,vtest,form,clickver) {
         } else $(form).submit();   
       }
     });
+    
+  function validate_loc(locstr, i,o,fields,clickver) {
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode( { 'address': locstr}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        // fill in form fields
+        $('input#'+o+'Field').val(results[0].formatted_address);
+        $('input#'+i+'str').val(results[0].formatted_address);
+        $('input#'+i+'lat').val(results[0].geometry.location.lat);
+        $('input#'+i+'lon').val(results[0].geometry.location.lng);
+        $('#'+o+'Err').html('');        
+        if (d==fields.length-1 && oksubmit) { 
+            if (clickver) {
+                loggedIn = checkLoginStatus();
+                if (loggedIn) $(form).submit();
+                else loginPlease();
+            } else $(form).submit();
+        }
+        d++;
+      } else {
+        $('input#'+i+'str').val('');
+        $('input#'+i+'lat').val('');
+        $('input#'+i+'lon').val('');
+        $('#'+o+'Err').html('Invalid Location');
+        oksubmit = false;                
+      }
+    });    
+  }       
 }
