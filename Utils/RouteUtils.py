@@ -16,7 +16,9 @@ class RouteUtils():
         # route.dest,route.locend=self.getGeoLoc(endstr)
         if route.start and route.dest: 
             route.pathpts, d = self.getPath(route.start,route.dest)
-        return route, d
+            return route, d
+        else:
+            return route, None
 
     def setpoints(self,p,startstr,endstr):
         route=p

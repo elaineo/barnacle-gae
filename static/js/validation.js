@@ -78,10 +78,11 @@ function click_validloc(btn_id,fields,inputs,vtest,form,clickver) {
     geocoder.geocode( { 'address': locstr}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         // fill in form fields
+        console.log(results);
         $('input#'+o+'Field').val(results[0].formatted_address);
         $('input#'+i+'str').val(results[0].formatted_address);
-        $('input#'+i+'lat').val(results[0].geometry.location.lat);
-        $('input#'+i+'lon').val(results[0].geometry.location.lng);
+        $('input#'+i+'lat').val(results[0].geometry.location.lat());
+        $('input#'+i+'lon').val(results[0].geometry.location.lng());
         $('#'+o+'Err').html('');        
         if (d==fields.length-1 && oksubmit) { 
             if (clickver) {
