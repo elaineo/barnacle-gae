@@ -65,6 +65,11 @@ class Kickstarter(BaseHandler):
     """ Terms of Service page """
     def get(self):
         self.render('kick/index.html', **self.params)        
+        
+class TrackerPage(BaseHandler):
+    """ Terms of Service page """
+    def get(self):
+        self.render('track/tracker.html', **self.params)                
 
 class BlogPage(BaseHandler):
     def get(self, post=None):

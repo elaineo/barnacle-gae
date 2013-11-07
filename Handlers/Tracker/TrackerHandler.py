@@ -50,6 +50,9 @@ class TrackerHandler(BaseHandler):
             self.render('track/web/main.html', **self.params)
             
     def post(self, action=None, key=None):       
+        if action=='eta':
+            self.__eta(key) 
+            return
         if not self.user_prefs:
             logging.error('Not logged in')
             response = { 'status': 'fail'}            
@@ -70,8 +73,6 @@ class TrackerHandler(BaseHandler):
             self.__sendconfirm()
         elif action=='share':
             self.__share()
-        elif action=='eta':
-            self.__eta(key) 
         else:
             return
 
@@ -314,12 +315,12 @@ class TrackerHandler(BaseHandler):
         self.params['first_name'] = self.user_prefs.first_name
         self.params['url'] = url
         self.params['action'] = 'sharetracking'
-        self.params['senderid'] = self.user_prefs.key.id()        
-        htmlbody =  self.render_str('email/sharetrack.html', **self.params)
-        textbody = sharetrack_txt % self.params
+        self.params['senderid'] = self.user_prefs.key.id()                
         share_sub = self.params['first_name'] + " has shared a route with you"
         for email in emails:
             self.params['receiverid'] = email
+            htmlbody =  self.render_str('email/sharetrack.html', **self.params)
+            textbody = sharetrack_txt % self.params
             try:
                 send_info(email, share_sub, textbody, htmlbody)        
             except:

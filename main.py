@@ -62,6 +62,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/mobile/<action>', handler=MobileHandler),
    webapp2.Route('/track/<action>', handler=TrackerHandler),
    webapp2.Route('/track/<action>/<key:[\w\-]{20,}>', handler=TrackerHandler),
+   webapp2.Route('/tracker', handler=TrackerPage),
 # search
    webapp2.Route('/search', handler=SearchHandler),
    webapp2.Route('/search/<action>', handler=SearchHandler),
