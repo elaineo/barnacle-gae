@@ -21,6 +21,7 @@ from Handlers.Launch.MobileHandler import *
 from Handlers.Launch.ExternalHandler import *
 from Handlers.Seo.SitemapHandler import SitemapHandler
 from Handlers.Seo.SearchableRouteHandler import SearchableRouteHandler
+from Handlers.Seo.SearchableRequestHandler import SearchableRequestHandler
 from Utils.DebugUtils import *
 from Utils.EmailUtils import *
 from Utils.CloseUtils import *
@@ -71,6 +72,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/search/<action>/<key:[\w\-]{20,}>', handler=SearchHandler),
 # seo
    webapp2.Route('/route/from/<origin>/to/<dest>', handler=SearchableRouteHandler),
+   webapp2.Route('/request/from/<origin>/to/<dest>', handler=SearchableRequestHandler),
 # accounts
    webapp2.Route('/signup', handler=SignupPage),
    webapp2.Route('/signup/<action>', handler=SignupPage),
@@ -103,7 +105,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
 # Utils
    ('/navhead',NavHelper),
    ('/suicide',CloseHelper),
-    webapp2.Route('/img/<action>/<sender>/<receiver>', handler=ImageHandler),   
+    webapp2.Route('/img/<action>/<sender>/<receiver>', handler=ImageHandler),
 # Footer
    ('/loc', LocationPage),
    ('/about', AboutPage),

@@ -13,7 +13,6 @@ for c in cities:
     city_dict[c['city']] = ndb.GeoPt(c['lat'], c['lon'])
 
 
-
 class SearchableRouteHandler(BaseHandler):
     """
     Make search engine crawlable route listing page
