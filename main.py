@@ -46,6 +46,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
                                ('/img/([0-9]+)', ImagePage),
                                 ('/home', GuestPage),
                                 ('/splash', SplashPage),
+   webapp2.Route('/welcome/<action>', handler=LandingPage),
 # LAUNCH!
 # requests
     webapp2.Route('/res/<action>/<key>', handler=ReserveHandler),
