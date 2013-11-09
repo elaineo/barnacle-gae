@@ -120,10 +120,10 @@ small { font-size: 84%; line-height: inherit; }
 
 /*** Search Form ***/
 .form-wrapper { margin-top: 60px; min-height: 492px; }
-.form-search { padding: 10px 12px 20px; background: #999; position: relative; border-left: 10px solid rgba(67, 100, 161, 0.3);  border-right: 10px solid rgba(67, 100, 161, 0.3); }
+.form-search { padding: 10px 12px 20px; background: rgba(153, 153, 153, 0.72); position: relative; border-left: 10px solid rgba(67, 100, 161, 0.6);  border-right: 10px solid rgba(67, 100, 161, 0.6); }
 .form-search label { color: #fff; }
-.form-search .notch { position: absolute; bottom: -10px; left: 20px; margin: 0; border-top: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid #999; padding: 0; width: 0; height: 0; }
-.form-header { background: #999; padding: 20px 14px 6px; border-left: 10px solid rgba(67, 100, 161, 0.3); border-top: 10px solid rgba(67, 100, 161, 0.3);  border-right: 10px solid rgba(67, 100, 161, 0.3);}
+.form-search .notch { position: absolute; bottom: -10px; left: 20px; margin: 0; border-top: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid rgba(153, 153, 153, 0.72); padding: 0; width: 0; height: 0; }
+.form-header { background: rgba(153, 153, 153, 0.72); padding: 20px 14px 6px; border-left: 10px solid rgba(67, 100, 161, 0.6); border-top: 10px solid rgba(67, 100, 161, 0.3);  border-right: 10px solid rgba(67, 100, 161, 0.6);}
 .form-header .lead { color: #fff; font-size: 16.4px; }
 .form-footer { padding: 20px 20px 10px;  border-left: 10px solid #fafafa; border-bottom: 10px solid #fafafa;  border-right: 10px solid #fafafa;background: #f8f8f8 url(../images/patterns/gray_pattern.gif); }
 .form-search.custom div.custom.dropdown { display: block; position: relative; width: auto; height: 32px; margin-bottom: 9px; margin-top: 2px; }

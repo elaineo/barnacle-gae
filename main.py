@@ -33,6 +33,7 @@ from Handlers.Launch.ReserveHandler import *
 from Handlers.Launch.CheckoutHandler import *
 from Handlers.Launch.NotifyHandler import *
 
+from Pages.LandingPage import *
 from Pages.HomePage import *
 from Pages.ContactPage import *
 
@@ -42,9 +43,9 @@ from Handlers.ReviewHandler import *
 sys.path.append('/Pages')
 
 app = webapp2.WSGIApplication([('/', HomePage),
+                               ('/img/([0-9]+)', ImagePage),
                                 ('/home', GuestPage),
                                 ('/splash', SplashPage),
-                               ('/img/([0-9]+)', ImagePage),
 # LAUNCH!
 # requests
     webapp2.Route('/res/<action>/<key>', handler=ReserveHandler),
