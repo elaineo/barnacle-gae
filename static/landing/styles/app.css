@@ -99,8 +99,15 @@ small { font-size: 84%; line-height: inherit; }
    02. Header Section
 ----------------------------------------- */
 
-.header-bg {background: #fff; }
-#header { padding-top: 20px; padding-bottom: 40px; background: url(/static/landing/images/header_image_bg_white.png) top center no-repeat; max-width: 1170px; margin: 0 auto; border-bttom: 10px solid red; }
+.header-bg {background: #f8f8f8;  }
+#header { padding-top: 20px; padding-bottom: 40px; background: url(/static/landing/images/header_image_bg_white.png) top center no-repeat; max-width: 1170px; margin: 0 auto; 
+box-shadow: inset 0 50px 50px -50px #171717;
+-moz-box-shadow: inset 0 50px 50px -50px #171717;
+-webkit-box-shadow: inset 0 50px 50px -50px #171717;
+ }
+
+.header-txt  a{ color: #171717; padding: 5px;padding-top:10px;}
+.header-txt a:hover { background:rgba(153, 153, 153, 0.72); color: #eee}
 
 /*** Top links ***/
 .top-links { text-align: right; color: #0296c0; padding: 4px 0; border-bottom: 1px solid #fff; background: #0076a3 url(/static/landing/images/patterns/gray_pattern.gif); }
@@ -114,10 +121,10 @@ small { font-size: 84%; line-height: inherit; }
 
 /*** Search Form ***/
 .form-wrapper { margin-top: 60px; min-height: 492px; }
-.form-search { padding: 10px 12px 20px; background: rgba(153, 153, 153, 0.72); position: relative; border-left: 10px solid rgba(67, 100, 161, 0.6);  border-right: 10px solid rgba(67, 100, 161, 0.6); }
+.form-search { padding: 10px 12px 20px; background: rgba(23, 23, 23, 0.72); position: relative;  }
 .form-search label { color: #fff; }
-.form-search .notch { position: absolute; bottom: -10px; left: 20px; margin: 0; border-top: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid rgba(153, 153, 153, 0.72); padding: 0; width: 0; height: 0; }
-.form-header { background: rgba(153, 153, 153, 0.72); padding: 20px 14px 6px; border-left: 10px solid rgba(67, 100, 161, 0.6); border-top: 10px solid rgba(67, 100, 161, 0.3);  border-right: 10px solid rgba(67, 100, 161, 0.6);}
+.form-search .notch { position: absolute; bottom: -10px; left: 20px; margin: 0; border-top: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid rgba(23, 23, 23, 0.72); padding: 0; width: 0; height: 0; }
+.form-header { background: rgba(23, 23, 23, 0.72); padding: 20px 14px 6px; }
 .form-header .lead { color: #fff; font-size: 16.4px; }
 .form-footer { padding: 20px 20px 10px;  border-left: 10px solid #fafafa; border-bottom: 10px solid #fafafa;  border-right: 10px solid #fafafa;background: #f8f8f8 url(/static/landing/images/patterns/gray_pattern.gif); }
 .form-search.custom div.custom.dropdown { display: block; position: relative; width: auto; height: 32px; margin-bottom: 9px; margin-top: 2px; }

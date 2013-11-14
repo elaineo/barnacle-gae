@@ -6,7 +6,7 @@ from Models.RequestModel import Request
 from Models.ReservationModel import Reservation
 from Models.MessageModel import Message
 from datetime import datetime, timedelta
-
+from google.appengine.ext import ndb
 
 class SummaryHandler(BaseHandler):
     def day_ago(self):
@@ -73,13 +73,19 @@ class SummaryHandler(BaseHandler):
         buf += self.total_report()
         return buf
 
-    def email_report(self, to_address, body):
+    def email_report(self, to_address, subject, body):
         sender_address = 'summary@p2ppostal.appspotmail.com'
-        timestamp = datetime.now().strftime('%Y/%m/%d')
-        subject = 'Daily Summary for %s' % timestamp
         mail.send_mail(sender_address, to_address, subject, body)
 
-    def get(self):
-        body = self.generate_report()
-        self.email_report('warren.mar@gmail.com', body)
-        self.email_report('help@gobarnacle.com', body)
+    def get(self, action=None, key=None):
+        if not action:
+            body = self.generate_report()
+            timestamp = datetime.now().strftime('%Y/%m/%d')
+            subject = 'Daily Summary for %s' % timestamp            
+            self.email_report('warren.mar@gmail.com', subject, body)
+            self.email_report('help@gobarnacle.com', subject, body)
+        elif action=='selfnote' and key:
+            r = ndb.Key(urlsafe=key).get()
+            buf = r.items + ' from ' + r.locstart + ' to ' + r.locend 
+            subject = 'New Barnacle request'
+            self.email_report('help@gobarnacle.com', subject, buf)

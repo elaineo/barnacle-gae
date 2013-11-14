@@ -167,6 +167,7 @@ class RouteHandler(BaseHandler):
         try:
             p.put() 
             taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
+            taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
             create_request_doc(p.key.urlsafe(), p)
             fbshare = bool(self.request.get('fbshare'))
             self.params['share_onload'] = fbshare               

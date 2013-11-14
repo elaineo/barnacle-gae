@@ -15,5 +15,5 @@ def fetch_twitter():
                     CONSUMER_SECRET,
                     ACCESS_TOKEN,
                     ACCESS_TOKEN_SECRET)
-    response = client.api.statuses.user_timeline.get(screen_name=twitter_handle, count=3)
+    response = client.api.statuses.user_timeline.get(screen_name=twitter_handle, count=2)
     return response.data

@@ -56,3 +56,6 @@ function checkLoginStatus() {
 function loginPlease() {
     display_modal("#signin-box");
 }
+function loginLand() {
+  $( '#login_panel' ).reveal( $( this ).data() );
+}

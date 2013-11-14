@@ -69,7 +69,8 @@ class MatchHandler(BaseHandler):
             self.__updatereq(r)
         elif action=='updateroute' and key:
             r = ndb.Key(urlsafe=key).get()
-            self.__updateroute(r)
+            self.__updateroute(r)        
+            
                     
     def post(self, action=None):
         if action=='dumprequests':
