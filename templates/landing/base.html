@@ -14,7 +14,7 @@
   <!--Site title-->
   <title>{% block title %}{% endblock %}</title>
   <!--Meta-->
-  <meta name="description"  content="{% block metadescr %}{% endblock %}">
+    {% block metadescr %}{% endblock %}
   <meta name="author"  content="Elaine Ou">
   <!--Set the viewport width to device width for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,7 +28,13 @@
   <link rel="stylesheet" href="/static/landing/styles/app.css">
   <link rel="stylesheet" href="/static/landing/styles/updates.css">
   <link rel="stylesheet" href="/static/landing/styles/custom.css">
-  
+  <style type="text/css">
+    #header { padding-top: 20px; padding-bottom: 40px; background: url(/static/landing/images/profile-{{seodir}}/header_image_bg.png) top center no-repeat; max-width: 1170px; margin: 0 auto; 
+    box-shadow: inset 0 50px 50px -50px #171717;
+    -moz-box-shadow: inset 0 50px 50px -50px #171717;
+    -webkit-box-shadow: inset 0 50px 50px -50px #171717;
+     }
+  </style>
   <script src="/static/js/jquery-1.9.1.js"></script>
   
 	
@@ -172,19 +178,15 @@
             
             <div class="carousel-profiles responsive">
               <ul id="profile-thumbs">
-                <li><a href="#"><img src="/static/landing/images/profile-carousel/thumb_01.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-carousel/thumb_02.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-carousel/thumb_03.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-carousel/thumb_04.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-carousel/thumb_05.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-carousel/thumb_06.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-carousel/thumb_07.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-carousel/thumb_08.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-carousel/thumb_09.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-carousel/thumb_10.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-carousel/thumb_11.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-carousel/thumb_12.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-carousel/thumb_13.jpg" alt=""></a></li>
+                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_01.jpg" alt=""></a></li>
+                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_02.jpg" alt=""></a></li>
+                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_03.jpg" alt=""></a></li>
+                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_04.jpg" alt=""></a></li>
+                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_05.jpg" alt=""></a></li>
+                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_06.jpg" alt=""></a></li>
+                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_07.jpg" alt=""></a></li>
+                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_08.jpg" alt=""></a></li>
+                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_09.jpg" alt=""></a></li>
               </ul>
             </div><!--end carousel-profiles-->
           </div><!--end form-footer-->
@@ -209,7 +211,7 @@
     <div class="row map-bg">
     
       <div class="twelve columns">
-        <h1 class="section-title">Deliveries Along for the Ride</h1>
+        <h1 class="section-title">{% block keyphrase %}{% endblock %} Along for the Ride</h1>
         <p class="lead">Barnacle matches your transportation needs with drivers who are commuting or traveling. Your deliveries are just along for the ride.
         <strong>Give your {{seosub}} their own private seats in passenger vehicles!</strong></p>
                 

@@ -14,18 +14,21 @@ class LandingPage(BaseHandler):
             self.response.headers['Content-Type'] = "application/json"
             self.write(json.dumps(tweets))
         elif action=='pets':
+            self.params['seodir'] = 'pets'
             self.params['seosub'] = 'pets'
             self.params['items'] = 'Pet'
             self.render('landing/pets.html', **self.params)
         elif action=='equip':
+            self.params['seodir'] = 'equip'
             self.params['seosub'] = 'toys'
             self.params['items'] = 'Toys'
-            self.render('landing/pets.html', **self.params)
-        elif action=='biz':
-            self.params['seosub'] = 'goods'
-            self.params['items'] = 'stuff'
-            self.render('landing/pets.html', **self.params)            
+            self.render('landing/equip.html', **self.params)
+        # elif action=='biz':
+            # self.params['seosub'] = 'goods'
+            # self.params['items'] = 'stuff'
+            # self.render('landing/biz.html', **self.params)            
         elif action=='auto':
+            self.params['seodir'] = 'auto'
             self.params['seosub'] = 'goods'
             self.params['items'] = 'Auto parts'
-            self.render('landing/pets.html', **self.params)            
+            self.render('landing/auto.html', **self.params)            
