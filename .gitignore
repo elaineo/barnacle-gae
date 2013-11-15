@@ -37,3 +37,6 @@ nosetests.xml
 # Mac
 .DS_Store
 *~
+
+barnacle.sublime-project
+barnacle.sublime-workspace
