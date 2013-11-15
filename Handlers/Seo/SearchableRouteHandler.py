@@ -18,10 +18,83 @@ class SearchableRouteHandler(BaseHandler):
     Make search engine crawlable route listing page
     """
     def get(self, origin=None, dest=None):
-        self.params['origin'] = urllib.unquote(origin)
-        self.params['dest'] = urllib.unquote(dest)
-        self.params['posts'] = self.get_routes(origin, dest)
-        self.render('search_seo.html', **self.params)
+        if origin:
+            self.params['origin'] = urllib.unquote(origin)
+        if dest:
+            self.params['dest'] = urllib.unquote(dest)
+        if origin == None:
+            self.params['posts'] = self.get_routes_to(dest)
+            self.render('search_seo_to.html', **self.params)
+        elif dest == None:
+            self.params['posts'] = self.get_routes_from(origin)
+            self.render('search_seo_from.html', **self.params)
+        else:
+            self.params['posts'] = self.get_routes(origin, dest)
+            self.render('search_seo.html', **self.params)
+
+    def get_routes_from(self, origin):
+        start = city_dict[origin]
+        delivend = datetime.now() + timedelta(days=365)
+        logging.info(start)
+        dist = 1
+        results = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',start).results
+        keepers = []
+        for c in results:
+            startpt = field_byname(c, "start")
+            dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude)
+            logging.info(startpt)
+            logging.info(dist0)
+            if dist0 < 10:
+                keepers.append(c)
+        results = keepers
+        posts = []
+        for doc in results:
+            d = search_todict(doc)
+            try:
+                p = {  'first_name': d['first_name'],
+                        'routekey': d['routekey'],
+                        'thumb_url': d['thumb_url'],
+                        'start': d['locstart'],
+                        'dest': d['locend'],
+                        'fbid': d['fbid'],
+                        'delivstart': d['delivstart'].strftime('%b-%d-%y'),
+                        'delivend': d['delivend'].strftime('%b-%d-%y')
+                    }
+                posts.append(p)
+            except:
+                continue
+        return posts
+
+    def get_routes_to(self, dest):
+        dest = city_dict[dest]
+        delivend = datetime.now() + timedelta(days=365)
+        dist = 1
+        results = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',dest).results
+        logging.info(results)
+        keepers = []
+        for c in results:
+            startpt = field_byname(c, "dest")
+            dist1 = HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude)
+            if dist1 < 10:
+                keepers.append(c)
+        results = keepers
+        posts = []
+        for doc in results:
+            d = search_todict(doc)
+            try:
+                p = {  'first_name': d['first_name'],
+                        'routekey': d['routekey'],
+                        'thumb_url': d['thumb_url'],
+                        'start': d['locstart'],
+                        'dest': d['locend'],
+                        'fbid': d['fbid'],
+                        'delivstart': d['delivstart'].strftime('%b-%d-%y'),
+                        'delivend': d['delivend'].strftime('%b-%d-%y')
+                    }
+                posts.append(p)
+            except:
+                continue
+        return posts
 
     def get_routes(self, origin, dest):
         """ Get routes that go from origin to destination
