@@ -36,7 +36,7 @@ class SearchableRouteHandler(BaseHandler):
         start = city_dict[origin]
         delivend = datetime.now() + timedelta(days=365)
         logging.info(start)
-        dist = 1
+        dist = 10 # miles
         results = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',start).results
         keepers = []
         for c in results:
@@ -44,7 +44,7 @@ class SearchableRouteHandler(BaseHandler):
             dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude)
             logging.info(startpt)
             logging.info(dist0)
-            if dist0 < 10:
+            if dist0 < dist:
                 keepers.append(c)
         results = keepers
         posts = []
@@ -68,14 +68,14 @@ class SearchableRouteHandler(BaseHandler):
     def get_routes_to(self, dest):
         dest = city_dict[dest]
         delivend = datetime.now() + timedelta(days=365)
-        dist = 1
+        dist = 10
         results = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',dest).results
         logging.info(results)
         keepers = []
         for c in results:
             startpt = field_byname(c, "dest")
             dist1 = HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude)
-            if dist1 < 10:
+            if dist1 < dist:
                 keepers.append(c)
         results = keepers
         posts = []
