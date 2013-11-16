@@ -7,6 +7,7 @@ from Utils.SearchDocUtils import closest_city
 import urllib
 import logging
 
+
 class SitemapHandler(BaseHandler):
     """
     Sitemap for google to crawl urls for SEO
@@ -27,7 +28,9 @@ class SitemapHandler(BaseHandler):
             start_nearest_city = closest_city(route.pathpts[0])['city']
             end_nearest_city = closest_city(route.pathpts[-1])['city']
             urls.append('http://' + urllib.quote('www.gobarnacle.com/route/from/' + start_nearest_city + '/to/' + end_nearest_city))
-        return urls
+            urls.append('http://' + urllib.quote('www.gobarnacle.com/route/from/' + start_nearest_city))
+            urls.append('http://' + urllib.quote('www.gobarnacle.com/route/to/' + end_nearest_city))
+        return set(urls)
 
     def get_request_urls(self):
         urls = []
@@ -35,4 +38,4 @@ class SitemapHandler(BaseHandler):
             start_nearest_city = closest_city(request.start)['city']
             end_nearest_city = closest_city(request.dest)['city']
             urls.append('http://' + urllib.quote('www.gobarnacle.com/request/from/' + start_nearest_city + '/to/' + end_nearest_city))
-        return urls
+        return set(urls)
