@@ -46,8 +46,7 @@ sys.path.append('/Pages')
 app = webapp2.WSGIApplication([('/', HomePage),
                                ('/img/([0-9]+)', ImagePage),
                                 ('/home', GuestPage),
-                                ('/splash', SplashPage),
-   webapp2.Route('/welcome/<action>', handler=LandingPage),
+                                ('/splash', SplashPage),   
 # LAUNCH!
 # requests
     webapp2.Route('/res/<action>/<key>', handler=ReserveHandler),
@@ -75,6 +74,8 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/route/from/<origin>', handler=SearchableRouteHandler),
    webapp2.Route('/route/to/<dest>', handler=SearchableRouteHandler),
    webapp2.Route('/request/from/<origin>/to/<dest>', handler=SearchableRequestHandler),
+   webapp2.Route('/welcome/<action>', handler=LandingPage),
+   webapp2.Route('/c/<action>', handler=CouponPage),
 # accounts
    webapp2.Route('/signup', handler=SignupPage),
    webapp2.Route('/signup/<action>', handler=SignupPage),

@@ -1,5 +1,6 @@
 from datetime import *
 from Handlers.BaseHandler import *
+from Models.Launch.CustModel import *
 from Utils.Twat import *
 
 import json
@@ -32,3 +33,19 @@ class LandingPage(BaseHandler):
             self.params['seosub'] = 'goods'
             self.params['items'] = 'Auto parts'
             self.render('landing/auto.html', **self.params)            
+            
+class CouponPage(BaseHandler):            
+    def get(self, action=None):
+        if action=='gen':
+            self.render('landing/coupongen.html', **self.params)  
+    def post(self, action=None):
+        if action=='gen':
+            name = self.request.get('name')
+            # Look up code
+            c = Codes.by_name(name.upper())
+            if not c:
+                c = Codes(name=name.upper())
+                c.put()
+            self.params['last_biz'] = c.name
+            self.params['last_code'] = c.code
+            self.render('landing/coupongen.html', **self.params)  
