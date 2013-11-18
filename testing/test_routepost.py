@@ -44,6 +44,9 @@ def main():
     elem = driver.find_element_by_id('post_btn')
     elem.click()
 
+    elem = driver.find_element_by_name('fbshare')
+    elem.click()
+
     #driver.close()
     print 'Testing Done'
 
