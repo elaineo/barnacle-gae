@@ -87,6 +87,7 @@ class RouteUtils():
         req = urlfetch.fetch(dir_url)
         results = json.loads(req.content)['routes'][0]['legs'][0]
         dist = results['distance']['value']   #dist in metres
+        logging.info(dist)
         precision = precisionDist(dist/1609 * fudge)
         pathpts = [roundPoint(start,precision)]        
         for s in results['steps']:
@@ -279,7 +280,7 @@ def HaversinDist(startlat, startlon, destlat, destlon):
 
 def precisionDist(dist):
     try:
-        p = round(6-2*math.log(dist)/math.log(10))
+        p = round(6-2*math.log(dist)/math.log(100))
     except:
         p=6
     return int(min(6, max(0, p)))

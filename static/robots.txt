@@ -10,5 +10,7 @@ Disallow: /edit/
 Disallow: /delete/
 Disallow: /kickstart
 Disallow: /routes
+Disallow: /reserve/
+Disallow: /post/delete/
 Disallow: /review
 Sitemap: http://www.gobarnacle.com/sitemap.xml

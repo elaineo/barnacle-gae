@@ -151,7 +151,7 @@ class SearchHandler(BaseHandler):
         posts = []
         ## Change this to a query
         if dest:
-            ### Get a set of low-res pathpts
+            ### Get a set of low-res pathpts            
             pathpts, precision = RouteUtils().estPath(start, dest,dist)
             results = Request.search_route(pathpts, delivstart, delivend, precision)
             for r in results:

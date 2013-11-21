@@ -93,7 +93,7 @@ class CheckoutHandler(BaseHandler):
         res_msg = new_res_msg % key
         if msg:
             res_msg = res_msg + '\n\n----Message from Sender----\n\n' + msg
-        create_note(res.receiver, new_res_sub, res_msg)    
+        create_note(self, res.receiver, new_res_sub, res_msg)    
         self.redirect('/reserve/' + key)  
 
     def __confirm_hold(self,key):
@@ -137,7 +137,8 @@ class CheckoutHandler(BaseHandler):
 
         customer = self.__create_cust(uri,email)
         charge = res.price*100
-        customer.debit(amount=charge)
+        if charge > 0:
+            customer.debit(amount=charge)
         res.confirmed=True
         res.put()        
         create_from_res(res)
@@ -151,7 +152,7 @@ class CheckoutHandler(BaseHandler):
         self.send_receipt(email, res, eparams) 
         # notify the driver
         msg = self.user_prefs.first_name + confirm_do_msg % key
-        create_note(res.sender, confirm_do_sub, msg)
+        create_note(self,res.sender, confirm_do_sub, msg)
 
     def __create_cust(self,uri,email=None):
         #create customer

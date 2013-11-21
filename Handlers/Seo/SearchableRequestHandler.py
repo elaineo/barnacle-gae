@@ -15,7 +15,6 @@ for c in cities:
 
 class SearchableRequestHandler(BaseHandler):
     def get(self, origin=None, dest=None):
-        logging.info('xx')
         self.params['origin'] = urllib.unquote(origin)
         self.params['dest'] = urllib.unquote(dest)
         self.params['posts'] = self.get_requests(origin, dest)

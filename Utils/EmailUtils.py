@@ -31,18 +31,21 @@ class EmailHandler(InboundMailHandler):
         html_body = ''
         for content_type, body in htmltext_bodies:
             html_body = html_body + body.decode()            
+            
+        logging.info(html_body)
+        logging.info(to_email)
 
-        if html_body !='':
-            mail.send_mail(sender=sender_email, bcc=bcc_email,
-                  reply_to=sender_email,
-                  to=to_email, 
-                  subject = mail_message.subject, body=plain_body,
-                  html=html_body)
-        else:
-            mail.send_mail(sender=sender_email, bcc=bcc_email,
-                  reply_to=sender_email,
-                  to=to_email, 
-                  subject = mail_message.subject, body=plain_body)
+        # if html_body !='':
+            # mail.send_mail(sender=sender_email, bcc=bcc_email,
+                  # reply_to=sender_email,
+                  # to=to_email, 
+                  # subject = mail_message.subject, body=plain_body,
+                  # html=html_body)
+        # else:
+        mail.send_mail(sender=sender_email, bcc=bcc_email,
+              reply_to=sender_email,
+              to=to_email, 
+              subject = mail_message.subject, body=plain_body)
 
 def extract_email(email):
     buf = re.findall('<.+>',email)
@@ -59,6 +62,7 @@ def encode_email_address(email):
             k = UserPrefs.get_by_id(id)
         except ValueError:
             return email
+            # return 'Barnacle Notification <' + email + '>'
     else:
         k = UserPrefs.by_email(email)
     if k is None:  ##this is going to be an issue for ppl who don't have email addr
@@ -92,12 +96,18 @@ def create_msg(self, sender, receiver, subject, msg):
                     subject=subject,
                     body=body,html=html)
 
-def create_note(receiver, subject, body):
+def create_note(self, receiver, subject, body):   
+    params = {}
+    params['msg'] = body
+    params['action'] = 'note'
+    params['senderid'] = 'barnacle'
+    params['receiverid'] = receiver.id()    
     recv_email = str(receiver.id()) + email_domain
+    html = self.render_str('email/createnote.html', **params)
     mail.send_mail(sender=noreply_email, bcc=bcc_email,
-                  to=recv_email,
-                  subject=subject,
-                  body=body)
+              to=recv_email,
+              subject=subject,
+              body=body, html=html)
 
 def send_info(to_email, subject, body, html=None):
     if html:

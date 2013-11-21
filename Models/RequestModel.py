@@ -102,7 +102,7 @@ class Request(ndb.Model):
             dest = roundPoint(q.dest, precision)
             if start in pathpts and dest in pathpts:
                 # Make sure it's going the right way
-                if pathpts.index(start) < pathpts.index(dest):
+                if pathpts.index(start) <= pathpts.index(dest):
                     results.append(q)
         return results
        

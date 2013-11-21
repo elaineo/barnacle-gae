@@ -151,7 +151,7 @@ class ReservationHandler(BaseHandler):
                     n = r.sender.get().get_notify()
                     if 1 in n:
                         msg = self.user_prefs.first_name + confirm_res_msg % key
-                        create_note(r.sender, confirm_res_sub, msg)
+                        create_note(self, r.sender, confirm_res_sub, msg)
                     # create associated tracker
                     create_from_res(r)
                     # charge the cc
@@ -183,11 +183,11 @@ class ReservationHandler(BaseHandler):
                         if r.__class__.__name__== 'Reservation':
                             msg = self.user_prefs.first_name + decline_res_msg
                             msg = msg + r.print_html()
-                            create_note(r.sender, decline_res_sub, msg)
+                            create_note(self, r.sender, decline_res_sub, msg)
                         else:
                             msg = self.user_prefs.first_name + decline_do_msg
                             msg = msg + r.print_html()
-                            create_note(r.sender, decline_do_sub, msg)
+                            create_note(self, r.sender, decline_do_sub, msg)
                     routekey=r.route.urlsafe()
                     r.key.delete()                
                     self.redirect('/post/'+routekey)
@@ -258,7 +258,7 @@ class ReservationHandler(BaseHandler):
             p.put() 
             if new_res:
                 do_msg = new_do_msg % p.key.urlsafe()
-                create_note(route.userkey, new_do_sub, do_msg)
+                create_note(self, route.userkey, new_do_sub, do_msg)
                 logging.info('New Offer: '+ p.key.urlsafe())
             self.redirect('/reserve/' + p.key.urlsafe())      
         except:
