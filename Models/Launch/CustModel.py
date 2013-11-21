@@ -6,7 +6,8 @@ import random
 
 class Codes(ndb.Model):
     name = ndb.StringProperty()     # associated business name
-    code = ndb.StringProperty()     
+    code = ndb.StringProperty()  
+    category = ndb.IntegerProperty(default=3)    # 0 - pets, 1 - auto, 2 - equip
     
     def _pre_put_hook(self):
         self.code = self.name[0:3].upper() + str(random.randint(0,99)) + 'NOV'   

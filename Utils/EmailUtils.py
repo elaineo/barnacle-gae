@@ -32,11 +32,17 @@ class EmailHandler(InboundMailHandler):
         for content_type, body in htmltext_bodies:
             html_body = html_body + body.decode()            
 
-        mail.send_mail(sender=sender_email, bcc=bcc_email,
+        if html_body !='':
+            mail.send_mail(sender=sender_email, bcc=bcc_email,
                   reply_to=sender_email,
                   to=to_email, 
                   subject = mail_message.subject, body=plain_body,
                   html=html_body)
+        else:
+            mail.send_mail(sender=sender_email, bcc=bcc_email,
+                  reply_to=sender_email,
+                  to=to_email, 
+                  subject = mail_message.subject, body=plain_body)
 
 def extract_email(email):
     buf = re.findall('<.+>',email)

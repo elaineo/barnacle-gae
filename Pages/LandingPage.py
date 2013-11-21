@@ -38,13 +38,24 @@ class CouponPage(BaseHandler):
     def get(self, action=None):
         if action=='gen':
             self.render('landing/coupongen.html', **self.params)  
+        else: 
+            c = Codes.by_code(action.upper())
+            self.params['bizname'] = c.name
+            if c.category==0:
+                self.redirect('/welcome/pets#coupon?'+c.name)
+            elif c.category==1:
+                self.render('landing/auto.html', **self.params)  
+            elif c.category==2:
+                self.render('landing/equip.html', **self.params)  
+            
     def post(self, action=None):
         if action=='gen':
             name = self.request.get('name')
+            cat = self.request.get('cat')
             # Look up code
             c = Codes.by_name(name.upper())
             if not c:
-                c = Codes(name=name.upper())
+                c = Codes(name=name.upper(),category=int(cat))
                 c.put()
             self.params['last_biz'] = c.name
             self.params['last_code'] = c.code

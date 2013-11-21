@@ -523,6 +523,17 @@
   </div><!--end row-->
   <a href="#" class="close-reveal-modal">×</a>
 </div><!-- end register panel -->
+
+<!--Coupon panel-->
+<div id="coupon_panel" class="reveal-modal">
+  <div class="row">
+      <div class="twelve columns">
+      <h3>Welcome, <span id='bizname'></span>! Enjoy $20 off your first order!</h3>
+      </div>
+  </div><!--end row-->
+  <a href="#" class="close-reveal-modal">×</a>
+</div><!--end login panel-->
+
 <!-- end login register stuff -->
 
 <p id="btnGoUp">Go up</p>
@@ -549,6 +560,12 @@
         click_landing('.search_btn','/search');
         click_landing('#searchreq_btn','/search/requests');
         click_landing('#post_btn','/drive');
+        if(window.location.hash) {
+          var popup = window.location.hash;
+          var bizname = popup.split('?')[1]
+          $('#bizname').html(bizname);
+          $( '#coupon_panel' ).reveal( $( this ).data() );
+        }			         
     });
     </script>
     <script type="text/javascript" src="/static/js/signinup.js"></script>
