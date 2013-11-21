@@ -35,6 +35,8 @@ class SearchableRouteHandler(BaseHandler):
             self.render('search_seo.html', **self.params)
 
     def get_routes_from(self, origin):
+        if origin not in city_dict:
+            return []
         start = city_dict[origin]
         delivend = datetime.now() + timedelta(days=365)
         logging.info(start)
@@ -54,6 +56,8 @@ class SearchableRouteHandler(BaseHandler):
         return self.results_to_post(results)
 
     def get_routes_to(self, dest):
+        if dest not in city_dict:
+            return []
         dest = city_dict[dest]
         delivend = datetime.now() + timedelta(days=365)
         dist = 10
