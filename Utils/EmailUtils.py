@@ -33,9 +33,8 @@ class EmailHandler(InboundMailHandler):
             html_body = html_body + body.decode()            
             
         logging.info(html_body)
-        logging.info(to_email)
 
-        # if html_body !='':
+        # if html_body:
             # mail.send_mail(sender=sender_email, bcc=bcc_email,
                   # reply_to=sender_email,
                   # to=to_email, 
@@ -61,8 +60,7 @@ def encode_email_address(email):
             id = int(email.split('@')[0])
             k = UserPrefs.get_by_id(id)
         except ValueError:
-            return email
-            # return 'Barnacle Notification <' + email + '>'
+            return 'Barnacle Notification <' + email + '>'
     else:
         k = UserPrefs.by_email(email)
     if k is None:  ##this is going to be an issue for ppl who don't have email addr
