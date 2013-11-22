@@ -23,28 +23,11 @@ class EmailHandler(InboundMailHandler):
             logging.error("couldn't find " + mail_message.to)
             return
 
-        plaintext_bodies = mail_message.bodies('text/plain')
-        plain_body = ''
-        for content_type, body in plaintext_bodies:
-            plain_body = plain_body + body.decode()
-        htmltext_bodies = mail_message.bodies('text/html')
-        html_body = ''
-        for content_type, body in htmltext_bodies:
-            html_body = html_body + body.decode()            
-            
-        logging.info(html_body)
-
-        # if html_body:
-            # mail.send_mail(sender=sender_email, bcc=bcc_email,
-                  # reply_to=sender_email,
-                  # to=to_email, 
-                  # subject = mail_message.subject, body=plain_body,
-                  # html=html_body)
-        # else:
-        mail.send_mail(sender=sender_email, bcc=bcc_email,
-              reply_to=sender_email,
-              to=to_email, 
-              subject = mail_message.subject, body=plain_body)
+        mail_message.sender = sender_email
+        mail_message.to = to_email
+        mail_message.bcc = bcc_email
+        mail_message.reply_to = sender_email
+        mail_message.send()
 
 def extract_email(email):
     buf = re.findall('<.+>',email)
@@ -52,6 +35,7 @@ def extract_email(email):
         return buf[0][1:-1]
     else:
         return email
+
 def encode_email_address(email):
     # Patch for if already encoded.
     # I don't know why it does this and I am too sick to figure it out
@@ -67,6 +51,7 @@ def encode_email_address(email):
         logging.info("Not found: "+ email)
         return info_email
     return k.first_name + ' via Barnacle <' + str(k.key.id()) + email_domain + '>'
+
 def decode_email_address(email):
     buf = email.split('@')
     id = int(buf[0])
@@ -94,12 +79,12 @@ def create_msg(self, sender, receiver, subject, msg):
                     subject=subject,
                     body=body,html=html)
 
-def create_note(self, receiver, subject, body):   
+def create_note(self, receiver, subject, body):
     params = {}
     params['msg'] = body
     params['action'] = 'note'
     params['senderid'] = 'barnacle'
-    params['receiverid'] = receiver.id()    
+    params['receiverid'] = receiver.id()
     recv_email = str(receiver.id()) + email_domain
     html = self.render_str('email/createnote.html', **params)
     mail.send_mail(sender=noreply_email, bcc=bcc_email,
