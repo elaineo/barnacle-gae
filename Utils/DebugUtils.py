@@ -16,6 +16,7 @@ from Models.Launch.BarnacleModel import *
 from Models.Launch.CLModel import *
 from Utils.data.fakedata import *
 from Utils.data.citylist import *
+from Utils.data.fix_cityshit import *
 from Utils.SearchUtils import *
 from Utils.SearchDocUtils import *
 from Utils.SearchScraped import *
@@ -39,6 +40,7 @@ class DebugUtils(BaseHandler):
         elif action=='qtask':
             taskqueue.add(url='/debug/clearall')
         elif action=='cities':
+            delete_all_in_index(CITY_INDEX)
             for c in cities:
                 point = ndb.GeoPt(c['lat'],c['lon'])
                 create_city_doc(c['city'],point)
@@ -212,7 +214,7 @@ class DebugUtils(BaseHandler):
                 # response = {'status': 'fail'}
                 # logging.error(z)
             self.response.headers['Content-Type'] = "application/json"
-            self.write(json.dumps(response))            
+            self.write(json.dumps(response))          
         else:
             return
             

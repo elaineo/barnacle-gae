@@ -4,7 +4,7 @@ cron:
   schedule: every day 00:00
 - description: daily expiration job
   url: /expire
-  schedule: every day 00:00
+  schedule: every day 06:59
 - description: daily notifications to senders
   url: /match/requests
   schedule: every day 23:20
