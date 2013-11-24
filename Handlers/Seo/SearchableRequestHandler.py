@@ -19,15 +19,7 @@ class SearchableRequestHandler(BaseHandler):
             self.params['origin'] = urllib.unquote(origin)
         if dest:
             self.params['dest'] = urllib.unquote(dest)
-        if origin.upper() == 'USA':
-            #return everything
-            posts = Request.get_all()
-            self.params['posts'] = [p.to_search() for p in posts]
-            rdump = RouteUtils().dumpreqs(posts)
-            self.params['markers'] = rdump['markers']
-            self.params['center'] = [40,-99]
-            self.render('search/seo_requests_all.html', **self.params)
-        elif origin == None:
+        if origin == None:
             posts, center = self.__get_reqs_to(dest)            
             posts = dump_results(posts) 
             self.params['posts'] = [p.to_search() for p in posts]
@@ -35,6 +27,14 @@ class SearchableRequestHandler(BaseHandler):
             self.params['markers'] = rdump['markers']
             self.params['center'] = center
             self.render('search/seo_requests_to.html', **self.params)
+        elif origin.upper() == 'USA':
+            #return everything
+            posts = Request.get_all()
+            self.params['posts'] = [p.to_search() for p in posts]
+            rdump = RouteUtils().dumpreqs(posts)
+            self.params['markers'] = rdump['markers']
+            self.params['center'] = [40,-99]
+            self.render('search/seo_requests_all.html', **self.params)            
         elif dest == None:
             posts, center = self.__get_reqs_from(origin)            
             posts = dump_results(posts) 

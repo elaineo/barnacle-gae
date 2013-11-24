@@ -24,15 +24,7 @@ class SearchableRouteHandler(BaseHandler):
             self.params['origin'] = urllib.unquote(origin)
         if dest:
             self.params['dest'] = urllib.unquote(dest)
-        if origin.upper() == 'USA':
-            #return everything
-            posts = Route.get_all()
-            self.params['posts'] = [p.to_search() for p in posts]
-            rdump = RouteUtils().dumpall(posts)
-            self.params['center'] = rdump['center']
-            self.params['paths'] = rdump['paths']
-            self.render('search/seo_route_all.html', **self.params)
-        elif origin == None:
+        if origin == None:
             posts, center = self.__get_routes_to(dest)
             posts = dump_results(posts) 
             self.params['center'] = center
@@ -42,6 +34,14 @@ class SearchableRouteHandler(BaseHandler):
                 self.params['center'] = rdump['center']
                 self.params['paths'] = rdump['paths']              
             self.render('search/seo_route_to.html', **self.params)
+        elif origin.upper() == 'USA':
+            #return everything
+            posts = Route.get_all()
+            self.params['posts'] = [p.to_search() for p in posts]
+            rdump = RouteUtils().dumpall(posts)
+            self.params['center'] = rdump['center']
+            self.params['paths'] = rdump['paths']
+            self.render('search/seo_route_all.html', **self.params)        
         elif dest == None:
             posts, center = self.__get_routes_from(origin)
             posts = dump_results(posts) 

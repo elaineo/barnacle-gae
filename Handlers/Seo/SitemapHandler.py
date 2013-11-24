@@ -38,4 +38,6 @@ class SitemapHandler(BaseHandler):
             start_nearest_city = closest_city(request.start)['city']
             end_nearest_city = closest_city(request.dest)['city']
             urls.append('http://' + urllib.quote('www.gobarnacle.com/request/from/' + start_nearest_city + '/to/' + end_nearest_city))
+            urls.append('http://' + urllib.quote('www.gobarnacle.com/request/from/' + start_nearest_city))            
+            urls.append('http://' + urllib.quote('www.gobarnacle.com/request/to/' + end_nearest_city))            
         return set(urls)
