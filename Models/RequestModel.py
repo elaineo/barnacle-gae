@@ -83,6 +83,7 @@ class Request(ndb.Model):
             'delivby' : cls.delivby.strftime('%b-%d-%y'),
             'start' : cls.locstart,
             'dest' : cls.locend,
+            'desc' : cls.items[:200],
             'thumb_url': u.profile_image_url('small'),
             'first_name' : u.first_name,
             'fbid' : u.userid

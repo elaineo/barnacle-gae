@@ -12,6 +12,7 @@ from Utils.SearchDocUtils import create_request_doc
 from Utils.SearchDocUtils import delete_doc
 from Utils.ValidUtils import *
 import logging
+import json
 
 class RouteHandler(BaseHandler):
     """ Post a new route """
@@ -20,7 +21,7 @@ class RouteHandler(BaseHandler):
             self.response.headers['Content-Type'] = "application/json"
             routes = Route.get_all()
             rdump = RouteUtils().dumpall(routes)
-            self.write(rdump)        
+            self.write(json.dumps(rdump))
         elif action=='jsonroute' and key:
             try:
                 route=ndb.Key(urlsafe=key).get()

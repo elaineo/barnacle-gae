@@ -99,9 +99,7 @@ class RouteUtils():
         
     def dumproute(self,r):
         route = {}
-        lat = sum([r.start.lat,r.dest.lat])/2
-        lng = sum([r.start.lon,r.dest.lon])/2
-        route['center'] = [lat,lng]
+        route['center'] = findCenter([r.start, r.dest])
         pathpts = []
         for p in r.pathpts:
             pathpts.append([p.lat,p.lon])
@@ -111,11 +109,7 @@ class RouteUtils():
 
     def dumproutepts(self,r,pts):
         route = {}
-        qstart = pts[0]
-        qdest = pts[-1]
-        lat = sum([qstart.lat,qdest.lat])/2
-        lng = sum([qstart.lon,qdest.lon])/2
-        route['center'] = [lat,lng]
+        route['center'] = findCenter([pts[0],pts[-1]])
         pathpts = []
         markers = []
         for p in r.pathpts:
@@ -129,9 +123,7 @@ class RouteUtils():
 
     def dumppts(self,pts):
         route = {}
-        lat = sum([x.lat for x in pts])/len(pts)
-        lng = sum([x.lon for x in pts])/len(pts)
-        route['center'] = [lat,lng]
+        route['center'] = findCenter(pts)
         markers = []
         for q in pts:
             markers.append([q.lat,q.lon])
@@ -141,9 +133,7 @@ class RouteUtils():
 
     def dumptrack(self,r,pts):
         route = {}
-        lat = sum([x.lat for x in pts])/len(pts)
-        lng = sum([x.lon for x in pts])/len(pts)
-        route['center'] = [lat,lng]
+        route['center'] = findCenter(pts)
         markers = []
         for q in pts:
             markers.append([q.lat,q.lon])
@@ -181,15 +171,17 @@ class RouteUtils():
         route['zoom'] = zoom_max(maxh,maxw)
         route['center'] = [lat,lng]        
         route['paths'] = paths
-        return json.dumps(route)  
+        return route
         
-    def dumpreqs(self,reqs):        
+    def dumpreqs(self,reqs, dest=True):        
         route = {}
         markers = []
         for r in reqs:
             q = r.start
+            if not dest:
+                q = r.dest
             a = r.locend.split(',')
-            abbrevloc = a[-3]+','+a[-2].split()[0]
+            abbrevloc = a[-3]+', '+a[-2].split()[0]
             m = {'lat': q.lat,
                 'lon':q.lon,
                 'loc':abbrevloc,
@@ -288,3 +280,8 @@ def precisionDist(dist):
 def roundPoint(point, prec):
     p = ndb.GeoPt(lat=round(point.lat,prec),lon=round(point.lon,prec))
     return p
+    
+def findCenter(pts):
+    lat = sum([x.lat for x in pts])/len(pts)
+    lng = sum([x.lon for x in pts])/len(pts)
+    return [lat,lng]

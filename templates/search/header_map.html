@@ -1,0 +1,18 @@
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script>
+{% include "search/mapsseo_req.js" %}
+</script>
+<div class="row-fluid">
+  <div class="span8 offset1">
+    <div id="map-canvas" class="routemap"></div>
+  </div>
+  <div class="span3">
+
+  </div>
+</div>
+
+<script>
+$(function() {
+  initialize();
+});
+</script>

@@ -1,6 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Delivery routes to {{dest}} | gobarnacle.com{% endblock %}
-{% block heading %}<h1>Drivers driving to {{dest}}</h1>{% endblock %}
+{% block title %}Delivery routes is the USA | gobarnacle.com{% endblock %}
+{% block heading %}<h1>All Barnacle Delivery Routes</h1>
+  {% include "search/header_map.html" %}
+{% endblock %}
 {% block head %}
 <meta name="description" content="Use Barnacle to deliver packages from {{origin}} to {{dest}}. Our users have shipped automotive parts, pets, sports equipment, marketing materials, etc.">
 {% endblock %}
@@ -19,7 +21,7 @@
         </tr></thead>
             {% for post in posts %}
         <tr  class='clicky' data-fb='{{post.fbid}}' onclick="document.location.href = '/post/{{post.routekey}}';">
-            <td {% if post.fbid %}rowspan='2'{% endif %}>
+            <td rowspan='2'>
             <img height="50px" src="{{post.thumb_url}}"><br>
             {{post.first_name}}</td>
             <td>{{post.start}}</td>
@@ -27,7 +29,9 @@
             <td>{{post.delivstart}}</td>
             <td>{{post.delivend}}</td>
         </tr>
-        <tr></tr>
+        <tr>
+          <td colspan='4'><small>{{post.details}}</small></td>
+        </tr>
             {% endfor %}
       </table>
     </div>

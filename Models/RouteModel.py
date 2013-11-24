@@ -94,6 +94,7 @@ class Route(ndb.Model):
             'delivend' : cls.delivend.strftime('%b-%d-%y'),
             'start' : cls.locstart,
             'dest' : cls.locend,
+            'details' : cls.details[:200],
             'thumb_url': u.profile_image_url('small'),
             'first_name' : u.first_name,
             'fbid' : u.userid

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Delivery Requests from the USA{% endblock %}
+{% block heading %}<h1>All Delivery Requests</h1>
+  {% include "search/header_map.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="span10 offset1">
+  <br>
+  <table class="table table-striped table-hover">
+    <thead><tr>
+        <th>Sender</th>
+        <th>Origin</th>
+        <th>Destination</th>
+        <th>Deliver By</th>
+    </tr></thead>
+        {% for post in posts %}
+    <tr class='clicky' data-fb='{{post.fbid}}' onclick="document.location.href = '/post/request/{{post.routekey}}';">
+        <td rowspan='2'>
+        <img height="50px" src="{{post.thumb_url}}"><br>
+        {{post.first_name}}</td>
+        <td>{{post.start}}</td>
+        <td>{{post.dest}}</td>
+        <td>{{post.delivby}}</td>
+      <tr>
+        <td>{{post.desc}}</td>
+      </tr>
+    </tr>
+            {% endfor %}
+  </table>
+  <br>
+  </div>
+</div>
+{% endblock %}

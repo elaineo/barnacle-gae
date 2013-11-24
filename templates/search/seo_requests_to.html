@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Delivery Requests to {{dest}}{% endblock %}
+{% block heading %}<h1>Delivery Requests to {{dest}}</h1>
+  {% include "search/header_map.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="span10 offset1">
+  <br>
+  <table class="table table-striped table-hover">
+    <thead><tr>
+        <th>Sender</th>
+        <th>Origin</th>
+        <th>Destination</th>
+        <th>Deliver By</th>
+    </tr></thead>
+        {% for post in posts %}
+    <tr class='clicky' data-fb='{{post.fbid}}' onclick="document.location.href = '/post/request/{{post.routekey}}';">
+        <td rowspan='2'>
+        <img height="50px" src="{{post.thumb_url}}"><br>
+        {{post.first_name}}</td>
+        <td>{{post.start}}</td>
+        <td>{{post.dest}}</td>
+        <td>{{post.delivby}}</td>
+      <tr>
+        <td  colspan='3'><small>{{post.desc}}</small></td>
+      </tr>
+    </tr>
+            {% endfor %}
+  </table>
+  <br>
+  </div>
+</div>
+<div class="row">
+    <div class="span10 offset1">
+        <p><a href="/request/from/{{dest}}">Search requests coming from {{dest}}</a></p>
+    </div>
+    <div class="span1">
+    </div>
+</div><!--endrow-->
+{% endblock %}

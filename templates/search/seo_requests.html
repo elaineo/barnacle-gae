@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Requests from {{origin}} to {{dest}}{% endblock %}
 {% block heading %}<h1>Requests from {{origin}} to {{dest}}</h1>
+  {% include "search/header_map.html" %}
 {% endblock %}
 
 {% block content %}
@@ -16,14 +17,14 @@
     </tr></thead>
         {% for post in posts %}
     <tr class='clicky' data-fb='{{post.fbid}}' onclick="document.location.href = '/post/request/{{post.routekey}}';">
-        <td {% if post.fbid %}rowspan='2'{% endif %}>
+        <td rowspan='2'>
         <img height="50px" src="{{post.thumb_url}}"><br>
         {{post.first_name}}</td>
         <td>{{post.start}}</td>
         <td>{{post.dest}}</td>
         <td>{{post.delivby}}</td>
       <tr>
-
+        <td  colspan='3'><smalL>{{post.desc}}</small></td>
       </tr>
     </tr>
             {% endfor %}
@@ -31,9 +32,13 @@
   <br>
   </div>
 </div>
+
+<div class="row">
+    <div class="span10 offset1">
+        <p><a href="/request/from/{{origin}}">Search requests coming from {{origin}}</a></p>
+        <p><a href="/request/to/{{dest}}">Search requests going to {{dest}}</a></p>
+    </div>
+    <div class="span1">
+    </div>
+</div><!--endrow-->
 {% endblock %}
-<script>
-$(function() {
-    $('.navicosearch').addClass('onbutton');
-});
-</script>

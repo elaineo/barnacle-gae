@@ -1,7 +1,7 @@
 from google.appengine.ext import ndb
 from Handlers.BaseHandler import *
 from Models.RouteModel import Route
-from Models.UserModels import UserPrefs
+from Utils.RouteUtils import *
 from Utils.SearchUtils import search_pathpts, search_todict, search_intersect, field_byname
 import logging
 import urllib
@@ -24,23 +24,51 @@ class SearchableRouteHandler(BaseHandler):
             self.params['origin'] = urllib.unquote(origin)
         if dest:
             self.params['dest'] = urllib.unquote(dest)
-        if origin == None:
-            self.params['posts'] = self.get_routes_to(dest)
-            self.render('search_seo_to.html', **self.params)
+        if origin.upper() == 'USA':
+            #return everything
+            posts = Route.get_all()
+            self.params['posts'] = [p.to_search() for p in posts]
+            rdump = RouteUtils().dumpall(posts)
+            self.params['center'] = rdump['center']
+            self.params['paths'] = rdump['paths']
+            self.render('search/seo_route_all.html', **self.params)
+        elif origin == None:
+            posts, center = self.__get_routes_to(dest)
+            posts = dump_results(posts) 
+            self.params['center'] = center
+            if len(posts) > 0:
+                self.params['posts'] = [p.to_search() for p in posts]
+                rdump = RouteUtils().dumpall(posts)
+                self.params['center'] = rdump['center']
+                self.params['paths'] = rdump['paths']              
+            self.render('search/seo_route_to.html', **self.params)
         elif dest == None:
-            self.params['posts'] = self.get_routes_from(origin)
-            self.render('search_seo_from.html', **self.params)
+            posts, center = self.__get_routes_from(origin)
+            posts = dump_results(posts) 
+            self.params['center'] = center
+            if len(posts) > 0:
+                self.params['posts'] = [p.to_search() for p in posts]
+                rdump = RouteUtils().dumpall(posts)
+                self.params['center'] = rdump['center']
+                self.params['paths'] = rdump['paths']  
+            self.render('search/seo_route_from.html', **self.params)
         else:
-            self.params['posts'] = self.get_routes(origin, dest)
-            self.render('search_seo.html', **self.params)
+            posts = self.__get_routes(origin, dest)
+            posts, center = dump_results(posts) 
+            self.params['center'] = center
+            if len(posts) > 0:
+                self.params['posts'] = [p.to_search() for p in posts]
+                rdump = RouteUtils().dumpall(posts)
+                self.params['center'] = rdump['center']
+                self.params['paths'] = rdump['paths']  
+            self.render('search/seo_route.html', **self.params)
 
-    def get_routes_from(self, origin):
+    def __get_routes_from(self, origin):
         if origin not in city_dict:
             return []
         start = city_dict[origin]
         delivend = datetime.now() + timedelta(days=365)
-        logging.info(start)
-        dist = 10  # miles
+        dist = 100  # miles
         results = search_pathpts(
             dist, 'ROUTE_INDEX', delivend.strftime('%Y-%m-%d'), 'delivstart', start).results
         keepers = []
@@ -52,18 +80,16 @@ class SearchableRouteHandler(BaseHandler):
             logging.info(dist0)
             if dist0 < dist:
                 keepers.append(c)
-        results = keepers
-        return self.results_to_post(results)
+        return keepers, [start.lat,start.lon]
 
-    def get_routes_to(self, dest):
+    def __get_routes_to(self, dest):
         if dest not in city_dict:
             return []
         dest = city_dict[dest]
         delivend = datetime.now() + timedelta(days=365)
-        dist = 10
+        dist = 100
         results = search_pathpts(
             dist, 'ROUTE_INDEX', delivend.strftime('%Y-%m-%d'), 'delivstart', dest).results
-        logging.info(results)
         keepers = []
         for c in results:
             startpt = field_byname(c, "dest")
@@ -71,30 +97,9 @@ class SearchableRouteHandler(BaseHandler):
                 dest.lat, dest.lon, startpt.latitude, startpt.longitude)
             if dist1 < dist:
                 keepers.append(c)
-        results = keepers
-        return self.results_to_post(results)
+        return keepers, [dest.lat,dest.lon]
 
-    def results_to_post(self, results):
-        """ convert search results to posts """
-        posts = []
-        for doc in results:
-            d = search_todict(doc)
-            try:
-                p = {'first_name': d['first_name'],
-                     'routekey': d['routekey'],
-                     'thumb_url': d['thumb_url'],
-                     'start': d['locstart'],
-                     'dest': d['locend'],
-                     'fbid': d['fbid'],
-                     'delivstart': d['delivstart'].strftime('%b-%d-%y'),
-                     'delivend': d['delivend'].strftime('%b-%d-%y')
-                     }
-                posts.append(p)
-            except:
-                continue
-        return posts
-
-    def get_routes(self, origin, dest):
+    def __get_routes(self, origin, dest):
         """ Get routes that go from origin to destination
         TODO make search smarter so it will match routes in the vicinity of origin and destination, not just exact match
         """
@@ -124,6 +129,12 @@ class SearchableRouteHandler(BaseHandler):
                 dest.lat, dest.lon, startpt.latitude, startpt.longitude)
             if dist0 < dist1:
                 keepers.append(c)
-        results = keepers
+        center = findCenter([start,dest])
+        return keepers, center
 
-        return self.results_to_post(results)
+def dump_results(results):
+    posts = []
+    for doc in results:
+        d = search_todict(doc)
+        posts.append(d)        
+    return [ndb.Key(urlsafe=p['routekey']).get() for p in posts]        
