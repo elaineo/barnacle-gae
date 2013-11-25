@@ -1,50 +1,50 @@
-            <form action="/post/request" method="post" class="custom form-search">
-            <div class="row">
-              <div class="five mobile-four columns">
-                <label class="right inline">Origin:</label>
-              </div>
-              <div class="seven mobile-four columns">
-                <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}">
-              </div>
-            </div><!--end row-->
-            <div class="row">
-              <div class="five mobile-four columns">
-                <label class="right inline">Destination:</label>
-              </div>
-              <div class="seven mobile-four columns">
-                <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{locend}}">
-              </div>
-            </div><!--end row-->
-            <div class="row">
-              <div class="five mobile-four columns">
-                <label class="right inline">Space Needed:</label>
-              </div>
-              <div class="seven mobile-four columns">
-                <select class="expand">
-                  <option selected="selected" value="0">Passenger Seat</option>
-                  <option value="1">Trunk</option>
-                  <option value="2">Wagon</option>
-                </select>
-              </div>
-            </div><!--end row-->            
-            <div class="row">
-              <div class="five mobile-four columns">
-                <label class="right inline">Deliver By:</label>
-              </div>
-              <div class="seven mobile-four columns">
-                <input type="date" name="reqdate" min="{{today}}" value="{{delivby}}" id="reqdate" autocomplete="off">
-              </div>
-            </div><!--end row-->
-            <input type='hidden' name="startlat" id="startlat">
-            <input type='hidden' name="startlon" id="startlon">
-            <input type='hidden' name="startstr" id="startstr">
-            <input type='hidden' name="destlat" id="destlat">
-            <input type='hidden' name="destlon" id="destlon">
-            <input type='hidden' name="deststr" id="deststr">         
-            <input type='hidden' name="items" value="{{items}}">
-            
-            <div class="row">
-              <div class="seven offset-by-five columns"><button class="button radius"><i class="icon-search"></i> &nbsp;GET A DRIVER</button></div>
-            </div>
-            <span class="notch"></span>
-          </form>
+<form action="/post/request" method="post" class="custom form-search">
+<div class="row">
+  <div class="five mobile-four columns">
+    <label class="right inline">Origin:</label>
+  </div>
+  <div class="seven mobile-four columns">
+    <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}">
+  </div>
+</div><!--end row-->
+<div class="row">
+  <div class="five mobile-four columns">
+    <label class="right inline">Destination:</label>
+  </div>
+  <div class="seven mobile-four columns">
+    <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{locend}}">
+  </div>
+</div><!--end row-->
+<div class="row">
+  <div class="five mobile-four columns">
+    <label class="right inline">Space Needed:</label>
+  </div>
+  <div class="seven mobile-four columns">
+    <select class="expand">
+      <option selected="selected" value="0">Passenger Seat</option>
+      <option value="1">Trunk</option>
+      <option value="2">Wagon</option>
+    </select>
+  </div>
+</div><!--end row-->            
+<div class="row">
+  <div class="five mobile-four columns">
+    <label class="right inline">Deliver By:</label>
+  </div>
+  <div class="seven mobile-four columns">
+    <input type="date" name="reqdate" min="{{today}}" value="{{delivby}}" id="reqdate" autocomplete="off">
+  </div>
+</div><!--end row-->
+<input type='hidden' name="startlat" id="startlat">
+<input type='hidden' name="startlon" id="startlon">
+<input type='hidden' name="startstr" id="startstr">
+<input type='hidden' name="destlat" id="destlat">
+<input type='hidden' name="destlon" id="destlon">
+<input type='hidden' name="deststr" id="deststr">         
+<input type='hidden' name="items" value="{{items}}">
+
+<div class="row">
+  <div class="seven offset-by-five columns"><button class="button radius"><i class="icon-search"></i> &nbsp;GET A DRIVER</button></div>
+</div>
+<span class="notch"></span>
+</form>

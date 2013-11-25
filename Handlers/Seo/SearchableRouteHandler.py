@@ -53,8 +53,8 @@ class SearchableRouteHandler(BaseHandler):
                 self.params['paths'] = rdump['paths']  
             self.render('search/seo_route_from.html', **self.params)
         else:
-            posts = self.__get_routes(origin, dest)
-            posts, center = dump_results(posts) 
+            posts, center = self.__get_routes(origin, dest)
+            posts = dump_results(posts) 
             self.params['center'] = center
             if len(posts) > 0:
                 self.params['posts'] = [p.to_search() for p in posts]
@@ -130,8 +130,8 @@ class SearchableRouteHandler(BaseHandler):
             if dist0 < dist1:
                 keepers.append(c)
         center = findCenter([start,dest])
-        return keepers, center
-
+        return keepers, center     
+        
 def dump_results(results):
     posts = []
     for doc in results:

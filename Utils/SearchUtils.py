@@ -107,4 +107,3 @@ def field_byname(s, fname):
         if f.name==fname:
             return f.value
     return None
-
