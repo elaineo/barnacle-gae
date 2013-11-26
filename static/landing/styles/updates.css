@@ -374,17 +374,17 @@ ul.accordion > li{ border-top: none;  margin-bottom: 8px; }
 	
  
  @media only screen and (max-width: 940px) {
-.top-bar { background: #4364A1; }
+.top-bar { background: #5cabb8; }
 .top-bar > ul .name { display: block !important; }
 .top-bar ul > li a:not(.button) { color: #fff; }
 .top-bar > ul .name h1 a { background: #2E456F; padding: 0 22.5px; font: 14px sans-serif; }
 .top-bar ul > li.name h1:hover {}
 .top-bar section { left: 0; position: relative; width: auto; -webkit-transition: left 300ms; -moz-transition: left 300ms; -o-transition: left 300ms; transition: left 300ms; }
-.top-bar ul > li.toggle-topbar { cursor: pointer; display: block; height: 45px; line-height: 45px; position: absolute; right: 0; top: 0; width: 55px; background: #4364A1;}
+.top-bar ul > li.toggle-topbar { cursor: pointer; display: block; height: 45px; line-height: 45px; position: absolute; right: 0; top: 0; width: 55px; background: #5cabb8;}
 .top-bar ul > li.toggle-topbar a { content: ""; display: block; width: 35px; height: 0; border: none; padding: 0; position: absolute; top:5px; right: 0; margin-top: 0;}
 .top-bar.expanded ul li.toggle-topbar a { top: 5px; border: none; right: 35px; }
-.top-bar ul > li.has-dropdown.moved > .dropdown li a:hover { background: #4364A1; display: block; }
-.top-bar ul > li.has-dropdown .dropdown li.has-dropdown > a li a:hover { background: #4364A1; }
+.top-bar ul > li.has-dropdown.moved > .dropdown li a:hover { background: #5cabb8; display: block; }
+.top-bar ul > li.has-dropdown .dropdown li.has-dropdown > a li a:hover { background: #5cabb81; }
 .top-bar ul > li.has-dropdown .dropdown { padding-top: 0; }
 .top-bar ul > li.has-dropdown .dropdown:before { border: none; }
 .top-bar ul > li.has-dropdown .dropdown li.has-dropdown .dropdown:before { border: none; }

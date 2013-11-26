@@ -32,9 +32,9 @@ body { background: /*#f4f4f4*/ url(/static/landing/images/patterns/bg-body.gif);
 
 /*** Typography ***/
 p { font-family: inherit; font-weight: normal; font-size: 13px; line-height: 1.4; margin-bottom: 17px; }
-a { color: #005580; /*-webkit-transition: ease 0.4s; -moz-transition: ease 0.4s; -o-transition: ease 0.4s; transition: ease 0.4s;*/ }
-a:hover { color: #08C; }
-a:focus { color: #08C; }
+a { color: #2699ae; /*-webkit-transition: ease 0.4s; -moz-transition: ease 0.4s; -o-transition: ease 0.4s; transition: ease 0.4s;*/ }
+a:hover { color: #5cabb8; }
+a:focus { color: #5cabb8; }
 h1, h2, h3, h4, h5, h6 { font-family: 'Open Sans', sans-serif; font-weight: 400; font-style: normal; color: #222222; text-rendering: optimizeLegibility; line-height: 1.1em; margin-bottom: 14px; margin-top: 14px; }
 h1 small, h2 small, h3 small, h4 small, h5 small, h6 small { font-size: 60%; color: #6f6f6f; line-height: 0; }
 h1 { font-size: 44px; margin-bottom: 44px; }
@@ -46,7 +46,7 @@ h6 { font-size: 14px; }
 .subheader { line-height: 1.3; color: #6f6f6f; font-weight: normal; margin-bottom: 17px; }
 small { font-size: 84%; line-height: inherit; }
 
-/*** Usefull Claeses ***/
+/*** Usefull Classes ***/
 .alpha { padding:0 15px 0 0; }
 .omega { padding:0 0 0 15px; }
 .no-padding { padding:0; }
@@ -65,17 +65,20 @@ small { font-size: 84%; line-height: inherit; }
 .red-text { color: #cf0000; }
 .pink-text { color: #f00056; }
 .black-text { color: #000; }
-.green-text { color: #12b8ba; }
-.blue-text { color: #2E456F; }
+.green-text { color: #98c935; }
+.blue-text { color: #2699ae; }
 .white-text { color: #fff; }
 .gold-text { color: #fbbd09; }
 
 /*** Buttons ***/
-.button { border: 1px solid #2E456F; background: #2E456F; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
-.button:hover, .button:focus { color: white; background-color: #4364A1; border: 1px solid #4364A1; }
+.button { border: 1px solid #2699ae; background: #2699ae; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
+.button:hover, .button:focus { color: white; background-color: #5cabb8; border: 1px solid #5cabb8; }
 .button.alert { background-color: #ed0058; border: 1px solid #ed0058; }
 .button.alert:hover,
 .button.alert:focus { background-color: #de0052; border: 1px solid #de0052; }
+.button.primary { background-color: #98c935; color: #fff; border: 1px solid #98c935; }
+.button.primary:hover,
+.button.primary:focus { background-color: #b7da72; border: 1px solid #b7da72;}
 .button.secondary { background-color: #e6e6e6; color: #1d1d1d; border: 1px solid #e6e6e6; }
 .button.secondary:hover,
 .button.secondary:focus { background-color: #dddcdc; }
@@ -86,7 +89,7 @@ small { font-size: 84%; line-height: inherit; }
 
 /*** Tooltips ***/
 .has-tip { border-bottom: none; cursor: pointer; font-weight: bold; color: #333; }
-.has-tip:hover, .has-tip:focus { border-bottom: none; color: #08C; }
+.has-tip:hover, .has-tip:focus { border-bottom: none; color: #5cabb8; }
 
 /*** Pop-ups ***/
 .reveal-modal { background: url(/static/landing/images/patterns/gray_pattern.gif); border: 10px solid #fafafa; }
@@ -107,8 +110,8 @@ small { font-size: 84%; line-height: inherit; }
 
 /*** Top links ***/
 .top-links { text-align: right; color: #0296c0; padding: 4px 0; border-bottom: 1px solid #fff; background: #0076a3 url(/static/landing/images/patterns/gray_pattern.gif); }
-.top-links a { color: #2E456F; }
-.top-links a:hover { color: #08C; }
+.top-links a { color: #2699ae; }
+.top-links a:hover { color: #5cabb8; }
 
 /*** Logo ***/
 #logo { max-height: 108px; text-indent: -9999px; padding-top: 0; margin-top: 0; }
@@ -124,17 +127,17 @@ small { font-size: 84%; line-height: inherit; }
 .form-header .lead { color: #fff; font-size: 16.4px; }
 .form-footer { padding: 20px 20px 10px;  border-left: 10px solid #fafafa; border-bottom: 10px solid #fafafa;  border-right: 10px solid #fafafa;background: #f8f8f8 url(/static/landing/images/patterns/gray_pattern.gif); }
 .form-search.custom div.custom.dropdown { display: block; position: relative; width: auto; height: 32px; margin-bottom: 9px; margin-top: 2px; }
-.form-search.custom div.custom.dropdown a.current { display: block; width: auto; line-height: 30px; min-height: 32px; padding: 0; padding-left: 6px; padding-right: 38px; border: solid 1px #2E456F; color: #fff; background-color: #2E456F; white-space: nowrap; }
-.form-search.custom div.custom.dropdown a.selector { position: absolute; width: 27px; height: 32px; display: block; right: 0; top: 0; border: solid 1px #2E456F; }
+.form-search.custom div.custom.dropdown a.current { display: block; width: auto; line-height: 30px; min-height: 32px; padding: 0; padding-left: 6px; padding-right: 38px; border: solid 1px #2699ae; color: #fff; background-color: #2699ae; white-space: nowrap; }
+.form-search.custom div.custom.dropdown a.selector { position: absolute; width: 27px; height: 32px; display: block; right: 0; top: 0; border: solid 1px #2699ae; }
 .form-search.custom div.custom.dropdown a.selector:after { content: ""; display: block; content: ""; display: block; width: 0; height: 0; border: solid 5px; border-color: #fff transparent transparent transparent; position: absolute; left: 50%; top: 50%; margin-top: -2px; margin-left: -5px; }
 .form-search.custom div.custom.dropdown ul { position: absolute; width: auto; display: none; margin: 0; left: 0; top: 31px; margin: 0; padding: 0; background: white; background: rgba(255, 255, 255, 0.95); border: solid 1px #ccC; }
 .form-search.custom div.custom.dropdown ul li { color: #555555; font-size: 13px; cursor: pointer; padding: 3px; padding-left: 6px; padding-right: 38px; min-height: 18px; line-height: 18px; margin: 0; white-space: nowrap; list-style: none; }
 .form-search.custom div.custom.dropdown ul li.selected { background: #ccC; color: black; }
 .form-search.custom div.custom.dropdown ul li:hover { background-color: #ccC; color: black; }
 .form-search.custom div.custom.dropdown ul li.selected:hover { background: #ccC; cursor: default; color: black; }
-.form-search .button { background:#2E456F; border: 1px solid #2E456F; }
+.form-search .button { background:#2699ae; border: 1px solid #2699ae; }
 .form-search .button:hover,
-.form-search .button:focus { color: white; background-color: #4364A1; border: 1px solid #4364A1; }
+.form-search .button:focus { color: white; background-color: #5cabb8; border: 1px solid #5cabb8; }
 
 /*** LogIn and Signup Forms ***/
 .login-buttons em { line-height: 22px; margin: 3px -6px; z-index: 1; position: relative; width:22px; height: 22px; display: inline-block; color: #69717e; text-align:center;
@@ -161,7 +164,7 @@ small { font-size: 84%; line-height: inherit; }
 ----------------------------------------- */
 
 #call-to-actions { padding-top: 60px; padding-bottom: 30px; text-align: center; background: #f8f8f8 url(/static/landing/images/patterns/gray_pattern.gif); color: #554; }
-#call-to-actions .section-title {  opacity: 0; font-family: 'Yesteryear', cursive; font-size: 68px; color: #554; }
+#call-to-actions .section-title {  opacity: 0; font-size: 34px !important;font-family: 'Open Sans',  sans-serif;text-transform: uppercase; color: #554; font-weight:800 }
 #call-to-actions .lead {  margin-bottom: 40px; opacity: 0; }
 #call-to-actions .alert { background-color: #ff0461; border: 1px solid #ff0461; }
 #call-to-actions .alert:hover,
@@ -206,7 +209,7 @@ iframe { border: none; }
 ----------------------------------------- */
 
 #feature-text { margin-bottom: 20px; padding-top: 60px; }
-#feature-text h2 { font-family: 'Yesteryear', cursive; font-size: 46px; color: #000; }
+#feature-text h2 { font-family: 'Open Sans', sans-serif; text-transform: uppercase;color: #000; font-weight: 600 }
 #feature-text a.imagelink { display:block; position:relative; }
 #feature-text a.imagelink .overlay { position:absolute; border-radius: 100%; -moz-border-radius: 100%; -webkit-border-radius: 100%; top:0; left:0; width: 100%; height: 100%; background:rgba(18,184,186,0); z-index:90;
 		-webkit-transition:background 0.4s cubic-bezier(0.19,1,0.22,1);

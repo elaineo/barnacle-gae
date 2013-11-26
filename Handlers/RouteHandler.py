@@ -57,24 +57,27 @@ class RouteHandler(BaseHandler):
             self.abort(403)
             return  
         elif action=='request' and not key:
-            if self.user_prefs:
-                remoteip = self.request.remote_addr
-                savsearch = SearchEntry.by_ip(remoteip)
-                pop = self.request.get('pop')
-                # create new request post
-                if savsearch and bool(pop):
-                    self.params.update(savsearch.params_fill(self.params))
-                self.params['route_title'] = 'Post a Delivery Request'
-                self.render('forms/fillrequest.html', **self.params)
-            else:                
-                self.redirect('/#signin-box') 
+            remoteip = self.request.remote_addr
+            savsearch = SearchEntry.by_ip(remoteip)
+            pop = self.request.get('pop')
+            # create new request post
+            if savsearch and bool(pop):
+                self.params.update(savsearch.params_fill(self.params))
+            self.params['route_title'] = 'Post a Delivery Request'
+            self.render('forms/fillrequest.html', **self.params)
         elif key: # check if user logged in
             self.view_page(key)
-        else:
+        elif self.user_prefs:
+            self.params['createorupdate'] = 'Ready to Drive'
+            d = Driver.by_userkey(self.user_prefs.key)
+            if not d: #not an existing driver
+                self.params.update(self.user_prefs.params_fill(self.params))
+                self.render('forms/filldriver.html', **self.params)
+                return
             self.params['route_title'] = 'Drive a New Route'
             self.render('forms/fillpost.html', **self.params)
-        # else:
-            # self.redirect('/#signin-box') 
+        else:
+            self.redirect('/#signin-box') 
             
     def post(self, action=None,key=None):
         if action=='request':

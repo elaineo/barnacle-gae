@@ -88,7 +88,7 @@ function click_validloc(btn_id,fields,inputs,vtest,form,clickver) {
             if (clickver) {
                 loggedIn = checkLoginStatus();
                 if (loggedIn) $(form).submit();
-                else loginPlease();
+                else { loginPlease(); d=0; }
             } else $(form).submit();
         }
         d++;
