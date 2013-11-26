@@ -68,6 +68,7 @@ small { font-size: 84%; line-height: inherit; }
 .green-text { color: #12b8ba; }
 .blue-text { color: #2E456F; }
 .white-text { color: #fff; }
+.gold-text { color: #fbbd09; }
 
 /*** Buttons ***/
 .button { border: 1px solid #2E456F; background: #2E456F; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
