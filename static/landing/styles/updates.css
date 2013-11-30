@@ -115,15 +115,6 @@ ul.pagination li.current a:hover, ul.pagination li.current a:focus { background:
 .widgets-container .widgets .widget-list li a:hover { color: #0296c0; }
 .widgets-container .widgets .widget-list li:last-child { border-bottom: none; }
 .widgets-container .widgets { margin-bottom: 30px; }
-.latest-entries { padding-top: 10px; }
-.latest-entries .avatar { background: #fff; padding: 3px; display: block; border-radius: 100%; -moz-border-radius: 100%; -webkit-border-radius: 100%;
-		-webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2); -moz-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2); }
-.latest-entries .avatar:hover {
-		-webkit-animation: pulse ease-in-out 1 normal 500ms; -moz-animation: pulse ease-in-out 1 normal 500ms; -ms-animation: pulse ease-in-out 1 normal 500ms;
-		-o-animation: pulse ease-in-out 1 normal 500ms; animation: pulse ease-in-out 1 normal 500ms; }
-.latest-entries img { display: block; border-radius: 100%; -moz-border-radius: 100%; -webkit-border-radius: 100%; }
-
-
 
 
 /* -----------------------------------------

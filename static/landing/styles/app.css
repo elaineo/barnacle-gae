@@ -274,6 +274,8 @@ iframe { border: none; }
 
 /*** Social Icons ***/
 .footer-social-icons a { color: #777; float: left; display: inline-block; margin-right: 5px; }
+.footer-social-icons a:hover { color: #5cabb8; }
+.footer-social-icons a:focus { color: #5cabb8; }
 
 /*** Twitter Feed ***/
 .twitter-article {}

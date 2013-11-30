@@ -3,7 +3,7 @@
 <div class="form-header">
 <p class="lead text-resize">Give your deliveries a ride with our nationwide network of commuters.</p>
 </div>
-<form action="/post/request0" method="post" class="custom form-search"  id='request_form'>
+<form action="/post/route0" method="post" class="custom form-search"  id='route_form'>
     <div class="control-group">
       <label class="control-label">Origin:</label>
       <div class="controls">
@@ -20,7 +20,7 @@
       <label class="control-label">Space Needed:</label>
       <div class="controls input-xlarge">
         <select class="expand">
-          <option selected="selected" value="0">Passenger Seat</option>
+          <option selected="selected" value="0"> <img src='/static/img/icons/icocap4.png'> Passenger Seat</option>
           <option value="1">Trunk</option>
           <option value="2">Wagon</option>
         </select>
@@ -53,13 +53,4 @@ $(document).ready(function(){
     click_validloc('#request_btn',['map0','map1'],['start','dest'],v,'#request_form',true);
 });
   </script>
- <script>
-  
-$(document).ready(function(){
-    /* Give the heading a pretty picture */
-    hh = $('.heading').height()+20;
-    $('.wash').height(hh);
-    $('.hero_container').height(hh);
-});
-  </script>  
   <script type="text/javascript" src="/static/js/validation.js"></script>
