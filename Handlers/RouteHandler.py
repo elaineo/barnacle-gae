@@ -82,6 +82,10 @@ class RouteHandler(BaseHandler):
     def post(self, action=None,key=None):
         if action=='request':
             self.__create_request(key)
+        elif action=='request0':
+            self.__init_request()   
+        elif action=='update' and key:
+            self.__update_request(key)  
         elif action=='edit' and key:
             try:
                 p = ndb.Key(urlsafe=key).get()
@@ -184,7 +188,61 @@ class RouteHandler(BaseHandler):
             self.params['rates'] = rates
             self.params['route_title'] = 'Edit Delivery Request'
             self.render('forms/fillrequest.html', **self.params)
+    def __init_request(self,key=None):
+        capacity = self.request.get('vcap')
+        capacity = parse_unit(capacity)    
+        #items = self.request.get('items')
+        reqdate = self.request.get('reqdate')     
+        if reqdate:
+            delivby = parse_date(reqdate)
+        else:
+            delivby = datetime.now()+timedelta(weeks=1)
             
+        start, startstr = self.__get_map_form('start')
+        dest, deststr = self.__get_map_form('dest')  
+        logging.info('Initial Request: '+startstr+' to '+deststr)
+                
+        p = Request(userkey=self.user_prefs.key, start=start, 
+            dest=dest, capacity=capacity,
+            delivby=delivby, locstart=startstr, locend=deststr)
+        price, distance, seed = priceEst(p)
+        stats = ReqStats(sugg_price = price, seed = seed, distance = distance)
+        p.rates = price
+        p.stats = stats
+        try:
+            p.put() 
+            taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
+            taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
+            create_request_doc(p.key.urlsafe(), p)            
+            self.params.update(fill_route_params(p.key.urlsafe(),False))
+            self.params['update_url'] = '/post/update/' + p.key.urlsafe()
+            self.render('request_review.html', **self.params)
+
+        except:
+            self.params['error_route'] = 'Invalid Locations'
+            self.params['items'] = items
+            self.params['capacity'] = capacity
+            self.params['delivby'] = reqdate
+            self.params['route_title'] = 'Edit Delivery Request'
+            self.render('forms/fillrequest.html', **self.params)            
+    def __update_request(self,key):
+        rates = self.request.get('rates')
+        rates = parse_rate(rates)
+        items = self.request.get('items')
+        p = ndb.Key(urlsafe=key).get()
+        # image upload
+        img = self.request.get("file")
+        if p and self.user_prefs and p.userkey == self.user_prefs.key:  
+            if img: 
+                imgstore = ImageStore.new(img)
+                imgstore.put()
+                p.img_id = imgstore.key.id()
+            p.rates = rates
+            p.items = items
+            p.put() 
+            self.view_page(p.key.urlsafe())    
+        else:
+            self.redirect('/post/request')
             
     def __create_route(self,key=None):
         capacity = self.request.get('vcap')

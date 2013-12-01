@@ -12,6 +12,8 @@ from Models.ReservationModel import Reservation
 from Models.ReservationModel import DeliveryOffer
 from Models.RouteModel import Route
 from Models.UserModels import *
+from Models.Launch.Driver import *
+from Models.Launch.DriverModel import *
 from Models.Launch.BarnacleModel import *
 from Models.Launch.CLModel import *
 from Utils.data.fakedata import *
@@ -59,6 +61,17 @@ class DebugUtils(BaseHandler):
             for d in data:
                 d.key.delete()                
             self.write('users gone.')
+        elif action=='importusers':
+            users = DriverModel.query()
+            ujson = []
+            ids = []
+            for u in users:
+                try:
+                    ids.append(int(u.fbid))
+                except:
+                    continue
+            self.response.headers['Content-Type'] = "application/json"
+            self.write(json.dumps(ids))
         elif action=='updatenotify':
             data = UserPrefs.query(UserPrefs.creation_date < datetime.now()-timedelta(days=5))
             for d in data:

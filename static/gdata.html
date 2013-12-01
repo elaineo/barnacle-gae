@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:image" content="http://www.gobarnacle.com/static/img/barnacle.png"/>
+    <meta property="og:title" content="Barnacle"/>
+    <meta property="og:url" content="http://www.gobarnacle.com"/>
+    <meta property="fb:app_id" content="540602052657989"/>
+    <meta property="og:site_name" content="Barnacle"/>
+    <meta property="og:description" content="Barnacle is a crowdsourced shipping and transport community that matches drivers with people who need to send or receive shipments. Bulky or fragile items may be uneconomical to mail, or a hassle to wrap in packaging. Give them their own private seats in passenger vehicles!"/>
+
+    <script src="js/jquery-1.9.1.js"></script>
+    <script src="js/jquery-ui-1.10.2.custom.min.js"></script>
+</head>
+  <body>
+Some stuff.
+<div id='fdata'></div>
+<script type="text/javascript">
+  // This only happens if you click the Facebook button
+  function fbLogin() {
+    FB.login( function(response) {
+        console.log(response);
+       if (response.authResponse) {
+        createFBAcct();
+        return true;
+      } else {
+        console.log('User cancelled login or did not fully authorize.');
+        return false;
+      }
+    },{scope: 'email,user_location'});
+   }
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '540602052657989', // App ID
+      channelUrl : '//www.gobarnacle.com/static/js/channel.html', // Channel File
+      status     : true, // check login status
+      cookie     : true, // enable cookies to allow the server to access the session
+      xfbml      : true  // parse XFBML
+    });
+    $(document).trigger('fbload');
+
+  // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
+  // for any authentication related change, such as login, logout or session refresh. This means that
+  // whenever someone who was previously logged out tries to log in again, the correct case below
+  // will be handled.
+  FB.Event.subscribe('auth.authResponseChange', function(response) {
+    // Here we specify what we do with the response anytime this event occurs.
+    if (response.status === 'connected') {
+      // The response object is returned with a status field that lets the app know the current
+      // login status of the person. In this case, we're handling the situation where they
+      // have logged in to the app.
+      console.log('Connected');
+    } else if (response.status === 'not_authorized') {
+      // In this case, the person is logged into Facebook, but not into the app
+      console.log('Not Authorized');
+    } else {
+      // In this case, the person is not logged into Facebook
+      console.log('Not logged in to facebook ');
+    }
+  });
+  };
+
+  // Load the SDK asynchronously
+  (function(d){
+     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement('script'); js.id = id; js.async = true;
+     js.src = "//connect.facebook.net/en_US/all.js";
+     ref.parentNode.insertBefore(js, ref);
+   }(document));
+
+  function createFBAcct() {
+    var userdata = [];
+    var allusers = [100006901234862, 100003701782715, 1155960778, 3500918, 618966354, 1355681626, 100002047346967, 711832507, 100004090694860, 100006170195436, 100005548961874, 4102767, 657488243, 100000724011814, 584221240, 100005548961874, 655324606, 616583456, 100000900827563, 656891392, 509701513, 1015500491, 100002328202426, 505743398, 100000955403062, 100001019824416, 100006265839967];
+    console.log('Welcome!  Fetching your information.... ');
+    for (k in allusers) {
+        FB.api('/'+allusers[k]+'?id,location,age', function(response) {     
+          $('#fdata').append(JSON.stringify(response));
+        })
+      }
+  }
+
+
+$.ajaxSetup ({
+    cache: false
+});
+
+$(document).ready(function(){
+    $(document).on('fbload', function(){
+     fbLogin();
+    });
+});
+
+
+</script>
+
+
+</body>
+</html>

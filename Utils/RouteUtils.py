@@ -2,12 +2,15 @@ import urllib2
 import json
 import logging
 import math
+import random
 import time
 from google.appengine.api import search
 from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
 from Utils.Defs import geocode_url, directions_url, tz_url
 from Utils.PolylineCode import poly_decode
+
+miles2m = 1609
 
 class RouteUtils():            
     def setloc(self,r,startstr,endstr):
@@ -88,7 +91,7 @@ class RouteUtils():
         results = json.loads(req.content)['routes'][0]['legs'][0]
         dist = results['distance']['value']   #dist in metres
         logging.info(dist)
-        precision = precisionDist(dist/1609 * fudge)
+        precision = precisionDist(dist/miles2m * fudge)
         pathpts = [roundPoint(start,precision)]        
         for s in results['steps']:
             polyline = s['polyline']['points']
@@ -285,3 +288,18 @@ def findCenter(pts):
     lat = sum([x.lat for x in pts])/len(pts)
     lng = sum([x.lon for x in pts])/len(pts)
     return [lat,lng]
+    
+def priceEst(req):
+    # Estimate an offer price for a given request
+    pathpts, distance = RouteUtils().getPath(req.start,req.dest)    
+    if req.capacity==0:
+        seats = 25
+    elif req.capacity==1:
+        seats = 40
+    else:
+        seats = 50
+    gas = 0.7*distance / (35*miles2m)
+    seed = random.randint(-50,50)
+    price = 50 + seats + int(gas) + seed
+    #TODO: take dist from fwy into account
+    return price, distance, seed

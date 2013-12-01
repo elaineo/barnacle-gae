@@ -5,18 +5,29 @@ from Utils.Defs import miles2m
 from Utils.RouteUtils import roundPoint
 import logging
 
+class ReqStats(ndb.Model):
+    """ Other stats we want: 
+      if they cancel after seeing suggested price
+      low/high end UPS, if they accept"""
+    referral = ndb.StringProperty()
+    sugg_price = ndb.IntegerProperty()
+    seed = ndb.IntegerProperty()
+    distance = ndb.IntegerProperty()
+
 class Request(ndb.Model):
     userkey = ndb.KeyProperty(required=True)  # the user_pref it is connected to
     capacity = ndb.IntegerProperty(default=0) # car (0), SUV (1), flatbed (2)
     rates = ndb.IntegerProperty()
-    items = ndb.TextProperty() 
+    items = ndb.TextProperty(default='') 
     created = ndb.DateTimeProperty(auto_now_add=True)
     delivby = ndb.DateProperty(required=True)
     start = ndb.GeoPtProperty(required=True)
     dest = ndb.GeoPtProperty(required=True)
     locstart = ndb.StringProperty(required=True) #text descr of location
     locend = ndb.StringProperty(required=True) #text descr of location    
-    matches = ndb.KeyProperty(repeated=True)  #store keys of matches
+    matches = ndb.KeyProperty(repeated=True)  #store keys of matches    
+    stats = ndb.StructuredProperty(ReqStats)
+    img_id = ndb.IntegerProperty()     
     
     def post_url(self):
         """ url for public view of post """

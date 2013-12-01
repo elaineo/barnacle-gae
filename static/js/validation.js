@@ -47,6 +47,7 @@ function click_validloc(btn_id,fields,inputs,vtest,form,clickver) {
     var oksubmit = true;
     var d = 0;          
     $(btn_id).click(function(event) {
+      oksubmit = true; 
       event.preventDefault();
       var wait = false;
       for (f in fields) {

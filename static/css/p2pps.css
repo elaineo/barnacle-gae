@@ -16,6 +16,10 @@
     padding: 10px;
     padding-left: 20px;
 }
+.support {
+  background: #eaeaea url(/static/landing/images/patterns/gray_pattern.gif);
+  padding: 10px;
+}
 .heading h3 {
     display: inline;
 }
