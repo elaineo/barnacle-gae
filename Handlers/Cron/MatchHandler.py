@@ -86,6 +86,7 @@ class MatchHandler(BaseHandler):
             except:
                 here = self.user_prefs.locpt
             # try:
+            dist = 100
             now = datetime.now().strftime('%Y-%m-%d')
             later = (datetime.now() + timedelta(365)).strftime('%Y-%m-%d')
             results = search_points_start(dist,'REQUEST_INDEX',later,now,'delivby','start',here)
