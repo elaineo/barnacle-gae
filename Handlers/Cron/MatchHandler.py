@@ -95,7 +95,28 @@ class MatchHandler(BaseHandler):
             # except:
                 # rdump = {'status':'fail'}
             self.response.headers['Content-Type'] = "application/json"                
-            self.write(json.dumps(rdump))
+            self.write(json.dumps(rdump))            
+        elif action=='dumpreqsdest':
+            data = json.loads(self.request.body)
+            logging.info(data)
+            self.response.headers['Content-Type'] = "application/json"
+            # try:
+            posts = []
+            key = data['key']
+            r = ndb.Key(urlsafe=key).get()
+            rdump = {'status':'ok'}
+            dist = 100
+            pathpts, precision = RouteUtils().estPath(r.start, r.dest,dist)
+            now = datetime.now()
+            later = (datetime.now() + timedelta(365))
+            results = Request.search_route(pathpts, now, later, precision)
+            for r in results:
+                posts.append(r.to_search())
+            rdump['posts'] = posts
+            rdump['count'] = len(posts)
+            # except:
+                # rdump = {'status': 'fail'}
+            self.write(json.dumps(rdump))  
             
     def __send_match2d(self, driver):
         routes = Route.by_userkey(driver)

@@ -406,6 +406,7 @@ def fill_route_params(key,is_route=False):
         params.update(p.gen_repeat())
     else:
         params.update({ 'items' : p.items,
+                        'img_url' : p.image_url(),
                         'num_offers' : p.num_offers(),
                         'rates' : p.rates,
                         'delivby' : p.delivby.strftime('%m/%d/%Y') })    

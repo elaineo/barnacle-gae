@@ -100,6 +100,18 @@ class Request(ndb.Model):
             'fbid' : u.userid
         }
         return route        
+
+    def image_url(self, mode = None):
+        """ Retrieve link to profile thumbnail or default """
+        if self.img_id:
+            profile_image = ImageStore.get_by_id(self.img_id)
+            if profile_image:
+                buf = '/img/' + str(self.img_id) + '?key=' + profile_image.fakehash
+                if mode:
+                    buf += '&mode=' + mode
+                return buf
+        return '/static/img/blank.png'
+        
         
     def __eq__(self, other):
         return self.userid==other.userid and self.created==other.created

@@ -6,6 +6,7 @@
     margin: 0 auto;
     max-width:1000px;
 }
+.header-bg {background: #f8f8f8; padding-top: 20px; }
 .densetxt {
     font: 1.2em/1.6em 'Open Sans', sans-serif;
 }
@@ -89,7 +90,7 @@
   width: 100%;  
 }
 .routemap {
-  height: 300px;
+  min-height: 300px;
   width: 100%;    
 }
 /* nav buttons */

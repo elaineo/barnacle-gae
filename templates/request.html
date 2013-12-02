@@ -4,15 +4,6 @@
 {% block heading %}<h1>{{first_name}} Needs a Delivery</h1>{% endblock %}
 {% block content %}
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-<div class="row-fluid">
-  <div class="span8 offset1">
-    <div class= "btn-group">
-  <button type="submit" class="btn" id="viewprof_btn">View {{first_name}}'s profile</button>
-  <button type="submit" class="btn" id="reserve_btn">Offer to Deliver</button>
-    </div>
-  <button type="submit" class="btn btn-primary btn-mini" id='fb_btn'>Facebook Share</button>
-  </div>
-</div>
 <div class="row"><div class="span10 offset1">
     {% if num_offers!=0 and edit_allow==True %}
     <table class='table table-striped table-hover table-condensed table-mini'>
@@ -50,17 +41,22 @@
     {% endif %}    
 </div></div>
     {% include "forms/stubspop/request_stub.html" %}
-    {% include "forms/stubspop/prof_box.html" %}
 <div class="row-fluid"><div class="span6 offset1">
     {% if edit_allow == True %} 
-<button type="submit" class="btn btn-inverse" id="editpost_btn">Edit Request</button>
+<button type="submit" class="button" id="editpost_btn">Edit Request</button>
         {% if num_confirmed == 0 %}
-<button type="submit" class="btn btn-danger" id='delete_btn'>Delete Request</button>
+<button type="submit" class="button secondary" id='delete_btn'>Delete Request</button>
         {% else %}
-<button class="btn btn-danger btn-mini" disabled>{{num_confirmed}} Confirmed Reservations</button>
+<button class="button secondary tiny" disabled>{{num_confirmed}} Confirmed Reservations</button>
         {% endif %}
     {% endif %} 
-</div></div>
+</div>
+<div class="span5">
+  <button type="submit" class="button compl" id="reserve_btn">Offer to Deliver</button>  
+</div>
+</div>
+<br>
+
 <script type="text/javascript">
 $(document).ready(function(){
     {% include 'share/fb_request.html' %}
@@ -76,4 +72,75 @@ $(document).ready(function(){
 });
 </script>
 
+{% endblock %}
+
+{% block content2 %}
+<div class="row-fluid heading" id='simreqs'><div class="span10 offset1">
+<h3>Other Requests Along the Way</h3>
+<p>Still have space in your car? Check out these other nearby requests for more delivery opportunities.</p>
+<table class="table table-striped table-hover" id='dumpreqs'>
+  <tr>
+    <th>Sender</th>
+    <th>Origin</th>
+    <th>Destination</th>
+    <th>Deliver By</th>
+  </tr>
+</table>
+<br>
+</div></div>
+<script type="text/javascript">
+$(document).ready(function(){
+    data = {'key':'{{routekey}}'};
+      console.log('dump');
+    getRequestDump(data);
+});
+function getRequestDump(data) {
+  $.ajax({
+    type: "POST",
+    dataType: "json",
+    contentType: "json",     
+    data: JSON.stringify(data),
+    url: '/match/dumpreqsdest',
+    success: function(q) {
+        console.log(q);
+        if (q.status == 'ok') {
+          if (parseInt(q.count) > 0) {
+            for (k in q.posts) {
+                buf = '<tr class="clicky"';
+                if (typeof q.posts[k].fbid != 'undefined') 
+                  buf += 'data-fb="'+ q.posts[k].fbid+'" ';
+                buf += 'onclick="document.location.href = \'/post/request\/q.posts[k].routekey\';"><td ';
+                if (typeof q.posts[k].fbid != 'undefined') 
+                  buf += 'rowspan="2"';
+                buf += '><img height="50px" src="';
+                buf += q.posts[k].thumb_url+'"><br>'; 
+                buf += q.posts[k].first_name+ '</td><td>';
+                buf += q.posts[k].start+ '</td><td>';
+                buf += q.posts[k].dest+ '</td><td>';
+                buf += q.posts[k].delivby+ '</td>';
+                if (typeof q.posts[k].fbid != 'undefined') 
+                  buf += '<tr><td colspan="4">Mutual Friends: <div class="dumpfriends">None.</div></td></tr>';
+                buf += '</tr>';    
+                $('table#dumpreqs tr:last').after(buf);
+            } 
+            loadFBdata();
+          } else
+            $('simreqs').hide();
+        }
+      }
+  });            
+}
+function loadFBdata() {
+    FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          $('.clicky').each(function() {
+            var fbid = $(this).attr('data-fb');
+            if (fbid != 'undefined') {
+              dumpFriends(fbid, $(this).next().find('.dumpfriends'),3);
+            }
+          });
+        }
+    });
+}
+</script>
 {% endblock %}

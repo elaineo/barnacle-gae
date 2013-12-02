@@ -62,12 +62,12 @@ class DebugUtils(BaseHandler):
                 d.key.delete()                
             self.write('users gone.')
         elif action=='importusers':
-            users = DriverModel.query()
+            users = Request.query()
             ujson = []
             ids = []
             for u in users:
-                try:
-                    ids.append(int(u.fbid))
+                try:                    
+                    ids.append(int(u.userkey.get().userid))
                 except:
                     continue
             self.response.headers['Content-Type'] = "application/json"

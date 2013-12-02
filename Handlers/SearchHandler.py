@@ -185,56 +185,6 @@ class SearchHandler(BaseHandler):
         self.params['searchkey'] = sr.urlsafe()
         self.render('searchfrag.html', **self.params)
         
-    def __search_routes_seo(self):        
-        enddate = self.request.get('enddate')
-        remoteip = self.request.remote_addr
-        if enddate:
-            delivend = parse_date(enddate)
-        else:
-            delivend = datetime.now() + timedelta(days=365)
-        
-        start, startstr = self.__get_search_form('start')
-        dest, deststr = self.__get_search_form('dest')
-        logging.info('Search req: '+startstr+' to '+deststr+' by '+enddate)         
-        if not start or not dest:          
-            self.params['error_route'] = 'Invalid Route'
-            self.render('search.html', **self.params)
-            return           
-            
-        dist = HaversinDist(start.lat,start.lon,dest.lat,dest.lon)/10
-        
-        startresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',start).results
-        destresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',dest).results
-        results = search_intersect(startresults, destresults)
-        keepers = []
-        for c in results:
-            startpt = field_byname(c, "start")
-            dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) 
-            dist1 = HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude)
-            if dist0 < dist1:
-                keepers.append(c)
-        results = keepers
-                    
-        posts = []
-        for doc in results:
-            d = search_todict(doc)
-            try:
-                p = {  'first_name': d['first_name'],
-                        'routekey': d['routekey'],
-                        'thumb_url': d['thumb_url'],
-                        'start': d['locstart'],
-                        'dest': d['locend'],
-                        'fbid': d['fbid'],
-                        'delivstart': d['delivstart'].strftime('%b-%d-%y'),
-                        'delivend': d['delivend'].strftime('%b-%d-%y')
-                    }
-                posts.append(p)
-            except:
-                continue
-                
-        self.params['posts'] = posts
-        self.params['searchkey'] = sr.urlsafe()
-        self.render('searchfrag.html', **self.params)
         
     def __search_clscrape(self, sr):
         startres = search_pathpts(sr.dist,'PATHPT_INDEX',sr.delivby.strftime('%Y-%m-%d'),'delivend',sr.start).results
