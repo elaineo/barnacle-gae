@@ -3,7 +3,7 @@ directions_url = 'http://maps.googleapis.com/maps/api/directions/json?'
 tz_url = 'https://maps.googleapis.com/maps/api/timezone/json?'
 miles2m = 1609
 
-signin_reg = '<div class="btn-group fblogin"><button class="btn btn-primary btn-small" style="height: 36px"><div class="icons-fb"></div></button><button class="btn btn-primary btn-small" style="height: 36px">Log In</button></div>'
+signin_reg = '<ul class="button-group radius right fblogin"><li><a class="small button facebook radius">JOIN &nbsp; &#8226; &nbsp; LOG IN</a></li></ul>'
 
 www_home = 'http://www.gobarnacle.com'
 info_email = 'Barnacle <admin@gobarnacle.com>'

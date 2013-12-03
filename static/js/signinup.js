@@ -114,9 +114,9 @@ function refresh_head() {
     url: "/navhead",
     success: function(response) {      
         console.log(response);
-        var head = '<table class="table-condensed"><tr><td rowspan="2"><img src="';
+        var head = '<table class="table-condensed user_head"><tr><td rowspan="2" class="th"><img src="';
         head += response.prof_thumb
-        head += '" class="img-rounded" width="70px" height="70px"></td><td style="text-align:left">';
+        head += '" class="img-rounded" id="prof_thumb"></td><td style="text-align:left">';
         head += response.nickname + '<br>';
         head += response.account_links + '</td></tr></table>';
         $('#user_head').html(head);        
