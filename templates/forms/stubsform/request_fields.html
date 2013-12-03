@@ -50,6 +50,24 @@
             <textarea class="span5" name="items" rows="2">{{items}}</textarea>
         </div>
     </div>	
+    <div class="control-group">
+     <table border=0>
+        <tr><td>Upload a Photo</td>
+            <td rowspan=3>
+            <div id="img-prev"><img height="100" src="{{img_thumb}}"></div>
+            </td>
+        </tr>
+        <tr class="space"></tr>
+        <tr>
+          <td style='vertical-align:bottom'>
+        <div style='display:inline'>
+            <input type="hidden" name="id" value="{{id}}">
+            <input type="file" class="file" id="images" accept="image/png,image/jpeg,image/gif" name="file">
+        </div>
+    </td>   
+    </tr>
+    </table>
+    </div>    
    
 <script>
   $(function() {

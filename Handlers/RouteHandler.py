@@ -51,7 +51,7 @@ class RouteHandler(BaseHandler):
                 else:
                     self.params.update(fill_route_params(key,False))
                     self.params['route_title'] = 'Edit Delivery Request'
-                    self.render('forms/fillrequest.html', **self.params)      
+                    self.render('forms/editrequest.html', **self.params)      
                 return
             logging.error(p)
             self.abort(403)
@@ -146,6 +146,7 @@ class RouteHandler(BaseHandler):
         rates = parse_rate(rates)
         items = self.request.get('items')
         reqdate = self.request.get('reqdate')     
+        img = self.request.get("file")
         if reqdate:
             delivby = parse_date(reqdate)
         else:
@@ -155,23 +156,26 @@ class RouteHandler(BaseHandler):
         dest, deststr = self.__get_map_form('dest')  
         logging.info('New Request: '+startstr+' to '+deststr)
         
-        if key: # if editing post
-            p = ndb.Key(urlsafe=key).get()
-            if p and self.user_prefs and p.userkey == self.user_prefs.key:  
-                p.rates = rates
-                p.items = items
-                p.delivby = delivby
-                p.locstart = startstr
-                p.locend = deststr
-                p.start = start
-                p.dest = dest
-                p.capacity=capacity
-            else:
-                self.redirect('/post/request')
-        else: # new post
-            p = Request(userkey=self.user_prefs.key, rates=rates, start=start, 
-                dest=dest, capacity=capacity,
-                items=items, delivby=delivby, locstart=startstr, locend=deststr)
+        p = ndb.Key(urlsafe=key).get()
+        if p and self.user_prefs and p.userkey == self.user_prefs.key:  
+            p.rates = rates
+            p.items = items
+            p.delivby = delivby
+            p.locstart = startstr
+            p.locend = deststr
+            p.start = start
+            p.dest = dest
+            p.capacity=capacity
+            if img: 
+                if p.img_id: # existing image
+                    imgstore = ImageStore.get_by_id(p.img_id)
+                    imgstore.update(img)
+                else: # new image
+                    imgstore = ImageStore.new(img)
+                imgstore.put()
+                p.img_id = imgstore.key.id()        
+        else:
+            self.redirect('/post/request')
         try:
             p.put() 
             taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
@@ -407,6 +411,7 @@ def fill_route_params(key,is_route=False):
     else:
         params.update({ 'items' : p.items,
                         'img_url' : p.image_url(),
+                        'img_thumb' : p.image_url('small'),
                         'num_offers' : p.num_offers(),
                         'rates' : p.rates,
                         'delivby' : p.delivby.strftime('%m/%d/%Y') })    
