@@ -10,22 +10,23 @@ class ImageStore(ndb.Model):
     fakehash = ndb.StringProperty() # used to prevent scrapping
     date = ndb.DateTimeProperty(auto_now_add=True)
     def update(self, img):
-        """ Automatially crop and resize """
+        """ Automatially resize """
         i = images.Image(img)               
         h = float(i.height)
         w = float(i.width)
 
-        # crop to make square image
+        # make the longest dim 600px
         if h < w:
+            i.resize(width=min(600,int(w)))
+            self.image_orig = i.execute_transforms()
             ratio = h/w
             i.crop(0.5 - 0.5*ratio, 0.0, 0.5 + 0.5*ratio, 1.0)
-            i.resize(int(h),int(h))
         else:
+            i.resize(height=min(600,int(h)))
+            self.image_orig = i.execute_transforms()
             ratio = w/h
             i.crop(0.0, 0.5 - 0.5*ratio, 1.0, 0.5 + 0.5*ratio)
-            i.resize(int(w),int(w))
-        self.image_orig = i.execute_transforms()
-        # resize images
+
         i.resize(360, 360)
         self.image_medium = i.execute_transforms()
         i.resize(100, 100)

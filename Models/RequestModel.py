@@ -101,7 +101,7 @@ class Request(ndb.Model):
         }
         return route        
 
-    def image_url(self, mode = None):
+    def image_url(self, mode = 'original'):
         """ Retrieve link to profile thumbnail or default """
         if self.img_id:
             profile_image = ImageStore.get_by_id(self.img_id)

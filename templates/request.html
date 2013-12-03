@@ -91,7 +91,7 @@ $(document).ready(function(){
 <script type="text/javascript">
 $(document).ready(function(){
     data = {'key':'{{routekey}}'};
-      console.log('dump');
+    $('#simreqs').hide();
     getRequestDump(data);
 });
 function getRequestDump(data) {
@@ -106,10 +106,13 @@ function getRequestDump(data) {
         if (q.status == 'ok') {
           if (parseInt(q.count) > 0) {
             for (k in q.posts) {
+              if (q.posts[k].routekey != '{{routekey}}') {
+                $('#simreqs').show();
                 buf = '<tr class="clicky"';
                 if (typeof q.posts[k].fbid != 'undefined') 
                   buf += 'data-fb="'+ q.posts[k].fbid+'" ';
-                buf += 'onclick="document.location.href = \'/post/request\/q.posts[k].routekey\';"><td ';
+                buf += 'onclick="document.location.href = \'/post/request\/';
+                buf += q.posts[k].routekey +'\';"><td ';
                 if (typeof q.posts[k].fbid != 'undefined') 
                   buf += 'rowspan="2"';
                 buf += '><img height="50px" src="';
@@ -122,10 +125,11 @@ function getRequestDump(data) {
                   buf += '<tr><td colspan="4">Mutual Friends: <div class="dumpfriends">None.</div></td></tr>';
                 buf += '</tr>';    
                 $('table#dumpreqs tr:last').after(buf);
+              }
             } 
             loadFBdata();
           } else
-            $('simreqs').hide();
+            $('#simreqs').hide();
         }
       }
   });            
