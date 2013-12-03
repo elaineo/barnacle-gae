@@ -98,6 +98,7 @@ function click_validloc(btn_id,fields,inputs,vtest,form,clickver) {
         $('input#'+i+'lat').val('');
         $('input#'+i+'lon').val('');
         $('#'+o+'Err').html('Invalid Location');
+        display_modal("#invalid-box");
         oksubmit = false;                
       }
     });    

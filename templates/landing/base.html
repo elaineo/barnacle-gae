@@ -87,7 +87,7 @@
     <div class="three columns">
     	<div class="space-b-20 hide-for-small">&nbsp;</div>	
         <a href="/how" class="small button secondary radius">How it Works</a>
-        <a href="/drive" class="small button secondary radius">Be a Driver</a>
+        <a href="/drive" id='post_btn' class="small button secondary radius">Be a Driver</a>
     </div>
     <div class="four columns login-buttons" style='text-transform: uppercase;
 	font-size: 0.85em; line-height: 1.5em;' id='user_head'>
@@ -114,7 +114,7 @@
             <p class="lead text-resize">Give your {{seosub}} a ride with our nationwide network of commuters.</p>
           </div>
           <!--Search form-->
-          <form action="/post/request" method="post" class="custom form-search">
+          <form action="/post/request0" method="post" class="custom form-search" id='request_form'>
             <div class="row">
               <div class="five mobile-four columns">
                 <label class="right inline">Origin:</label>
@@ -136,7 +136,7 @@
                 <label class="right inline">Space Needed:</label>
               </div>
               <div class="seven mobile-four columns">
-                <select class="expand">
+                <select name="vcap" class="expand">
                   <option selected="selected" value="0">Passenger Seat</option>
                   <option value="1">Trunk</option>
                   <option value="2">Wagon</option>
@@ -160,7 +160,7 @@
             <input type='hidden' name="items" value="{{items}}">
             
             <div class="row">
-              <div class="seven offset-by-five columns"><button class="button radius"><i class="icon-search"></i> &nbsp;GET A DRIVER</button></div>
+              <div class="seven offset-by-five columns"><button class="button radius" id='request_btn'><i class="icon-search"></i> &nbsp;GET A DRIVER</button></div>
             </div>
             <span class="notch"></span>
           </form>
@@ -178,15 +178,15 @@
             
             <div class="carousel-profiles responsive">
               <ul id="profile-thumbs">
-                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_01.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_02.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_03.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_04.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_05.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_06.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_07.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_08.jpg" alt=""></a></li>
-                <li><a href="#"><img src="/static/landing/images/profile-{{seodir}}/thumb_09.jpg" alt=""></a></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_01.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_02.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_03.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_04.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_05.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_06.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_07.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_08.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_09.jpg" alt=""></li>
               </ul>
             </div><!--end carousel-profiles-->
           </div><!--end form-footer-->
@@ -302,7 +302,7 @@
           </div>
           <h4>Lower Cost</h4>
           <p>Save up to 75% off commercial shipping and freight prices.</p>
-          <p><a class="small button radius secondary" id="request_btn"><i class="icon-angle-right"></i> REQUEST A DELIVERY</a></p>
+          <p><a href="/how" class="small button radius secondary"><i class="icon-angle-right"></i> READ MORE</a></p>
         </li>
         
         <li class="four columns">
@@ -315,7 +315,7 @@
           </div>
           <h4>Real-time Tracking</h4>
           <p>We provide real-time tracking and look out for our drivers to help them provide you with the best possible service.</p>
-          <p><a href="/tracker" class="small button radius secondary"><i class="icon-angle-right"></i> READ MORE</a></p>
+          <p><a href="/how" class="small button radius secondary"><i class="icon-angle-right"></i> READ MORE</a></p>
         </li>
         
         <li class="four columns">
@@ -427,6 +427,15 @@
   <a href="#" class="close-reveal-modal">×</a>
 </div><!--end login panel-->
 
+<div id="invalid-box" class="reveal-modal">
+  <div class="row">
+      <div class="twelve columns">
+      <h4>Invalid Location.</h4>
+    </div>
+  </div><!--end row-->
+  <a href="#" class="close-reveal-modal">×</a>
+</div>
+
 <!-- Forgot panel -->
 <div id="forgot_panel" class="reveal-modal">
   <div class="row">
@@ -469,11 +478,10 @@
     <!-- Barnacle crap -->    
     <script>
     $(document).ready(function(){
-        /* separate button for form submission */
-        click_landing('#request_btn','/post/request');
-        click_landing('.search_btn','/search');
-        click_landing('#searchreq_btn','/search/requests');
-        click_landing('#post_btn','/drive');
+        var v = [[0],[0]];
+        click_validloc('#request_btn',['map0','map1'],['start','dest'],v,'#request_form',true);
+        click_redirect('.search_btn','/search');
+        click_redirect('#post_btn','/drive');
         if(window.location.hash) {
           var popup = window.location.hash;
           var bizname = popup.split('?')[1]
@@ -485,7 +493,7 @@
     <script type="text/javascript" src="/static/js/signinup.js"></script>
     <script type="text/javascript" src="/static/js/fb.js"></script> 
     <script type="text/javascript" src="/static/js/cookie.js"></script>    
-    
+    <script type="text/javascript" src="/static/js/validation.js"></script>    
 
   
     <!-- maps and other stuff for the form -->

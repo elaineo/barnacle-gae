@@ -147,17 +147,3 @@ function click_submit(btn_id,form) {
       }
     });    
 }
-
-function click_landing(btn_id,loc) {
-$(btn_id).click(function(event) {
-  console.log('click');
-  event.preventDefault();
-  loggedIn = checkLoginStatus();
-  if (loggedIn) {
-    window.location.assign(loc);
-  } else {
-    $( 'body' ).data( "nextLoc", loc );      
-    loginLand();
-  }
-});    
-}
