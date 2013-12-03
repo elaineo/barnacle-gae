@@ -260,54 +260,11 @@ iframe { border: none; }
 #newsletter-form #result {}
 
 
-
-
-
-/* -----------------------------------------
-   08. Footer
------------------------------------------ */
-
-#footer { background: #171717 url(/static/landing/images/patterns/black_pattern.gif); padding-top: 40px; padding-bottom: 40px; }
-#footer h5 { color: #777; margin-bottom: 20px; }
-#footer hr { border: solid #333; border-width: 1px 0 0; }
-#footer .section { margin-bottom: 10px; }
-
-/*** Social Icons ***/
-.footer-social-icons a { color: #777; float: left; display: inline-block; margin-right: 5px; }
-.footer-social-icons a:hover { color: #5cabb8; }
-.footer-social-icons a:focus { color: #5cabb8; }
-
-/*** Twitter Feed ***/
-.twitter-article {}
-.twitter-text {}
-.tweetprofilelink { margin-right: 5px; }
-.tweet-time a { padding: 1px 4px 2px; font-size: 11px; text-align: center; text-decoration: none; line-height: 1; white-space: nowrap; display: inline; position: relative; bottom: 1px; color: #9a9a9a; background: #333;
-		-webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
-
-/*** Latest Blog ***/
-.latest-blog li { list-style: none; display: inline-block; width: 100%; margin-bottom: 10px; }
-.latest-blog .avatar { width: 56px; height: 56px; padding: 3px; background: #777; display: inline-block; float: left; margin-right: 10px;
-border-radius: 100%; -moz-border-radius: 100%; -webkit-border-radius: 100%; }
-.latest-blog .avatar:hover { background: #f00056; padding: 0;
-		-webkit-animation: pulse ease-in-out 1 normal 500ms; -moz-animation: pulse ease-in-out 1 normal 500ms; -ms-animation: pulse ease-in-out 1 normal 500ms;
-		-o-animation: pulse ease-in-out 1 normal 500ms; animation: pulse ease-in-out 1 normal 500ms;
-		border: 3px solid #f00056; }
-.latest-blog img { width: 50px; height: 50px; display: block;
-border-radius: 100%; -moz-border-radius: 100%; -webkit-border-radius: 100%; }
-
-/*** Newsletter Form ***/
-#result { font-weight: bold; }
-
-
-
-
-
 /* -----------------------------------------
    Boxed Page
 ----------------------------------------- */
 .page { /*border: 1px solid #ddd; */background: #fff; box-shadow: 0 0 3px rgba(153, 153, 153, 0.1); max-width: 1170px; min-width: 300px; margin: 0 auto; }
 .boxed-style {}
-
 
 
 

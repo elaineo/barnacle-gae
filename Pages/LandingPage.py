@@ -24,10 +24,11 @@ class LandingPage(BaseHandler):
             self.params['seosub'] = 'toys'
             self.params['items'] = 'Toys'
             self.render('landing/equip.html', **self.params)
-        # elif action=='biz':
-            # self.params['seosub'] = 'goods'
-            # self.params['items'] = 'stuff'
-            # self.render('landing/biz.html', **self.params)            
+        elif action=='biz':
+            self.params['seodir'] = 'biz'
+            self.params['seosub'] = 'goods'
+            self.params['items'] = 'stuff'
+            self.render('landing/biz.html', **self.params)            
         elif action=='auto':
             self.params['seodir'] = 'auto'
             self.params['seosub'] = 'goods'
