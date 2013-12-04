@@ -545,8 +545,6 @@ class HTTPSConnectionPool(HTTPConnectionPool):
         Return a fresh :class:`httplib.HTTPSConnection`.
         """
         self.num_connections += 1
-        log.info("Starting new HTTPS connection (%d): %s"
-                 % (self.num_connections, self.host))
 
         if not ssl:  # Platform-specific: Python compiled without +ssl
             if not HTTPSConnection or HTTPSConnection is object:

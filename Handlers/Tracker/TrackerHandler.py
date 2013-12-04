@@ -202,14 +202,14 @@ class TrackerHandler(BaseHandler):
             start = ndb.GeoPt(lat=startlat, lon=startlon)
             dest = ndb.GeoPt(lat=destlat, lon=destlon)
             response = { 'status': 'ok'}
+            if start and dest:
+                track = TrackerModel(driver = self.user_prefs.key, start = start, 
+                    dest=dest, delivend=delivend, locstart=locstart, locend=locend,
+                    tzoffset=tzoffset)
+                track.put()
+                response['route'] = track.to_dict()
         except:
             response = { 'status': 'fail'}            
-        if start and dest:
-            track = TrackerModel(driver = self.user_prefs.key, start = start, 
-                dest=dest, delivend=delivend, locstart=locstart, locend=locend,
-                tzoffset=tzoffset)
-            track.put()
-            response['route'] = track.to_dict()
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))              
 

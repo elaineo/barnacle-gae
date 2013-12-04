@@ -68,7 +68,7 @@
 .drivernum {
     float: left;
     font: 1.3em 'Open Sans', sans-serif;
-    color: #5973b9;
+    color: #2699ae;
     padding-right: 8px;
 }
 .driverlabel {
@@ -77,7 +77,7 @@
 }
 .question {
     cursor: pointer;
-    color: #5973b9;
+    color: #2699ae;
 }
 .answer {
     font: 0.95em/1.5em 'Open Sans', sans-serif;
@@ -85,7 +85,7 @@
     color: #999
 }
 .unread {
-    color: #5973b9;
+    color: #2699ae;
     font-weight: bold;  
 }
 
@@ -230,7 +230,7 @@ button:active, .onbutton{
     line-height: 200%;
     white-space:nowrap;
     text-align:center;
-    color: #5973b9;
+    color: #2699ae;
 }
 .footerbot{
     color: #aaa;
@@ -413,16 +413,11 @@ button:active, .onbutton{
 .tweet-time a { padding: 1px 4px 2px; font-size: 11px; text-align: center; text-decoration: none; line-height: 1; white-space: nowrap; display: inline; position: relative; bottom: 1px; color: #9a9a9a; background: #333;
 		-webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
 
-/*** Latest Blog ***/
-.latest-blog li { list-style: none; display: inline-block; width: 100%; margin-bottom: 10px; }
-.latest-blog .avatar { width: 56px; height: 56px; padding: 3px; background: #777; display: inline-block; float: left; margin-right: 10px;
-border-radius: 100%; -moz-border-radius: 100%; -webkit-border-radius: 100%; }
-.latest-blog .avatar:hover { background: #f00056; padding: 0;
-		-webkit-animation: pulse ease-in-out 1 normal 500ms; -moz-animation: pulse ease-in-out 1 normal 500ms; -ms-animation: pulse ease-in-out 1 normal 500ms;
-		-o-animation: pulse ease-in-out 1 normal 500ms; animation: pulse ease-in-out 1 normal 500ms;
-		border: 3px solid #f00056; }
-.latest-blog img { width: 50px; height: 50px; display: block;
-border-radius: 100%; -moz-border-radius: 100%; -webkit-border-radius: 100%; }
 
 /*** Newsletter Form ***/
 #result { font-weight: bold; }
+#support { background: #eaeaea url(/static/landing/images/patterns/gray_pattern.gif); padding-top: 40px; padding-bottom: 20px; border-top: 10px solid #fafafa; }
+#newsletter-form #result {}
+.page { /*border: 1px solid #ddd; */background: #fff; box-shadow: 0 0 3px rgba(153, 153, 153, 0.1); max-width: 1170px; min-width: 300px; margin: 0 auto; }
+.boxed-style {}
+.wide-style { background: #fff;  margin: 0; max-width: none; }

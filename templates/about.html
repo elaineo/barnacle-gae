@@ -23,12 +23,67 @@ Barnacle drivers now service routes all over the San Francisco Bay Area. We also
 </p>
 <p><a href='/loc'>How to find us</a>.</p>
 
-<div class="row bottom">&nbsp;<hr></div>  
+<div class="row">&nbsp;<hr></div>  
 <h4>Team</h4>
 <p>Barnacle was created by a team of engineers from Stanford, Harvard, and MIT. We're growing, and we want you to <a href='/jobs'>join us</a>!</p>
 <br>
-{% include 'share/mailchimp.html' %}
-
   </div>
 </div>
+{% endblock %}
+
+{% block content2 %}
+<!-- SUPPORT & NEWSLETTER SECTION
+================================================ -->
+<section>
+  <div id="support">
+    <div class="row">
+      
+      <div class="four columns">
+      	<div class="panel">
+      		<h4><i class="icon-question-sign"></i> Concerns or questions?</h4>
+        	<p>Read more about how it works and contact us with any additional questions.</p>
+          <a href="/how" class="small button radius secondary" target="_blank"><i class="icon-angle-right"></i> HOW IT WORKS</a>
+    		</div><!--end panel-->
+      </div>
+      
+      <div class="eight columns">
+      	<div class="panel">
+      		<h4><i class="icon-smile"></i> NEWSLETTER SIGNUP</h4>
+        	<p>By subscribing to our mailing list you will always be updated with the latest news from us.</p>
+          
+          <!--Newsletter form-->
+          <form action="http://gobarnacle.us7.list-manage1.com/subscribe/post?u=63e7c0e246c3f363c1ce9c125&amp;id=bab2de2f7f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="row">
+            <div class="four columns">
+              <div class="row collapse">
+                <div class="two mobile-one columns">
+                	<span class="prefix"><i class="icon-user"></i></span>
+                </div>
+                <div class="ten mobile-three columns">
+                	<input type="text" name="yname" id="yname" placeholder="Your name" required>
+                </div>
+              </div>
+            </div>
+            <div class="five columns">
+              <div class="row collapse">
+                <div class="two mobile-one columns">
+                	<span class="prefix"><i class="icon-envelope"></i></span>
+                </div>
+                <div class="ten mobile-three columns">
+                	<input type="email" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="Your email" required>
+                </div>
+              </div>
+            </div>
+            <div class="three columns">
+            	<p><button type="submit" id="mc-embedded-subscribe"  name="newsletter-submit" class="small radius button expand">JOIN US</button></p>
+            </div>
+						<div class="twelve column">              
+            	<small><i class="icon-lock"></i> <strong>Your <a href="/privacy">privacy</a> is important to us and we will never share your information.</strong></small>            	
+            </div>
+          </form><!--end newsletter-form-->    		</div><!--end panel-->
+      </div>
+      
+    </div><!--end row-->
+  </div><!--end support-->
+</section>
+<!--END SUPPORT & NEWSLETTER SECTION-->
 {% endblock %}
