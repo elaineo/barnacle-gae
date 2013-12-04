@@ -9,7 +9,7 @@
     {% include "forms/stubsform/settings_fields.html" %}
     
 	<p align="center">		
-	<button type="submit" class="btn" id="settings_btn">Save</button>
+	<button type="submit" class="button secondary" id="settings_btn">Save</button>
 	</p>
 </form>
   </div>
@@ -18,13 +18,13 @@
 <div class="row-fluid">
   <div class="span8 offset2">
     <h3>Driver Options</h3>
-      <button class='btn btn-small btn-info' id='bank_btn'>Payment Account</button>
+      <button class='button small primary' id='bank_btn'>Payment Account</button>
     {% if ins == True %}
-      <button class='btn btn-small btn-info disabled'>
+      <button class='button small primary disabled'>
       <i class="icon-check"></i> Insured Driver</button>
     {% else %}
       <a href='/apply'>
-      <button class='btn btn-small btn-info'>Apply for Insurance</button></a>
+      <button class='button small primary'>Apply for Insurance</button></a>
     {% endif %}
   </div>
 </div>

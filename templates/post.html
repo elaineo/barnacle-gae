@@ -7,10 +7,10 @@
 <div class="row-fluid">
   <div class="span8 offset1">
     <div class= "btn-group">
-      <button type="submit" class="btn" id="viewprof_btn">View {{first_name}}'s profile</button>
-      <button type="submit" class="btn" id="reserve_btn">Reserve this Route</button>
+      <button type="submit" class="button info" id="viewprof_btn">View {{first_name}}'s profile</button>
+      <button type="submit" class="button primary" id="reserve_btn">Reserve this Route</button>
     </div>
-  <button type="submit" class="btn btn-primary btn-mini" id='fb_btn'>Facebook Share</button>
+  <button type="submit" class="button facebook tiny" id='fb_btn'>Facebook Share</button>
   </div>
 </div>
 
@@ -59,11 +59,11 @@
     {% include "forms/stubspop/prof_box.html" %}
 <div class="row-fluid"><div class="span6 offset1">
     {% if edit_allow == True %} 
-<button type="submit" class="btn btn-inverse" id="editpost_btn">Edit Post</button>
+<button type="submit" class="button small info" id="editpost_btn">Edit Post</button>
         {% if num_confirmed == 0 %}
-<button type="submit" class="btn btn-danger" id='delete_btn'>Delete Post</button>
+<button type="submit" class="button small secondary" id='delete_btn'>Delete Post</button>
         {% else %}
-<button class="btn btn-danger btn-mini" disabled>{{num_confirmed}} Confirmed Reservations</button>
+<button class="button compl tiny" disabled>{{num_confirmed}} Confirmed Reservations</button>
         {% endif %}
     {% endif %}    
 </div></div>

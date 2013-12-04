@@ -6,11 +6,11 @@
 
 <div class="row-fluid"><div class="span6 offset1">
     {% if edit_allow == True %} 
-<button type="submit" class="btn btn-inverse" id="editres_btn">Edit Offer</button>
-<button type="submit" class="btn btn-danger" id='delete_btn'>Delete Offer</button>
+<button type="submit" class="button small info" id="editres_btn">Edit Offer</button>
+<button type="submit" class="button small secondary" id='delete_btn'>Delete Offer</button>
     {% endif %}
     {% if confirmed == True %} 
-<a href="{{track_url}}"><button class="btn btn-inverse">Track Delivery</button></a>
+<a href="{{track_url}}"><button class="button small primary">Track Delivery</button></a>
     {% endif %}
 </div></div>
     {% include "forms/stubspop/offer_stub.html" %}
