@@ -835,6 +835,18 @@ a.thumbnail:hover,a.thumbnail:focus{border-color:#2699ae;-webkit-box-shadow:0 1p
 .dropdown-submenu.pull-left{float:none;}.dropdown-submenu.pull-left>.dropdown-menu{left:-100%;margin-left:10px;-webkit-border-radius:3px 0 6px 6px;-moz-border-radius:3px 0 6px 6px;border-radius:3px 0 6px 6px;}
 .dropdown .dropdown-menu .nav-header{padding-left:20px;padding-right:20px;}
 .typeahead{z-index:1051;margin-top:2px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px;}
+.collapse {
+  position: relative;
+  height: 0;
+  overflow: hidden;
+  -webkit-transition: height 0.35s ease;
+  -moz-transition: height 0.35s ease;
+  -o-transition: height 0.35s ease;
+  transition: height 0.35s ease;
+}
+.collapse.in {
+  height: auto;
+}
 .accordion{margin-bottom:20px;}
 .accordion-group{margin-bottom:2px;border:1px solid #e5e5e5;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px;}
 .accordion-heading{border-bottom:0;}
