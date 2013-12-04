@@ -72,12 +72,18 @@
 <!-- HEADER SECTION
 ================================================ -->
 <header>
-	<div class="row">
+    
+    <div class="row fixed" id='toplogo'>
+      <div class="two pull-9 columns hide-for-small">
+        <img src='/static/img/barnaclelogo_sq.png'>
+      </div>
+    </div>
+	<div class="row fixed" id='navhead' >
       
     <!-- Logo -->
-    <div class="three pull-9 columns">
+    <div class="three pull-9 columns hide-for-small">
         <div class="space-b-10 hide-for-small">&nbsp;</div>	
-      	<a href="/"><img style='width:220px;' src="/static/img/barnaclelogo.png"></a>
+      	<a href="/"><img id='flatlogo' style='width:220px;' src="/static/img/barnaclelogo.png"></a>
     </div>
     <!--end logo-->
     <div class="one columns">
@@ -108,7 +114,7 @@
 </div>
 <div class='heading hero_fg'>
   <div class="row">
-    <div class='twelve columns ' style='height:450px;text-align:center;'>
+    <div class='twelve columns ' style='height:500px;text-align:center;'>
         <h1 class='heroh1'>SHIP OUTSIDE THE BOX</h1>
         <h4 class='whiteh1'>A TRUSTED NETWORK OF DRIVERS ALREADY EN ROUTE</h4>
         <br>
@@ -333,6 +339,17 @@ $(document).ready(function(){
     hh = $('.heading').height()+20;
     $('.wash').height(hh);
     $('.hero_container').height(hh);
+});
+$(document).scroll( function() {
+    var value = $(this).scrollTop();
+    console.log(value);
+    if ( value > 60 ) {
+        $("#toplogo").css("display", "None");
+        $("#flatlogo").css("display", "block");
+    } else {
+        $("#toplogo").css("display", "block");
+        $("#flatlogo").css("display", "None");
+    }
 });
   </script>  
     <!-- Barnacle crap -->    

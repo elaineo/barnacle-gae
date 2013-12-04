@@ -1,5 +1,4 @@
 * { margin: 0; padding: 0; outline: 0; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
-
 .main {
     font: 1.0em/1.6em 'Open Sans', sans-serif;
 	color: #555; 
@@ -195,6 +194,15 @@ button:active, .onbutton{
     max-width:1000px;
     margin: auto;
 }
+#navhead {
+  background: #f8f8f8;
+}
+#flatlogo{
+  display:None;
+}
+#toplogo {
+  z-index: 100;
+}
 .bottom hr {
     height: 1px;
     border:none;
@@ -374,7 +382,7 @@ button:active, .onbutton{
   text-shadow: rgb(0, 0, 0) 0px 0px 20px;
 }
 .heroh1 {
-  margin-top: 15%;
+  margin-top: 20%;
   margin-bottom: 10px;
   color: #fff;
   font-weight: 600;
