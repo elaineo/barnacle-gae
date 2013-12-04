@@ -190,26 +190,26 @@ class TrackerHandler(BaseHandler):
     def __create(self):
         data = json.loads(self.request.body)
         logging.info(data)    
-        try:
-            tzoffset = int(data['tzoffset'])
-            startlat = float(data['startlat'])
-            startlon = float(data['startlon'])
-            destlat = float(data['destlat'])
-            destlon = float(data['destlon'])
-            locstart = data['locstart']
-            locend = data['locend']
-            delivend = parse_date(data['delivend'])
-            start = ndb.GeoPt(lat=startlat, lon=startlon)
-            dest = ndb.GeoPt(lat=destlat, lon=destlon)
-            response = { 'status': 'ok'}
-            if start and dest:
-                track = TrackerModel(driver = self.user_prefs.key, start = start, 
-                    dest=dest, delivend=delivend, locstart=locstart, locend=locend,
-                    tzoffset=tzoffset)
-                track.put()
-                response['route'] = track.to_dict()
-        except:
-            response = { 'status': 'fail'}            
+        # try:
+        tzoffset = int(data['tzoffset'])
+        startlat = float(data['startlat'])
+        startlon = float(data['startlon'])
+        destlat = float(data['destlat'])
+        destlon = float(data['destlon'])
+        locstart = data['locstart']
+        locend = data['locend']
+        delivend = parse_date(data['delivend'])
+        start = ndb.GeoPt(lat=startlat, lon=startlon)
+        dest = ndb.GeoPt(lat=destlat, lon=destlon)
+        response = { 'status': 'ok'}
+        if start and dest:
+            track = TrackerModel(driver = self.user_prefs.key, start = start, 
+                dest=dest, delivend=delivend, locstart=locstart, locend=locend,
+                tzoffset=tzoffset)
+            track.put()
+            response['route'] = track.to_dict()
+        # except:
+            # response = { 'status': 'fail'}            
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))              
 

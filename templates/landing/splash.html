@@ -72,7 +72,6 @@
 <!-- HEADER SECTION
 ================================================ -->
 <header>
-<div>
 	<div class="row">
       
     <!-- Logo -->
@@ -81,13 +80,14 @@
       	<a href="/"><img style='width:220px;' src="/static/img/barnaclelogo.png"></a>
     </div>
     <!--end logo-->
-    <div class="two columns">
+    <div class="one columns">
     </div>         
     <!--Login buttons-->  
-    <div class="four columns">
-    	<div class="space-b-20 hide-for-small">&nbsp;</div>	
+    <div class="five columns">
+    	<div class="space-b-20 hide-for-small">&nbsp;</div>	        
+        <button class="search_btn small button secondary radius">Find a Driver</button>
+        <button class="post_btn small button secondary radius">Be a Driver</button>
         <a href="/how" class="small button secondary radius">How it Works</a>
-        <button id='post_btn' class="small button secondary radius">Be a Driver</button>
     </div>
     <div class="three columns login-buttons" style='text-transform: uppercase;
 	font-size: 0.85em; line-height: 1.5em;' id='user_head'>
@@ -99,105 +99,25 @@
     </div>
     <!--end login buttons-->
   </div>
-  
-<div id="header">
-	<div class="row">
-    
 
-		
-    <div class="twelve columns">
-      <div class="row">
-      
-      	<!--Form wrapper-->
-        <div class="five columns form-wrapper">
-          <div class="form-header">
-            <p class="lead text-resize">Give your {{seosub}} a ride with our nationwide network of commuters.</p>
-          </div>
-          <!--Search form-->
-          <form action="/post/request0" method="post" class="custom form-search" id='request_form'>
-            <div class="row">
-              <div class="five mobile-four columns">
-                <label class="right inline">Origin:</label>
-              </div>
-              <div class="seven mobile-four columns">
-                <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}">
-              </div>
-            </div><!--end row-->
-            <div class="row">
-              <div class="five mobile-four columns">
-                <label class="right inline">Destination:</label>
-              </div>
-              <div class="seven mobile-four columns">
-                <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{locend}}">
-              </div>
-            </div><!--end row-->
-            <div class="row">
-              <div class="five mobile-four columns">
-                <label class="right inline">Space Needed:</label>
-              </div>
-              <div class="seven mobile-four columns">
-                <select name="vcap" class="expand">
-                  <option selected="selected" value="0">Passenger Seat</option>
-                  <option value="1">Trunk</option>
-                  <option value="2">Wagon</option>
-                </select>
-              </div>
-            </div><!--end row-->            
-            <div class="row">
-              <div class="five mobile-four columns">
-                <label class="right inline">Deliver By:</label>
-              </div>
-              <div class="seven mobile-four columns">
-                <input type="date" name="reqdate" min="{{today}}" value="{{delivby}}" id="reqdate" autocomplete="off">
-              </div>
-            </div><!--end row-->
-            <input type='hidden' name="startlat" id="startlat">
-            <input type='hidden' name="startlon" id="startlon">
-            <input type='hidden' name="startstr" id="startstr">
-            <input type='hidden' name="destlat" id="destlat">
-            <input type='hidden' name="destlon" id="destlon">
-            <input type='hidden' name="deststr" id="deststr">         
-            <input type='hidden' name="items" value="{{items}}">
-            
-            <div class="row">
-              <div class="seven offset-by-five columns"><button class="button radius" id='request_btn'><i class="icon-search"></i> &nbsp;GET A DRIVER</button></div>
-            </div>
-            <span class="notch"></span>
-          </form>
-         
-          <!--end search form-->
-          <!--Form footer-->
-          <div class="form-footer silver-bg">
-            <p><strong>Recent Deliveries</strong>
-              <span class="right hide-for-small">
-                <a href="#" id="profile-thumbs-prev"><i class="icon-circle-arrow-left icon-large"></i></a>&nbsp;
-                <a href="#" id="profile-thumbs-next"><i class="icon-circle-arrow-right icon-large"></i></a>
-              </span>
-            </p>
-            <div class="clearfix"></div>
-            
-            <div class="carousel-profiles responsive">
-              <ul id="profile-thumbs">
-                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_01.jpg" alt=""></li>
-                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_02.jpg" alt=""></li>
-                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_03.jpg" alt=""></li>
-                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_04.jpg" alt=""></li>
-                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_05.jpg" alt=""></li>
-                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_06.jpg" alt=""></li>
-                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_07.jpg" alt=""></li>
-                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_08.jpg" alt=""></li>
-                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_09.jpg" alt=""></li>
-              </ul>
-            </div><!--end carousel-profiles-->
-          </div><!--end form-footer-->
-  
-        </div><!--end form-wrapper-->
-      </div><!--end row-->
-    </div><!--end twelve-->
-  </div><!--end row-->
-</div><!--end #header-->
-</div><!--end header-bg-->
-</header>
+<div class='hero_bg row'>
+  <div class="hero_container">  
+    <div class="splash_img"></div>
+  </div>
+  <div class="wash"></div>
+</div>
+<div class='heading hero_fg'>
+  <div class="row">
+    <div class='twelve columns ' style='height:450px;text-align:center;'>
+        <h1 class='heroh1'>SHIP OUTSIDE THE BOX</h1>
+        <h4 class='whiteh1'>A TRUSTED NETWORK OF DRIVERS ALREADY EN ROUTE</h4>
+        <br>
+    <button class="search_btn button radius large">Find a Driver &nbsp;<i class="icon-search"></i></button> &nbsp; &nbsp;
+    <button class="post_btn button radius large compl">Be a Driver &nbsp;<i class="icon-road"></i></button>
+    </div>
+  </div>
+</div>
+ </header>
 <!--END HEADER SECTION-->
 
 
@@ -208,69 +128,56 @@
 ================================================ -->
 <section>
   <div id="call-to-actions" class="silver-bg">
-    <div class="row map-bg">
-    
+    <div class="row map-bg">    
       <div class="twelve columns">
-        <h1 class="section-title">Ship Outside the Box</h1>
-        <p class="lead">Barnacle matches your transportation needs with drivers who are commuting or traveling. Your deliveries are just along for the ride.
-        <strong>Give your {{seosub}} their own private seats in passenger vehicles!</strong></p>
-                
-        <!--Take action-->
-        <div class="take-action">
-          <ul class="button-group radius expand left">
-            <li><a class="search_btn button large expand">Find a Driver &nbsp;<i class="icon-search"></i></a></li>
-          </ul>
-          <span class="or-block hide-for-small">- or -</span>
-          <ul class="button-group radius expand right">
-          
-            
-            <li><a id='post_btn' class="button secondary large expand">Be a Driver &nbsp;<i class="icon-road"></i></a></li>
-          </ul>
-        </div>
-        <!--end take-action-->
-      </div><!--end twelve-->
+        <h1 class="section-title">WHY SHIP WITH <span class="blue-text">BARNACLE?</span></h1>
+        <p class="lead">
+        Barnacle is a community. Our drivers will work with you to arrange a delivery schedule and provide special care for your transportation needs. 
+        <strong>Give your most treasured possessions their own private seats in passenger vehicles!</strong></p>
 
-        <!--Status Icons-->
-        <div class="status three columns mobile-one">
-          <div class="icon" data-animation="pulse">
-            <img src="/static/landing/images/steps/status_01.png" width="213" height="149" alt="">
+      </div><!--end twelve-->
+  <div id="feature-text" class="text-center">
+    <div class="row">
+      
+      <ul class="no-bullet">
+        <li class="four columns">
+          <div class="circle">
+            <a class="imagelink">
+              <span class="overlay"></span>
+              <span class="read"><i class="icon-truck"></i></span>
+              <img src="/static/landing/images/small_thumb_01.png" alt="">
+            </a>
           </div>
-          <ul class="block-grid">
-            <li class="title">100,000+</li>
-            <li class="subtitle">Users in total</li>
-          </ul>
-        </div>
+          <h4>Lower Cost</h4>
+          <p>Save up to 75% off commercial shipping and freight prices.</p>
+        </li>
         
-        <div class="status three columns mobile-one">
-          <div class="icon" data-animation="pulse">
-            <img src="/static/landing/images/steps/status_02.png" width="213" height="149" alt="">
+        <li class="four columns">
+          <div class="circle">
+            <a class="imagelink">
+              <span class="overlay"></span>
+              <span class="read"><i class="icon-truck"></i></span>
+              <img src="/static/landing/images/small_thumb_02.png" alt="">
+            </a>
           </div>
-          <ul class="block-grid">
-            <li class="title">947</li>
-            <li class="subtitle">Active Drivers</li>
-          </ul>
-        </div>
+          <h4>Real-time Tracking</h4>
+          <p>We provide real-time tracking and look out for our drivers to help them provide you with the best possible service.</p>
+        </li>
         
-        <div class="status three columns mobile-one">
-          <div class="icon" data-animation="pulse">
-            <img src="/static/landing/images/steps/status_03.png" width="213" height="149" alt="">
+        <li class="four columns">
+          <div class="circle">
+            <a class="imagelink">
+              <span class="overlay"></span>
+              <span class="read"><i class="icon-truck"></i></span>
+              <img src="/static/landing/images/small_thumb_03.png" alt="">
+            </a>
           </div>
-          <ul class="block-grid">
-            <li class="title">530</li>
-            <li class="subtitle">Upcoming Routes</li>
-          </ul>
-        </div>
-        
-        <div class="status three columns mobile-one">
-          <div class="icon" data-animation="pulse">
-            <img src="/static/landing/images/steps/status_04.png" width="213" height="149" alt="">
-          </div>
-          <ul class="block-grid">
-            <li class="title">417</li>
-            <li class="subtitle">Deliveries Completed</li>
-          </ul>
-        </div>
-        <!--end status icons-->
+          <h4>Ship Outside the Box</h4>
+          <p>Your deliveries get their own private seats or trunk space. This means you don't have to worry about crating or packaging your shipments.</p>
+        </li>
+      </ul>
+    </div><!--end row-->
+  </div><!--end feature-text-->
       
     </div><!--end row map-bg-->
   </div><!--end call-to-actions-->
@@ -287,50 +194,9 @@
   <div id="feature-text" class="text-center">
     <div class="row">
       <div class="twelve columns">
-        <h2><span class="no-bg">Why Ship With <span class="blue-text">Barnacle?</span></span></h2>
-        <p class="lead">Barnacle is a community. The driver will work with you to arrange a delivery schedule and provide special care for your transportation needs. Never worry about missed deliveries or infonotices. </p>
-      </div><!--end twelve-->
-      
-      <ul class="no-bullet">
-        <li class="four columns">
-          <div class="circle">
-            <a href="/static/landing/images/small_thumb_01.png" class="imagelink" data-rel="prettyPhoto[gallery1]">
-              <span class="overlay"></span>
-              <span class="read"><i class="icon-truck"></i></span>
-              <img src="/static/landing/images/small_thumb_01.png" alt="">
-            </a>
-          </div>
-          <h4>Lower Cost</h4>
-          <p>Save up to 75% off commercial shipping and freight prices.</p>
-          <p><a href="/how" class="small button radius secondary"><i class="icon-angle-right"></i> READ MORE</a></p>
-        </li>
-        
-        <li class="four columns">
-          <div class="circle">
-            <a href="/static/landing/images/small_thumb_02.png" class="imagelink" data-rel="prettyPhoto[gallery1]">
-              <span class="overlay"></span>
-              <span class="read"><i class="icon-truck"></i></span>
-              <img src="/static/landing/images/small_thumb_02.png" alt="">
-            </a>
-          </div>
-          <h4>Real-time Tracking</h4>
-          <p>We provide real-time tracking and look out for our drivers to help them provide you with the best possible service.</p>
-          <p><a href="/how" class="small button radius secondary"><i class="icon-angle-right"></i> READ MORE</a></p>
-        </li>
-        
-        <li class="four columns">
-          <div class="circle">
-            <a href="/static/landing/images/small_thumb_03.png" class="imagelink" data-rel="prettyPhoto[gallery1]">
-              <span class="overlay"></span>
-              <span class="read"><i class="icon-truck"></i></span>
-              <img src="/static/landing/images/small_thumb_03.png" alt="">
-            </a>
-          </div>
-          <h4>Ship Outside the Box</h4>
-          <p>Your {{seosub}} get their own private seats or trunk space. This means you don't have to worry about crating or packaging your shipments.</p>
-          <p><a href="/how" class="small button radius secondary"><i class="icon-angle-right"></i> READ MORE</a></p>
-        </li>
-      </ul>
+        <h2><span class="no-bg">JOIN OUR GROWING NETWORK</span></span></h2>        
+      </div><!--end twelve-->    
+      <div id="map-canvas" class="homemap"></div>
     </div><!--end row-->
   </div><!--end feature-text-->
 </section>
@@ -436,17 +302,6 @@
   <a href="#" class="close-reveal-modal">×</a>
 </div>
 
-<!-- Forgot panel -->
-<div id="forgot_panel" class="reveal-modal">
-  <div class="row">
-
-    <div class="twelve columns"><hr>
-      <small><a href="#" data-reveal-id="signin-box">GO BACK</a></small>
-    </div>
-  </div><!--end row-->
-  <a href="#" class="close-reveal-modal">×</a>
-</div><!-- end register panel -->
-
 <!--Coupon panel-->
 <div id="coupon_panel" class="reveal-modal">
   <div class="row">
@@ -471,20 +326,22 @@
 <!-- JAVASCRIPTS
 ================================================ -->
 
-
+ <script>
+  
+$(document).ready(function(){
+    /* Give the heading a pretty picture */
+    hh = $('.heading').height()+20;
+    $('.wash').height(hh);
+    $('.hero_container').height(hh);
+});
+  </script>  
     <!-- Barnacle crap -->    
     <script>
     $(document).ready(function(){
-        var v = [[0],[0]];
-        click_validloc('#request_btn',['map0','map1'],['start','dest'],v,'#request_form',true);
         click_redirect('.search_btn','/search');
-        click_redirect('#post_btn','/drive');
-        if(window.location.hash) {
-          var popup = window.location.hash;
-          var bizname = popup.split('?')[1]
-          $('#bizname').html(bizname);
-          $( '#coupon_panel' ).reveal( $( this ).data() );
-        }			         
+        click_redirect('.post_btn','/drive');
+        var mapURL = '/post/jsonall';
+        initialize_home(mapURL);
     });
     </script>
     <script type="text/javascript" src="/static/js/signinup.js"></script>
@@ -494,9 +351,9 @@
 
   
     <!-- maps and other stuff for the form -->
-  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>          
-  <script src="/static/js/maps/mapsclientno.js"></script>
 
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places"></script>
+<script type="text/javascript" src="/static/js/maps/mapsplash.js"></script>
   
   <!-- 3rd Plugins -->
 	<!-- jQuery & Foundation Framework -->

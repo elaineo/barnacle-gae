@@ -11,7 +11,7 @@ class HomePage(BaseHandler):
             self.params['new_requests'] = [r.to_dict(incl_user=True) for r in nr]
             self.render('home.html', **self.params)
         else:
-            self.render('splash.html', **self.params)
+            self.render('landing/splash.html', **self.params)
 
 class GuestPage(BaseHandler):
     """Guest Home page """
