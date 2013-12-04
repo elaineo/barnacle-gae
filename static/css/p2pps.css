@@ -197,11 +197,28 @@ button:active, .onbutton{
 #navhead {
   background: #f8f8f8;
 }
-#flatlogo{
-  display:None;
+#logo {
+-webkit-transition: all .1s ease-in;
+-moz-transition: all .1s ease-in;
+-o-transition: all .1s ease-in;
+-ms-transition: all .1s ease-in;
+transition: all .1s ease-in;
+background-size: 100% 100%;
+background-repeat: no-repeat;
+margin-left: 0;
+margin-top: 0;
+padding: 0;
+position: absolute;
 }
-#toplogo {
-  z-index: 100;
+.flatlogo{
+  background-image: url('/static/img/barnaclelogo_sm.png');  
+  height: 56px;
+  width: 200px;
+}
+.toplogo {
+  background-image: url('/static/img/barnaclelogo_sq.png');
+  height: 135px;
+  width: 135px;
 }
 .bottom hr {
     height: 1px;

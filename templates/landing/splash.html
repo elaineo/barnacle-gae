@@ -12,9 +12,13 @@
 	<!--Site charset-->
   <meta charset="utf-8">
   <!--Site title-->
-  <title>{% block title %}{% endblock %}</title>
-  <!--Meta-->
-    {% block metadescr %}{% endblock %}
+    <title>Barnacle</title>
+    <meta property="og:image" content="http://www.gobarnacle.com/static/img/barnacle.png"/>
+    <meta property="og:title" content="Barnacle"/>
+    <meta property="og:url" content="http://www.gobarnacle.com"/>
+    <meta property="fb:app_id" content="540602052657989"/>
+    <meta property="og:site_name" content="Barnacle"/>
+    <meta property="og:description" content="Deliveries Along for the Ride."/>
   <meta name="author"  content="Elaine Ou">
   <!--Set the viewport width to device width for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,13 +32,6 @@
   <link rel="stylesheet" href="/static/landing/styles/app.css">
   <link rel="stylesheet" href="/static/landing/styles/updates.css">
   <link rel="stylesheet" href="/static/landing/styles/custom.css">
-  <style type="text/css">
-    #header { padding-top: 20px; padding-bottom: 40px; background: url(/static/landing/images/profile-{{seodir}}/header_image_bg.jpg) top center no-repeat; max-width: 1170px; margin: 0 auto; 
-    box-shadow: inset 0 50px 50px -50px #171717;
-    -moz-box-shadow: inset 0 50px 50px -50px #171717;
-    -webkit-box-shadow: inset 0 50px 50px -50px #171717;
-     }
-  </style>
   <script src="/static/js/jquery-1.9.1.js"></script>
   
 	
@@ -60,6 +57,15 @@
   <!-- jQuery & Foundation Framework -->
   <script type="text/javascript" src="/static/landing/scripts/modernizr.foundation.js"></script> 
 </head>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#prof_thumb').error(function() { $(this).hide(); });       
+});
+function breakout_of_frame() {
+    if (top.location != location) 
+        top.location.href = document.location.href ;
+}    
+</script>
 <body>
 
 
@@ -73,29 +79,23 @@
 ================================================ -->
 <header>
     
-    <div class="row fixed" id='toplogo'>
-      <div class="two pull-9 columns hide-for-small">
-        <img src='/static/img/barnaclelogo_sq.png'>
-      </div>
-    </div>
-	<div class="row fixed" id='navhead' >
-      
+	<div class="row fixed" id='navhead' >      
     <!-- Logo -->
     <div class="three pull-9 columns hide-for-small">
-        <div class="space-b-10 hide-for-small">&nbsp;</div>	
-      	<a href="/"><img id='flatlogo' style='width:220px;' src="/static/img/barnaclelogo.png"></a>
+      	<a href="/" id='logo' class='toplogo'></a>
     </div>
     <!--end logo-->
     <div class="one columns">
     </div>         
     <!--Login buttons-->  
-    <div class="five columns">
-    	<div class="space-b-20 hide-for-small">&nbsp;</div>	        
+    <div class="five columns hide-for-small">
+    	<div class="space-b-10 hide-for-small">&nbsp;</div>	        
         <button class="search_btn small button secondary radius">Find a Driver</button>
         <button class="post_btn small button secondary radius">Be a Driver</button>
         <a href="/how" class="small button secondary radius">How it Works</a>
+        <div class="space-b-5 hide-for-small">&nbsp;</div>	 
     </div>
-    <div class="three columns login-buttons" style='text-transform: uppercase;
+    <div class="three columns login-buttons hide-for-small" style='text-transform: uppercase;
 	font-size: 0.85em; line-height: 1.5em;' id='user_head'>
        <table class='user_head'><tr><td rowspan='2' class='th'>
          <img src="{{prof_thumb}}" id='prof_thumb'>
@@ -200,21 +200,15 @@
   <div id="feature-text" class="text-center">
     <div class="row">
       <div class="twelve columns">
-        <h2><span class="no-bg">JOIN OUR GROWING NETWORK</span></span></h2>        
+        <h2><span class="no-bg">JOIN OUR GROWING NETWORK</span></span></h2>  
+        <p class="lead">
+        We have over 5000 drivers with routes between major cities. It's fun to be a <span class="blue-text">Barnacle</span> driver!</p>        
       </div><!--end twelve-->    
       <div id="map-canvas" class="homemap"></div>
     </div><!--end row-->
   </div><!--end feature-text-->
 </section>
 <!--END FEATURED TEXT SECTION-->
-
-  
-    {% block testimonials %}
-    {% endblock %}
-<!--END TESTIMONIALS SECTION-->
-
-
-
 
 
 <!-- SUPPORT & NEWSLETTER SECTION
@@ -299,15 +293,6 @@
   <a href="#" class="close-reveal-modal">×</a>
 </div><!--end login panel-->
 
-<div id="invalid-box" class="reveal-modal">
-  <div class="row">
-      <div class="twelve columns">
-      <h4>Invalid Location.</h4>
-    </div>
-  </div><!--end row-->
-  <a href="#" class="close-reveal-modal">×</a>
-</div>
-
 <!--Coupon panel-->
 <div id="coupon_panel" class="reveal-modal">
   <div class="row">
@@ -339,18 +324,27 @@ $(document).ready(function(){
     hh = $('.heading').height()+20;
     $('.wash').height(hh);
     $('.hero_container').height(hh);
+    preload([
+    '/static/img/barnaclelogo_sm.png',
+    '/static/img/barnaclelogo_sq.png']);
 });
+
 $(document).scroll( function() {
     var value = $(this).scrollTop();
     console.log(value);
     if ( value > 60 ) {
-        $("#toplogo").css("display", "None");
-        $("#flatlogo").css("display", "block");
+        $("#logo").addClass("flatlogo");
+        $("#logo").removeClass("toplogo");
     } else {
-        $("#toplogo").css("display", "block");
-        $("#flatlogo").css("display", "None");
+        $("#logo").removeClass("flatlogo");
+        $("#logo").addClass("toplogo");
     }
 });
+function preload(arrayOfImages) {
+    $(arrayOfImages).each(function(){
+        $('<img/>')[0].src = this;
+    });
+}
   </script>  
     <!-- Barnacle crap -->    
     <script>
