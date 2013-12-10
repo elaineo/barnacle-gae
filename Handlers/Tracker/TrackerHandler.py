@@ -327,7 +327,7 @@ class TrackerHandler(BaseHandler):
                 continue                
                 
 def create_from_res(r):
-    tzoffset = RouteUtils.getTZ(r.locend)
+    tzoffset = RouteUtils().getTZ(r.dest)
     track = TrackerModel(start = r.start, 
     dest=r.dest, delivend=r.deliverby, locstart=r.locstart, 
     locend=r.locend, tzoffset=tzoffset, reservation=r.key)

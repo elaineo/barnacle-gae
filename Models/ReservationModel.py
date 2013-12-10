@@ -32,7 +32,7 @@ class Reservation(ndb.Model):
         """ if confirmed url for tracking page """
         t = TrackerModel.by_reservation(self.key).get()
         if t:
-            return t.get().post_url()
+            return t.post_url()
         else:
             return ''
     def edit_url(self):

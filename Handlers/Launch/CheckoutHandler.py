@@ -110,7 +110,8 @@ class CheckoutHandler(BaseHandler):
         customer.add_card(p.uri)
             
         charge = res.price*100
-        customer.debit(amount=charge)
+        if charge >0:
+            customer.debit(amount=charge)
         
         hold = balanced.Hold.find(p.uri)
         hold.void()

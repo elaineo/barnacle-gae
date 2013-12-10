@@ -56,7 +56,7 @@ class RouteUtils():
             return None, 'invalid' 
             
     def getTZ(self,loc):
-        ts = int(time.time())
+        ts = str(time.time())
         data = "location=" + str(loc.lat) + "," + str(loc.lon) + "&timestamp=" + ts + "&sensor=true"
         req = urlfetch.fetch(tz_url+data)
         results = json.loads(req.content)['rawOffset'] 

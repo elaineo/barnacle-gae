@@ -1,16 +1,16 @@
 <div class="row-fluid">
   <div class="span8 offset1 btn-group">
   {% if is_receiver == True %}
-  <button type="submit" class="btn" id="viewprof_btn">View {{sender_first_name}}'s Profile</button>
+  <button type="submit" class="button info" id="viewprof_btn">View {{sender_first_name}}'s Profile</button>
   {% endif %}
-  <button type="submit" class="btn" id="viewroute_btn">View {{receiver_first_name}}'s Route</button>
+  <button type="submit" class="button info" id="viewroute_btn">View {{receiver_first_name}}'s Route</button>
   {% if is_receiver == True or is_sender == True %}{% if msg_ok == True %}
-  <button type="submit" class="btn" id="sendmsg_btn">Send Message</button>
+  <button type="submit" class="button info" id="sendmsg_btn">Send Message</button>
   {% endif %}{% endif %}
   
   {% if confirm_allow %}
-  <button type="submit" class="btn btn-inverse confirm" id="confirmres_btn">Confirm</button>
-  <button type="submit" class="btn btn-danger decline" id="decline_btn">Decline</button>
+  <button type="submit" class="button primary confirm" id="confirmres_btn">Confirm</button>
+  <button type="submit" class="button secondary decline" id="decline_btn">Decline</button>
   {% endif %}
   </div>
 </div>
@@ -22,7 +22,7 @@
       <label class="control-label" for="msg">Message:</label>
         <div class="controls">
           <textarea class="input-xxlarge" rows="5" name="msg" id="msgReserve">{{msg}}</textarea>
-        </div><button type="submit" class="btn" id="submitmsg_btn">send</button>
+        </div><button type="submit" class="button info small" id="submitmsg_btn">send</button>
         </div>    
     </p>
   </div>
