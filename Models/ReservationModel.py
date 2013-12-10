@@ -24,6 +24,7 @@ class Reservation(ndb.Model):
     locstart = ndb.StringProperty(required=True) #text descr of location
     locend = ndb.StringProperty(required=True) #text descr of location
     confirmed = ndb.BooleanProperty(default=False)
+    img_id = ndb.IntegerProperty()     
             
     def reserve_url(self):
         """ url for public view of reservation """
@@ -206,6 +207,8 @@ class ExpiredReservation(ndb.Model):
     rcvr_name = ndb.StringProperty()     
     start = ndb.GeoPtProperty()
     dest = ndb.GeoPtProperty()
+    items = ndb.TextProperty()    # description of goods
+    img_id = ndb.IntegerProperty()     
     
     @classmethod
     def deliveries_completed(cls, rcvr):

@@ -12,6 +12,7 @@ from Utils.SearchScraped import *
 from Utils.SearchUtils import expire_pathpts
 
 import json
+import logging
 
 class ExpireHandler(BaseHandler):
     def get(self):
@@ -32,18 +33,19 @@ class ExpireHandler(BaseHandler):
             route_index.delete(r.key.urlsafe())
             if r.roundtrip:
                 route_index.delete(r.key.urlsafe()+'_RT')
-            r.key.delete()
             drouts.append(exr.to_dict())
             for q in Reservation.by_route(r.key):
                 if q.confirmed:
                     exp = ExpiredReservation(sender=q.sender, receiver=q.receiver, 
                     route=q.route, items=q.items, price=q.price,
                     deliverby=q.deliverby, start=q.start, dest=q.dest, 
-                    locstart=q.locstart, locend=q.locend, sender_name=q.sender_name(),
-                    rcvr_name=q.receiver_name())
+                    locstart=q.locstart, locend=q.locend, 
+                    sender_name=q.sender_name(), rcvr_name=q.receiver_name(),
+                    img_id=q.img_id)
                     exp.put()
                     dresv.append(exp.to_dict())
                 q.key.delete()
+            r.key.delete()
         deadreqs = Request.query().filter(Request.delivby<now)
         dreqs=[]
         doff=[]
