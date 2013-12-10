@@ -99,7 +99,6 @@ class MatchHandler(BaseHandler):
             self.write(json.dumps(rdump))            
         elif action=='dumpreqsdest':
             data = json.loads(self.request.body)
-            logging.info(data)
             self.response.headers['Content-Type'] = "application/json"
             # try:
             posts = []
@@ -113,6 +112,24 @@ class MatchHandler(BaseHandler):
             results = Request.search_route(pathpts, now, later, precision)
             for r in results:
                 posts.append(r.to_search())
+            rdump['posts'] = posts
+            rdump['count'] = len(posts)
+            # except:
+                # rdump = {'status': 'fail'}
+            self.write(json.dumps(rdump))  
+        elif action=='dumproutesdest':
+            data = json.loads(self.request.body)
+            self.response.headers['Content-Type'] = "application/json"
+            # try:
+            posts = []
+            key = data['key']
+            r = ndb.Key(urlsafe=key).get()
+            rdump = {'status':'ok'}
+            later = (datetime.now() + timedelta(365))
+            req = Request(start=r.start, dest=r.dest, delivby=later)
+            results = find_routematch(req)
+            for r in results:
+                posts.append(r.get().to_search())
             rdump['posts'] = posts
             rdump['count'] = len(posts)
             # except:

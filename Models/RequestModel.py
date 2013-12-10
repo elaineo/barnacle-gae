@@ -13,6 +13,7 @@ class ReqStats(ndb.Model):
     sugg_price = ndb.IntegerProperty()
     seed = ndb.IntegerProperty()
     distance = ndb.IntegerProperty()
+    views = ndb.IntegerProperty(default=0)
 
 class Request(ndb.Model):
     userkey = ndb.KeyProperty(required=True)  # the user_pref it is connected to
@@ -54,6 +55,11 @@ class Request(ndb.Model):
     def num_confirmed(self):
         r = DeliveryOffer.route_confirmed(self.key)
         return r 
+    
+    def increment_views(self):
+        if self.stats:
+            self.stats.views = self.stats.views+1
+            self.put()
             
     @classmethod
     def by_userkey(cls,userkey):
@@ -110,7 +116,7 @@ class Request(ndb.Model):
                 if mode:
                     buf += '&mode=' + mode
                 return buf
-        return '/static/img/blank.png'
+        return '/static/img/barnacle.png'
         
         
     def __eq__(self, other):
@@ -158,14 +164,38 @@ class ExpiredRequest(ndb.Model):
     delivby = ndb.DateProperty()
     start = ndb.GeoPtProperty()
     dest = ndb.GeoPtProperty()
+    locstart = ndb.StringProperty() #text descr of location
+    locend = ndb.StringProperty() #text descr of location    
+    oldkey = ndb.KeyProperty()
+    img_id = ndb.IntegerProperty()     
     
     def to_dict(cls):
         route = {
+            'name': cls.userkey.get().first_name,
             'userkey': cls.userkey.urlsafe(),
             'rates': cls.rates,
             'items' : cls.items,
             'delivby' : cls.delivby.strftime('%m/%d/%Y'),
+            'start' : cls.locstart,
+            'dest' : cls.locend,
             'start' : {cls.start.lat, cls.start.lon},
-            'dest' : {cls.dest.lat, cls.dest.lon}
+            'dest' : {cls.dest.lat, cls.dest.lon},
+            'img_url' : cls.image_url(),
+            'routekey' : cls.key.urlsafe()
         }
         return route
+    
+    def image_url(self, mode = 'original'):
+        """ Retrieve link to profile thumbnail or default """
+        if self.img_id:
+            profile_image = ImageStore.get_by_id(self.img_id)
+            if profile_image:
+                buf = '/img/' + str(self.img_id) + '?key=' + profile_image.fakehash
+                if mode:
+                    buf += '&mode=' + mode
+                return buf
+        return '/static/img/barnacle.png'    
+    
+    @classmethod
+    def by_key(cls,key):
+        return cls.query().filter(cls.oldkey==key).get()

@@ -10,7 +10,7 @@ class Codes(ndb.Model):
     category = ndb.IntegerProperty(default=3)    # 0 - pets, 1 - auto, 2 - equip
     
     def _pre_put_hook(self):
-        self.code = self.name[0:3].upper() + str(random.randint(0,99)) + 'NOV'   
+        self.code = self.name[0:3].upper() + str(random.randint(0,99)) + 'DEC'   
     
     @classmethod
     def by_code(cls,code):

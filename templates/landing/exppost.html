@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{# Public View of Posts #}
+{% block title%}{{locstart}} to {{locend}}{% endblock %}
+{% block heading %}<h1 class='whiteh1'>Ship Outside the Box</h1>
+  {% include "forms/header_req.html" %}
+{% endblock %}
+{% block content %}
+<h1>{{name}}'s Route from {{locstart}} to {{locend}}</h1>
+    {% include "forms/stubspop/exppost_stub.html" %}    
+
+{% endblock %}
+
+{% block content2 %}
+<div class="row-fluid heading" id='simroutes'><div class="span10 offset1">
+<h1>Similar Routes</h1>
+<p>Need a ride? Check out these upcoming drives.</p>
+<table class="table table-striped table-hover" id='dumpreqs'>
+  <tr>
+    <th>Driver</th>
+    <th>Origin</th>
+    <th>Destination</th>
+    <th>Departure Date</th>
+    <th>Arrival Date</th>
+  </tr>
+</table>
+<br>
+</div></div>
+<script type="text/javascript">
+$(document).ready(function(){
+    data = {'key':'{{routekey}}'};
+    $('#simroutes').hide();
+    getRequestDump(data);
+});
+function getRequestDump(data) {
+  $.ajax({
+    type: "POST",
+    dataType: "json",
+    contentType: "json",     
+    data: JSON.stringify(data),
+    url: '/match/dumproutesdest',
+    success: function(q) {
+        console.log(q);
+        if (q.status == 'ok') {
+          if (parseInt(q.count) > 0) {
+            for (k in q.posts) {
+                $('#simroutes').show();
+                buf = '<tr class="clicky"';
+                if (typeof q.posts[k].fbid != 'undefined') 
+                  buf += 'data-fb="'+ q.posts[k].fbid+'" ';
+                buf += 'onclick="document.location.href = \'/post\/';
+                buf += q.posts[k].routekey +'\';"><td ';
+                if (typeof q.posts[k].fbid != 'undefined') 
+                  buf += 'rowspan="2"';
+                buf += '><img height="50px" src="';
+                buf += q.posts[k].thumb_url+'"><br>'; 
+                buf += q.posts[k].first_name+ '</td><td>';
+                buf += q.posts[k].start+ '</td><td>';
+                buf += q.posts[k].dest+ '</td><td>';
+                buf += q.posts[k].delivstart+ '</td><td>';
+                buf += q.posts[k].delivend+ '</td>';
+                if (typeof q.posts[k].fbid != 'undefined') 
+                  buf += '<tr><td colspan="5">Mutual Friends: <div class="dumpfriends">None.</div></td></tr>';
+                buf += '</tr>';    
+                $('table#dumpreqs tr:last').after(buf);
+            } 
+            loadFBdata();
+          } else
+            $('#simreqs').hide();
+        }
+      }
+  });            
+}
+function loadFBdata() {
+    FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          $('.clicky').each(function() {
+            var fbid = $(this).attr('data-fb');
+            if (fbid != 'undefined') {
+              dumpFriends(fbid, $(this).next().find('.dumpfriends'),3);
+            }
+          });
+        }
+    });
+}
+</script>
+
+{% endblock %}

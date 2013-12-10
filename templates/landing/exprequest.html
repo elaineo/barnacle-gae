@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title%}{{name}}'s Delivery Request{% endblock %}
+{% block heading %}<h1 class='whiteh1'>Ship Outside the Box</h1>
+  {% include "forms/header_req.html" %}
+{% endblock %}
+
+{% block content %}
+<h1>{{name}}'s Delivery Request from {{locstart}} to {{locend}}</h1>
+    {% include "forms/stubspop/exprequest_stub.html" %}
+
+<br>
+{% endblock %}
+
+{% block content2 %}
+<div class="row-fluid heading" id='simreqs'><div class="span10 offset1">
+<h1>Similar Requests</h1>
+<p>Check out these other nearby requests for more delivery opportunities.</p>
+<table class="table table-striped table-hover" id='dumpreqs'>
+  <tr>
+    <th>Sender</th>
+    <th>Origin</th>
+    <th>Destination</th>
+    <th>Deliver By</th>
+  </tr>
+</table>
+<br>
+</div></div>
+<script type="text/javascript">
+$(document).ready(function(){
+    data = {'key':'{{routekey}}'};
+    $('#simreqs').hide();
+    getRequestDump(data);
+});
+function getRequestDump(data) {
+  $.ajax({
+    type: "POST",
+    dataType: "json",
+    contentType: "json",     
+    data: JSON.stringify(data),
+    url: '/match/dumpreqsdest',
+    success: function(q) {
+        console.log(q);
+        if (q.status == 'ok') {
+          if (parseInt(q.count) > 0) {
+            for (k in q.posts) {
+                $('#simreqs').show();
+                buf = '<tr class="clicky"';
+                if (typeof q.posts[k].fbid != 'undefined') 
+                  buf += 'data-fb="'+ q.posts[k].fbid+'" ';
+                buf += 'onclick="document.location.href = \'/post/request\/';
+                buf += q.posts[k].routekey +'\';"><td ';
+                if (typeof q.posts[k].fbid != 'undefined') 
+                  buf += 'rowspan="2"';
+                buf += '><img height="50px" src="';
+                buf += q.posts[k].thumb_url+'"><br>'; 
+                buf += q.posts[k].first_name+ '</td><td>';
+                buf += q.posts[k].start+ '</td><td>';
+                buf += q.posts[k].dest+ '</td><td>';
+                buf += q.posts[k].delivby+ '</td>';
+                if (typeof q.posts[k].fbid != 'undefined') 
+                  buf += '<tr><td colspan="4">Mutual Friends: <div class="dumpfriends">None.</div></td></tr>';
+                buf += '</tr>';    
+                $('table#dumpreqs tr:last').after(buf);
+            } 
+            loadFBdata();
+          } else
+            $('#simreqs').hide();
+        }
+      }
+  });            
+}
+function loadFBdata() {
+    FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          $('.clicky').each(function() {
+            var fbid = $(this).attr('data-fb');
+            if (fbid != 'undefined') {
+              dumpFriends(fbid, $(this).next().find('.dumpfriends'),3);
+            }
+          });
+        }
+    });
+}
+</script>
+
+<div class='row' style='height:40px'></div>
+{% include 'sizechart.html' %}
+ <script>
+$(document).ready(function(){
+    $('#size_info').html(' <a href="#sizechart"><i class="icon-info-sign"></i></a>');
+});
+  </script>
+{% endblock %}

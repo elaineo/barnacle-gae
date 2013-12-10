@@ -16,6 +16,7 @@ from Handlers.Cron.SummaryHandler import SummaryHandler
 from Handlers.SettingsHandler import *
 from Handlers.NewsHandler import *
 from Handlers.DriverHandler import *
+from Handlers.GerritHandler import *
 from Handlers.Tracker.TrackerHandler import *
 from Handlers.Launch.MobileHandler import *
 from Handlers.Launch.ExternalHandler import *
@@ -130,6 +131,8 @@ app = webapp2.WSGIApplication([('/', HomePage),
     webapp2.Route('/summary/<action>/<key:[\w\-]{20,}>', handler=SummaryHandler),
    webapp2.Route('/summary', handler=SummaryHandler),
    webapp2.Route('/external/<action>', ExternalHandler),
+   webapp2.Route('/gerrit/<action>', GerritHandler),
+                               
    ('/expire', ExpireHandler), EmailHandler.mapping()],
   debug=True)
 

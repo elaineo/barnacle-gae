@@ -9,6 +9,9 @@ class RepeatRoute(ndb.Model):
     dayweek = ndb.IntegerProperty(repeated=True) # day of week, Sunday(0) to Sat(6) 
     weekmonth = ndb.IntegerProperty(repeated=True) # week of month1-4
 
+class RouteStats(ndb.Model):
+    views = ndb.IntegerProperty(default=0)    
+    
 class Route(ndb.Model):
     userkey = ndb.KeyProperty(required=True)  # the user_pref it is connected to
     capacity = ndb.IntegerProperty(default=0) # car (0), SUV (1), flatbed (2), hauler (3)
@@ -24,6 +27,7 @@ class Route(ndb.Model):
     locend = ndb.StringProperty(required=True) #text descr of location
     pathpts = ndb.GeoPtProperty(repeated=True)     
     matches = ndb.KeyProperty(repeated=True)  #store keys of matches
+    stats = ndb.StructuredProperty(RouteStats)
 
     def _pre_put_hook(self):
         p = RouteUtils().setloc(self, self.locstart, self.locend)        
@@ -124,7 +128,11 @@ class Route(ndb.Model):
             r['rstring'] = rstring
         return r
 
-        
+    def increment_views(self):
+        if self.stats:
+            self.stats.views = self.stats.views+1
+            self.put()
+            
     @classmethod
     def by_userkey(cls,userkey):
         return cls.query().filter(cls.userkey==userkey)
@@ -156,16 +164,26 @@ class ExpiredRoute(ndb.Model):
     delivend = ndb.DateProperty()
     start = ndb.GeoPtProperty()
     dest = ndb.GeoPtProperty()
+    locstart = ndb.StringProperty() #text descr of location
+    locend = ndb.StringProperty() #text descr of location    
+    oldkey = ndb.KeyProperty()
     
     def to_dict(cls):
         route = {
+            'name': cls.userkey.get().first_name,
             'userkey': cls.userkey.urlsafe(),
             'capacity' : cls.capacity,
             'details' : cls.details,
             'delivstart' : cls.delivstart.strftime('%m/%d/%Y'),
             'delivend' : cls.delivend.strftime('%m/%d/%Y'),
+            'start' : cls.locstart,
+            'dest' : cls.locend,
             'start' : {cls.start.lat, cls.start.lon},
-            'dest' : {cls.dest.lat, cls.dest.lon}
+            'dest' : {cls.dest.lat, cls.dest.lon},
+            'routekey' : cls.key.urlsafe()
         }
         return route
     
+    @classmethod
+    def by_key(cls,key):
+        return cls.query().filter(cls.oldkey==key).get()    

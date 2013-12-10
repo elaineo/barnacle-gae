@@ -64,6 +64,7 @@ class RouteHandler(BaseHandler):
             if savsearch and bool(pop):
                 self.params.update(savsearch.params_fill(self.params))
             self.params['route_title'] = 'Post a Delivery Request'
+            self.params['today'] = datetime.now().strftime('%Y-%m-%d')
             self.render('forms/fillrequest.html', **self.params)
         elif key: # check if user logged in
             self.view_page(key)
@@ -191,6 +192,7 @@ class RouteHandler(BaseHandler):
             self.params['delivby'] = reqdate
             self.params['rates'] = rates
             self.params['route_title'] = 'Edit Delivery Request'
+            self.params['today'] = datetime.now().strftime('%Y-%m-%d')
             self.render('forms/fillrequest.html', **self.params)
     def __init_request(self,key=None):
         capacity = self.request.get('vcap')
@@ -220,6 +222,7 @@ class RouteHandler(BaseHandler):
             create_request_doc(p.key.urlsafe(), p)            
             self.params.update(fill_route_params(p.key.urlsafe(),False))
             self.params['update_url'] = '/post/update/' + p.key.urlsafe()
+            self.params['email'] = self.user_prefs.email
             self.render('request_review.html', **self.params)
 
         except:
@@ -228,11 +231,17 @@ class RouteHandler(BaseHandler):
             self.params['capacity'] = capacity
             self.params['delivby'] = reqdate
             self.params['route_title'] = 'Edit Delivery Request'
+            self.params['today'] = datetime.now().strftime('%Y-%m-%d')
             self.render('forms/fillrequest.html', **self.params)            
     def __update_request(self,key):
         rates = self.request.get('rates')
         rates = parse_rate(rates)
         items = self.request.get('items')
+        email = self.request.get('email')
+        if email and (email != self.user_prefs.email):
+            u = self.user_prefs.key.get()
+            u.email = email
+            u.put()
         p = ndb.Key(urlsafe=key).get()
         # image upload
         img = self.request.get("file")
@@ -299,8 +308,9 @@ class RouteHandler(BaseHandler):
                 p.roundtrip = rtr
             else:
                 self.redirect('/post')
-        else: # new post
-            p = Route(userkey=self.user_prefs.key, locstart=startstr, locend=deststr, 
+        else: # new post            
+            p = Route(userkey=self.user_prefs.key, stats=RouteStats(),
+                locstart=startstr, locend=deststr, 
                 start=start, dest=dest, capacity=capacity, details=details, 
                 delivstart=delivstart, delivend=delivend, roundtrip=rtr)
         if (repeatr<2):
@@ -333,14 +343,15 @@ class RouteHandler(BaseHandler):
             key = keyrt[:-3]
         else:
             key = keyrt
-        try:
-            p = ndb.Key(urlsafe=key).get()
+        p = ndb.Key(urlsafe=key).get()
+        if p:
+            p.increment_views()
             if self.user_prefs and self.user_prefs.key == p.userkey:
                 self.params['edit_allow'] = True
                 if p.num_confirmed > 0:
                     self.params['resdump'] = route_resdump(p.key, p.__class__.__name__)
                 if len(p.matches) > 0:
-                    self.params['matchdump'] = route_matchdump(p)                    
+                    self.params['matchdump'] = route_matchdump(p)      
             else:
                 self.params['edit_allow'] = False      
             if self.user_prefs and self.user_prefs.account_type == 'fb':
@@ -352,10 +363,19 @@ class RouteHandler(BaseHandler):
                 self.params.update(fill_route_params(key,False))
                 self.render('request.html', **self.params)
             return
-        except:
-            self.abort(409)
-            return  
-            
+        else:        
+            #see if it's expired
+            expr = get_expired(key)
+            if expr: # display expired pages
+                self.params.update(expr.to_dict())
+                if expr.__class__.__name__ == 'ExpiredRoute':                
+                    self.render('landing/exppost.html', **self.params)
+                else:
+                    self.render('landing/exprequest.html', **self.params)
+            else:
+                self.abort(409)
+        return  
+                
     def __get_map_form(self,pt):
         ptlat = self.request.get(pt+'lat')
         ptlon = self.request.get(pt+'lon')
@@ -370,6 +390,12 @@ class RouteHandler(BaseHandler):
             ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
         return ptg, ptstr
 
+def get_expired(key):
+    p = ExpiredRequest.by_key(ndb.Key(urlsafe=key))
+    if not p:
+        p = ExpiredRoute.by_key(ndb.Key(urlsafe=key))
+    return p
+        
 def add_roundtrip(route):
     p2 = Route(userkey=route.userkey, locstart=route.locend, locend=route.locstart, 
                 start=route.dest, dest=route.start, 
@@ -419,7 +445,7 @@ def fill_route_params(key,is_route=False):
     message_url += 'receiver=' + u.key.urlsafe() + '&subject=' +p.locstart+' to ' +p.locend
     params['message_url'] = message_url
     return params
-        
+    
 class DumpHandler(BaseHandler):
     def get(self, key=None):
         if not self.user_prefs.key:

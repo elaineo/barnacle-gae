@@ -26,7 +26,8 @@ class ExpireHandler(BaseHandler):
         for r in deadroutes:
             exr = ExpiredRoute(userkey=r.userkey, capacity=r.capacity, 
             details=r.details, delivstart = r.delivstart, delivend=r.delivend,
-            start=r.start, dest=r.dest, repeatr=r.repeatr)
+            locstart=r.locstart, locend=r.locend, 
+            start=r.start, dest=r.dest, repeatr=r.repeatr, oldkey=r.key)
             exr.put()
             route_index.delete(r.key.urlsafe())
             if r.roundtrip:
@@ -48,7 +49,8 @@ class ExpireHandler(BaseHandler):
         doff=[]
         req_index = search.Index(name=REQUEST_INDEX)
         for r in deadreqs:
-            exr = ExpiredRequest(userkey=r.userkey, rates=r.rates,  
+            exr = ExpiredRequest(userkey=r.userkey, rates=r.rates, oldkey=r.key, 
+            locstart=r.locstart, locend=r.locend, 
             items=r.items, delivby = r.delivby, start=r.start, dest=r.dest)
             exr.put()
             req_index.delete(r.key.urlsafe())

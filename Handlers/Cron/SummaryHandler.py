@@ -87,5 +87,6 @@ class SummaryHandler(BaseHandler):
         elif action=='selfnote' and key:
             r = ndb.Key(urlsafe=key).get()
             buf = r.items + ' from ' + r.locstart + ' to ' + r.locend 
+            buf += '\n' + r.post_url()
             subject = 'New Barnacle request'
             self.email_report('help@gobarnacle.com', subject, buf)

@@ -80,14 +80,15 @@
       	<a href="/"><img src="/static/img/barnaclelogo_sm.png"></a>
     </div>
     <!--end logo-->
-    <div class="two columns">
+    <div class="one columns">
     </div>         
     <!--Login buttons-->  
-    <div class="four columns">
-    	<div class="space-b-10 hide-for-small">&nbsp;</div>	
+    <div class="five columns hide-for-small">
+    	<div class="space-b-10 hide-for-small">&nbsp;</div>	        
+        <button class="search_btn small button secondary radius">Find a Driver</button>
+        <button class="post_btn small button secondary radius">Be a Driver</button>
         <a href="/how" class="small button secondary radius">How it Works</a>
-        <button id='post_btn' class="small button secondary radius">Be a Driver</button>
-        <div class="space-b-5 hide-for-small">&nbsp;</div>	
+        <div class="space-b-5 hide-for-small">&nbsp;</div>	 
     </div>
     <div class="three columns login-buttons" style='text-transform: uppercase;
 	font-size: 0.85em; line-height: 1.5em;' id='user_head'>
@@ -224,7 +225,7 @@
           <ul class="button-group radius expand right">
           
             
-            <li><a id='post_btn' class="button secondary large expand">Be a Driver &nbsp;<i class="icon-road"></i></a></li>
+            <li><a class="post_btn button secondary large expand">Be a Driver &nbsp;<i class="icon-road"></i></a></li>
           </ul>
         </div>
         <!--end take-action-->
@@ -236,7 +237,7 @@
             <img src="/static/landing/images/steps/status_01.png" width="213" height="149" alt="">
           </div>
           <ul class="block-grid">
-            <li class="title">100,000+</li>
+            <li class="title">10,000+</li>
             <li class="subtitle">Users in total</li>
           </ul>
         </div>
@@ -246,7 +247,7 @@
             <img src="/static/landing/images/steps/status_02.png" width="213" height="149" alt="">
           </div>
           <ul class="block-grid">
-            <li class="title">947</li>
+            <li class="title">500</li>
             <li class="subtitle">Active Drivers</li>
           </ul>
         </div>
@@ -256,8 +257,8 @@
             <img src="/static/landing/images/steps/status_03.png" width="213" height="149" alt="">
           </div>
           <ul class="block-grid">
-            <li class="title">530</li>
-            <li class="subtitle">Upcoming Routes</li>
+            <li class="title">46</li>
+            <li class="subtitle">Connected Cities</li>
           </ul>
         </div>
         
@@ -266,7 +267,7 @@
             <img src="/static/landing/images/steps/status_04.png" width="213" height="149" alt="">
           </div>
           <ul class="block-grid">
-            <li class="title">417</li>
+            <li class="title">400+</li>
             <li class="subtitle">Deliveries Completed</li>
           </ul>
         </div>
@@ -400,65 +401,9 @@
 
 {% include "landing/footer.html" %}
 
+{% include "landing/modals.html" %}
 
-
-
-
-<!-- POP-UP MODAL FORMS
-================================================ -->
-<!--Login panel-->
-<div id="fb-root"></div>
-<div id="signin-box" class="reveal-modal">
-  <div class="row">
-      <div class="twelve columns">
-      <div class="radius button facebook fblogin"><i class="icon-facebook-sign"></i> &nbsp;LOG IN WITH Facebook</div>
-      </div>
-    <div class="twelve columns"><hr>
-      <p>To establish trust in the community, we require that drivers sign up using their Facebook accounts. Please read our <a href='/privacy' target='_blank'>privacy policy</a> to learn how we protect your information.</p>
-    </div>
-  </div><!--end row-->
-  <a href="#" class="close-reveal-modal">×</a>
-</div><!--end login panel-->
-
-<div id="invalid-box" class="reveal-modal">
-  <div class="row">
-      <div class="twelve columns">
-      <h4>Invalid Location.</h4>
-    </div>
-  </div><!--end row-->
-  <a href="#" class="close-reveal-modal">×</a>
-</div>
-
-<!-- Forgot panel -->
-<div id="forgot_panel" class="reveal-modal">
-  <div class="row">
-
-    <div class="twelve columns"><hr>
-      <small><a href="#" data-reveal-id="signin-box">GO BACK</a></small>
-    </div>
-  </div><!--end row-->
-  <a href="#" class="close-reveal-modal">×</a>
-</div><!-- end register panel -->
-
-<!--Coupon panel-->
-<div id="coupon_panel" class="reveal-modal">
-  <div class="row">
-      <div class="twelve columns">
-      <h3>Welcome, <span id='bizname'></span>! Your booking fee will be waived for your first order!</h3>
-      </div>
-  </div><!--end row-->
-  <a href="#" class="close-reveal-modal">×</a>
-</div><!--end login panel-->
-
-<!-- end login register stuff -->
-
-<p id="btnGoUp">Go up</p>
-</div><!--end page-->  
-
-<p id="btnGoUp">Go up</p>
-</div><!--end page-->  
-
-<!--END POP-UP MODAL FORMS-->
+<!-- POP-UP MODAL FORMS-->
 
  
 <!-- JAVASCRIPTS
@@ -471,7 +416,7 @@
         var v = [[0],[0]];
         click_validloc('#request_btn',['map0','map1'],['start','dest'],v,'#request_form',true);
         click_redirect('.search_btn','/search');
-        click_redirect('#post_btn','/drive');
+        click_redirect('.post_btn','/drive');
         if(window.location.hash) {
           var popup = window.location.hash;
           var bizname = popup.split('?')[1]

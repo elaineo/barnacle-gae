@@ -1,3 +1,4 @@
+from datetime import *
 from google.appengine.ext import ndb
 from Handlers.BaseHandler import *
 from Models.RequestModel import Request
@@ -19,6 +20,7 @@ class SearchableRequestHandler(BaseHandler):
             self.params['origin'] = urllib.unquote(origin)
         if dest:
             self.params['dest'] = urllib.unquote(dest)
+        self.params['today'] = datetime.now().strftime('%Y-%m-%d')
         if origin == None:
             posts, center = self.__get_reqs_to(dest)            
             posts = dump_results(posts) 

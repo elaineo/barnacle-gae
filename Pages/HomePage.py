@@ -23,7 +23,7 @@ class GuestPage(BaseHandler):
 class SplashPage(BaseHandler):
     """ About page """
     def get(self):
-        self.render('splash.html', **self.params)
+        self.render('landing/splash.html', **self.params)
         
 class AboutPage(BaseHandler):
     """ About page """

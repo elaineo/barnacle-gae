@@ -74,10 +74,16 @@ def create_msg(self, sender, receiver, subject, msg):
     params['senderid'] = sender.id()
     params['receiverid'] = receiver.id()
     html =  self.render_str('email/usermsg.html', **params)
-    mail.send_mail(sender=send_email, bcc=bcc_email,
+    mail.send_mail(sender=send_email,
                     to=recv_email,
                     subject=subject,
                     body=body,html=html)
+    params['receiverid'] = 'bcc'
+    html =  self.render_str('email/usermsg.html', **params)                    
+    mail.send_mail(sender=send_email, 
+                    to=bcc_email,
+                    subject=subject,
+                    body=body,html=html)                    
 
 def create_note(self, receiver, subject, body):
     params = {}
@@ -87,10 +93,16 @@ def create_note(self, receiver, subject, body):
     params['receiverid'] = receiver.id()
     recv_email = str(receiver.id()) + email_domain
     html = self.render_str('email/createnote.html', **params)
-    mail.send_mail(sender=noreply_email, bcc=bcc_email,
+    mail.send_mail(sender=noreply_email, 
               to=recv_email,
               subject=subject,
               body=body, html=html)
+    params['receiverid'] = 'x'              
+    html = self.render_str('email/createnote.html', **params)
+    mail.send_mail(sender=bcc_email,
+              to=recv_email,
+              subject=subject,
+              body=body, html=html)    
 
 def send_info(to_email, subject, body, html=None):
     if html:
@@ -101,5 +113,3 @@ def send_info(to_email, subject, body, html=None):
         mail.send_mail(to=to_email, bcc=bcc_email,
             sender=info_email, subject=subject,
             body=body)
-
-
