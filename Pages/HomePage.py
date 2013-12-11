@@ -7,10 +7,12 @@ class HomePage(BaseHandler):
     """ Home page, first page shown """
     def get(self):
         if self.user_prefs:
-            nr = Request.newest(5)
-            self.params['new_requests'] = [r.to_dict(incl_user=True) for r in nr]
+            #nr = Request.newest(5)
+            #self.params['new_requests'] = [r.to_dict(incl_user=True) for r in nr]
             self.render('home.html', **self.params)
-        else:
+        else:            
+            referer = self.request.referer
+            self.set_secure_cookie('referral', referer)
             self.render('landing/splash.html', **self.params)
 
 class GuestPage(BaseHandler):

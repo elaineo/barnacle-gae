@@ -43,6 +43,9 @@ class CouponPage(BaseHandler):
             c = Codes.by_code(action.upper())
             self.params['bizname'] = c.name
             # set cookie so we know where they came from
+            self.set_secure_cookie('code', action.upper())
+            referer = self.request.referer
+            self.set_secure_cookie('referral', referer)
             if c.category==0:
                 self.redirect('/welcome/pets#coupon?'+c.name)
             elif c.category==1:
