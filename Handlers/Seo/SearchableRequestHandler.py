@@ -22,12 +22,15 @@ class SearchableRequestHandler(BaseHandler):
             self.params['dest'] = urllib.unquote(dest)
         self.params['today'] = datetime.now().strftime('%Y-%m-%d')
         if origin == None:
-            posts, center = self.__get_reqs_to(dest)            
-            posts = dump_results(posts) 
-            self.params['posts'] = [p.to_search() for p in posts]
-            rdump = RouteUtils().dumpreqs(posts, dest=True)
-            self.params['markers'] = rdump['markers']
-            self.params['center'] = center
+            try:
+                posts, center = self.__get_reqs_to(dest)            
+                posts = dump_results(posts) 
+                self.params['posts'] = [p.to_search() for p in posts]
+                rdump = RouteUtils().dumpreqs(posts, dest=True)
+                self.params['markers'] = rdump['markers']
+                self.params['center'] = center
+            except:
+                pass
             self.render('search/seo_requests_to.html', **self.params)
         elif origin.upper() == 'USA':
             #return everything
@@ -38,19 +41,25 @@ class SearchableRequestHandler(BaseHandler):
             self.params['center'] = [40,-99]
             self.render('search/seo_requests_all.html', **self.params)            
         elif dest == None:
-            posts, center = self.__get_reqs_from(origin)            
-            posts = dump_results(posts) 
-            self.params['posts'] = [p.to_search() for p in posts]
-            rdump = RouteUtils().dumpreqs(posts, dest=False)
-            self.params['markers'] = rdump['markers']
-            self.params['center'] = center
+            try:
+                posts, center = self.__get_reqs_from(origin)            
+                posts = dump_results(posts) 
+                self.params['posts'] = [p.to_search() for p in posts]
+                rdump = RouteUtils().dumpreqs(posts, dest=False)
+                self.params['markers'] = rdump['markers']
+                self.params['center'] = center
+            except:
+                pass
             self.render('search/seo_requests_from.html', **self.params)
         else:
-            posts, center = self.__get_reqs(origin, dest)
-            self.params['posts'] = [p.to_search() for p in posts]
-            rdump = RouteUtils().dumpreqs(posts)
-            self.params['markers'] = rdump['markers']
-            self.params['center'] = center
+            try:
+                posts, center = self.__get_reqs(origin, dest)
+                self.params['posts'] = [p.to_search() for p in posts]
+                rdump = RouteUtils().dumpreqs(posts)
+                self.params['markers'] = rdump['markers']
+                self.params['center'] = center
+            except:
+                pass
             self.render('search/seo_requests.html', **self.params)
     
     def __get_reqs(self, origin, dest):

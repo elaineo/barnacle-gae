@@ -27,14 +27,17 @@ class SearchableRouteHandler(BaseHandler):
             self.params['dest'] = urllib.unquote(dest)
         self.params['today'] = datetime.now().strftime('%Y-%m-%d')
         if origin == None:
-            posts, center = self.__get_routes_to(dest)
-            posts = dump_results(posts) 
-            self.params['center'] = center
-            if len(posts) > 0:
-                self.params['posts'] = [p.to_search() for p in posts]
-                rdump = RouteUtils().dumpall(posts)
-                self.params['center'] = rdump['center']
-                self.params['paths'] = rdump['paths']              
+            try:
+                posts, center = self.__get_routes_to(dest)
+                posts = dump_results(posts) 
+                self.params['center'] = center
+                if len(posts) > 0:
+                    self.params['posts'] = [p.to_search() for p in posts]
+                    rdump = RouteUtils().dumpall(posts)
+                    self.params['center'] = rdump['center']
+                    self.params['paths'] = rdump['paths']              
+            except:
+                pass
             self.render('search/seo_route_to.html', **self.params)
         elif origin.upper() == 'USA':
             #return everything
@@ -45,24 +48,30 @@ class SearchableRouteHandler(BaseHandler):
             self.params['paths'] = rdump['paths']
             self.render('search/seo_route_all.html', **self.params)        
         elif dest == None:
-            posts, center = self.__get_routes_from(origin)
-            posts = dump_results(posts) 
-            self.params['center'] = center
-            if len(posts) > 0:
-                self.params['posts'] = [p.to_search() for p in posts]
-                rdump = RouteUtils().dumpall(posts)
-                self.params['center'] = rdump['center']
-                self.params['paths'] = rdump['paths']  
+            try:
+                posts, center = self.__get_routes_from(origin)
+                posts = dump_results(posts) 
+                self.params['center'] = center
+                if len(posts) > 0:
+                    self.params['posts'] = [p.to_search() for p in posts]
+                    rdump = RouteUtils().dumpall(posts)
+                    self.params['center'] = rdump['center']
+                    self.params['paths'] = rdump['paths']  
+            except:
+                pass
             self.render('search/seo_route_from.html', **self.params)
         else:
-            posts, center = self.__get_routes(origin, dest)
-            posts = dump_results(posts) 
-            self.params['center'] = center
-            if len(posts) > 0:
-                self.params['posts'] = [p.to_search() for p in posts]
-                rdump = RouteUtils().dumpall(posts)
-                self.params['center'] = rdump['center']
-                self.params['paths'] = rdump['paths']  
+            try:
+                posts, center = self.__get_routes(origin, dest)
+                posts = dump_results(posts) 
+                self.params['center'] = center
+                if len(posts) > 0:
+                    self.params['posts'] = [p.to_search() for p in posts]
+                    rdump = RouteUtils().dumpall(posts)
+                    self.params['center'] = rdump['center']
+                    self.params['paths'] = rdump['paths']  
+            except:
+                pass
             self.render('search/seo_route.html', **self.params)
 
     def __get_routes_from(self, origin):

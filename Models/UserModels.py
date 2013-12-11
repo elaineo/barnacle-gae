@@ -10,38 +10,10 @@ import urllib2
 # Models #
 ##########
     
-class UserAccounts(ndb.Model):
-    """ non-google user database """    
-    email = ndb.StringProperty(required = True)
-    pwhash = ndb.TextProperty(required = True)
-    login_token = ndb.StringProperty()      #for mobile devices
+class UserStats(ndb.Model):
+    referral = ndb.StringProperty()
+    code = ndb.StringProperty()
     
-    @classmethod
-    def by_email(cls, email):
-        u = cls.query(cls.email == email)
-        return u
-    @classmethod
-    def login(cls, email, pw):
-        u = cls.by_email(email).get()
-        if u and valid_pwhash(email, pw, u.pwhash):
-            return u
-    @classmethod
-    def by_login_token(cls, token):
-        return cls.query().filter(cls.login_token == token).get()
-    def set_login_token(self):
-        self.login_token = str(uuid.uuid4())
-        self.put()
-        return self.login_token        
-    def as_json(self):
-        up = UserPrefs.by_email(self.email)
-        message = {
-            'login_token' : self.login_token,
-            'fullName': up.fullname(),
-            'email': up.email,
-            'ukey': up.key.urlsafe()
-        }
-        return message
-
 class UserSettings(ndb.Model):
     """ 0.Messages 1.Reservation updates 2.Review notify 3.Matching Delivery requests    4. Newsletter """ 
     notify = ndb.IntegerProperty(repeated=True) 

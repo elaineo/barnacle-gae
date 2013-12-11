@@ -9,7 +9,6 @@ class ReqStats(ndb.Model):
     """ Other stats we want: 
       if they cancel after seeing suggested price
       low/high end UPS, if they accept"""
-    referral = ndb.StringProperty()
     sugg_price = ndb.IntegerProperty()
     seed = ndb.IntegerProperty()
     distance = ndb.IntegerProperty()

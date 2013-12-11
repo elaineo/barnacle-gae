@@ -42,6 +42,7 @@ class CouponPage(BaseHandler):
         else: 
             c = Codes.by_code(action.upper())
             self.params['bizname'] = c.name
+            # set cookie so we know where they came from
             if c.category==0:
                 self.redirect('/welcome/pets#coupon?'+c.name)
             elif c.category==1:
