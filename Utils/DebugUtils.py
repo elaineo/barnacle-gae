@@ -72,11 +72,16 @@ class DebugUtils(BaseHandler):
                     continue
             self.response.headers['Content-Type'] = "application/json"
             self.write(json.dumps(ids))
-        elif action=='updatenotify':
-            data = UserPrefs.query(UserPrefs.creation_date < datetime.now()-timedelta(days=5))
-            for d in data:
-                d.settings.notify.append(4)
-                d.put()
+        elif action=='cleanexp':
+            data = Reservation.query().filter(Reservation.deliverby<date.today())
+            for q in data:
+                x = ExpiredReservation(sender=q.sender, receiver=q.receiver, 
+                    route=q.route, items=q.items, price=q.price,
+                    deliverby=q.deliverby, start=q.start, dest=q.dest, 
+                    locstart=q.locstart, locend=q.locend, 
+                    sender_name=q.sender_name(), rcvr_name=q.receiver_name(),
+                    img_id=q.img_id)
+                x.put()
             return
         elif action=='clearcl':
             data = CLModel.query()
