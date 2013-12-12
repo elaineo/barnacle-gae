@@ -69,7 +69,12 @@ class RouteUtils():
         #locs = locs+'&waypoints='
         dir_url = directions_url + locs + '&sensor=false'
         req = urlfetch.fetch(dir_url)
-        results = json.loads(req.content)['routes'][0]['legs'][0]
+        try:
+            results = json.loads(req.content)['routes'][0]['legs'][0]
+        except:
+            logging.error(req.content)
+            logging.error('HTTPError from google dir')
+            return [start,dest], 1000      
         precision = -1
         distance = results['distance']['value']
         for s in results['steps']:
@@ -91,9 +96,9 @@ class RouteUtils():
         try:
             results = json.loads(req.content)['routes'][0]['legs'][0]
         except:
-            logging.error('HTTPError from google geo')
-            raise HTTPError 
-            return     
+            logging.error(req.content)
+            logging.error('HTTPError from google dir') 
+            return [start,dest], -1
         dist = results['distance']['value']   #dist in metres
         precision = precisionDist(dist/miles2m * fudge)
         pathpts = [roundPoint(start,precision)]        
