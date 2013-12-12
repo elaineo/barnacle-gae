@@ -88,9 +88,13 @@ class RouteUtils():
         locs='origin=' + str(start) + '&destination=' + str(dest)
         dir_url = directions_url + locs + '&sensor=false'
         req = urlfetch.fetch(dir_url)
-        results = json.loads(req.content)['routes'][0]['legs'][0]
+        try:
+            results = json.loads(req.content)['routes'][0]['legs'][0]
+        except:
+            logging.error('HTTPError from google geo')
+            raise HTTPError 
+            return     
         dist = results['distance']['value']   #dist in metres
-        logging.info(dist)
         precision = precisionDist(dist/miles2m * fudge)
         pathpts = [roundPoint(start,precision)]        
         for s in results['steps']:

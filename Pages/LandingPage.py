@@ -41,6 +41,8 @@ class CouponPage(BaseHandler):
             self.render('landing/coupongen.html', **self.params)  
         else: 
             c = Codes.by_code(action.upper())
+            if not c:
+                self.redirect('/')                
             self.params['bizname'] = c.name
             # set cookie so we know where they came from
             self.set_secure_cookie('code', action.upper())
