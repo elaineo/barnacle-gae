@@ -12,7 +12,7 @@
 </div>    
 <div class="row">
     <div class="span10 offset1">
- <form enctype="multipart/form-data" method="post" id='route_form' class="form-horizontal">
+ <form enctype="multipart/form-data" method="post" id='route_form' class="form-horizontal" action="/post">
 
      <div class="control-group">
         <div class="controls" id="rtRadios">
@@ -231,7 +231,7 @@ $(document).ready(function(){
     //add some validation
     //click_submit('#route_btn','#route_form');
     var v = [[0],[0]];
-    click_validloc('#route_btn',['map0','map1'],['start','dest'],v,'#route_form',true);
+    click_ajax('#route_btn',['map0','map1'],['start','dest'],v,'#route_form',true);
     click_redirect('#postreq_btn','/post/request');
     $("#dayWeekOpts").css("display","none");
     $("#weekMonthOpts").css("display","none");
@@ -271,4 +271,20 @@ function returnLabel() {
 }
   </script>
   <script type="text/javascript" src="/static/js/validation.js"></script>
+  <script type="text/javascript">
+function submitCallback(data, formURL) {
+  $.ajax({
+    type: "POST",
+    dataType: "json",
+    contentType: "application/json; charset=utf-8",
+    url: formURL,
+    data: data,
+    success: function(response) {
+      //should just redirect
+      if (response.status =='ok') 
+        window.location.href=response.next;
+    }
+  });
+}
+</script>
 {% endblock %}

@@ -334,8 +334,8 @@ def pathPrec(start,results):
         # distance = s['distance']['value']   #dist in metres
         polyline = s['polyline']['points']
         pathsegment = poly_decode(polyline, precision)[0::100]              
-        lat = s['end_location']['lat']
-        lon = s['end_location']['lng']
+        lat = s['end_location']['nb']
+        lon = s['end_location']['ob']
         pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
         pathpts = pathpts + pathsegment
-    return pathpts, distance    
+    return pathpts

@@ -258,25 +258,28 @@ class RouteHandler(BaseHandler):
             self.redirect('/post/request')
             
     def __create_route(self,key=None):
-        capacity = self.request.get('vcap')
-        repeatr = int(self.request.get('repeatr'))
-        rtr = bool(self.request.get('rtr'))
+        self.response.headers['Content-Type'] = "application/json"
+        response = {'status':'ok'}
+        data = json.loads(unicode(self.request.body, errors='replace'))
+        capacity = data.get('vcap')
+        repeatr = int(data.get('repeatr'))
+        rtr = bool(data.get('rtr'))
         capacity = parse_unit(capacity)
         if (repeatr<2):
-            weekr = self.request.get_all('weekr')
+            weekr = data.get('weekr')
             dayweek = [int(w) for w in weekr]
             if len(weekr)==0:
                 repeatr=2
             else:
                 rr = RepeatRoute(period=repeatr, dayweek=dayweek,weekmonth=[])
         if (repeatr==1):
-            monthr = self.request.get_all('monthr')
+            monthr = data.get('monthr')
             if len(monthr)==0:
                 repeatr=0
             rr.weekmonth = [int(m) for m in monthr]
-        details = self.request.get('details')
-        startdate = self.request.get('delivstart')
-        enddate = self.request.get('delivend')
+        details = data.get('details')
+        startdate = data.get('delivstart')
+        enddate = data.get('delivend')
         if startdate:
             delivstart = parse_date(startdate)
         else:
@@ -286,8 +289,8 @@ class RouteHandler(BaseHandler):
         else:
             delivend = datetime.now()+timedelta(weeks=1)
             
-        start, startstr = self.__get_map_form('start')
-        dest, deststr = self.__get_map_form('dest')
+        start, startstr = get_search_json(data,'start')
+        dest, deststr = get_search_json(data,'dest')
         logging.info('New Route: '+startstr+' to '+deststr)
             
         if key: # if editing post
@@ -307,7 +310,9 @@ class RouteHandler(BaseHandler):
                     delete_doc(p.key.urlsafe()+'_RT',p.__class__.__name__)
                 p.roundtrip = rtr
             else:
-                self.redirect('/post')
+                response = {'status':'fail'}
+                self.write(json.dumps(response))
+                return
         else: # new post            
             p = Route(userkey=self.user_prefs.key, stats=RouteStats(),
                 locstart=startstr, locend=deststr, 
@@ -317,15 +322,21 @@ class RouteHandler(BaseHandler):
             p.repeatr = rr
         else:
             p.repeatr = None
+        path = data.get('legs')
+        p.pathpts = pathPrec(start, path[0])
         # try:                
         p.put()            
         taskqueue.add(url='/match/updateroute/'+p.key.urlsafe(), method='get')
         create_route_doc(p.key.urlsafe(), p)
         if rtr:
             add_roundtrip(p)
-        fbshare = bool(self.request.get('fbshare'))
-        self.params['share_onload'] = fbshare    
-        self.view_page(p.key.urlsafe())                
+        fbshare = bool(data.get('fbshare'))
+        #self.params['share_onload'] = fbshare    
+        share_onload=''
+        if fbshare:
+            share_onload='?fb=1'
+        response['next'] = '/post/'+p.key.urlsafe()+share_onload
+        self.write(json.dumps(response))
         # except:
             # self.params['error_route'] = 'Invalid Route'
             # self.params['locstart'] = startstr

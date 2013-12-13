@@ -1,3 +1,4 @@
+from google.appengine.ext import ndb
 import dateutil.parser
 from datetime import *
 import re
@@ -24,3 +25,16 @@ def parse_unit(unit):
     else:
         u = 0
     return u    
+    
+def get_search_json(data,pt):
+    ptlat = data.get(pt+'lat')
+    ptlon = data.get(pt+'lon')
+    ptstr = data.get(pt)
+    if not ptlat or not ptlon:            
+        if ptstr:
+            ptg = RouteUtils().getGeoLoc(ptstr)[0]
+        else:
+            ptg = None
+    else:
+        ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
+    return ptg, ptstr              

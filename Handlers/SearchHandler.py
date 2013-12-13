@@ -75,8 +75,7 @@ class SearchHandler(BaseHandler):
             deststr=''
             dest = None
         logging.info('Search req: '+startstr+' to '+deststr+' from '+startdate+' to '+enddate)
-        
-        
+                
         if not start:
             #return error
             self.write('Invalid locations')
@@ -236,15 +235,3 @@ class SearchHandler(BaseHandler):
             ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
         return ptg, ptstr    
         
-def get_search_json(data,pt):
-    ptlat = data.get(pt+'lat')
-    ptlon = data.get(pt+'lon')
-    ptstr = data.get(pt)
-    if not ptlat or not ptlon:            
-        if ptstr:
-            ptg = RouteUtils().getGeoLoc(ptstr)[0]
-        else:
-            ptg = None
-    else:
-        ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
-    return ptg, ptstr          
