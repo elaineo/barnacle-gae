@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Search Delivery Requests{% endblock %}
-{% block heading %}<h1 class="whiteh1">Search Delivery Requests</h1>{% endblock %}
+{% block heading %}<h1>Search Delivery Requests</h1>{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="/static/css/jquery-ui.css" />
 <div class="row-fluid">
@@ -42,7 +42,7 @@
   $(function() {
     $('.navicosearch').addClass('onbutton');
     mapallURL = '/search/reqseo';
-    initialize(mapallURL);
+    initialize(mapallURL,'map-canvas');
     /**
     vtest = [[0],['input#map1Field','']];
     click_validloc('#search_btn',['map0','map1'],['start','dest'],
@@ -52,7 +52,7 @@
       event.preventDefault();
       // Update map with results
       if ($("input#map0Field").val()=='')
-        initialize(mapallURL);
+        initialize(mapallURL,'map-canvas');
       else {
         mapURL = mapallURL + "?startlat=" + $("input#startlat").val() + "&startlon=" + $("input#startlon").val() + "&destlat=" + $("input#destlat").val() + "&destlon=" + $("input#destlon").val();
         initialize(mapURL);

@@ -62,6 +62,12 @@ class SearchableRequestHandler(BaseHandler):
                 pass
             self.render('search/seo_requests.html', **self.params)
     
+    def post(self,origin=None):
+        if origin=='citylut':
+            self.__city_lookup()
+        elif origin=='reqseo':
+            self.__search_requests_seo()
+    
     def __get_reqs(self, origin, dest):
         if (origin not in city_dict) or (dest not in city_dict):
             return []    
@@ -109,6 +115,63 @@ class SearchableRequestHandler(BaseHandler):
         results = search_points_start(dist,'REQUEST_INDEX',delivend.strftime('%Y-%m-%d'),delivstart.strftime('%Y-%m-%d'),'delivby','start',start)
 
         return results, [start.lat,start.lon]
+
+    ''' crap for later '''
+    def __city_lookup(self):            
+        self.response.headers['Content-Type'] = "application/json"
+        start,startstr = self.__get_search_form('start')
+        # destination is optional. Make two calls if you want.
+        dest,deststr = self.__get_search_form('dest')   
+        ## find nearest major cities
+        startc = search_points(start, 'loc', CITY_INDEX)
+        destc = search_points(dest, 'loc', CITY_INDEX)
+        logging.info(startc)
+        response = {}
+        for doc in startc.results:
+            d = search_todict(doc)
+            d['loc'] = [d['loc'].latitude, d['loc'].longitude]
+            response['start'] = d
+        for doc in destc.results:
+            d = search_todict(doc)
+            d['loc'] = [d['loc'].latitude, d['loc'].longitude]
+            response['dest'] = d
+        self.write(json.dumps(response))
+        
+    def __search_requests_seo(self):
+        self.response.headers['Content-Type'] = "application/json"
+        start,startstr = self.__get_search_form('start')
+        if not start:
+            r = Request.get_all()
+            rdump = RouteUtils().dumpreqs(r)
+            self.write(json.dumps(rdump))
+            return
+        # this is optional
+        dest,deststr = self.__get_search_form('dest')     
+
+        dist=100
+        delivstart = datetime.now()
+        delivend = delivstart + timedelta(days=365)
+
+        posts = []
+        if dest:            
+            ### Get a set of low-res pathpts
+            pathpts, precision = RouteUtils().estPath(start, dest,dist)
+            pp = []
+            for p in pathpts:
+                pp.append([p.lat,p.lon])
+            results = Request.search_route(pathpts, delivstart, delivend, precision)
+            rdump = RouteUtils().dumpreqs(results)
+            rdump['waypts'] = pp
+        else:
+            results = search_points_start(dist,'REQUEST_INDEX',delivend.strftime('%Y-%m-%d'),delivstart.strftime('%Y-%m-%d'),'delivby','start',start)
+            logging.info(results)
+
+            r = []
+            for doc in results.results:
+                r.append(ndb.Key(urlsafe=doc.doc_id).get())
+            rdump = RouteUtils().dumpreqs(r)
+        self.write(json.dumps(rdump))
+        
         
 def dump_results(results):
     posts = []

@@ -73,9 +73,42 @@
     });
     
     vtest = [[0],['input#map1Field','']];
-    click_validloc('#search_btn',['map0','map1'],['start','dest'],
+    click_ajax('#search_btn',['map0','map1'],['start','dest'],
         vtest,'#search_form',false);
   });
   </script>
   <script type="text/javascript" src="/static/js/validation.js"></script>
+<script type="text/javascript">
+function submitCallback(data, formURL) {
+  $.ajax({
+    type: "POST",
+    dataType: "text",
+    accepts: "text/html",
+    contentType: "application/json; charset=utf-8",
+    url: formURL,
+    data: data,
+    success: function(response) {
+        $('#dumpresults').html(response);
+        window.location.hash='dumpresults';
+        loadFBdata();
+    }
+  });
+}
+function loadFBdata() {
+    FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          $('.clicky').each(function() {
+            var fbid = $(this).attr('data-fb');
+            dumpFriends(fbid, $(this).next().find('.dumpfriends'),3);
+            dumpThumb(fbid, $(this).find('td.dumpthumb'));
+          });
+        }
+    });
+}
+</script>
+{% endblock %}
+
+{% block content2 %}
+
+<div id='dumpresults'></div>
 {% endblock %}

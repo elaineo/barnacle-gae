@@ -41,7 +41,89 @@ function change_validity (x){
         document.forms[0].classList.remove('valid')
     }
 }
- 
+
+/** click_ajax
+  vtest: which fields do we need to check?
+  clickver: Do they need to be logged in?
+**/
+function click_ajax(btn_id, fields,inputs,vtest,form,clickver) {
+  var nchecks = fields.length;
+  var valid = new Array(nchecks);
+  $(btn_id).click(function(event) {
+    event.preventDefault();
+    window.location.hash='';
+    for (var i=0;i<nchecks;i++) {
+      valid[i]=true;
+    } 
+    if (clickver) {
+        loggedIn = checkLoginStatus();
+        if (!loggedIn) {
+          loginPlease();
+          return;
+        }
+    }
+    var fajax = [];
+    for (f in fields) {
+      fieldLoc = $('#'+fields[f]+'Field').val();
+      // do we need to test this field?
+      var test = false;
+      if (vtest[f].length<2) valid[f] = false; 
+      else if (($(vtest[f][0]).val()!==vtest[f][1]) && 
+      ( $('input#'+inputs[f]+'lat').val() == '' || $('input#'+inputs[f]+'lon').val() == '' )) 
+        valid[f] = false;     
+      if (!valid[f])
+        fajax.push( geoFunc(fieldLoc, fields[f], inputs[f], f) );
+    }
+    // serialize, get path, submit
+    $.when.apply($, fajax);
+  });
+  
+  function getDirs(ff) {
+    var directionsService = new google.maps.DirectionsService();
+    var start = $('#'+ff[0]+'Field').val();
+    /** TODO: add support for waypoints **/
+    var end = $('#'+ff[ff.length-1]+'Field').val();
+    var request = {
+      origin:start,
+      destination:end,
+      travelMode: google.maps.TravelMode.DRIVING
+    };
+    directionsService.route(request, function(response, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      console.log(response.routes[0]);
+      dirData = response.routes[0];
+      formData = $(form).serializeObject();
+      $.extend(dirData, formData);      
+    } else //else what? submit as is
+      dirData = $(form).serializeObject();
+    
+    submitCallback(JSON.stringify(dirData), $(form).action);
+    });
+  }
+  function geoFunc(locstr,o,i,f) {
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode( { 'address': locstr}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        // fill in form fields
+        console.log(results);
+        $('input#'+o+'Field').val(results[0].formatted_address);
+        $('input#'+i+'str').val(results[0].formatted_address);
+        $('input#'+i+'lat').val(results[0].geometry.location.lat());
+        $('input#'+i+'lon').val(results[0].geometry.location.lng());   
+        valid[f] = true;
+        if (valid.every(Boolean))
+          getDirs(fields);
+      } else {
+        console.log(status);
+        $('input#'+i+'str').val('');
+        $('input#'+i+'lat').val('');
+        $('input#'+i+'lon').val('');
+        display_modal("#invalid-box");
+        return;              
+      }
+    });     
+  }
+}
 
 function click_validloc(btn_id,fields,inputs,vtest,form,clickver) {
     var oksubmit = true;
@@ -83,8 +165,7 @@ function click_validloc(btn_id,fields,inputs,vtest,form,clickver) {
         $('input#'+o+'Field').val(results[0].formatted_address);
         $('input#'+i+'str').val(results[0].formatted_address);
         $('input#'+i+'lat').val(results[0].geometry.location.lat());
-        $('input#'+i+'lon').val(results[0].geometry.location.lng());
-        $('#'+o+'Err').html('');        
+        $('input#'+i+'lon').val(results[0].geometry.location.lng());   
         if (d==fields.length-1 && oksubmit) { 
             if (clickver) {
                 loggedIn = checkLoginStatus();
@@ -97,10 +178,25 @@ function click_validloc(btn_id,fields,inputs,vtest,form,clickver) {
         $('input#'+i+'str').val('');
         $('input#'+i+'lat').val('');
         $('input#'+i+'lon').val('');
-        $('#'+o+'Err').html('Invalid Location');
         display_modal("#invalid-box");
         oksubmit = false;                
       }
     });    
   }       
 }
+
+$.fn.serializeObject = function() {
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};

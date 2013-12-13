@@ -312,3 +312,30 @@ def priceEst(req):
     price = 50 + seats + int(gas) + seed
     #TODO: take dist from fwy into account
     return price, distance, seed
+    
+def pathEst(start, dest, results, fudge=100):
+    """ Precision of path determined by total dist.
+      0.1 ~ 10 miles <-- improve later """
+    dist = results['distance']['value']   #dist in metres
+    precision = precisionDist(dist/miles2m * fudge)
+    pathpts = [roundPoint(start,precision)]        
+    for s in results['steps']:
+        polyline = s['polyline']['points']
+        pathsegment = poly_decode(polyline, precision)              
+        pathpts = pathpts + pathsegment
+    pathpts.append(roundPoint(dest,precision))
+    return pathpts, precision    
+    
+def pathPrec(start,results):
+    pathpts = [start]
+    precision = -1
+    distance = results['distance']['value']
+    for s in results['steps']:
+        # distance = s['distance']['value']   #dist in metres
+        polyline = s['polyline']['points']
+        pathsegment = poly_decode(polyline, precision)[0::100]              
+        lat = s['end_location']['lat']
+        lon = s['end_location']['lng']
+        pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
+        pathpts = pathpts + pathsegment
+    return pathpts, distance    

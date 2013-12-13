@@ -15,7 +15,7 @@ class SearchHandler(BaseHandler):
     """ Search page """
     def get(self, action=None, key=None):
         if action=='request':
-            self.render('search_requests.html', **self.params)           
+            self.render('search/search_requests.html', **self.params)    
         elif action=='scrapez':
             sdump = {}
             if not key:
@@ -39,44 +39,24 @@ class SearchHandler(BaseHandler):
             self.response.headers['Content-Type'] = "application/json"
             self.write(json.dumps(sdump))            
         else:
-            self.render('search.html', **self.params)
+            self.render('search/search.html', **self.params)
         
     def post(self,action=None):
         if action=='request':
             self.__search_requests()
-        elif action=='citylut':
-            self.__city_lookup()
         else:
-            self.__search_routes()
-            
-    def __city_lookup(self):            
-        self.response.headers['Content-Type'] = "application/json"
-        start,startstr = self.__get_search_form('start')
-        # destination is optional. Make two calls if you want.
-        dest,deststr = self.__get_search_form('dest')   
-        ## find nearest major cities
-        startc = search_points(start, 'loc', CITY_INDEX)
-        destc = search_points(dest, 'loc', CITY_INDEX)
-        logging.info(startc)
-        response = {}
-        for doc in startc.results:
-            d = search_todict(doc)
-            d['loc'] = [d['loc'].latitude, d['loc'].longitude]
-            response['start'] = d
-        for doc in destc.results:
-            d = search_todict(doc)
-            d['loc'] = [d['loc'].latitude, d['loc'].longitude]
-            response['dest'] = d
-        self.write(json.dumps(response))
+            self.__search_routes()           
     
         
     def __search_requests(self):
-        dist = self.request.get('dist')
+        data = json.loads(unicode(self.request.body, errors='replace'))
+        
+        dist = data.get('dist')
         if not dist:
             dist = 100
         dist = int(dist)
-        startdate = self.request.get('startdate')
-        enddate = self.request.get('enddate')
+        startdate = data.get('startdate')
+        enddate = data.get('enddate')
         if startdate:
             delivstart = parse_date(startdate)
         else:
@@ -86,27 +66,28 @@ class SearchHandler(BaseHandler):
         else:
             delivend = delivstart + timedelta(days=90)
             
-        start, startstr = self.__get_search_form('start')
+        start, startstr = get_search_json(data,'start')
         # this is optional
-        checkdest = self.request.get('dest')
+        checkdest = data.get('dest')
         if checkdest:
-            dest, deststr = self.__get_search_form('dest')     
+            dest, deststr = get_search_json(data,'dest')     
         else:
             deststr=''
             dest = None
         logging.info('Search req: '+startstr+' to '+deststr+' from '+startdate+' to '+enddate)
+        
+        
         if not start:
-            self.params['delivstart'] = startdate
-            self.params['delivend'] = enddate
-            self.params['error_route'] = 'Invalid Location'
-            self.render('search_requests.html', **self.params)
+            #return error
+            self.write('Invalid locations')
             return
 
         posts = []
         ## Change this to a query
         if dest:
+            path = data.get('legs')
             ### Get a set of low-res pathpts            
-            pathpts, precision = RouteUtils().estPath(start, dest,dist)
+            pathpts, precision = pathEst(start, dest,path[0])
             results = Request.search_route(pathpts, delivstart, delivend, precision)
             for r in results:
                 posts.append(r.to_search())
@@ -127,7 +108,7 @@ class SearchHandler(BaseHandler):
                 posts.append(p)
 
         self.params['posts'] = posts
-        self.render('searchqres.html', **self.params)
+        self.render('searchqfrag.html', **self.params)
             
     def __search_routes(self):        
         enddate = self.request.get('enddate')
@@ -142,7 +123,7 @@ class SearchHandler(BaseHandler):
         logging.info('Search req: '+startstr+' to '+deststr+' by '+enddate)         
         if not start or not dest:          
             self.params['error_route'] = 'Invalid Route'
-            self.render('search.html', **self.params)
+            self.render('search/search.html', **self.params)
             return           
             
         dist = HaversinDist(start.lat,start.lon,dest.lat,dest.lon)/10
@@ -184,8 +165,7 @@ class SearchHandler(BaseHandler):
         self.params['posts'] = posts
         self.params['searchkey'] = sr.urlsafe()
         self.render('searchfrag.html', **self.params)
-        
-        
+                
     def __search_clscrape(self, sr):
         startres = search_pathpts(sr.dist,'PATHPT_INDEX',sr.delivby.strftime('%Y-%m-%d'),'delivend',sr.start).results
         destres = search_pathpts(sr.dist,'PATHPT_INDEX',sr.delivby.strftime('%Y-%m-%d'),'delivend',sr.dest).results
@@ -255,3 +235,16 @@ class SearchHandler(BaseHandler):
         else:
             ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
         return ptg, ptstr    
+        
+def get_search_json(data,pt):
+    ptlat = data.get(pt+'lat')
+    ptlon = data.get(pt+'lon')
+    ptstr = data.get(pt)
+    if not ptlat or not ptlon:            
+        if ptstr:
+            ptg = RouteUtils().getGeoLoc(ptstr)[0]
+        else:
+            ptg = None
+    else:
+        ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
+    return ptg, ptstr          

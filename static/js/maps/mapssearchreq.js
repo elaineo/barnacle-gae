@@ -1,11 +1,11 @@
-function initialize(mapURL) {
+function initialize(mapURL,mapID) {
   var mapOptions = {
     center: new google.maps.LatLng(40, -99),
     zoom: 4,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
   var autoOptions = { componentRestrictions: {country: 'us'}  };
-  var map = new google.maps.Map(document.getElementById('map-canvas'),
+  var map = new google.maps.Map(document.getElementById(mapID),
     mapOptions);
 
   var input0 = /** @type {HTMLInputElement} */(document.getElementById('map0Field'));
@@ -17,31 +17,6 @@ function initialize(mapURL) {
   autocomplete0.bindTo('bounds', map);
   autocomplete1.bindTo('bounds', map);
   
-  var marker0 = new google.maps.Marker({
-    map: map,
-    draggable: true,
-    visible: false
-  });
-    marker0.setIcon(/** @type {google.maps.Icon} */({
-      url: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=A|990099|ffffff',
-      size: new google.maps.Size(71, 71),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(17, 34),
-      scaledSize: new google.maps.Size(25, 35)
-    }));
-    
-  var marker1 = new google.maps.Marker({
-    map: map,
-    draggable: true,
-    visible: false
-  });
-    marker1.setIcon(/** @type {google.maps.Icon} */({
-      url: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=B|990099|ffffff',
-      size: new google.maps.Size(71, 71),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(17, 34),
-      scaledSize: new google.maps.Size(25, 35)
-    }));  
     $.ajax({
       type: "POST",
       url: mapURL,
