@@ -51,7 +51,7 @@
   
 $(document).ready(function(){
     var v = [[0],[0]];
-    click_validloc('#request_btn',['map0','map1'],['start','dest'],v,'#request_form',true);
+    click_ajax('#request_btn',['map0','map1'],['start','dest'],v,'#request_form',true);
 });
   </script>
  <script>
@@ -64,3 +64,20 @@ $(document).ready(function(){
 });
   </script>  
   <script type="text/javascript" src="/static/js/validation.js"></script>
+    <script type="text/javascript">
+function submitCallback(data, formURL) {
+  $.ajax({
+    type: "POST",
+    dataType: "text",
+    accepts: "text/html",
+    contentType: "application/json; charset=utf-8",
+    url: formURL,
+    data: data,
+    success: function(response) {
+        $('#dumpresults').html(response);
+        window.location.hash='dumpresults';
+
+    }
+  });
+}
+</script>

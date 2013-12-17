@@ -204,25 +204,6 @@ class RouteUtils():
         route['markers'] = markers
         return route
         
-    def debugloc(self,r,startstr,endstr):
-        route=r
-        route.start,route.locstart=self.getGeoLoc(startstr)
-        route.dest,route.locend=self.getGeoLoc(endstr)
-        if not route.start or not route.dest: 
-            return None
-        else:
-            route.pathpts = self.getPath(route.start,route.dest)
-            return route
-    def debugpoints(self,p,startstr,endstr):
-        route=p
-        route.start,route.locstart=self.getGeoLoc(startstr)
-        route.dest,route.locend=self.getGeoLoc(endstr)
-        if not route.start or not route.dest: 
-            return None
-        else:
-            return route
-                    
-        
 def map_zoom_pts(pts):
     # calculate map zoom
     lats = [x.lat for x in pts]
@@ -298,9 +279,8 @@ def findCenter(pts):
     lng = sum([x.lon for x in pts])/len(pts)
     return [lat,lng]
     
-def priceEst(req):
+def priceEst(req, distance):
     # Estimate an offer price for a given request
-    pathpts, distance = RouteUtils().getPath(req.start,req.dest)    
     if req.capacity==0:
         seats = 25
     elif req.capacity==1:
@@ -311,7 +291,7 @@ def priceEst(req):
     seed = random.randint(-50,50)
     price = 50 + seats + int(gas) + seed
     #TODO: take dist from fwy into account
-    return price, distance, seed
+    return price, seed
     
 def pathEst(start, dest, results, fudge=100):
     """ Precision of path determined by total dist.

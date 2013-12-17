@@ -97,33 +97,6 @@ class GerritHandler(BaseHandler):
                 d.key.delete()
             delete_all_in_index(CL_INDEX)                               
             self.write('cl stuff gone.')                     
-        elif action=='createroutes':  
-            users = BarnacleModel.query().fetch()
-            for r in fakeroutes2:
-                r = r.split()                
-                ukey = random.choice(users).key
-                p = Route(userkey=ukey, locstart=r[0], locend=r[1], capacity=0, 
-                delivstart=datetime.strptime(r[2],'%m/%d/%Y'), 
-                delivend=datetime.strptime(r[3],'%m/%d/%Y'))
-                try:
-                    p = RouteUtils().debugloc(p, p.locstart, p.locend)                  
-                    p.put() 
-                    create_route_doc(p.key.urlsafe(), p)                    
-                except:
-                    continue
-            self.write('routes created.')         
-        elif action=='createreqs':  
-            users = UserPrefs.query().fetch()
-            for r in fakereqs:
-                r = r.split()                
-                ukey = random.choice(users).key
-                p = Request(userkey=ukey, rates=random.randrange(100), 
-                locstart=r[0], locend=r[1], delivby=datetime.strptime(r[2],'%m/%d/%Y'),
-                items=r[3].replace('-',' '))
-                p = RouteUtils().debugpoints(p, p.locstart, p.locend)    
-                p.put()            
-                create_request_doc(p.key.urlsafe(), p)
-            self.write('requests created.')            
         elif action=='createreviews':  
             users = UserPrefs.query().fetch()
             for r in fakereviews:  

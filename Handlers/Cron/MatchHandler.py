@@ -92,7 +92,7 @@ class MatchHandler(BaseHandler):
             results = search_points_start(dist,'REQUEST_INDEX',later,now,'delivby','start',here)
             rdump = {'status':'ok'}
             rdump['count'] = len(results.results)
-            rdump['link'] = '/search/request?startlat='+str(here.lat)+'&startlon='+str(here.lon)
+            rdump['link'] = '/search/reqhome?startlat='+str(here.lat)+'&startlon='+str(here.lon)
             # except:
                 # rdump = {'status':'fail'}
             self.response.headers['Content-Type'] = "application/json"                

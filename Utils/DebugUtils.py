@@ -72,50 +72,20 @@ class DebugUtils(BaseHandler):
                     continue
             self.response.headers['Content-Type'] = "application/json"
             self.write(json.dumps(ids))
-        elif action=='cleanexp':
-            data = Reservation.query().filter(Reservation.deliverby<date.today())
-            for q in data:
-                x = ExpiredReservation(sender=q.sender, receiver=q.receiver, 
-                    route=q.route, items=q.items, price=q.price,
-                    deliverby=q.deliverby, start=q.start, dest=q.dest, 
-                    locstart=q.locstart, locend=q.locend, 
-                    sender_name=q.sender_name(), rcvr_name=q.receiver_name(),
-                    img_id=q.img_id)
-                x.put()
+        elif action=='googleblows':
+            data = Route.query()
+            for p in data:
+                if len(p.pathpts)<3:
+                    logging.info(p)
+                    p,d = RouteUtils().setloc(p,p.locstart,p.locend)
+                    p.put()
             return
         elif action=='clearcl':
             data = CLModel.query()
             for d in data:
                 d.key.delete()
             delete_all_in_index(CL_INDEX)                               
-            self.write('cl stuff gone.')                     
-        elif action=='createroutes':  
-            users = BarnacleModel.query().fetch()
-            for r in fakeroutes2:
-                r = r.split()                
-                ukey = random.choice(users).key
-                p = Route(userkey=ukey, locstart=r[0], locend=r[1], capacity=0, 
-                delivstart=datetime.strptime(r[2],'%m/%d/%Y'), 
-                delivend=datetime.strptime(r[3],'%m/%d/%Y'))
-                try:
-                    p = RouteUtils().debugloc(p, p.locstart, p.locend)                  
-                    p.put() 
-                    create_route_doc(p.key.urlsafe(), p)                    
-                except:
-                    continue
-            self.write('routes created.')         
-        elif action=='createreqs':  
-            users = UserPrefs.query().fetch()
-            for r in fakereqs:
-                r = r.split()                
-                ukey = random.choice(users).key
-                p = Request(userkey=ukey, rates=random.randrange(100), 
-                locstart=r[0], locend=r[1], delivby=datetime.strptime(r[2],'%m/%d/%Y'),
-                items=r[3].replace('-',' '))
-                p = RouteUtils().debugpoints(p, p.locstart, p.locend)    
-                p.put()            
-                create_request_doc(p.key.urlsafe(), p)
-            self.write('requests created.')            
+            self.write('cl stuff gone.')                                  
         elif action=='createreviews':  
             users = UserPrefs.query().fetch()
             for r in fakereviews:  

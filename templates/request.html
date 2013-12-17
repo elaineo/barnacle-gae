@@ -60,9 +60,11 @@
 <script type="text/javascript">
 $(document).ready(function(){
     {% include 'share/fb_request.html' %}
-    {% if share_onload == True %}
-      window.open(fb_url, '', 'width=800,height=500,scrollbars=no,location=no');
-    {% endif %}    
+    if(window.location.href.indexOf('?')>0) {
+      var name = window.location.href.split('?')[1]
+      if (name=='fb')
+        window.open(fb_url, '', 'width=800,height=500,scrollbars=no,location=no');
+    }
     click_redirect('#viewprof_btn','{{profile_url}}');
     click_redirect('#message_btn','{{message_url}}');        
     click_redirect('#reserve_btn','{{reserve_url}}');

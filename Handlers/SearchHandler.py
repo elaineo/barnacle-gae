@@ -43,28 +43,19 @@ class SearchHandler(BaseHandler):
         
     def post(self,action=None):
         if action=='request':
-            self.__search_requests()
+            self.__search_req_json()
+        elif action=='reqhome':
+            self.__search_req_home()
         else:
             self.__search_routes()           
     
         
-    def __search_requests(self):
+    def __search_req_json(self):
         data = json.loads(unicode(self.request.body, errors='replace'))
         
         dist = data.get('dist')
-        if not dist:
-            dist = 100
-        dist = int(dist)
         startdate = data.get('startdate')
         enddate = data.get('enddate')
-        if startdate:
-            delivstart = parse_date(startdate)
-        else:
-            delivstart = datetime.now()
-        if enddate:
-            delivend = parse_date(enddate)
-        else:
-            delivend = delivstart + timedelta(days=90)
             
         start, startstr = get_search_json(data,'start')
         # this is optional
@@ -81,34 +72,26 @@ class SearchHandler(BaseHandler):
             self.write('Invalid locations')
             return
 
-        posts = []
-        ## Change this to a query
         if dest:
-            path = data.get('legs')
-            ### Get a set of low-res pathpts            
-            pathpts, precision = pathEst(start, dest,path[0])
-            results = Request.search_route(pathpts, delivstart, delivend, precision)
-            for r in results:
-                posts.append(r.to_search())
+            path = data.get('legs')            
         else:
-            results = search_points_start(dist,'REQUEST_INDEX',delivend.strftime('%Y-%m-%d'),delivstart.strftime('%Y-%m-%d'),'delivby','start',start)
-            logging.info(results)
-
-            for doc in results.results:
-                d = search_todict(doc)
-                p = {  'first_name': d['first_name'],
-                        'thumb_url': d['thumb_url'],
-                        'start': d['locstart'],
-                        'dest': d['locend'],
-                        'delivby': d['delivby'].strftime('%b-%d-%y'),
-                        'fbid' : d['fbid'],
-                        'routekey': d['routekey']
-                    }
-                posts.append(p)
+            path = None
+        
+        posts = search_requests(start,dest,dist,path,startdate,enddate)            
 
         self.params['posts'] = posts
         self.render('searchqfrag.html', **self.params)
-            
+
+    def __search_req_home(self):
+        start, startstr = self.__get_search_form('start')
+                
+        if not start:
+            return
+        posts = search_requests(start)                    
+        self.params['posts'] = posts
+        self.render('searchqres.html', **self.params)        
+
+        
     def __search_routes(self):        
         enddate = self.request.get('enddate')
         remoteip = self.request.remote_addr
@@ -235,3 +218,41 @@ class SearchHandler(BaseHandler):
             ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
         return ptg, ptstr    
         
+def search_requests(start,dest=None, dist=None, path=None, startdate=None,enddate=None):
+    if not dist:
+        dist = 100
+    dist = int(dist)
+    if startdate:
+        delivstart = parse_date(startdate)
+    else:
+        delivstart = datetime.now()
+    if enddate:
+        delivend = parse_date(enddate)
+    else:
+        delivend = delivstart + timedelta(days=90)                
+
+    posts = []
+    ## Change this to a query
+    if dest:
+        ### Get a set of low-res pathpts            
+        pathpts, precision = pathEst(start, dest,path[0])
+        results = Request.search_route(pathpts, delivstart, delivend, precision)
+        for r in results:
+            posts.append(r.to_search())
+    else:
+        results = search_points_start(dist,'REQUEST_INDEX',delivend.strftime('%Y-%m-%d'),delivstart.strftime('%Y-%m-%d'),'delivby','start',start)
+        logging.info(results)
+
+        for doc in results.results:
+            d = search_todict(doc)
+            p = {  'first_name': d['first_name'],
+                    'thumb_url': d['thumb_url'],
+                    'start': d['locstart'],
+                    'dest': d['locend'],
+                    'delivby': d['delivby'].strftime('%b-%d-%y'),
+                    'fbid' : d['fbid'],
+                    'routekey': d['routekey']
+                }
+            posts.append(p)
+
+    return posts        

@@ -195,26 +195,33 @@ class RouteHandler(BaseHandler):
             self.params['today'] = datetime.now().strftime('%Y-%m-%d')
             self.render('forms/fillrequest.html', **self.params)
     def __init_request(self,key=None):
-        capacity = self.request.get('vcap')
+        self.response.headers['Content-Type'] = "application/json"
+        response = {'status':'ok'}
+        data = json.loads(unicode(self.request.body, errors='replace'))
+        
+        capacity = data.get('vcap')
         capacity = parse_unit(capacity)    
         #items = self.request.get('items')
-        reqdate = self.request.get('reqdate')     
+        reqdate = data.get('reqdate')     
         if reqdate:
             delivby = parse_date(reqdate)
         else:
             delivby = datetime.now()+timedelta(weeks=1)
             
-        start, startstr = self.__get_map_form('start')
-        dest, deststr = self.__get_map_form('dest')  
+        start, startstr = get_map_json('start')
+        dest, deststr = get_map_json('dest')  
         logging.info('Initial Request: '+startstr+' to '+deststr)
-                
+        results = data.get('legs')
+        distance = results[0]['distance']['value']
         p = Request(userkey=self.user_prefs.key, start=start, 
-            dest=dest, capacity=capacity,
+            dest=dest, capacity=capacity, distance=distance,
             delivby=delivby, locstart=startstr, locend=deststr)
-        price, distance, seed = priceEst(p)
+        
+        price, seed = priceEst(p, distance)
         stats = ReqStats(sugg_price = price, seed = seed, distance = distance)
         p.rates = price
         p.stats = stats
+
         try:
             p.put() 
             taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
@@ -232,7 +239,8 @@ class RouteHandler(BaseHandler):
             self.params['delivby'] = reqdate
             self.params['route_title'] = 'Edit Delivery Request'
             self.params['today'] = datetime.now().strftime('%Y-%m-%d')
-            self.render('forms/fillrequest.html', **self.params)            
+            self.render('forms/fillrequest.html', **self.params)  
+            
     def __update_request(self,key):
         rates = self.request.get('rates')
         rates = parse_rate(rates)
@@ -334,7 +342,7 @@ class RouteHandler(BaseHandler):
         #self.params['share_onload'] = fbshare    
         share_onload=''
         if fbshare:
-            share_onload='?fb=1'
+            share_onload='?fb'
         response['next'] = '/post/'+p.key.urlsafe()+share_onload
         self.write(json.dumps(response))
         # except:
