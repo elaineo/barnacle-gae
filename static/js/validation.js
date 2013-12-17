@@ -97,7 +97,7 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver) {
     } else //else what? submit as is
       dirData = $(form).serializeObject();
     
-    submitCallback(JSON.stringify(dirData), $(form).action);
+    submitCallback(JSON.stringify(dirData), $(form).attr('action'));
     });
   }
   function geoFunc(locstr,o,i,f) {

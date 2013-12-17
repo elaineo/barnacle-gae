@@ -208,13 +208,13 @@ class RouteHandler(BaseHandler):
         else:
             delivby = datetime.now()+timedelta(weeks=1)
             
-        start, startstr = get_map_json('start')
-        dest, deststr = get_map_json('dest')  
+        start, startstr = get_search_json(data,'start')
+        dest, deststr = get_search_json(data,'dest')  
         logging.info('Initial Request: '+startstr+' to '+deststr)
         results = data.get('legs')
         distance = results[0]['distance']['value']
         p = Request(userkey=self.user_prefs.key, start=start, 
-            dest=dest, capacity=capacity, distance=distance,
+            dest=dest, capacity=capacity, 
             delivby=delivby, locstart=startstr, locend=deststr)
         
         price, seed = priceEst(p, distance)
@@ -232,7 +232,7 @@ class RouteHandler(BaseHandler):
             self.params['email'] = self.user_prefs.email
             self.render('request_review.html', **self.params)
 
-        except:
+        except:  #this should never happen
             self.params['error_route'] = 'Invalid Locations'
             self.params['items'] = items
             self.params['capacity'] = capacity
