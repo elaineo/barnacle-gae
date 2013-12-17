@@ -50,6 +50,9 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver) {
   var nchecks = fields.length;
   var valid = new Array(nchecks);
   $(btn_id).click(function(event) {
+    //disable button until finished
+    $(btn_id).attr('disabled', 'disabled');
+    $(btn_id).css('cursor', 'progress');
     event.preventDefault();
     window.location.hash='';
     for (var i=0;i<nchecks;i++) {
@@ -59,6 +62,8 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver) {
         loggedIn = checkLoginStatus();
         if (!loggedIn) {
           loginPlease();
+          $(btn_id).removeAttr('disabled');
+          $(btn_id).css('cursor', 'default');
           return;
         }
     }
@@ -96,7 +101,8 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver) {
       $.extend(dirData, formData);      
     } else //else what? submit as is
       dirData = $(form).serializeObject();
-    
+    $(btn_id).removeAttr('disabled');
+    $(btn_id).css('cursor', 'default');
     submitCallback(JSON.stringify(dirData), $(form).attr('action'));
     });
   }
@@ -119,6 +125,8 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver) {
         $('input#'+i+'lat').val('');
         $('input#'+i+'lon').val('');
         display_modal("#invalid-box");
+        $(btn_id).removeAttr('disabled');
+        $(btn_id).css('cursor', 'default');
         return;              
       }
     });     

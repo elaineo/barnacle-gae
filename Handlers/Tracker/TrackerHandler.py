@@ -173,19 +173,19 @@ class TrackerHandler(BaseHandler):
         self.write(json.dumps(response))              
         
     def __view_page(self,key,mobile=False):
-        try:
-            p = ndb.Key(urlsafe=key).get()
-            self.params.update(p.to_dict())
-            self.params['first_name'] = p.driver.get().first_name
-            if mobile:
-                self.params['dispeta'] = False
-                self.render('mobile/track.html', **self.params)
-            else:
-                self.render('track/track.html', **self.params)
-            return
-        except:
-            self.abort(409)
-            return         
+        # try:
+        p = ndb.Key(urlsafe=key).get()
+        self.params.update(p.to_dict())
+        self.params['first_name'] = p.driver.get().first_name
+        if mobile:
+            self.params['dispeta'] = False
+            self.render('mobile/track.html', **self.params)
+        else:
+            self.render('track/track.html', **self.params)
+        return
+        # except:
+            # self.abort(409)
+            # return         
             
     def __create(self):
         data = json.loads(self.request.body)
