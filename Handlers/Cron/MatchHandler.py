@@ -102,11 +102,15 @@ class MatchHandler(BaseHandler):
             self.response.headers['Content-Type'] = "application/json"
             # try:
             posts = []
-            key = data['key']
-            r = ndb.Key(urlsafe=key).get()
+            key = data.get('key')
+            if key:
+                r = ndb.Key(urlsafe=key).get()
+            else:
+                return
             rdump = {'status':'ok'}
             dist = 100
-            pathpts, precision = RouteUtils().estPath(r.start, r.dest,dist)
+            path = data.get('legs')
+            pathpts, precision = pathEst(r.start, r.dest,path[0])
             now = datetime.now()
             later = (datetime.now() + timedelta(365))
             results = Request.search_route(pathpts, now, later, precision)

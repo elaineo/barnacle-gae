@@ -91,51 +91,68 @@ $(document).ready(function(){
 <br>
 </div></div>
 <script type="text/javascript">
-$(document).ready(function(){
-    data = {'key':'{{routekey}}'};
+$(document).ready(function(){    
     $('#simreqs').hide();
-    getRequestDump(data);
+    getRequestDump();
 });
-function getRequestDump(data) {
-  $.ajax({
-    type: "POST",
-    dataType: "json",
-    contentType: "json",     
-    data: JSON.stringify(data),
-    url: '/match/dumpreqsdest',
-    success: function(q) {
-        console.log(q);
-        if (q.status == 'ok') {
-          if (parseInt(q.count) > 0) {
-            for (k in q.posts) {
-              if (q.posts[k].routekey != '{{routekey}}') {
-                $('#simreqs').show();
-                buf = '<tr class="clicky"';
-                if (typeof q.posts[k].fbid != 'undefined') 
-                  buf += 'data-fb="'+ q.posts[k].fbid+'" ';
-                buf += 'onclick="document.location.href = \'/post/request\/';
-                buf += q.posts[k].routekey +'\';"><td ';
-                if (typeof q.posts[k].fbid != 'undefined') 
-                  buf += 'rowspan="2"';
-                buf += '><img height="50px" src="';
-                buf += q.posts[k].thumb_url+'"><br>'; 
-                buf += q.posts[k].first_name+ '</td><td>';
-                buf += q.posts[k].start+ '</td><td>';
-                buf += q.posts[k].dest+ '</td><td>';
-                buf += q.posts[k].delivby+ '</td>';
-                if (typeof q.posts[k].fbid != 'undefined') 
-                  buf += '<tr><td colspan="4">Mutual Friends: <div class="dumpfriends">None.</div></td></tr>';
-                buf += '</tr>';    
-                $('table#dumpreqs tr:last').after(buf);
-              }
-            } 
-            loadFBdata();
-          } else
-            $('#simreqs').hide();
-        }
-      }
-  });            
+
+function getRequestDump() {
+  var data = {'key':'{{routekey}}'};
+  var directionsService = new google.maps.DirectionsService();
+  var start = '{{ locstart }}';
+  var end = '{{ locend }}';
+  var request = {
+    origin:start,
+    destination:end,
+    travelMode: google.maps.TravelMode.DRIVING
+  };
+  directionsService.route(request, function(response, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      console.log(response.routes[0]);
+      data.legs = response.routes[0].legs;
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        contentType: "json",     
+        data: JSON.stringify(data),
+        url: '/match/dumpreqsdest',
+        success: function(q) {
+            console.log(q);
+            if (q.status == 'ok') {
+              if (parseInt(q.count) > 0) {
+                for (k in q.posts) {
+                  if (q.posts[k].routekey != '{{routekey}}') {
+                    $('#simreqs').show();
+                    buf = '<tr class="clicky"';
+                    if (typeof q.posts[k].fbid != 'undefined') 
+                      buf += 'data-fb="'+ q.posts[k].fbid+'" ';
+                    buf += 'onclick="document.location.href = \'/post/request\/';
+                    buf += q.posts[k].routekey +'\';"><td ';
+                    if (typeof q.posts[k].fbid != 'undefined') 
+                      buf += 'rowspan="2"';
+                    buf += '><img height="50px" src="';
+                    buf += q.posts[k].thumb_url+'"><br>'; 
+                    buf += q.posts[k].first_name+ '</td><td>';
+                    buf += q.posts[k].start+ '</td><td>';
+                    buf += q.posts[k].dest+ '</td><td>';
+                    buf += q.posts[k].delivby+ '</td>';
+                    if (typeof q.posts[k].fbid != 'undefined') 
+                      buf += '<tr><td colspan="4">Mutual Friends: <div class="dumpfriends">None.</div></td></tr>';
+                    buf += '</tr>';    
+                    $('table#dumpreqs tr:last').after(buf);
+                  }
+                } 
+                loadFBdata();
+              } else
+                $('#simreqs').hide();
+            }
+          }
+      });              
+    } 
+
+  });
 }
+
 function loadFBdata() {
     FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
