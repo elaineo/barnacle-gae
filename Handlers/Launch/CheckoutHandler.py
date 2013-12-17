@@ -179,13 +179,13 @@ class CheckoutHandler(BaseHandler):
         logging.info(customer.id)
 
     def send_receipt(self, email, res, params):
-        self.params['action'] = 'receipt'
-        self.params['senderid'] = 'barnacle'
+        params['action'] = 'receipt'
+        params['senderid'] = 'barnacle'
         u = UserPrefs.by_email(email)
         if u:
-            self.params['receiverid'] = u.key.id()
+            params['receiverid'] = u.key.id()
         else:
-            self.params['receiverid'] = email
+            params['receiverid'] = email
         htmlbody =  self.render_str('email/receipt.html', **params)
         textbody = resreceipt_txt % params
         send_info(to_email=email, subject=confirm_res_sub, 

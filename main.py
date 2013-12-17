@@ -33,7 +33,6 @@ from Handlers.Launch.ApplyHandler import *
 from Handlers.Launch.RequestHandler import *
 from Handlers.Launch.ReserveHandler import *
 from Handlers.Launch.CheckoutHandler import *
-from Handlers.Launch.NotifyHandler import *
 
 from Pages.LandingPage import *
 from Pages.HomePage import *
@@ -124,7 +123,6 @@ app = webapp2.WSGIApplication([('/', HomePage),
    ('/contact', ContactPage),
 # Admin
     webapp2.Route('/debug/<action>', handler=DebugUtils),
-    webapp2.Route('/notify/<action>', handler=NotifyHandler),
     webapp2.Route('/match/<action>', handler=MatchHandler),
     webapp2.Route('/match/<action>/<key:[\w\-]{20,}>', handler=MatchHandler),
     webapp2.Route('/news/<action>', handler=NewsHandler),
