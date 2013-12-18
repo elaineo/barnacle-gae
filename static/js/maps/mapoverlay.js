@@ -43,11 +43,15 @@ function initialize_map(mapURL) {
       /* check for markers */
       for (k in route['markers']) {
         m = new google.maps.LatLng(route['markers'][k][0],route['markers'][k][1]);
+        if (k==0) 
+          bimg = '/static/img/icons/map/marker-barnacle.png';            
+        else if (k==(route['markers'].length-1))
+          bimg = '/static/img/icons/map/marker-dest.png';        
         routePaths.push(new google.maps.Marker({
             position:m,
             clickable: false,
             animation: google.maps.Animation.DROP,
-            icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=B|990099|ffffff',
+            icon: bimg,
             raiseOnDrag: false,
             visible: true
         }));

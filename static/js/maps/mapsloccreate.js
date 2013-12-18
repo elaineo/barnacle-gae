@@ -10,29 +10,16 @@ function initialize() {
    var marker0 = new google.maps.Marker({
     map: map,
     draggable: true,
-    visible: false
+    visible: false,
+    icon: '/static/img/icons/map/marker-car.png'
    });       
-   
-    marker0.setIcon(/** @type {google.maps.Icon} */({
-      url: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=A|990099|ffffff',
-      size: new google.maps.Size(71, 71),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(17, 34),
-      scaledSize: new google.maps.Size(25, 35)
-    }));
     
   var marker1 = new google.maps.Marker({
     map: map,
     draggable: true,
-    visible: false
+    visible: false,
+    icon: '/static/img/icons/map/marker-star.png'
   });
-    marker1.setIcon(/** @type {google.maps.Icon} */({
-      url: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=B|990099|ffffff',
-      size: new google.maps.Size(71, 71),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(17, 34),
-      scaledSize: new google.maps.Size(25, 35)
-    }));  
        
     
   // Try HTML5 geolocation

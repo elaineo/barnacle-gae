@@ -9,13 +9,16 @@ function initialize() {
   var autoOptions = { componentRestrictions: {country: 'us'}  };
   map = new google.maps.Map(document.getElementById('map-canvas'),
     mapOptions);
-
+    var markerDot = new google.maps.MarkerImage('/static/img/icons/map/dot.png',
+                new google.maps.Size(10, 10),
+                new google.maps.Point(0,0),
+                new google.maps.Point(5, 5));  
   marker0 = new google.maps.Marker({
     map: map,
     draggable: false,
     visible: true,
     clickable: false,
-    icon: 'http://www.gobarnacle.com/static/img/icons/dot.png',
+    icon: markerDot,
     raiseOnDrag: false
    });       
     

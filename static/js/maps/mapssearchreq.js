@@ -32,7 +32,7 @@ function initialize(mapURL,mapID) {
                 clickable: true,
                 title: 'Get me to '+route['markers'][k]['loc'],
                 animation: google.maps.Animation.DROP,
-                icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=O|B00000|ffffff',
+                icon: '/static/img/icons/map/marker-barnacle.png',
                 raiseOnDrag: false,
                 visible: true
             });

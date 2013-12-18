@@ -13,6 +13,7 @@ import urllib2
 class UserStats(ndb.Model):
     referral = ndb.StringProperty()
     code = ndb.StringProperty()
+    ip_addr = ndb.StringProperty(repeated=True)
     
 class UserSettings(ndb.Model):
     """ 0.Messages 1.Reservation updates 2.Review notify 3.Matching Delivery requests    4. Newsletter """ 
