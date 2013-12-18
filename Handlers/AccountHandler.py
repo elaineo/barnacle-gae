@@ -58,7 +58,7 @@ class SignupPage(BaseHandler):
         self.write(json.dumps(response))
     def __fb(self):
         # retrieve information
-        # Fix for Bad content type: '; charset=utf-8'
+        # Fix for Bad content type: '; charset=utf-8'        
         if len(self.request.content_type) == 0:
             fp = self.request.environ['webob._body_file'][1]
             fp.reset()
@@ -67,17 +67,14 @@ class SignupPage(BaseHandler):
         else:
             data = json.loads(unicode(self.request.body, errors='replace'))
         logging.info(data)
-        first_name = data['first_name']
-        last_name = data['last_name']
-        fbid = data['id']
-        try:
-            email = data['email']
-        except:
-            try:
-                username = data['username']
-                email = username+'@facebook.com'
-            except:
-                email = 'blank@gobarnacle.com'
+        remoteip = self.request.remote_addr
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        fbid = data.get('id')       
+        email = data.get('email')
+        if not email:
+            username = data.get('username')
+            email = username+'@facebook.com'                
         try:
             location = data['location']['name']
         except:
@@ -91,7 +88,7 @@ class SignupPage(BaseHandler):
             if not up:
                 referral = self.read_secure_cookie('referral')
                 code = self.read_secure_cookie('code')
-                stats = UserStats(referral=referral, code=code)
+                stats = UserStats(referral=referral, code=code, ip_addr=[remoteip])
                 sett = UserSettings(notify=[1,2,3,4])
                 up = UserPrefs(account_type = 'fb', email = email, userid = fbid, first_name = first_name, last_name = last_name, img_id = -1, settings=sett, location = location, fblocation = location, 
                 stats=stats)
@@ -103,6 +100,12 @@ class SignupPage(BaseHandler):
             else:
                 response = { 'status': 'existing'}
                 logging.info('Existing account login')
+                if not up.stats:
+                    up.stats = UserStats(ip_addr=[remoteip])
+                    up.put()
+                elif remoteip not in up.stats.ip_addr:
+                    up.stats.ip_addr.append(remoteip)
+                    up.put()
             # set cookies
             self.login(fbid, 'fb')
             self.set_current_user()

@@ -1,25 +1,27 @@
 // JQuery Twitter Feed. Coded by www.webdevdoor.com (2012) and modified from https://twitter.com/javascripts/blogger.js
 $(document).ready(function () {
  
-    var displaylimit = 3;
+    var displaylimit = 2;
     var twitterprofile = "SeventhQueen";
     var screenname = "Seventh Queen";
-    var showdirecttweets = false;
+    var showdirecttweets = true;
+      // Remove directtweets in the future when strangers start tweeting at us
     var showretweets = true;
     var showtweetlinks = true;
     var showprofilepic = true;
  
-    var headerHTML = '';
     var loadingHTML = '';
+    var headerHTML = '';
     //headerHTML += '<a href="https://twitter.com/" ><img src="images/twitter-bird-light.png" width="34" style="float:left;padding:3px 12px 0px 6px" alt="twitter bird" /></a>';
     //headerHTML += '<h1>'+screenname+' <span style="font-size:13px"><a href="https://twitter.com/'+twitterprofile+'" >@'+twitterprofile+'</a></span></h1>';
     loadingHTML += '<div id="loading-container"><img src="/static/landing/images/loading_dark.gif" width="32" height="32" alt="tweet loader" /></div>';
  
-    $('#twitter-feed').html(headerHTML + loadingHTML);
+    $('#twitter-feed').html(loadingHTML);
  
     $.getJSON('/welcome/twitter',
         function(feeds) {
             //alert(feeds);
+            console.log(feeds);
             var feedHTML = '';
             var displayCounter = 1;
             for (var i=0; i<feeds.length; i++) {
@@ -68,7 +70,7 @@ $(document).ready(function () {
                     }
                  }
             }
- 
+ console.log(feedHTML);
             $('#twitter-feed').html(feedHTML);
     });
  
