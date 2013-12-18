@@ -169,8 +169,8 @@ class ExpiredRoute(ndb.Model):
             'details' : cls.details,
             'delivstart' : cls.delivstart.strftime('%m/%d/%Y'),
             'delivend' : cls.delivend.strftime('%m/%d/%Y'),
-            'start' : cls.locstart,
-            'dest' : cls.locend,
+            'locstart' : cls.locstart,
+            'locend' : cls.locend,
             'start' : {cls.start.lat, cls.start.lon},
             'dest' : {cls.dest.lat, cls.dest.lon},
             'routekey' : cls.key.urlsafe()
