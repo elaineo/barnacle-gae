@@ -6,6 +6,8 @@ function initialize_home(mapURL) {
         disableDefaultUI: true
     };
     var map = new google.maps.Map(document.getElementById("map-canvas"),mapOptions);
+    map.mapTypes.set('map_style', styledMap);
+    map.setMapTypeId('map_style');
       var marker0 = new google.maps.Marker({
     map: map,
     draggable: true,

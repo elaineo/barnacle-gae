@@ -8,7 +8,9 @@ function initialize_home(mapURL) {
         scrollwheel: false
     };
     var map = new google.maps.Map(document.getElementById("map-canvas"),mapOptions);
-
+    map.mapTypes.set('map_style', styledMap);
+    map.setMapTypeId('map_style');
+    
     $.getJSON(mapURL, function(route){   
       var ctrLatLng = new google.maps.LatLng(route['center'][0],route['center'][1]);
       map.setCenter(ctrLatLng);

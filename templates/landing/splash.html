@@ -290,7 +290,6 @@ $(document).ready(function(){
 
 $(document).scroll( function() {
     var value = $(this).scrollTop();
-    console.log(value);
     if ( value > 60 ) {
         $("#logo").addClass("flatlogo");
         $("#logo").removeClass("toplogo");
@@ -323,6 +322,7 @@ function preload(arrayOfImages) {
     <!-- maps and other stuff for the form -->
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places"></script>
+<script type="text/javascript" src="/static/js/maps/mapstyles.js"></script>
 <script type="text/javascript" src="/static/js/maps/mapsplash.js"></script>
   
   <!-- 3rd Plugins -->
