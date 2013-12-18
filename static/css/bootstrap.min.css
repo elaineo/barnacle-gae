@@ -350,10 +350,10 @@ legend+.control-group{margin-top:20px;-webkit-margin-top-collapse:separate;}
 .button.expand { width: 100%; text-align: center; }
 .button.primary { background-color: #2699ae; border: 1px solid #1e728c; }
 .button.primary:hover, .button.primary:focus { background-color: #5cabb8; }
-.button.info { background-color: #333; border: 1px solid #333; }
+.button.info { background-color: #444; border: 1px solid #666; }
 .button.info:hover, .button.info:focus { background-color: #222; }
-.button.compl { background-color: #D96651; border: 1px solid #D96651; }
-.button.compl:hover, .button.compl:focus { background-color: #ECB2A8; }
+.button.compl { background-color: #c5dac6; border: 1px solid #b9ccc8; color: #000}
+.button.compl:hover, .button.compl:focus { background-color: #b9ccc8; }
 .button.success { background-color: #5da423; border: 1px solid #396516; }
 .button.success:hover, .button.success:focus { background-color: #457a1a; }
 .button.alert { background-color: #c60f13; border: 1px solid #7f0a0c; }
