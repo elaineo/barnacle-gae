@@ -70,7 +70,7 @@ class SearchableRequestHandler(BaseHandler):
     
     def __get_reqs(self, origin, dest):
         if (origin not in city_dict) or (dest not in city_dict):
-            return []    
+            return None, None   
         startstr = origin
         deststr = dest
 

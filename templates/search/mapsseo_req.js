@@ -38,9 +38,14 @@ function initialize() {
     $('#map1Err').html('');
   });
 
-
+  {% if center is defined %}
+    center = new google.maps.LatLng({{center[0]}}, {{center[1]}});
+  {% else %}
+    center =  new google.maps.LatLng(40, -99);
+  {% endif %}
+  
   var mapOptions = {
-    center: new google.maps.LatLng({{center[0]}}, {{center[1]}}),
+    center: center,
     zoom: 4,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
@@ -48,31 +53,6 @@ function initialize() {
   var map = new google.maps.Map(document.getElementById('map-canvas'),
     mapOptions);
 
-  var marker0 = new google.maps.Marker({
-    map: map,
-    draggable: true,
-    visible: false
-  });
-    marker0.setIcon(/** @type {google.maps.Icon} */({
-      url: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=A|990099|ffffff',
-      size: new google.maps.Size(71, 71),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(17, 34),
-      scaledSize: new google.maps.Size(25, 35)
-    }));
-    
-  var marker1 = new google.maps.Marker({
-    map: map,
-    draggable: true,
-    visible: false
-  });
-    marker1.setIcon(/** @type {google.maps.Icon} */({
-      url: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=B|990099|ffffff',
-      size: new google.maps.Size(71, 71),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(17, 34),
-      scaledSize: new google.maps.Size(25, 35)
-    }));  
   var routePaths=[];
   var marker = new Array();
   var infowindow = new Array();    
@@ -83,7 +63,7 @@ function initialize() {
         clickable: true,
         title: 'Get me to {{mark.loc}}',
         animation: google.maps.Animation.DROP,
-        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=O|B00000|ffffff',
+        icon: '/static/img/icons/map/marker-barnacle.png'
         raiseOnDrag: false,
         visible: true
     });
