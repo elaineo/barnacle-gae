@@ -84,7 +84,9 @@ $(document).ready(function() {
       $('#previous>a').attr('href', $('.archives')[blogI+1].getAttribute('href'));
     }
     
-    var blogTitle = "Barnacle: {{blog_post}}";
+    var blogTitle = "Barnacle: {{blog_post}}".replace(/-/g, ' ');
+    
+    document.title = blogTitle;
     var blogLink = window.location;
     $('#tweet').click(function() {
         var twitURL = 'http://twitter.com/share?text="'+blogTitle+'"&url='+blogLink;
@@ -92,7 +94,7 @@ $(document).ready(function() {
         window.open(twitURL,'','width=500,height=300','');
     });
     $('#fb_share').click(function() {
-        var fbURL = 'http://www.facebook.com/sharer.php?u='+blogLink;
+        var fbURL='https://www.facebook.com/dialog/feed?app_id=540602052657989&link='+blogLink+'&picture=http://www.gobarnacle.com/static/img/barnacle.png&name='+blogTitle+'&redirect_uri=http://www.gobarnacle.com/suicide'        
         window.open(fbURL,'','width=500,height=300','');
     });
     $('#li_share').click(function(){
