@@ -12,5 +12,6 @@ Disallow: /kickstart
 Disallow: /routes
 Disallow: /reserve/
 Disallow: /post/delete/
+Disallow: /post/jsonroute/
 Disallow: /review
 Sitemap: http://www.gobarnacle.com/sitemap.xml
