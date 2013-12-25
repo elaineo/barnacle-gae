@@ -48,6 +48,17 @@ class GerritHandler(BaseHandler):
 
             self.write( "\n<BR>AVG")
             self.write(sum([g.rates for g in gerrit]) / gerrit.count() )
+  
+        if action=='cl':
+
+            gerrit = UserPrefs.query(UserPrefs.stats.referral.IN(['craigslist']))
+            
+            ### I commented this out cuz this file was preventing other stuff from running -- E
+            
+            # for
+            # self.write( "COUNT")
+            # self.write(gerrit.count() )
+        
         
         #self.write( gerrit.count() )
              # delete_all_in_index(ROUTE_INDEX)

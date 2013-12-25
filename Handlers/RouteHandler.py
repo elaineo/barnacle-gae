@@ -135,7 +135,7 @@ class RouteHandler(BaseHandler):
                 # delete in search docs
                 delete_doc(r.key.urlsafe(),type)
                 r.key.delete()
-                self.redirect('/')
+                self.redirect('/account')
             else:
                 self.abort(403)
                 return  
