@@ -90,6 +90,7 @@ def search_todict(s):
     rk = s.doc_id
     if rk.endswith('_RT'):
         d['routekey'] = rk[:-3]
+        # roundtrip, flip start and dest
     else:
         d['routekey'] = rk
     return d
