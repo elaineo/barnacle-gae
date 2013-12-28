@@ -18,7 +18,7 @@ class RouteUtils():
         # route.start,route.locstart=self.getGeoLoc(startstr)
         # route.dest,route.locend=self.getGeoLoc(endstr)
         if route.start and route.dest: 
-            route.pathpts, d = self.getPath(route.start,route.dest)
+            route.pathpts, d = getPath(route.start,route.dest)
             return route, d
         else:
             return route, None
@@ -60,32 +60,7 @@ class RouteUtils():
         data = "location=" + str(loc.lat) + "," + str(loc.lon) + "&timestamp=" + ts + "&sensor=true"
         req = urlfetch.fetch(tz_url+data)
         results = json.loads(req.content)['rawOffset'] 
-        return int(results)
-    
-    def getPath(self,start,dest):
-        pathpts = [start]
-        locs='origin=' + str(start) + '&destination=' + str(dest)
-        # eventually add waypoints
-        #locs = locs+'&waypoints='
-        dir_url = directions_url + locs + '&sensor=false'
-        req = urlfetch.fetch(dir_url)
-        try:
-            results = json.loads(req.content)['routes'][0]['legs'][0]
-        except:
-            logging.error(req.content)
-            logging.error('HTTPError from google dir')
-            return [start,dest], 1000      
-        precision = -1
-        distance = results['distance']['value']
-        for s in results['steps']:
-            # distance = s['distance']['value']   #dist in metres
-            polyline = s['polyline']['points']
-            pathsegment = poly_decode(polyline, precision)[0::100]              
-            lat = s['end_location']['lat']
-            lon = s['end_location']['lng']
-            pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
-            pathpts = pathpts + pathsegment
-        return pathpts, distance
+        return int(results)   
 
     def estPath(self,start,dest, fudge=100):
         """ Precision of path determined by total dist.
@@ -319,3 +294,30 @@ def pathPrec(start,results):
         pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
         pathpts = pathpts + pathsegment
     return pathpts
+    
+    
+#### Stuff that calls the Google Maps API. If all else fails. Hopefully never need to use it ######
+def getPath(start,dest):
+    pathpts = [start]
+    locs='origin=' + str(start) + '&destination=' + str(dest)
+    # eventually add waypoints
+    #locs = locs+'&waypoints='
+    dir_url = directions_url + locs + '&sensor=false'
+    req = urlfetch.fetch(dir_url)
+    try:
+        results = json.loads(req.content)['routes'][0]['legs'][0]
+    except:
+        logging.error(req.content)
+        logging.error('HTTPError from google dir')
+        return [start,dest], 1000      
+    precision = -1
+    distance = results['distance']['value']
+    for s in results['steps']:
+        # distance = s['distance']['value']   #dist in metres
+        polyline = s['polyline']['points']
+        pathsegment = poly_decode(polyline, precision)[0::100]              
+        lat = s['end_location']['lat']
+        lon = s['end_location']['lng']
+        pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
+        pathpts = pathpts + pathsegment
+    return pathpts, distance    

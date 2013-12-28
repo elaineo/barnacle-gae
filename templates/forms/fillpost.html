@@ -280,9 +280,12 @@ function submitCallback(data, formURL) {
     url: formURL,
     data: data,
     success: function(response) {
+      console.log(response);
       //should just redirect
       if (response.status =='ok') 
         window.location.href=response.next;
+      else if (response.status =='invalid') 
+        display_modal("#invalid-route");
     }
   });
 }

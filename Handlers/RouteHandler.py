@@ -334,8 +334,11 @@ class RouteHandler(BaseHandler):
         try:
             p.pathpts = pathPrec(start, path[0])
         except: 
-            #Somehow, the front end did not return this data
-        # try:                
+            #Somehow, the front end did not return this data. must be invalid route
+            # p.pathpts, dist = getPath(start,dest)
+            response = {'status':'invalid'}
+            self.write(json.dumps(response))
+            return
         p.put()            
         taskqueue.add(url='/match/updateroute/'+p.key.urlsafe(), method='get')
         create_route_doc(p.key.urlsafe(), p)
@@ -348,17 +351,6 @@ class RouteHandler(BaseHandler):
             share_onload='?fb'
         response['next'] = '/post/'+p.key.urlsafe()+share_onload
         self.write(json.dumps(response))
-        # except:
-            # self.params['error_route'] = 'Invalid Route'
-            # self.params['locstart'] = startstr
-            # self.params['locend'] = deststr
-            # self.params['details'] = details
-            # self.params['delivstart'] = startdate
-            # self.params['delivend'] = enddate
-            # self.params['capacity'] = capacity
-            # self.params['rt'] = int(rtr)
-            # self.params['route_title'] = 'Edit Route'
-            # self.render('forms/fillpost.html', **self.params)           
             
     def view_page(self,keyrt):
         if keyrt.endswith('_RT'):
