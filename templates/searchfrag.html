@@ -56,6 +56,7 @@ function loadFBdata() {
             {% endfor %}
   </table>
   <br>
+  <div id='scrape_results'>
   <b>Results from outside of Barnacle</b>
   <table id='waiting' class='table'><tr><td>
   <img src='/static/img/icons/loader.gif'> Searching...
@@ -68,6 +69,7 @@ function loadFBdata() {
         <th>Departure Date</th>
     </tr>
   </table>
+  </div>
   <br>
   Don't see any results you like? Submit this as a <button class="button primary small" id="postreq_btn">Delivery Request</button><br>
   We will notify you when there is a driver match.
@@ -75,12 +77,13 @@ function loadFBdata() {
 </div>
   <script>
 $('table#outresults').hide();
-  
+$('#scrape_results').hide();  
   $(function() {
     $('.navicosearch').addClass('onbutton');
     });
 $(document).ready(function(){
   $('table#outresults').hide();
+  $('#scrape_results').hide();  
   click_redirect('#postreq_btn','/post/request?pop=1');
   /* populate external results */
   populateZSearch('/search/scrapez/{{searchkey}}');
@@ -97,6 +100,8 @@ function populateZSearch(searchURL) {
         console.log(q);
         $('table#waiting').hide();
         $('table#outresults').show();
+        if (q.results.length > 0)
+          $('#scrape_results').show();  
         for (i in q.results) {      
           var rowhtml = '<tr class="clicky" data-fb="' + q.results[i]['fbid'] + '" onclick="document.location.href = \'/scraped/' +  q.results[i]['routekey'] + '\';">';
           rowhtml +='<td ';
@@ -126,6 +131,10 @@ function populateCLSearch(searchURL) {
     url: searchURL,
     success: function(q) {
         console.log(q);
+        $('table#waiting').hide();
+        $('table#outresults').show();
+        if (q.results.length > 0)
+          $('#scrape_results').show();          
         for (i in q.results) {      
           var rowhtml = '<tr class="clicky" onclick="document.location.href = \'/scraped/' +  q.results[i]['routekey'] + '\';">';
           rowhtml +='<td>';

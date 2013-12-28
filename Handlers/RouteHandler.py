@@ -331,7 +331,10 @@ class RouteHandler(BaseHandler):
         else:
             p.repeatr = None
         path = data.get('legs')
-        p.pathpts = pathPrec(start, path[0])
+        try:
+            p.pathpts = pathPrec(start, path[0])
+        except: 
+            #Somehow, the front end did not return this data
         # try:                
         p.put()            
         taskqueue.add(url='/match/updateroute/'+p.key.urlsafe(), method='get')

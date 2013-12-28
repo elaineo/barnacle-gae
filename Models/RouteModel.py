@@ -94,7 +94,8 @@ class Route(ndb.Model):
             'details' : cls.details[:200],
             'thumb_url': u.profile_image_url('small'),
             'first_name' : u.first_name,
-            'fbid' : u.userid
+            'fbid' : u.userid,
+            'roundtrip' : int(cls.roundtrip)
         }
         return route             
     

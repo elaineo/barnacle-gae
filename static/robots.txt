@@ -14,4 +14,5 @@ Disallow: /reserve/
 Disallow: /post/delete/
 Disallow: /post/jsonroute/
 Disallow: /review
+Disallow: /match/
 Sitemap: http://www.gobarnacle.com/sitemap.xml

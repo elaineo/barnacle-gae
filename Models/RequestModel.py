@@ -125,8 +125,8 @@ class Request(ndb.Model):
     @classmethod
     def search_route(cls, pathpts, delivstart, delivend, precision):
         results = []
-        qall = cls.query().filter(cls.delivby > delivstart and cls.delivby < delivend)
-        for q in qall:            
+        qall = cls.query().filter(cls.delivby >= delivstart)
+        for q in qall:                    
             start = roundPoint(q.start, precision)
             dest = roundPoint(q.dest, precision)
             if start in pathpts and dest in pathpts:

@@ -10,8 +10,10 @@ from Utils.Defs import www_home
 from Utils.Defs import request_note_sub
 from Utils.EmailUtils import send_info
 from Utils.DefsEmail import *
+from Utils.RouteUtils import HaversinDist, pathPrec
 
 import json
+import logging
 dist = 100 #Arbitrary distance
 
 class MatchHandler(BaseHandler):
@@ -168,11 +170,15 @@ class MatchHandler(BaseHandler):
         posts = []
         unroll=""
         for m in matches:
+            # check if it's a RT
             p = m.get().to_search()
             if p['thumb_url'][0]=='/':
                 p['thumb_url'] = www_home + p['thumb_url']                
             posts.append(p)
-            unroll=unroll + "\n" + p['start'] + "\t" + p['dest'] + "\t" + p['delivend'] + "\t" + www_home + "/post/"+p['routekey']
+            unroll=unroll + "\n" + p['start'] + "\t" + p['dest'] + "\t"
+            if p['roundtrip'] == 1:
+                unroll = unroll + "Roundtrip"
+            unroll = unroll + "\t" + p['delivend'] + "\t" + www_home + "/post/"+p['routekey']
         params = {'posts': posts}
         unrollparams = {'posts': unroll}
         self.params['action'] = 'match2sender'
@@ -201,8 +207,14 @@ class MatchHandler(BaseHandler):
     
 def find_reqmatch(route):
     # for a given route, get all matching requests
-    pathpts, precision = RouteUtils().estPath(route.start, route.dest, dist)
+    # Use stored pathpts, generate Haversin Dist    
+    dist = HaversinDist(route.start.lat, route.start.lon, route.dest.lat, route.dest.lon)
+    # increase fudge because we only stored [0::100]
+    precision = precisionDist(dist)-3
+    pathpts = [roundPoint(pp, precision) for pp in route.pathpts]    
     results = Request.search_route(pathpts, route.delivstart, route.delivend, precision)
+    if route.roundtrip:
+        results = results + Request.search_route(reversed(pathpts), route.delivend, route.delivend, precision)
     return [m.key for m in results]
     
 def find_routematch(req):
