@@ -91,11 +91,10 @@ class TrackerHandler(BaseHandler):
                 if int(code)==pin_gen(r.key.id()):
                     r.status = 99
                     response = { 'status': 'ok'}
+                    r.delivend = datetime.today()                    
+                    r.put()
                 else:
-                    r.status = 2 
                     response = { 'status': 'Wrong code.'} 
-                r.delivend = datetime.today()                    
-                r.put()
         except:
             response = { 'status': 'Failed.'}            
         self.response.headers['Content-Type'] = "application/json"
@@ -245,10 +244,14 @@ class TrackerHandler(BaseHandler):
                 response = { 'status': 'Route not found.'}
             elif r.driver!=self.user_prefs.key:
                 response = { 'status': 'Permission denied.'}
+            elif not r.reservation: #No linked reservation
+                response = { 'status': 'No recipients!'}
             else:
                 response = { 'status': 'ok'}
                 r.delivend = datetime.today()
-                r.put()
+                # change status to waiting
+                r.status = 2
+                r.put()                
                 #send a notification to the nonexistent customer
         except:
             response = { 'status': 'Failed.'}            
