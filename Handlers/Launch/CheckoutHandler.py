@@ -69,7 +69,7 @@ class CheckoutHandler(BaseHandler):
         self.params.update(fill_res_params(res))
         eparams = self.params
         eparams.update(self.params['d'])
-        self.render('launch/receipt.html', **self.params)
+        self.render('launch/receipt_res.html', **self.params)
         self.send_receipt(email, res, eparams)
         
     def __hold(self, key):
@@ -149,7 +149,7 @@ class CheckoutHandler(BaseHandler):
         self.params.update(res.to_dict())      
         eparams = self.params
         eparams.update(self.params['d'])
-        self.render('launch/receipt.html', **self.params)
+        self.render('launch/receipt_res.html', **self.params)
         self.send_receipt(email, res, eparams) 
         # notify the driver
         msg = self.user_prefs.first_name + confirm_do_msg % key

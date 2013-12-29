@@ -30,7 +30,7 @@ import logging
 
 class TestUtils(BaseHandler):
     def get(self):
-        self.render('test.html', **self.params)
+        self.render('launch/receipt_req.html', **self.params)
         
 class DebugUtils(BaseHandler):
     def get(self, action=None):

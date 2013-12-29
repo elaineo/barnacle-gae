@@ -130,7 +130,6 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/summary', handler=SummaryHandler),
    webapp2.Route('/external/<action>', ExternalHandler),
    webapp2.Route('/gerrit/<action>', GerritHandler),
-                               
    ('/expire', ExpireHandler), EmailHandler.mapping()],
   debug=True)
 
