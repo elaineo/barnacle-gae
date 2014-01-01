@@ -52,7 +52,8 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver) {
   $(btn_id).click(function(event) {
     //disable button until finished
     $(btn_id).attr('disabled', 'disabled');
-    $(btn_id).css('cursor', 'progress');
+    //$(btn_id).after('<img id="loader" src="/static/img/icons/loader.gif">');
+    //$(btn_id).hide();
     event.preventDefault();
     window.location.hash='';
     for (var i=0;i<nchecks;i++) {
@@ -64,6 +65,7 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver) {
           loginPlease();
           $(btn_id).removeAttr('disabled');
           $(btn_id).css('cursor', 'default');
+          $(btn_id).show();
           return;
         }
     }

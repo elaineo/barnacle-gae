@@ -16,21 +16,6 @@ function display_modal(loginBox) {
 }
 
 $(document).ready(function() {
-	$('a.modal-window').click(function() {
-		
-        //Getting the variable's value from a link 
-		var loginBox = $(this).attr('href');
-        display_modal(loginBox);
-		return false;
-	});
-	$('a.modal-switch').click(function() {
-        //Getting the variable's value from a link 
-        $('.modal-popup').fadeOut(100); 
-		var loginBox = $(this).attr('href');
-        display_modal(loginBox);
-		return false;
-	});
-	
 	// When clicking on the button close or the mask layer the popup closed
 	$('a.close, #mask').on('click', function() { 
         closeModal();

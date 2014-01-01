@@ -30,10 +30,6 @@ import json
 import random
 import logging
 import math
-
-class TestUtils(BaseHandler):
-    def get(self):
-        self.render('test.html', **self.params)
         
 class GerritHandler(BaseHandler):
     def get(self, action=None):
@@ -48,7 +44,31 @@ class GerritHandler(BaseHandler):
 
             self.write( "\n<BR>AVG")
             self.write(sum([g.rates for g in gerrit]) / gerrit.count() )
-  
+
+        if action=='wow':
+            self.write('Total users \t New users \t Active users \t Active reqs \t New reqs \t Reqs w matches \t Active routes \t New routes<br>')
+            for weeknum in range(1,4):
+                lastweek = datetime.now() - timedelta(weeks=weeknum)
+                # all users
+                users = str(UserPrefs.query().count())
+                active_week0 = str(UserPrefs.query().filter(UserPrefs.last_active > lastweek).count())
+                join_week0 = str(UserPrefs.query().filter(UserPrefs.creation_date > lastweek).count())
+                # Active Barnacles
+                reqs = Request.query()
+                requests = str(reqs.count())            
+                # Barnacles created in last week
+                requests_week0 = str(Request.query().filter(Request.created > lastweek).count())
+                # For all active barnacles, how many have matches?
+                matches = 0
+                for r in reqs:
+                    if r.matches != None:
+                        matches = matches + 1
+                # Active Routes
+                routes = str(Route.query().count())
+                routes_week0 = str(Route.query().filter(Route.created > lastweek).count())            
+                self.write(users + '\t' + join_week0 + '\t' + active_week0 + '\t' + requests + '\t' + requests_week0 + '\t' + str(matches) + '\t' + routes + '\t' + routes_week0 + '<br>')
+
+        
         if action=='cl':
 
             gerrit = UserPrefs.query(UserPrefs.stats.referral.IN(['craigslist']))
