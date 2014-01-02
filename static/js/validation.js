@@ -52,8 +52,7 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver,steps) {
   $(btn_id).click(function(event) {
     //disable button until finished
     $(btn_id).attr('disabled', 'disabled');
-    //$(btn_id).after('<img id="loader" src="/static/img/icons/loader.gif">');
-    //$(btn_id).hide();
+    $(btn_id).addClass('wait');
     event.preventDefault();
     window.location.hash='';
     for (var i=0;i<nchecks;i++) {
@@ -64,8 +63,7 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver,steps) {
         if (!loggedIn) {
           loginPlease();
           $(btn_id).removeAttr('disabled');
-          $(btn_id).css('cursor', 'default');
-          $(btn_id).show();
+          $(btn_id).removeClass('wait');          
           return;
         }
     }
@@ -106,14 +104,12 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver,steps) {
       $.extend(dirData, formData);      
     } else //else what? submit as is
       dirData = $(form).serializeObject();
-    $(btn_id).removeAttr('disabled');
-    $(btn_id).css('cursor', 'default');
     submitCallback(JSON.stringify(dirData), $(form).attr('action'));
     });
   }
   function geoFunc(locstr,o,i,f) {
     var geocoder = new google.maps.Geocoder();
-    geocoder.geocode( { 'address': locstr}, function(results, status) {
+    geocoder.geocode( { 'address': locstr, componentRestrictions: {country: 'us'}  }, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         // fill in form fields
         console.log(results);
@@ -131,7 +127,7 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver,steps) {
         $('input#'+i+'lon').val('');
         display_modal("#invalid-box");
         $(btn_id).removeAttr('disabled');
-        $(btn_id).css('cursor', 'default');
+        $(btn_id).removeClass('wait');   
         return;              
       }
     });     

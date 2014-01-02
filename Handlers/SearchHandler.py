@@ -77,6 +77,7 @@ class SearchHandler(BaseHandler):
             distance = data.get('distance')
         else:
             path = None
+            distance = None
             
         posts = search_requests(start,dest,dist,path,distance,startdate,enddate)
         self.params['posts'] = posts

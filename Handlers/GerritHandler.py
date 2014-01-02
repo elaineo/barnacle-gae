@@ -45,7 +45,7 @@ class GerritHandler(BaseHandler):
             self.write( "\n<BR>AVG")
             self.write(sum([g.rates for g in gerrit]) / gerrit.count() )
 
-        if action=='wow':
+        elif action=='wow':
             self.write('Total users \t New users \t Active users \t Active reqs \t New reqs \t Reqs w matches \t Active routes \t New routes<br>')
             for weeknum in range(1,5):
                 currweek = datetime.now() - timedelta(weeks=weeknum-1)
@@ -75,7 +75,25 @@ class GerritHandler(BaseHandler):
                 
                 self.write(currweek.strftime('%Y-%m-%d') + '\t' + users + '\t' + join_week0 + '\t' + active_week0 + '\t' + requests + '\t' + requests_week0 + '\t' + str(matches) + '\t' + routes + '\t' + routes_week0 + '<br>')
 
-        
+        elif action=='repeat': 
+            routes = Request.query()
+            users = []
+            rusers = []
+            rcount = 0
+            for r in routes:
+                if r.userkey in users and r.userkey not in rusers:
+                    rcount = rcount+1
+                    rusers.append(r.userkey)
+                else:
+                    users.append(r.userkey)
+            xroutes = ExpiredRequest.query()
+            for r in xroutes:
+                if r.userkey in users and r.userkey not in rusers:
+                    rcount = rcount+1
+                    rusers.append(r.userkey)
+                else:
+                    users.append(r.userkey)
+            self.write(rcount)
         if action=='cl':
 
             gerrit = UserPrefs.query(UserPrefs.stats.referral.IN(['craigslist']))

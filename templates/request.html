@@ -108,8 +108,8 @@ function getRequestDump() {
   };
   directionsService.route(request, function(response, status) {
     if (status == google.maps.DirectionsStatus.OK) {
-      console.log(response.routes[0]);
-      data.legs = response.routes[0].legs;
+      data.distance: response.routes[0].legs[0].distance.value;
+      data.legs = response.routes[0].legs[0].steps; 
       $.ajax({
         type: "POST",
         dataType: "json",

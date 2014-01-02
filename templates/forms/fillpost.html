@@ -286,6 +286,8 @@ function submitCallback(data, formURL) {
         window.location.href=response.next;
       else if (response.status =='invalid') 
         display_modal("#invalid-route");
+      $('#route_btn').removeAttr('disabled');
+      $('#route_btn').removeClass('wait');   
     }
   });
 }
