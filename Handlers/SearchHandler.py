@@ -61,7 +61,7 @@ class SearchHandler(BaseHandler):
         # this is optional
         checkdest = data.get('dest')
         if checkdest:
-            dest, deststr = get_search_json(data,'dest')     
+            dest, deststr = get_search_json(data,'dest') 
         else:
             deststr=''
             dest = None
@@ -74,11 +74,11 @@ class SearchHandler(BaseHandler):
 
         if dest:
             path = data.get('legs')            
+            distance = data.get('distance')
         else:
             path = None
-        
-        posts = search_requests(start,dest,dist,path,startdate,enddate)            
-
+            
+        posts = search_requests(start,dest,dist,path,distance,startdate,enddate)
         self.params['posts'] = posts
         self.render('searchqfrag.html', **self.params)
 
@@ -218,7 +218,7 @@ class SearchHandler(BaseHandler):
             ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
         return ptg, ptstr    
         
-def search_requests(start,dest=None, dist=None, path=None, startdate=None,enddate=None):
+def search_requests(start,dest=None, dist=None, path=None, distance=None, startdate=None,enddate=None):
     if not dist:
         dist = 100
     dist = int(dist)
@@ -235,7 +235,7 @@ def search_requests(start,dest=None, dist=None, path=None, startdate=None,enddat
     ## Change this to a query
     if dest:
         ### Get a set of low-res pathpts            
-        pathpts, precision = pathEst(start, dest,path[0])
+        pathpts, precision = pathEst(start, dest,path, distance)
         results = Request.search_route(pathpts, delivstart, delivend, precision)
         for r in results:
             posts.append(r.to_search())

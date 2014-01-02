@@ -13,6 +13,7 @@ from Utils.SearchDocUtils import delete_doc
 from Utils.ValidUtils import *
 import logging
 import json
+import time
 
 class RouteHandler(BaseHandler):
     """ Post a new route """
@@ -195,10 +196,9 @@ class RouteHandler(BaseHandler):
             self.params['today'] = datetime.now().strftime('%Y-%m-%d')
             self.render('forms/fillrequest.html', **self.params)
     def __init_request(self,key=None):
-        self.response.headers['Content-Type'] = "application/json"
+        self.response.headers['Content-Type'] = "application/json"        
         response = {'status':'ok'}
         data = json.loads(unicode(self.request.body, errors='replace'))
-        
         capacity = data.get('vcap')
         capacity = parse_unit(capacity)    
         #items = self.request.get('items')
@@ -207,16 +207,16 @@ class RouteHandler(BaseHandler):
             delivby = parse_date(reqdate)
         else:
             delivby = datetime.now()+timedelta(weeks=1)
-            
+        
         start, startstr = get_search_json(data,'start')
         dest, deststr = get_search_json(data,'dest')  
+        
         logging.info('Initial Request: '+startstr+' to '+deststr)
-        results = data.get('legs')
-        distance = results[0]['distance']['value']
+        distance = data.get('distance')
         p = Request(userkey=self.user_prefs.key, start=start, 
             dest=dest, capacity=capacity, 
             delivby=delivby, locstart=startstr, locend=deststr)
-        
+
         price, seed = priceEst(p, distance)
         stats = ReqStats(sugg_price = price, seed = seed, distance = distance)
         p.rates = price
@@ -224,17 +224,16 @@ class RouteHandler(BaseHandler):
 
         try:
             p.put() 
-            taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
-            taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
-            create_request_doc(p.key.urlsafe(), p)            
             self.params.update(fill_route_params(p.key.urlsafe(),False))
             self.params['update_url'] = '/post/update/' + p.key.urlsafe()
             self.params['email'] = self.user_prefs.email
-            self.render('request_review.html', **self.params)
+            self.render('request_review.html', **self.params)            
+            taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
+            taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
+            create_request_doc(p.key.urlsafe(), p)            
 
         except:  #this should never happen
             self.params['error_route'] = 'Invalid Locations'
-            self.params['items'] = items
             self.params['capacity'] = capacity
             self.params['delivby'] = reqdate
             self.params['route_title'] = 'Edit Delivery Request'
@@ -331,8 +330,9 @@ class RouteHandler(BaseHandler):
         else:
             p.repeatr = None
         path = data.get('legs')
+        distance = data.get('distance')
         try:
-            p.pathpts = pathPrec(start, path[0])
+            p.pathpts = pathPrec(start, path, distance)
         except: 
             #Somehow, the front end did not return this data. must be invalid route
             # p.pathpts, dist = getPath(start,dest)

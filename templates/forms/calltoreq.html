@@ -51,7 +51,7 @@
   
 $(document).ready(function(){
     var v = [[0],[0]];
-    click_ajax('#request_btn',['map0','map1'],['start','dest'],v,'#request_form',true);
+    click_ajax('#request_btn',['map0','map1'],['start','dest'],v,'#request_form',true, false);
 });
   </script>
  <script>
@@ -66,6 +66,8 @@ $(document).ready(function(){
   <script type="text/javascript" src="/static/js/validation.js"></script>
     <script type="text/javascript">
 function submitCallback(data, formURL) {
+  timestamp = new Date().getTime();
+  console.log(timestamp);
   console.log(formURL);
   $.ajax({
     type: "POST",
@@ -75,6 +77,8 @@ function submitCallback(data, formURL) {
     url: formURL,
     data: data,
     success: function(response) {
+      timestamp = new Date().getTime();
+      console.log(timestamp);
       document.open();
       document.write(response);
       document.close(); 

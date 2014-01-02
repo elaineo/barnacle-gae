@@ -47,26 +47,33 @@ class GerritHandler(BaseHandler):
 
         if action=='wow':
             self.write('Total users \t New users \t Active users \t Active reqs \t New reqs \t Reqs w matches \t Active routes \t New routes<br>')
-            for weeknum in range(1,4):
+            for weeknum in range(1,5):
+                currweek = datetime.now() - timedelta(weeks=weeknum-1)
                 lastweek = datetime.now() - timedelta(weeks=weeknum)
+                
                 # all users
-                users = str(UserPrefs.query().count())
-                active_week0 = str(UserPrefs.query().filter(UserPrefs.last_active > lastweek).count())
-                join_week0 = str(UserPrefs.query().filter(UserPrefs.creation_date > lastweek).count())
+                users = str(UserPrefs.query(UserPrefs.creation_date < currweek).count())
+                active_week0 = str(UserPrefs.query().filter(ndb.AND(UserPrefs.last_active > lastweek, UserPrefs.last_active < currweek)).count())
+                join_week0 = str(UserPrefs.query().filter(ndb.AND(UserPrefs.creation_date > lastweek, UserPrefs.creation_date < currweek)).count())
+                
                 # Active Barnacles
-                reqs = Request.query()
-                requests = str(reqs.count())            
+                reqs = Request.query().filter(Request.created < currweek)
                 # Barnacles created in last week
-                requests_week0 = str(Request.query().filter(Request.created > lastweek).count())
-                # For all active barnacles, how many have matches?
+                requests_week0 = str(Request.query().filter(ndb.AND(Request.created > lastweek, Request.created < currweek)).count())
+                requests = str(reqs.count())            
+                
+                # For all active barnacles, how many have matches that were created prior to this week?
                 matches = 0
                 for r in reqs:
-                    if r.matches != None:
-                        matches = matches + 1
+                    if r.matches:
+                        if (True in [m.get().created < currweek for m in r.matches]):
+                            matches = matches + 1
+                
                 # Active Routes
-                routes = str(Route.query().count())
-                routes_week0 = str(Route.query().filter(Route.created > lastweek).count())            
-                self.write(users + '\t' + join_week0 + '\t' + active_week0 + '\t' + requests + '\t' + requests_week0 + '\t' + str(matches) + '\t' + routes + '\t' + routes_week0 + '<br>')
+                routes = str(Route.query().filter(Route.created < currweek).count())
+                routes_week0 = str(Route.query().filter(ndb.AND(Route.created > lastweek, Route.created < currweek)).count())            
+                
+                self.write(currweek.strftime('%Y-%m-%d') + '\t' + users + '\t' + join_week0 + '\t' + active_week0 + '\t' + requests + '\t' + requests_week0 + '\t' + str(matches) + '\t' + routes + '\t' + routes_week0 + '<br>')
 
         
         if action=='cl':

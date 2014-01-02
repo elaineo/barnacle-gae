@@ -268,24 +268,22 @@ def priceEst(req, distance):
     #TODO: take dist from fwy into account
     return price, seed
     
-def pathEst(start, dest, results, fudge=100):
+def pathEst(start, dest, steps, dist, fudge=100):
     """ Precision of path determined by total dist.
       0.1 ~ 10 miles <-- improve later """
-    dist = results['distance']['value']   #dist in metres
     precision = precisionDist(dist/miles2m * fudge)
     pathpts = [roundPoint(start,precision)]        
-    for s in results['steps']:
+    for s in steps:
         polyline = s['polyline']['points']
         pathsegment = poly_decode(polyline, precision)              
         pathpts = pathpts + pathsegment
     pathpts.append(roundPoint(dest,precision))
     return pathpts, precision    
     
-def pathPrec(start,results):
+def pathPrec(start,steps,distance):
     pathpts = [start]
     precision = -1
-    distance = results['distance']['value']
-    for s in results['steps']:
+    for s in steps:
         # distance = s['distance']['value']   #dist in metres
         polyline = s['polyline']['points']
         pathsegment = poly_decode(polyline, precision)[0::100]              

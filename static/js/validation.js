@@ -46,7 +46,7 @@ function change_validity (x){
   vtest: which fields do we need to check?
   clickver: Do they need to be logged in?
 **/
-function click_ajax(btn_id, fields,inputs,vtest,form,clickver) {
+function click_ajax(btn_id, fields,inputs,vtest,form,clickver,steps) {
   var nchecks = fields.length;
   var valid = new Array(nchecks);
   $(btn_id).click(function(event) {
@@ -98,7 +98,10 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver) {
     directionsService.route(request, function(response, status) {
     if (status == google.maps.DirectionsStatus.OK) {
       console.log(response.routes[0]);
-      dirData = response.routes[0];
+      // separate distance and route
+      dirData = { distance: response.routes[0].legs[0].distance.value };
+      if (steps)
+        dirData.legs = response.routes[0].legs[0].steps; 
       formData = $(form).serializeObject();
       $.extend(dirData, formData);      
     } else //else what? submit as is
