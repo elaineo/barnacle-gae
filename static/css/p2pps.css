@@ -418,11 +418,11 @@ position: absolute;
 }
 
 button.wait {
-    color: transparent;
+    color: transparent !important;
     border: 0 !important;
     background: url('/static/img/icons/loader.gif') no-repeat scroll 0 0 transparent !important;
     height: 26px;
-    cursor: wait;
+    cursor: wait !important;
 }
 
 /* -----------------------------------------

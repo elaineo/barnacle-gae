@@ -109,6 +109,13 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver,steps) {
   }
   function geoFunc(locstr,o,i,f) {
     var geocoder = new google.maps.Geocoder();
+    // is it blank? 
+    if (locstr == '') {
+        display_modal("#invalid-box");
+        $(btn_id).removeAttr('disabled');
+        $(btn_id).removeClass('wait');       
+        return;
+    }
     geocoder.geocode( { 'address': locstr, componentRestrictions: {country: 'us'}  }, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         // fill in form fields
