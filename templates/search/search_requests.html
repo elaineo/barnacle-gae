@@ -91,6 +91,8 @@ function submitCallback(data, formURL) {
         $('#dumpresults').html(response);
         window.location.hash='dumpresults';
         loadFBdata();
+         $('#search_btn').removeAttr('disabled');
+         $('#search_btn').removeClass('wait');   
     }
   });
 }

@@ -24,6 +24,11 @@ class LandingPage(BaseHandler):
             self.params['seosub'] = 'toys'
             self.params['items'] = 'Toys'
             self.render('landing/equip.html', **self.params)
+        elif action=='music':
+            self.params['seodir'] = 'music'
+            self.params['seosub'] = 'instruments'
+            self.params['items'] = 'Instruments'
+            self.render('landing/music.html', **self.params)            
         elif action=='biz':
             self.params['seodir'] = 'biz'
             self.params['seosub'] = 'shipments'
@@ -56,6 +61,8 @@ class CouponPage(BaseHandler):
                 self.redirect('/welcome/equip#coupon?'+c.name)
             elif c.category==3:
                 self.redirect('/welcome/biz#coupon?'+c.name)                
+            elif c.category==4:
+                self.redirect('/welcome/music#coupon?'+c.name)                                
             
     def post(self, action=None):
         if action=='gen':
