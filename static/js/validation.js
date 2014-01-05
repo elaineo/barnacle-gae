@@ -45,6 +45,7 @@ function change_validity (x){
 /** click_ajax
   vtest: which fields do we need to check?
   clickver: Do they need to be logged in?
+  steps: Do we need map dirs or just distance? What if we need neither?
 **/
 function click_ajax(btn_id, fields,inputs,vtest,form,clickver,steps) {
   var nchecks = fields.length;

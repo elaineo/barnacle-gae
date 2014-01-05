@@ -139,7 +139,7 @@ class Request(ndb.Model):
 class SearchEntry(ndb.Model):
     remoteip = ndb.StringProperty(required=True) #don't know who they are, don't care
     created = ndb.DateTimeProperty(auto_now_add=True)
-    delivby = ndb.DateProperty(required=True)
+    delivby = ndb.DateProperty()
     start = ndb.GeoPtProperty(required=True)
     dest = ndb.GeoPtProperty(required=True)
     dist = ndb.FloatProperty(default=100.0)

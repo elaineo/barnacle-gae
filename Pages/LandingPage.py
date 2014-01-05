@@ -58,11 +58,11 @@ class CouponPage(BaseHandler):
             elif c.category==1:
                 self.redirect('/welcome/auto#coupon?'+c.name)
             elif c.category==2:
-                self.redirect('/welcome/equip#coupon?'+c.name)
+                self.redirect('/welcome/equip#coupon?'+c.name)             
             elif c.category==3:
-                self.redirect('/welcome/biz#coupon?'+c.name)                
-            elif c.category==4:
-                self.redirect('/welcome/music#coupon?'+c.name)                                
+                self.redirect('/welcome/music#coupon?'+c.name)
+            else:
+                self.redirect('/welcome/biz#coupon?'+c.name)                   
             
     def post(self, action=None):
         if action=='gen':

@@ -3,7 +3,9 @@ from google.appengine.ext import ndb
 from google.appengine.api import mail
 
 from Handlers.BaseHandler import *
+from Handlers.SearchHandler import *
 from Models.Launch.ResModel import *
+from Models.RequestModel import *
 from Models.Launch.BarnacleModel import *
 from Utils.RouteUtils import *
 from Utils.ValidUtils import *
@@ -16,17 +18,36 @@ class ReserveHandler(BaseHandler):
         elif action=='json' and key:
             self.__jsondump(key)
         else:
-            self.params['route_title'] = 'Reserve a Delivery'
-            self.render('launch/filllres.html', **self.params)
+            self.params['route_title'] = 'Ship Your Stuff'
+            self.render('launch/filllreq.html', **self.params)
                             
     def post(self, action=None,key=None):
-        if not self.user_prefs:
-            self.redirect('/res#signin-box')
         if (action=='driver'):
             self.__create_checkout(key)
+        elif (action=='search'):
+            self.__search_drivers()
         else:
             self.__create_res()
             
+    def __search_drivers(self):
+        data = json.loads(unicode(self.request.body, errors='replace'))
+        remoteip = self.request.remote_addr
+        start, startstr = get_search_json(data,'start')
+        dest, deststr = get_search_json(data,'dest') 
+        logging.info('Search req: '+startstr+' to '+deststr)
+        if not start or not dest:
+            #return error
+            self.write('Invalid locations')
+            return
+        # store this search
+        sr = SearchEntry(remoteip = remoteip, start=start, 
+                    dest=dest, locstart=startstr,locend=deststr).put()    
+        
+        self.response.headers['Content-Type'] = "application/json"
+        response = { 'next' : '/res/driver/'+sr.urlsafe(),
+                     'status': 'ok' }
+        self.write(json.dumps(response))
+    
     def __create_res(self):
         capacity = self.request.get('vcap')
         capacity = parse_unit(capacity)
@@ -98,18 +119,32 @@ class ReserveHandler(BaseHandler):
         self.redirect('/checkout/'+res.key.urlsafe())
         
     def __driverres(self,key):
+        # retrieve search, find matching drivers
+        dist = 100
         numres = 6
-        users = BarnacleModel.query().fetch(numres)
+        delivend = datetime.now() + timedelta(days=365)
         res = ndb.Key(urlsafe=key).get()
+        startresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',res.start).results
+        destresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',res.dest).results
+        results = search_intersect(startresults, destresults)                    
+        keepers = []
+        for c in results:
+            startpt = field_byname(c, "start")
+            dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) 
+            dist1 = HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude)
+            if dist0 < dist1:
+                keepers.append(c)
+        results = keepers
+        logging.info(results)
+        # if there are no drivers, redirect to next page to complete request
         drivers = []
-        for u in users:
-            p = fill_driver_params(u)
-            p['rates']=res.ratestemp+u.seed
+        for r in results:
+            p = fill_driver_params(r.userkey.get())
             drivers.append(p)
         self.params['reskey'] = key
         self.params['drivers'] = drivers            
         self.render('launch/driverres.html', **self.params)    
-        
+                
         
     def __jsondump(self,key):
         try:
