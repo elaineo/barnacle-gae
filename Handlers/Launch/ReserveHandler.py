@@ -212,15 +212,13 @@ class ReserveHandler(BaseHandler):
         logging.info(results)
         # if there are no drivers, redirect to next page to complete request
         drivers = []
-        results = Driver.query()
-        for d in results:
-            p = {}
-            # route = ndb.Key(urlsafe=r.doc_id).get()
-            # res.matches.append(ndb.Key(urlsafe=r.doc_id))
-            # res.put()
-            # p = search_todict(r)
-            # p['capacity'] = route.capacity
-            # d = Driver.by_userkey(r.userkey)
+        for r in results:
+            route = ndb.Key(urlsafe=r.doc_id).get()
+            res.matches.append(ndb.Key(urlsafe=r.doc_id))
+            res.put()
+            p = search_todict(r)
+            p['capacity'] = route.capacity
+            d = Driver.by_userkey(r.userkey)
             p = d.params_fill(p)
             drivers.append(p)
 #rating, #completed, checkbox, vehicle, date arriving, insured, bank (tooltip)
