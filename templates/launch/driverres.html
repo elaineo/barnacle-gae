@@ -1,80 +1,83 @@
 {% extends "base.html" %}
-{% block title %}Select a Driver{% endblock %}
-{% block heading %}<h1>Select a Driver</h1>{% endblock %}
+{% block title %}{{res_title}}{% endblock %}
+{% block heading %}<h1>{{res_title}}</h1>{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="/static/css/drivers.css" />
-<script type="text/javascript">
-$(document).ready(function(){
-    $(document).on('fbload', function(){
-        FB.getLoginStatus(function(response) {
-            if (response.status === 'connected') {
-              $('.clicky').each(function() {
-                var fbid = $(this).attr('data-fb');
-                dumpFriends(fbid, $(this).find('.dumpfriends'),3);
-              });
-            }
-        });
-    });
-});
-</script>
-
+<form enctype="multipart/form-data" method="post" class="form-horizontal" id="search_form">
 <div class="row">
-  <div class="span10 offset1">
-  <div class="row">
-    {% for d in drivers %}
-      <div class='span3'>
-        <table class="table table-bordered table-hover clicky" data-fb='{{d.fbid}}'>
-        <tr><td>
-        <table><tr><td style='border: none;'>
-        <img style='width:100px' src="{{d.profile_thumb}}">
-        </td><td style='border: none;'>
-        <p class='pricetag'>${{d.rates}}</p></br>
-        <form enctype="multipart/form-data" method="post" class='form_submit'>
-        <input type='hidden' value='{{d.rates}}' name='rates'>
-        <input type='hidden' value='{{d.key}}' name='dkey'>
-        <input type='hidden' value='{{d.reskey}}' name='reskey'>
-        <button class='btn btn-small'>Checkout</button>
-        </form>
-        </td></tr></table>
-        <h4>{{d.first_name}} &nbsp;&nbsp;</h4>
-        <a href='{{d.prof_url}}' target='_blank'>view profile</a><br>
-        Deliveries Completed: <b>{{d.deliv_completed}}</b><br> 
-        <div style='max-height:40px'>
-        {{d.insured | safe}} <br><br>
+  <div class="span4">            
+    <div class="control-group">
+       <label class="control-label">Space Needed:</label>
+        <div class="controls input-xlarge">
+        <select  name="vcap" class="expand" id='vcap'>
+          <option  name="vcap" value="0" selected>Passenger Seat</option>
+          <option  name="vcap"  value="1">Trunk</option>
+          <option  name="vcap" value="2">Wagon</option>
+        </select>
         </div>
-        <b>Mutual Friends</b><br>
-        <div class='dumpfriends' >None.</div>
-        <!-- Networks: {% for n in d.networks %} {{n}}{% endfor %} -->
-        </td></tr></table>
-      </div>
-    {% endfor %}
+    </div>
   </div>
+  <div class="span5">  
+    <div class="control-group">
+        <label class="control-label" for="dates">Deliver By:</label>
+        <div class="controls">
+          <input type="date" name="enddate" min="{{today}}" value="{{delivby}}" id="enddate" autocomplete="off">
+        </div>
+    </div>    
+  </div>
+  <div class="span2"><button id='request_btn' class="button secondary"> Next</button></div>  
+</div>
+</form>
+<div class="row">
+  <div class="span10 offset1" id='drivermosaic'>
+  {% include "launch/drivermosaic.html" %}
   <br>
   Don't see any results you like? Post a <button class="btn btn-info btn-small" id="postreq_btn">Delivery Request</button>
   </div>
 </div>
   <script>
 $(document).ready(function(){  
-    $('.navicoreq').addClass('onbutton');
-    click_redirect('#postreq_btn','/post/request');
-    $('.clicky tr td table tr td button').addClass('hide');
-    
-    $('.clicky').click(function() {
-        $('.clicky').removeClass('selected');
-        $('.clicky tr td table tr td button').addClass('hide');
-        $(this).addClass('selected');          
-        $(this).find('button').removeClass('hide');
+    $('.navicoreq').addClass('onbutton');   
+    user_rating();
+    // tooltips
+    $('.info_ins').popover({trigger: 'hover'});    
+    $('.info_bank').popover({trigger: 'hover'});    
+    //Detect change in filters
+    $('#enddate').change(function() {
+      submitSearch();
     });
-    $('.form_checkout').submit( function(event) {
-        event.preventDefault();
-        loggedIn = checkLoginStatus();
-          if (loggedIn) {
-            $(this).submit();    
-          } else {
-            loginPlease();
-          }
+    $('#vcap').change(function() {
+      submitSearch();
     });
-    
-});    
-  </script>
+});
+function submitSearch() {
+  data = {'vcap' : $('select#vcap').val(),
+          'delivend': $('#enddate').val() };
+  $.ajax({
+    type: "POST",
+    dataType: "text",
+    accepts: "text/html",
+    contentType: "application/json; charset=utf-8",
+    url: '/res/filter/{{reskey}}',
+    data: JSON.stringify(data),
+    success: function(response) {
+      console.log(response);
+      //update search results
+      $('#drivermosaic').html(response);
+    }, 
+    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+      console.log("Status: " + textStatus); 
+      console.log("Error: " + errorThrown); 
+    }       
+  });  
+}
+function user_rating(){
+    $(".avgrating").each(function() {
+      $(this).find('.rating-starsOn').each(function() {
+        w =$(this).text();
+        $(this).width(w * $(this).height());
+      });  
+    })
+}
+</script> 
 {% endblock %}

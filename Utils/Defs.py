@@ -53,9 +53,9 @@ SG_geolat = 34.125
 SG_geolon = -118.086
 MV_string = '1601 N Shoreline Blvd, Mountain View, CA'
 SG_string = '6936 N Ferncroft Ave, San Gabriel, CA'
-ins_str = '<img src="/static/barnacle16.png"> Insured up to $500'
+ins_str = '<img src="/static/barnacle16.png" data-toggle="popover" data-content="I dont remember why we said to have a tooltip here." class="info_ins"> Insured up to $500'
 ins_str_email = 'Insured up to $500'
-bank_str = '<i class="icon-ok"></i> Bank Account Verified'
+bank_str = '<i class="icon-ok info_bank" data-toggle="popover" data-content="I dont remember why we said to have a tooltip here."></i> Bank Account Verified'
 
 blank_img = '/static/img/blank.png'
 blank_id = '5792498911805440'

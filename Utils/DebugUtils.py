@@ -85,7 +85,13 @@ class DebugUtils(BaseHandler):
             for d in data:
                 d.key.delete()
             delete_all_in_index(CL_INDEX)                               
-            self.write('cl stuff gone.')                                  
+            self.write('cl stuff gone.')       
+        elif action=='populate':
+            for f in fakefb:
+                u = UserPrefs(userid=f[1], email=f[2], first_name=f[3], last_name=f[4], about=f[5], location=f[6])
+                u.put()
+                d = Driver(userkey=u.key).put()
+            self.write('users created.') 
         elif action=='createreviews':  
             users = UserPrefs.query().fetch()
             for r in fakereviews:  

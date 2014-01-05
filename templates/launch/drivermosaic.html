@@ -1,0 +1,38 @@
+  <div class="row">
+    {% for d in drivers %}
+      <div class='span3'>
+        <table class="table table-bordered table-hover clicky" data-fb='{{d.fbid}}'>
+        <tr><td>
+        <table>
+        <tr><td style='border: none; position:relative;'>
+        <div style='position:absolute;top:0;'>
+        <input type="checkbox" name="dkey" value="{{d.routekey}}" checked>
+        </div>
+        <img style='width:100px' src="{{d.profile_thumb}}">
+        </td><td style='border: none;'>
+        {% if d.capacity == 0 %}<img src='/static/img/icons/icocap0.png'> Compact
+        {% elif d.capacity == 1 %}<img src='/static/img/icons/icocap1.png'> SUV
+        {% elif d.capacity == 2 %}<img src='/static/img/icons/icocap2.png'> Pickup
+        {% elif d.capacity == 3 %}<img src='/static/img/icons/icocap3.png'> Hauler
+        {% elif d.capacity == 4 %}<img src='/static/img/icons/icocap4.png'> Carry On
+        {% endif %}
+        </br>
+        </td></tr></table>
+        <h4>{{d.first_name}} &nbsp;&nbsp;</h4>
+        <div class="avgrating">
+        <span class="rating-starsOff" style="width:95px;">
+        <span class="rating-starsOn" style="width:19px">{{d.avg_rating}}</span>
+        </span>
+        </div>        
+        <a href='{{d.prof_url}}' target='_blank'>view profile</a><br><br>
+        Deliveries Completed: <b>{{d.deliv_completed}}</b><br> 
+        <div style='height:40px'>
+        {{d.insured | safe}} <br>
+        {{d.bankver | safe}}                
+        </div><br>
+        Arrival Date: {{d.delivend}}
+        <!-- Networks: {% for n in d.networks %} {{n}}{% endfor %} -->
+        </td></tr></table>
+      </div>
+    {% endfor %}
+  </div>

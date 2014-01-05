@@ -6,10 +6,10 @@ from Handlers.BaseHandler import *
 from Handlers.SearchHandler import *
 from Models.Launch.ResModel import *
 from Models.RequestModel import *
-from Models.Launch.BarnacleModel import *
+from Models.Launch.Driver import *
 from Utils.RouteUtils import *
 from Utils.ValidUtils import *
-from Utils.Defs import MV_geolat, MV_geolon, SG_geolat, SG_geolon, MV_string, SG_string, ins_str, ins_str_email
+from Utils.Defs import MV_geolat, MV_geolon, SG_geolat, SG_geolon, MV_string, SG_string
 
 class ReserveHandler(BaseHandler):
     def get(self, action=None,key=None):
@@ -26,6 +26,8 @@ class ReserveHandler(BaseHandler):
             self.__create_checkout(key)
         elif (action=='search'):
             self.__search_drivers()
+        elif (action=='filter') and key:
+            self.__filter(key)
         else:
             self.__create_res()
             
@@ -118,6 +120,29 @@ class ReserveHandler(BaseHandler):
         res.put()
         self.redirect('/checkout/'+res.key.urlsafe())
         
+    def __filter(self, key):
+        # retrieve search, filter matching drivers
+        res = ndb.Key(urlsafe=key).get()
+        data = json.loads(unicode(self.request.body, errors='replace'))
+        capacity = data.get('vcap')
+        vcap = parse_unit(capacity)
+        enddate = data.get('delivend')
+        if enddate:
+            delivend = parse_date(enddate)
+        else:
+            delivend = datetime.now()+timedelta(days=365)
+        drivers = []
+        for r in res.matches:
+            route = r.get()
+            if route.capacity > vcap and route.delivend <= delivend:
+                p = route.to_search()
+                d = Driver.by_userkey(route.userkey)
+                p = d.params_fill(p)
+                drivers.append(p)
+        response = {'status': 'ok'}
+        self.params['drivers'] = drivers  
+        self.render('launch/drivermosaic.html', **self.params)   
+        
     def __driverres(self,key):
         # retrieve search, find matching drivers
         dist = 100
@@ -130,7 +155,7 @@ class ReserveHandler(BaseHandler):
         keepers = []
         for c in results:
             startpt = field_byname(c, "start")
-            dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) 
+            dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt. longitude) 
             dist1 = HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude)
             if dist0 < dist1:
                 keepers.append(c)
@@ -138,11 +163,23 @@ class ReserveHandler(BaseHandler):
         logging.info(results)
         # if there are no drivers, redirect to next page to complete request
         drivers = []
-        for r in results:
-            p = fill_driver_params(r.userkey.get())
+        results = Driver.query()
+        for d in results:
+            p = {}
+            # route = ndb.Key(urlsafe=r.doc_id).get()
+            # res.matches.append(ndb.Key(urlsafe=r.doc_id))
+            # res.put()
+            # p = search_todict(r)
+            # p['capacity'] = route.capacity
+            # d = Driver.by_userkey(r.userkey)
+            p = d.params_fill(p)
             drivers.append(p)
+#rating, #completed, checkbox, vehicle, date arriving, insured, bank (tooltip)
+#location, about            
         self.params['reskey'] = key
-        self.params['drivers'] = drivers            
+        self.params['drivers'] = drivers  
+        self.params['today'] = datetime.now().strftime('%Y-%m-%d')
+        self.params['res_title'] = res.locstart + ' to ' + res.locend
         self.render('launch/driverres.html', **self.params)    
                 
         
@@ -178,13 +215,17 @@ def fill_driver_params(u):
             'key' : u.key.urlsafe()
         }
     if u.ins:
-        p['ins'] = ins_str
+        p['insured'] = ins_str
         p['ins_email'] = ins_str_email
     else:
-        p['ins'] = ''
+        p['insured'] = ''
         p['ins_email'] = ''
+    if u.bank:
+        p['bank'] = bank_str
+    else:
+        p['bank'] = ''
     return p
-
+    
 def fill_res_params(r):
     r = { 'reskey' : r.key.urlsafe() ,
           'price' : r.rates,

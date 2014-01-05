@@ -145,7 +145,8 @@ class SearchEntry(ndb.Model):
     dist = ndb.FloatProperty(default=100.0)
     locstart = ndb.StringProperty(required=True) #text descr of location
     locend = ndb.StringProperty(required=True) #text descr of location   
-
+    matches = ndb.KeyProperty(repeated=True)
+    
     @classmethod
     def by_ip(cls,remoteip):
         return cls.query().filter(cls.remoteip==remoteip).order(-cls.created).get()

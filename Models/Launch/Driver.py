@@ -2,6 +2,7 @@ from google.appengine.ext import ndb
 import logging
 import json
 from Utils.Defs import ins_str, ins_str_email, bank_str
+from Models.UserModels import Review
 
 class Driver(ndb.Model):
     userkey = ndb.KeyProperty(required=True)  # the user_pref it is connected to
@@ -40,6 +41,9 @@ class Driver(ndb.Model):
         params['profile_thumb'] = u.profile_image_url('small')
         params['fbid'] = u.userid
         params['key'] = self.userkey
+        params['avg_rating'] = Review.avg_rating(self.userkey)
+        params['location'] = u.location
+        params['about'] = u.about
         return params
 
     @classmethod
