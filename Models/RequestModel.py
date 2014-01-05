@@ -140,6 +140,7 @@ class SearchEntry(ndb.Model):
     remoteip = ndb.StringProperty(required=True) #don't know who they are, don't care
     created = ndb.DateTimeProperty(auto_now_add=True)
     delivby = ndb.DateProperty()
+    capacity = ndb.IntegerProperty(default=0) 
     start = ndb.GeoPtProperty(required=True)
     dest = ndb.GeoPtProperty(required=True)
     dist = ndb.FloatProperty(default=100.0)
@@ -155,6 +156,7 @@ class SearchEntry(ndb.Model):
         params['delivby'] = self.delivby.strftime('%m/%d/%Y')
         params['locstart'] = self.locstart
         params['locend'] = self.locend
+        params['capacity'] = self.capacity
         return params
     
 class ExpiredRequest(ndb.Model):

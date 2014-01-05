@@ -22,12 +22,14 @@ class ReserveHandler(BaseHandler):
             self.render('launch/filllreq.html', **self.params)
                             
     def post(self, action=None,key=None):
-        if (action=='driver'):
-            self.__create_checkout(key)
+        if (action=='driver') and key:
+            self.__edit_res(key)
         elif (action=='search'):
             self.__search_drivers()
         elif (action=='filter') and key:
-            self.__filter(key)
+            self.__filter(key)       
+        elif (action=='checkout') and key:
+            self.__create_checkout(key)
         else:
             self.__create_res()
             
@@ -36,13 +38,14 @@ class ReserveHandler(BaseHandler):
         remoteip = self.request.remote_addr
         start, startstr = get_search_json(data,'start')
         dest, deststr = get_search_json(data,'dest') 
+        distance = data.get('distance')
         logging.info('Search req: '+startstr+' to '+deststr)
         if not start or not dest:
             #return error
             self.write('Invalid locations')
             return
         # store this search
-        sr = SearchEntry(remoteip = remoteip, start=start, 
+        sr = SearchEntry(remoteip = remoteip, start=start, dist = distance,
                     dest=dest, locstart=startstr,locend=deststr).put()    
         
         self.response.headers['Content-Type'] = "application/json"
@@ -50,6 +53,34 @@ class ReserveHandler(BaseHandler):
                      'status': 'ok' }
         self.write(json.dumps(response))
     
+    def __edit_res(self, key):
+        # add more info to searchentry
+        #data = json.loads(unicode(self.request.body, errors='replace'))        
+        capacity = self.request.get('vcap')
+        capacity = parse_unit(capacity)
+        enddate = self.request.get('delivend')
+        matches = self.request.get_all('dkey')
+        if enddate:
+            delivend = parse_date(enddate)
+        else:
+            delivend = datetime.now()+timedelta(weeks=1)
+
+        res = ndb.Key(urlsafe=key).get()
+        res.delivby = delivend
+        res.capacity = capacity
+        res.matches = [ndb.Key(urlsafe=m) for m in matches]
+        res.put()
+        #Next, upload img and make an offer -- we need suggested offer price
+        self.params = res.params_fill(self.params)
+        self.params['email'] = self.user_prefs.email
+        self.params['update_url'] = '/res/checkout/'+key
+        price, seed = priceEst(res, res.dist)
+        self.params['rates'] = price
+        self.params['routekey'] = key
+        self.params['res_title'] = res.locstart + ' to ' + res.locend
+        self.render('launch/request_review.html', **self.params)   
+
+            
     def __create_res(self):
         capacity = self.request.get('vcap')
         capacity = parse_unit(capacity)
@@ -111,14 +142,32 @@ class ReserveHandler(BaseHandler):
             self.render('launch/filllres.html', **self.params)           
             
     def __create_checkout(self,key):
-        dkey = self.request.get('dkey')
         rates = self.request.get('rates')
+        rates = parse_rate(rates)
+        items = self.request.get('items')
+        email = self.request.get('email')
+        if email and (email != self.user_prefs.email):
+            u = self.user_prefs.key.get()
+            u.email = email
+            u.put()
         res = ndb.Key(urlsafe=key).get()
-        rates = parse_rate(rates)       
-        res.rates = rates        
-        res.driver = ndb.Key(urlsafe=dkey)
-        res.put()
-        self.redirect('/checkout/'+res.key.urlsafe())
+        # image upload
+        img = self.request.get("file")
+        # Create request
+        stats = ReqStats(distance=int(res.dist))
+        p = Request(userkey = self.user_prefs.key, capacity=res.capacity, 
+            delivby=res.delivby, 
+            start=res.start, dest=res.dest, locstart=res.locstart, 
+            locend=res.locend, matches=res.matches, stats=stats)
+        if img: 
+            imgstore = ImageStore.new(img)
+            imgstore.put()
+            p.img_id = imgstore.key.id()
+        p.rates = rates
+        p.items = items
+        p.put() 
+
+        self.redirect('/checkout/'+p.key.urlsafe())
         
     def __filter(self, key):
         # retrieve search, filter matching drivers

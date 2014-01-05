@@ -3,7 +3,7 @@
 {% block heading %}<h1>{{res_title}}</h1>{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="/static/css/drivers.css" />
-<form enctype="multipart/form-data" method="post" class="form-horizontal" id="search_form">
+<form enctype="multipart/form-data" method="post" class="form-horizontal" id="driver_form">
 <div class="row">
   <div class="span4">            
     <div class="control-group">
@@ -25,9 +25,8 @@
         </div>
     </div>    
   </div>
-  <div class="span2"><button id='request_btn' class="button secondary"> Next</button></div>  
+  <div class="span2"><button id='next_btn' class="button secondary"> Next</button></div>  
 </div>
-</form>
 <div class="row">
   <div class="span10 offset1" id='drivermosaic'>
   {% include "launch/drivermosaic.html" %}
@@ -35,6 +34,7 @@
   Don't see any results you like? Post a <button class="btn btn-info btn-small" id="postreq_btn">Delivery Request</button>
   </div>
 </div>
+</form>
   <script>
 $(document).ready(function(){  
     $('.navicoreq').addClass('onbutton');   
@@ -48,6 +48,10 @@ $(document).ready(function(){
     });
     $('#vcap').change(function() {
       submitSearch();
+    });
+    $('#next_btn').click(function(event) {
+      event.preventDefault();
+      $('#driver_form').submit();
     });
 });
 function submitSearch() {

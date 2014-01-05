@@ -44,8 +44,8 @@ class CheckoutHandler(BaseHandler):
             res = ndb.Key(urlsafe=key).get()                
         except:
             self.abort(400)
-        self.params['d'] = fill_driver_params(res.driver.get())
-        self.params.update(fill_res_params(res))
+        self.params.update(res.to_dict())
+        self.params['reskey'] = key
         self.params['checkout_action'] = '/checkout'
         self.render('launch/checkout.html', **self.params)        
                 
