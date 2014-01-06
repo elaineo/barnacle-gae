@@ -17,6 +17,9 @@ class ReserveHandler(BaseHandler):
             self.__driverres(key)
         elif action=='json' and key:
             self.__jsondump(key)
+        elif action=='edit' and key:
+            self.params['key'] = key
+            self.render('launch/fillitem.html', **self.params)
         else:
             self.params['route_title'] = 'Ship Your Stuff'
             self.render('launch/filllreq.html', **self.params)
@@ -40,17 +43,23 @@ class ReserveHandler(BaseHandler):
         start, startstr = get_search_json(data,'start')
         dest, deststr = get_search_json(data,'dest') 
         distance = data.get('distance')
+        enddate = self.request.get('reqdate')
         logging.info('Search req: '+startstr+' to '+deststr)
         if not start or not dest:
             #return error
             self.write('Invalid locations')
             return
+        if enddate:
+            delivend = parse_date(enddate)
+        else:
+            delivend = datetime.now()+timedelta(days=365)            
         # store this search
         sr = SearchEntry(remoteip = remoteip, start=start, dist = distance,
+                    delivby = delivend,
                     dest=dest, locstart=startstr,locend=deststr).put()    
         
         self.response.headers['Content-Type'] = "application/json"
-        response = { 'next' : '/res/driver/'+sr.urlsafe(),
+        response = { 'next' : '/res/edit/'+sr.urlsafe(),
                      'status': 'ok' }
         self.write(json.dumps(response))
     
@@ -59,12 +68,7 @@ class ReserveHandler(BaseHandler):
         #data = json.loads(unicode(self.request.body, errors='replace'))        
         capacity = self.request.get('vcap')
         capacity = parse_unit(capacity)
-        enddate = self.request.get('delivend')
         matches = self.request.get_all('dkey')
-        if enddate:
-            delivend = parse_date(enddate)
-        else:
-            delivend = datetime.now()+timedelta(weeks=1)
 
         res = ndb.Key(urlsafe=key).get()
         res.delivby = delivend

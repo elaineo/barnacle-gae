@@ -98,6 +98,10 @@
   min-height: 300px;
   width: 100%;    
 }
+.reqmap {
+  min-height: 250px;
+  width: 95%;    
+}
 /* nav buttons */
 .navicoreqs {
     border: 0;
@@ -452,6 +456,58 @@ background-position: 0 -20px;
 }
 
 .css-label{ background-image:url(http://csscheckbox.com/checkboxes/web-two-style.png); }
+.ship-item {
+    border: 0;
+    width: 100%;
+    cursor:pointer;
+    height:100px; 
+    z-index: 0;
+    position: absolute; 
+    margin:10px;    
+}
+
+.item-bg {
+    background: rgba(0, 0, 0, 0.68); 
+    position: relative;
+    z-index: 1;
+    text-align:center;
+    height: 120px;
+    padding-top:60px;
+    cursor:pointer;
+}
+.item-bg:hover {
+    background: rgba(104, 104, 104, 0.68); 
+    position: relative;
+    z-index: 2;
+    text-align:center;
+    height: 120px;
+    padding-top:60px;    
+    cursor:pointer;
+}
+.v-cat {
+    background:url('/static/img/icons/v-cat.gif') 50% 50% no-repeat;
+    background-size: contain;
+}
+.v-bike {
+    background:url('/static/img/icons/v-bike.gif') 50% 50% no-repeat;
+    background-size: contain;
+}
+.v-house {
+    background:url('/static/img/icons/v-house.gif') 50% 50% no-repeat;
+    background-size: contain;
+}
+.v-guitar {
+    background:url('/static/img/icons/v-guitar.gif') 50% 50% no-repeat;
+    background-size: contain;
+}
+.v-gift {
+    background:url('/static/img/icons/v-gift.gif') 50% 50% no-repeat;
+    background-size: contain;
+}
+.v-car {
+    background:url('/static/img/icons/v-car.gif') 50% 50% no-repeat;
+    background-size: contain;
+}
 /* -----------------------------------------
    08. Footer
 ----------------------------------------- */

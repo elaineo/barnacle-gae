@@ -1,0 +1,97 @@
+<div class="form-header">
+<p class="lead text-resize">Let's get started.</p>
+</div>
+ <form action='/res/search' enctype="multipart/form-data" method="post" id='search_form' class="custom form-search form-horizontal">
+<div class='row-fluid'>
+  <div class='span6'>
+    <div class='row-fluid'>
+      <div class='span4'>
+        <p><h1 class='h1label'>From:</h1></p>
+        <p><h1 class='h1label'>To:</h1></p>
+      </div>
+      <div class='span8' style='position:relative;'>
+        <p><input class="input input-addr" type="text" name="start" id='map0Field' value="{{locstart}}" style='width: 250px!important; height: 40px!important;'></p><p>
+        <input class="input input-addr" type="text" name="dest" id='map1Field' value="{{locend}}" style='width: 250px!important; height: 40px!important;'>
+        </p>
+        <img src='/static/img/icons/sort_wh.png'style='height:20px; position:absolute; top:30px;left:250px;' id='swaploc'>
+      </div>
+    </div><!--end row-->      
+    <div class='row-fluid'>
+      <div class='span4'>
+        <h1 class='h1label'>Deliver By:</h1>
+      </div>
+      <div class='span8'>
+        <input type="date" name="reqdate" min="{{today}}" value="{{delivby}}" id="reqdate" autocomplete="off" style='width: 250px!important; height: 40px!important;'>
+      </div>
+    </div><!--end row-->
+    <input type='hidden' name="startlat" id="startlat">
+    <input type='hidden' name="startlon" id="startlon">
+    <input type='hidden' name="startstr" id="startstr">
+    <input type='hidden' name="destlat" id="destlat">
+    <input type='hidden' name="destlon" id="destlon">
+    <input type='hidden' name="deststr" id="deststr">         
+  </div>
+  <div class='span6'>
+    <div id="map-canvas" class="reqmap"></div>
+  </div>
+</div>
+<div class='row' style='height:20px'></div>
+</form>
+<script type="text/javascript" src="/static/landing/scripts/foundation.min.js"></script>        
+<script type="text/javascript" src="/static/landing/scripts/transition.js"></script>
+ <script>
+$(document).ready(function(){
+    var v = [[0],[0]];
+    click_ajax('#request_btn',['map0','map1'],['start','dest'],v,'#request_form',true, false);
+});
+  </script>
+ <script>
+  
+$(document).ready(function(){
+    /* Give the heading a pretty picture */
+    hh = $('.heading').height()+20;
+    $('.wash').height(hh);
+    $('.hero_container').height(hh);
+});
+  </script>  
+  <script type="text/javascript" src="/static/js/validation.js"></script>
+    <script type="text/javascript">
+function submitCallback(data, formURL) {
+  timestamp = new Date().getTime();
+  console.log(timestamp);
+  console.log(formURL);
+  $.ajax({
+    type: "POST",
+    dataType: "text",
+    accepts: "text/html",
+    contentType: "application/json; charset=utf-8",
+    url: formURL,
+    data: data,
+    success: function(response) {
+      timestamp = new Date().getTime();
+      console.log(timestamp);
+      document.open();
+      document.write(response);
+      document.close(); 
+    }
+  });
+}
+</script>
+ <script>  
+$(document).ready(function(){
+  $('#swaploc').click(function() {
+    var temp = $('input#map0Field').val();
+    $('input#map0Field').val($('input#map1Field').val());
+    $('input#map1Field').val(temp);
+    temp = $('input#startlat').val();
+    $('input#startlat').val($('input#destlat').val());
+    $('input#destlat').val(temp);
+    temp = $('input#startlon').val();
+    $('input#startlon').val($('input#destlon').val());
+    $('input#destlon').val(temp);    
+    temp = $('input#startstr').val();
+    $('input#startstr').val($('input#deststr').val());
+    $('input#deststr').val(temp);    
+  });
+});
+</script>

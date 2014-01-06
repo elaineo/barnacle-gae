@@ -1,0 +1,37 @@
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script type="text/javascript" src="/static/js/maps/mapstyles.js"></script>
+<script src="/static/js/maps/launch/maphome.js"></script>
+<link rel="stylesheet" href="/static/landing/styles/transition.css">
+<div class="row-fluid">
+  <div class="span12">
+    {% include "launch/forms/stub_item.html" %}
+  </div>
+</div>
+
+<script>  
+$(document).ready(function(){
+    var mapURL = '/post/jsonall';
+    initialize_home(mapURL);
+    vtest = [[0],[0]];
+    click_ajax('#search_btn',['map0','map1'],['start','dest'],
+        vtest,'#search_form',false, false);
+});
+
+function submitCallback(data, formURL) {
+  $.ajax({
+    type: "POST",
+    dataType: "json",
+    contentType: "application/json; charset=utf-8",
+    url: formURL,
+    data: data,
+    success: function(response) {
+      console.log(response);
+      //should just redirect
+      if (response.status =='ok') 
+        window.location.href=response.next;
+    }
+  });
+}
+  </script>
+  <script src="/static/js/jquery.validate.js"></script>
+  <script type="text/javascript" src="/static/js/validation.js"></script>
