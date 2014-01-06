@@ -9,7 +9,7 @@
         <input type="checkbox" name="dkey" value="{{d.routekey}}" checked>
         </div>
         <img style='width:100px' src="{{d.profile_thumb}}">
-        </td><td style='border: none;'>
+        </td><td class="capacity" style='border: none;'>
         {% if d.capacity == 0 %}<img src='/static/img/icons/icocap0.png'> Compact
         {% elif d.capacity == 1 %}<img src='/static/img/icons/icocap1.png'> SUV
         {% elif d.capacity == 2 %}<img src='/static/img/icons/icocap2.png'> Pickup

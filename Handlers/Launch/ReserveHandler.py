@@ -34,6 +34,7 @@ class ReserveHandler(BaseHandler):
             self.__create_res()
             
     def __search_drivers(self):
+        # input from page 1, will go to page 3
         data = json.loads(unicode(self.request.body, errors='replace'))
         remoteip = self.request.remote_addr
         start, startstr = get_search_json(data,'start')
@@ -79,68 +80,69 @@ class ReserveHandler(BaseHandler):
         self.params['routekey'] = key
         self.params['res_title'] = res.locstart + ' to ' + res.locend
         self.render('launch/request_review.html', **self.params)   
-
-            
-    def __create_res(self):
-        capacity = self.request.get('vcap')
-        capacity = parse_unit(capacity)
-        startdate = self.request.get('delivstart')
-        enddate = self.request.get('delivend')
-        rates = self.request.get('rates')
-        rates = parse_rate(rates)     
-        if rates <1:
-            rates=20
-        dropoff = bool(int(self.request.get('dropoff')))
-        pickup = bool(int(self.request.get('pickup')))
-        if dropoff:
-            dropoffloc = self.request.get('dropTloc')
-            if (dropoffloc == '0'):
-                start = ndb.GeoPt(lat=MV_geolat,lon=MV_geolon)
-                startstr = MV_string
-            else:
-                start = ndb.GeoPt(lat=SG_geolat,lon=SG_geolon)
-                startstr = SG_string
-        else:
-            start, startstr = self.__get_map_form('start')
-        if pickup:
-            pickuploc = self.request.get('pickTloc')
-            if (pickuploc == '0'):
-                dest = ndb.GeoPt(lat=MV_geolat,lon=MV_geolon)
-                deststr = MV_string
-            else:
-                dest = ndb.GeoPt(lat=SG_geolat,lon=SG_geolon)
-                deststr = SG_string
-        else:
-            dest, deststr = self.__get_map_form('dest')
-
+                    
         
-        if startdate:
-            delivstart = parse_date(startdate)
-        else:
-            delivstart = datetime.now()
+    def __filter(self, key):
+        # retrieve search, filter matching drivers
+        res = ndb.Key(urlsafe=key).get()
+        data = json.loads(unicode(self.request.body, errors='replace'))
+        capacity = data.get('vcap')
+        vcap = parse_unit(capacity)
+        enddate = data.get('delivend')
         if enddate:
             delivend = parse_date(enddate)
         else:
-            delivend = datetime.now()+timedelta(weeks=1)
-           
-        p = ResModel( user=self.user_prefs.key, rates=rates, ratestemp=rates,
-            locstart=startstr, locend=deststr, 
-            start=start, dest=dest, capacity=capacity, 
-            pickup=pickup, dropoff=dropoff, 
-            delivstart=delivstart, delivend=delivend)            
-        try:                
-            p.put()            
-            self.redirect('/res/driver/'+p.key.urlsafe())  
-        except:
-            self.params['error_route'] = 'Invalid Route'
-            self.params['locstart'] = startstr
-            self.params['locend'] = deststr
-            self.params['delivstart'] = startdate
-            self.params['delivend'] = enddate
-            self.params['capacity'] = capacity
-            self.params['route_title'] = 'Invalid Route'
-            self.render('launch/filllres.html', **self.params)           
-            
+            delivend = datetime.now().date()+timedelta(days=365)
+        drivers = []
+        for r in res.matches:
+            route = r.get()
+            if route.capacity > vcap and route.delivend <= delivend:
+                p = route.to_search()
+                d = Driver.by_userkey(route.userkey)
+                p = d.params_fill(p)
+                drivers.append(p)
+        response = {'status': 'ok'}
+        self.params['drivers'] = drivers  
+        self.render('launch/drivermosaic.html', **self.params)   
+        
+    def __driverres(self,key):
+        # retrieve search, find matching drivers
+        dist = 100
+        numres = 6
+        delivend = datetime.now() + timedelta(days=365)
+        res = ndb.Key(urlsafe=key).get()
+        startresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',res.start).results
+        destresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',res.dest).results
+        results = search_intersect(startresults, destresults)                    
+        keepers = []
+        for c in results:
+            startpt = field_byname(c, "start")
+            dist0 = HaversinDist(res.start.lat,res.start.lon, startpt.latitude, startpt. longitude) 
+            dist1 = HaversinDist(res.dest.lat,res.dest.lon, startpt.latitude, startpt.longitude)
+            if dist0 < dist1:
+                keepers.append(c)
+        results = keepers
+        logging.info(results)
+        # if there are no drivers, redirect to next page to complete request
+        drivers = []
+        for r in results:
+            route = ndb.Key(urlsafe=r.doc_id).get()
+            res.matches.append(ndb.Key(urlsafe=r.doc_id))
+            res.put()
+            p = search_todict(r)
+            p['capacity'] = route.capacity
+            p['delivend'] = route.delivend.strftime('%m/%d/%Y')
+            d = Driver.by_userkey(route.userkey)
+            p = d.params_fill(p)
+            drivers.append(p)
+#rating, #completed, checkbox, vehicle, date arriving, insured, bank (tooltip)
+#location, about            
+        self.params['reskey'] = key
+        self.params['drivers'] = drivers  
+        self.params['today'] = datetime.now().strftime('%Y-%m-%d')
+        self.params['res_title'] = res.locstart + ' to ' + res.locend
+        self.render('launch/driverres.html', **self.params)    
+
     def __create_checkout(self,key):
         rates = self.request.get('rates')
         rates = parse_rate(rates)
@@ -167,68 +169,7 @@ class ReserveHandler(BaseHandler):
         p.items = items
         p.put() 
 
-        self.redirect('/checkout/'+p.key.urlsafe())
-        
-    def __filter(self, key):
-        # retrieve search, filter matching drivers
-        res = ndb.Key(urlsafe=key).get()
-        data = json.loads(unicode(self.request.body, errors='replace'))
-        capacity = data.get('vcap')
-        vcap = parse_unit(capacity)
-        enddate = data.get('delivend')
-        if enddate:
-            delivend = parse_date(enddate)
-        else:
-            delivend = datetime.now()+timedelta(days=365)
-        drivers = []
-        for r in res.matches:
-            route = r.get()
-            if route.capacity > vcap and route.delivend <= delivend:
-                p = route.to_search()
-                d = Driver.by_userkey(route.userkey)
-                p = d.params_fill(p)
-                drivers.append(p)
-        response = {'status': 'ok'}
-        self.params['drivers'] = drivers  
-        self.render('launch/drivermosaic.html', **self.params)   
-        
-    def __driverres(self,key):
-        # retrieve search, find matching drivers
-        dist = 100
-        numres = 6
-        delivend = datetime.now() + timedelta(days=365)
-        res = ndb.Key(urlsafe=key).get()
-        startresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',res.start).results
-        destresults = search_pathpts(dist,'ROUTE_INDEX',delivend.strftime('%Y-%m-%d'),'delivstart',res.dest).results
-        results = search_intersect(startresults, destresults)                    
-        keepers = []
-        for c in results:
-            startpt = field_byname(c, "start")
-            dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt. longitude) 
-            dist1 = HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude)
-            if dist0 < dist1:
-                keepers.append(c)
-        results = keepers
-        logging.info(results)
-        # if there are no drivers, redirect to next page to complete request
-        drivers = []
-        for r in results:
-            route = ndb.Key(urlsafe=r.doc_id).get()
-            res.matches.append(ndb.Key(urlsafe=r.doc_id))
-            res.put()
-            p = search_todict(r)
-            p['capacity'] = route.capacity
-            d = Driver.by_userkey(r.userkey)
-            p = d.params_fill(p)
-            drivers.append(p)
-#rating, #completed, checkbox, vehicle, date arriving, insured, bank (tooltip)
-#location, about            
-        self.params['reskey'] = key
-        self.params['drivers'] = drivers  
-        self.params['today'] = datetime.now().strftime('%Y-%m-%d')
-        self.params['res_title'] = res.locstart + ' to ' + res.locend
-        self.render('launch/driverres.html', **self.params)    
-                
+        self.redirect('/checkout/'+p.key.urlsafe())                
         
     def __jsondump(self,key):
         try:

@@ -1,20 +1,31 @@
-<div class="row-fluid">
-  <div class="span8">
+<div class="row">
+  <div class="span7">
     <div class="control-group row-fluid">   
       <label class="control-label" for="dropoff">Origin:</label>
         <div class="controls">
-          <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}">
-          <span class="help-inline error" id='map0Err'>{{error_route}}</span>
+          <input class="input" type="text" name="start" id='map0Field' value="{{locstart}}" style='width: 300px !important;'>
         </div>
         <label class="control-label" for="dest">Destination:</label>
         <div class="controls">
-          <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{locend}}">
-          <span class="help-inline error" id='map1Err'>{{error_route}}</span>
+          <input class="input" type="text" name="dest" id='map1Field' value="{{locend}}" style='width: 300px !important;'>
         </div>
     </div>   
   </div>
-  <div class="span4">
+  <div class="span1" style='position:relative' id='swaploc'>
+    <img src='/static/img/icons/sort.png'style='height:20px; position:absolute; top:50%;left:0'>
+  </div>
+  <div class="span2">
     <button type="submit" class="button secondary" id='search_btn'>Next</button>
+  </div>
+</div>
+<div class="row">
+  <div class="span6">
+    <div class="control-group">
+        <label class="control-label" for="dates">Deliver By:</label>
+        <div class="controls">
+          <input type="date" name="enddate" min="{{today}}" value="{{delivby}}" id="enddate" autocomplete="off">
+        </div>
+    </div>   
   </div>
 </div>
 <div class="row-fluid">
@@ -22,3 +33,21 @@
     <div id="map-canvas" class="homemap"></div>
 </div>
 </div> 
+ <script>  
+$(document).ready(function(){
+  $('#swaploc').click(function() {
+    var temp = $('input#map0Field').val();
+    $('input#map0Field').val($('input#map1Field').val());
+    $('input#map1Field').val(temp);
+    temp = $('input#startlat').val();
+    $('input#startlat').val($('input#destlat').val());
+    $('input#destlat').val(temp);
+    temp = $('input#startlon').val();
+    $('input#startlon').val($('input#destlon').val());
+    $('input#destlon').val(temp);    
+    temp = $('input#startstr').val();
+    $('input#startstr').val($('input#deststr').val());
+    $('input#deststr').val(temp);    
+  });
+});
+</script>
