@@ -25,10 +25,10 @@ class ReserveHandler(BaseHandler):
             self.render('launch/filllreq.html', **self.params)
                             
     def post(self, action=None,key=None):
-        if (action=='driver') and key:
-            self.__edit_res(key)
-        elif (action=='search'):
-            self.__search_drivers()
+        if (action=='search'):  #WHERE
+            self.__where()
+        elif (action=='edit') and key:  #WHAT
+            self.__what(key)        
         elif (action=='filter') and key:
             self.__filter(key)       
         elif (action=='checkout') and key:
@@ -36,7 +36,7 @@ class ReserveHandler(BaseHandler):
         else:
             self.__create_res()
             
-    def __search_drivers(self):
+    def __where(self):
         # input from page 1, will go to page 3
         data = json.loads(unicode(self.request.body, errors='replace'))
         remoteip = self.request.remote_addr
@@ -63,9 +63,9 @@ class ReserveHandler(BaseHandler):
                      'status': 'ok' }
         self.write(json.dumps(response))
     
-    def __edit_res(self, key):
-        # add more info to searchentry
-        #data = json.loads(unicode(self.request.body, errors='replace'))        
+    def __what(self, key):
+        # Turn the search entry into a request
+        # Who cares about capacity, driver can figure it out
         capacity = self.request.get('vcap')
         capacity = parse_unit(capacity)
         matches = self.request.get_all('dkey')

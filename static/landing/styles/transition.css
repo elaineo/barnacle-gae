@@ -43,6 +43,7 @@ form.custom .custom.disabled { background-color: #dddddd; }
 .form-item .item {position: relative; }
 .form-item label { color: #fff; }
 .form-item textarea {font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 16px;  line-height: 18px; }
+.form-item #img-prev img { height:154px!important; max-height:200px;max-width:400px;}
 .form-search { padding: 0px 12px 10px; background: rgba(23, 23, 23, 0.72); position: relative;  }
 .form-search label { color: #fff; }
 .form-search .notch { position: absolute; bottom: -10px; left: 20px; margin: 0; border-top: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid rgba(23, 23, 23, 0.72); padding: 0; width: 0; height: 0; }

@@ -484,6 +484,9 @@ background-position: 0 -20px;
     padding-top:60px;    
     cursor:pointer;
 }
+.item-bg.selected {
+  background: rgba(104, 104, 104, 0.68); 
+}
 .v-cat {
     background:url('/static/img/icons/v-cat.gif') 50% 50% no-repeat;
     background-size: contain;
