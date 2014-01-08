@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title%}Let's Go!{% endblock %}
+{% block heading %}
+ <!-- Progress bar and button -->
+ <div class="row">
+  <div class="span2 offset5" style='color:#fff'>
+    <table style='border:0;width:100%'><tr>
+    <td width='25%'><i class="icon-circle"></i></td>
+    <td width='25%'><i class="icon-circle"></i></td>
+    <td width='25%'><i class="icon-circle"></i></td>
+    <td width='25%'><i class="icon-circle"></i></td>
+    </tr></table>
+  </div>
+</div>
+{% include "launch/forms/header_checkout.html" %}
+
+{% endblock %}
+{% block content %}
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
+<script type="text/javascript">
+    //balanced.init('/v1/marketplaces/TEST-MP59PrHkpa0ko7BaYwp0CkH5');
+    balanced.init('/v1/marketplaces/MPzQH7Kg11jaH5eTYoFxMVg');
+</script>
+
+<script src="/static/js/jquery.validate.js"></script>
+ <script>
+  
+$(document).ready(function(){
+    $('.navicoreqs').addClass('onbutton');  
+    //click_submit('#request_btn','#request_form');
+    var mapURL = '/res/json/{{reskey}}';
+    initialize_map(mapURL);    
+    $('#info_offer').popover({trigger: 'hover'});
+    $('#info_email').popover({trigger: 'hover'});    
+    
+    $("#tos").click(function(){
+        var agree = $("input#tos:checked").val();
+        if (typeof agree!='undefined') 
+            $('#request_btn').removeAttr('disabled'); 
+        else
+            $('#request_btn').attr('disabled', 'disabled'); 
+    });
+});
+$(document).ready(function(){
+    /* Give the heading a pretty picture */
+    hh = $('.heading').height()+20;
+    $('.wash').height(hh);
+    $('.hero_container').height(hh);
+});
+  </script>
+  <script type="text/javascript" src="/static/js/validation.js"></script>
+<script type="text/javascript" src="/static/js/maps/mapoverlay.js"></script>
+<script type="text/javascript" src='/static/js/ccpay.js'></script>  
+{% endblock %}

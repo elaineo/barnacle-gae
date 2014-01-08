@@ -103,13 +103,13 @@ class ReserveHandler(BaseHandler):
         drivers = []
         for r in results:
             route = ndb.Key(urlsafe=r.doc_id).get()
-            p = search_todict(r)
-            p['capacity'] = route.capacity
-            p['delivend'] = route.delivend.strftime('%m/%d/%Y')
+            q = search_todict(r)
+            q['capacity'] = route.capacity
+            q['delivend'] = route.delivend.strftime('%m/%d/%Y')
             d = Driver.by_userkey(route.userkey)
-            p = d.params_fill(p)
-            drivers.append(p)   
-        self.params['reskey'] = p.key
+            q = d.params_fill(q)
+            drivers.append(q)   
+        self.params['reskey'] = p.key.urlsafe()
         self.params['drivers'] = drivers  
         self.render('launch/filldriver.html', **self.params)    
                     
@@ -160,7 +160,8 @@ class ReserveHandler(BaseHandler):
         routes = self.request.get_all('dkey')
         res = ndb.Key(urlsafe=key).get()
         logging.info(routes)
-
+        res.matches = [ndb.Key(urlsafe=r) for r in routes]
+        # Notify these drivers
         self.redirect('/checkout/'+res.key.urlsafe())                
         
     def __jsondump(self,key):

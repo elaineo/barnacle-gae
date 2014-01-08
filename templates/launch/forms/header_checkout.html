@@ -1,0 +1,109 @@
+<link rel="stylesheet" href="/static/landing/styles/transition.css">
+<link rel="stylesheet" href="/static/css/checkout.css" />
+<link rel="stylesheet" href="/static/css/jquery-ui.css" />
+<div class="form-header">
+  <h4 style='color:#fff'>Confirm Your Reservation</h4>
+  <p style='color:#fff'>Provide your reservation details below. We will contact the drivers you selected, as well as any new matching drivers. <b>You will only be charged if a driver accepts your request.</b> <br>
+  We will not release payment to the driver until you confirm a successful delivery. </p>
+</div>
+
+<form enctype="multipart/form-data" method="post" id='cc_form' class="form-header form-horizontal" action="{{checkout_action}}">
+  <div class="row-fluid">
+    <div class="span7 greyback">
+      <h4>Contact Info</h4>
+      <div class="row-fluid">
+        <div class='span3'>Email <i class="icon-info-sign" id='info_email' data-toggle="popover" data-content='This is where you will receive messages regarding your request. You can change your notification preferences under Account Settings.'></i>:</div>
+        <div class='span9'><input name='email' type='email' required></div>
+      </div>
+      <div class="row-fluid">
+        <div class='span3'>Phone Number:</div>
+        <div class='span9'><input name='tel' type='tel' required></div>
+      </div>  
+     <div class="row-fluid" style='height:20px'></div>
+    <h4>Payment Information</h4>
+    <div class="row-fluid"> 
+      <div class='span10 offset2'>       <div
+			class="cc_visa       cc cc_initial"></div><div
+			class="cc_mastercard cc cc_initial"></div><div
+			class="cc_amex       cc cc_initial"></div><div
+			class="cc_discover   cc cc_initial"></div><div
+			class="cc_diners     cc cc_initial"></div><div
+			class="cc_jcb        cc cc_initial"></div>
+      </div>
+    </div>
+    <div class="row-fluid"> 
+      <div class='span3'>Card Number:</div>
+      <div class='span8'><input type='text' class='card-number span12' maxlength='16'></div>
+      <span class="text-error" id='cc-err'></span>
+    </div>
+    <div class="row-fluid"> 
+      <div class='span3'>Expiration:</div>
+      <div class='span6'>
+      <select class='input-mini cc-em'>{% include 'month_opts.txt' %}</select> / 20<input type='number' class='input-mini cc-ey' min="13"></div>
+      <div class="span3 text-error" id='ccexp-err'></div>
+    </div>    
+    <div class="row-fluid"> 
+      <div class='span3'>Security Code:</div>
+      <div class='span2'><input type='text' class='input-mini cc-csc' maxlength="4"></div>
+      <div class='span3 hidden-phone' style='padding-left:20px'><div id='cvc_card' class='visa_back'></div></div>
+    </div>     
+    <div class="row-fluid"> 
+      <div class="span3">
+        Offer Price <i class="icon-info-sign" id='info_offer' data-toggle="popover" data-content='This is the offer price recommended by Barnacle to ensure prompt driver matching. You are welcome to adjust the price based on your delivery needs.'></i>:
+      </div>
+      <div class="span6">
+        <span class="add-on hidden-phone">$</span>
+          <input class="span5" type="number" name="rates" value="{{sugg_rates}}" onkeyup="validate_rate()" min="0">
+      </div>
+    </div>   
+    <div class="row-fluid hidden-phone" style='height:20px'></div> 
+    <div class="row-fluid" >
+      <div class='span12'>
+      <label class="checkbox inline">
+        <input type='checkbox' id='tos'> I have read and agree to the <a href='/tos'>Terms of Service</a>.
+      </label>
+      </div>
+    </div> 
+    <div class="row-fluid"> 
+      <div class='span4 offset4'>
+	<button type="submit" class="button secondary" id='request_btn' disabled='disabled'>Book It</button>
+      </div>
+      <div class='span4 text-error' id='check-err'></div>
+    </div>  
+  </div>     
+
+  <div class="span4 greyback">
+    <h4>Summary</h4>
+    <div id="map-canvas" class="homemap" style='height:200px'></div>
+    <div class="row-fluid checkout">      
+      <div class="span4 hidden-phone">
+        {% if category==1 %}
+        <img src='/static/img/icons/k-bike.png'>
+        {% elif category==2 %}
+        <img src='/static/img/icons/k-house.png'>
+        {% elif category==3 %}
+        <img src='/static/img/icons/k-guitar.png'>
+        {% elif category==4 %}
+        <img src='/static/img/icons/k-cat.png'>
+        {% elif category==5 %}
+        <img src='/static/img/icons/k-car.png'>
+        {% else %}
+        <img src='/static/img/icons/k-gift.png'>
+        {% endif %}
+      </div>
+      <div class="span6 hidden-phone">
+        <img src="{{image_url}}">
+      </div>
+    </div>
+    
+    <div class="row-fluid">
+      <div class='span12'>
+      <p>Deliver by {{ delivby }}</p>
+      <p>{{items}}</p>
+      </div>
+    </div>         
+  </div>
+</div>        
+
+
+</form>    

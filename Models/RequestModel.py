@@ -80,9 +80,11 @@ class Request(ndb.Model):
             'locend' : cls.locend,
             'rates' : cls.rates,
             'capacity' : cls.capacity,
+            'category' : cls.category,
             'reqitems' : cls.items,
             'num_offers' : cls.num_offers(),
-            'num_matches' : len(cls.matches)
+            'num_matches' : len(cls.matches),
+            'image_url' : cls.image_url()
         }
         if incl_user:
             u = cls.userkey.get()

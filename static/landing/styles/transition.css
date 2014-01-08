@@ -122,3 +122,8 @@ form.custom .custom.disabled { background-color: #dddddd; }
 .button.action { background-color: #b44413; color: #fff; border: 1px solid #b44413; padding:10px 40px; }
 .button.action:hover,
 .button.action:focus { background-color: #e25518; }
+.checkout img {
+  width: 150px;
+  padding: 10px;
+  vertical-align:middle;
+}

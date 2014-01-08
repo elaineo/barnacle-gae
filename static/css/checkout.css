@@ -37,6 +37,3 @@ transition:all .5s linear;
 .amex_front{background-position:-75px -22px; width:75px; height:48px}
 
 }
-#map-canvas {
-    height: 300px;
-}

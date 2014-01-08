@@ -46,8 +46,9 @@ class CheckoutHandler(BaseHandler):
             self.abort(400)
         self.params.update(res.to_dict())
         self.params['reskey'] = key
+        self.params['sugg_rates'] = res.stats.sugg_price
         self.params['checkout_action'] = '/checkout'
-        self.render('launch/checkout.html', **self.params)        
+        self.render('launch/fillcheckout.html', **self.params)        
                 
     def __process(self,key):
         try:
