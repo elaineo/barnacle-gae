@@ -17,6 +17,7 @@ class ReqStats(ndb.Model):
 class Request(ndb.Model):
     userkey = ndb.KeyProperty(required=True)  # the user_pref it is connected to
     capacity = ndb.IntegerProperty(default=0) # car (0), SUV (1), flatbed (2)
+    category = ndb.IntegerProperty(default=0) # car (0), SUV (1), flatbed (2)
     rates = ndb.IntegerProperty()
     items = ndb.TextProperty(default='') 
     created = ndb.DateTimeProperty(auto_now_add=True)
@@ -140,13 +141,12 @@ class SearchEntry(ndb.Model):
     remoteip = ndb.StringProperty(required=True) #don't know who they are, don't care
     created = ndb.DateTimeProperty(auto_now_add=True)
     delivby = ndb.DateProperty()
-    capacity = ndb.IntegerProperty(default=0) 
     start = ndb.GeoPtProperty(required=True)
     dest = ndb.GeoPtProperty(required=True)
     dist = ndb.FloatProperty(default=100.0)
     locstart = ndb.StringProperty(required=True) #text descr of location
     locend = ndb.StringProperty(required=True) #text descr of location   
-    matches = ndb.KeyProperty(repeated=True)
+    # matches = ndb.KeyProperty(repeated=True)
     
     @classmethod
     def by_ip(cls,remoteip):

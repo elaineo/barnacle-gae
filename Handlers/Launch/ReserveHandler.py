@@ -64,26 +64,58 @@ class ReserveHandler(BaseHandler):
         self.write(json.dumps(response))
     
     def __what(self, key):
+        dist = 100
+        numres = 6  #max results returned    
         # Turn the search entry into a request
         # Who cares about capacity, driver can figure it out
-        capacity = self.request.get('vcap')
-        capacity = parse_unit(capacity)
-        matches = self.request.get_all('dkey')
-
+        category = self.request.get('category')
+        category = parse_unit(category)
+        items = self.request.get('items')
+        img = self.request.get("file")
+        
         res = ndb.Key(urlsafe=key).get()
-        res.delivby = delivend
-        res.capacity = capacity
-        res.matches = [ndb.Key(urlsafe=m) for m in matches]
-        res.put()
-        #Next, upload img and make an offer -- we need suggested offer price
-        self.params = res.params_fill(self.params)
-        self.params['email'] = self.user_prefs.email
-        self.params['update_url'] = '/res/checkout/'+key
-        price, seed = priceEst(res, res.dist)
-        self.params['rates'] = price
-        self.params['routekey'] = key
+        
+        p = Request(userkey=self.user_prefs.key, category=category, 
+            items=items, delivby=res.delivby, start=res.start, dest=res.dest, 
+            locstart=res.locstart, locend=res.locend)
+        
+        price, seed = priceEst(p, res.dist)
+        stats = ReqStats(sugg_price=price, seed=seed, distance=int(res.dist))
+        p.stats = stats
+            
+        if img: 
+            imgstore = ImageStore.new(img).put()
+            p.img_id = imgstore.id()
+        
+        p.put()
+        # Next, display list of drivers
+        startresults = search_pathpts(dist,'ROUTE_INDEX',p.delivby.strftime('%Y-%m-%d'),'delivstart',p.start).results
+        destresults = search_pathpts(dist,'ROUTE_INDEX',p.delivby.strftime('%Y-%m-%d'),'delivstart',p.dest).results
+        results = search_intersect(startresults, destresults)                    
+        keepers = []
+        for c in results:
+            startpt = field_byname(c, "start")
+            dist0 = HaversinDist(res.start.lat,res.start.lon, startpt.latitude, startpt. longitude) 
+            dist1 = HaversinDist(res.dest.lat,res.dest.lon, startpt.latitude, startpt.longitude)
+            if dist0 < dist1:
+                keepers.append(c)
+        results = keepers
+        logging.info(results)
+        # if there are no drivers, redirect to next page to complete request
+        drivers = []
+        for r in results:
+            route = ndb.Key(urlsafe=r.doc_id).get()
+            p = search_todict(r)
+            p['capacity'] = route.capacity
+            p['delivend'] = route.delivend.strftime('%m/%d/%Y')
+            d = Driver.by_userkey(route.userkey)
+            p = d.params_fill(p)
+            drivers.append(p)   
+        self.params['reskey'] = key
+        self.params['drivers'] = drivers  
+        self.params['today'] = datetime.now().strftime('%Y-%m-%d')
         self.params['res_title'] = res.locstart + ' to ' + res.locend
-        self.render('launch/request_review.html', **self.params)   
+        self.render('launch/filldriver.html', **self.params)    
                     
         
     def __filter(self, key):
@@ -129,14 +161,16 @@ class ReserveHandler(BaseHandler):
         logging.info(results)
         # if there are no drivers, redirect to next page to complete request
         drivers = []
-        for r in results:
-            route = ndb.Key(urlsafe=r.doc_id).get()
-            res.matches.append(ndb.Key(urlsafe=r.doc_id))
-            res.put()
-            p = search_todict(r)
-            p['capacity'] = route.capacity
-            p['delivend'] = route.delivend.strftime('%m/%d/%Y')
-            d = Driver.by_userkey(route.userkey)
+        results = Driver.query()
+        for d in results:
+            # route = ndb.Key(urlsafe=r.doc_id).get()
+            # res.matches.append(ndb.Key(urlsafe=r.doc_id))
+            # res.put()
+            # p = search_todict(r)
+            # p['capacity'] = route.capacity
+            # p['delivend'] = route.delivend.strftime('%m/%d/%Y')
+            # d = Driver.by_userkey(route.userkey)
+            p={}
             p = d.params_fill(p)
             drivers.append(p)
 #rating, #completed, checkbox, vehicle, date arriving, insured, bank (tooltip)
@@ -145,7 +179,7 @@ class ReserveHandler(BaseHandler):
         self.params['drivers'] = drivers  
         self.params['today'] = datetime.now().strftime('%Y-%m-%d')
         self.params['res_title'] = res.locstart + ' to ' + res.locend
-        self.render('launch/driverres.html', **self.params)    
+        self.render('launch/filldriver.html', **self.params)    
 
     def __create_checkout(self,key):
         rates = self.request.get('rates')

@@ -4,7 +4,16 @@
  <!-- Progress bar and button -->
 {% include "launch/forms/progress.html" %}
   {% include "launch/forms/header_item.html" %}
+
 {% endblock %}
 {% block content %}
-
+<script>
+  
+$(document).ready(function(){
+    /* Give the heading a pretty picture */
+    hh = $('.heading').height()+20;
+    $('.wash').height(hh);
+    $('.hero_container').height(hh);
+});
+</script> 
 {% endblock %}
