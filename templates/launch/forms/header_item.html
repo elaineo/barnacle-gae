@@ -81,8 +81,12 @@ $(document).ready(function(){
     scrollToAnchor('#insurance');
   });
   $('button.next').click(function() {
-    if ($('input#category').val() != '')
-      $('form#search_form').submit();
+    if ($('input#category').val() != '') {
+      $('button.next').attr('disabled', 'disabled');
+      $('button.next').addClass('wait');
+      $('form#search_form').submit();      
+    } else
+        display_modal_msg('Please select a category.');
   });
 });
 function scrollToAnchor(aid){

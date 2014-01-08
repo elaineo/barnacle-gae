@@ -14,6 +14,7 @@ from Models.Launch.BarnacleModel import *
 from Models.PaymentModel import *
 from Models.UserModels import *
 
+from Utils.ValidUtils import parse_rate
 from Utils.data.paydefs import *
 from Utils.Defs import *
 from Utils.EmailUtils import send_info, create_note
@@ -47,7 +48,7 @@ class CheckoutHandler(BaseHandler):
         self.params.update(res.to_dict())
         self.params['reskey'] = key
         self.params['sugg_rates'] = res.stats.sugg_price
-        self.params['checkout_action'] = '/checkout'
+        self.params['checkout_action'] = '/checkout/' + key
         self.render('launch/fillcheckout.html', **self.params)        
                 
     def __process(self,key):
@@ -56,20 +57,20 @@ class CheckoutHandler(BaseHandler):
         except:
             self.abort(400)    
         email = self.request.get('email')
-        details = self.request.get('details')
+        tel = self.request.get('tel')
+        rates = self.request.get('rates')
+        rates = parse_rate(rates)
         uri = self.request.get('balancedCreditCardURI')        
         
-        if details:
-            res.details = details
-            res.put()
+        res.rates = rates
+        res.put()
         
         customer = self.__create_cust(uri,email)
         charge = res.rates*100
-        customer.debit(amount=charge)
-        self.params['d'] = res.driver.get().params_fill({})
-        self.params.update(fill_res_params(res))
+        if charge > 0:    
+            customer.debit(amount=charge)
+        self.params.update(res.to_dict())
         eparams = self.params
-        eparams.update(self.params['d'])
         self.render('launch/receipt_res.html', **self.params)
         self.send_receipt(email, res, eparams)
         

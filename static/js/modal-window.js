@@ -14,6 +14,11 @@ function add_confirmation_dialog(action, button){
 function display_modal(loginBox) {
   $(loginBox).modal();
 }
+function display_modal_msg(msg) {
+  $('h4#modal-msg').html(msg);
+  $('#modal-box').modal();
+}
+
 
 $(document).ready(function() {
 	// When clicking on the button close or the mask layer the popup closed

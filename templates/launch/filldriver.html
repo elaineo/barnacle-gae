@@ -14,8 +14,9 @@ $(document).ready(function(){
     // tooltips
     $('.info_ins').popover({trigger:'hover', container:'body'});
     $('.info_bank').popover({trigger: 'hover',container:'body'});
-    $('#next_btn').click(function(event) {
-      event.preventDefault();
+    $('button.next').click(function(event) {
+      $('button.next').attr('disabled', 'disabled');
+      $('button.next').addClass('wait');      
       $('#driver_form').submit();
     });
 });
