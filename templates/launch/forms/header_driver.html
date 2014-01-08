@@ -1,21 +1,16 @@
 <link rel="stylesheet" href="/static/landing/styles/transition.css">
-<div class="row-fluid">
-  <div class="span12">
-    <div class="form-header">
-    <h4 style='color:#fff'>Who are you shipping with?</h4>
-    <p class='lead'>We will send your request to the drivers selected below.</p>
-    </div>
-     <form action='/res/driver/{{key}}' enctype="multipart/form-data" method="post" id='search_form' class="custom form-item form-horizontal">
-        <div class="row" id='drivermosaic'>
-
-          {% include "launch/drivermosaic.html" %}
-          <br>
-          Don't see any results you like? Post a <button class="btn btn-info btn-small" id="postreq_btn">Delivery Request</button>
-        </div>
-    <div class='row' style='height:20px'></div>
-    </form>    
-  </div>
+<div class="form-header">
+  <h4 style='color:#fff'>Who are you shipping with?</h4>
+  <p class='lead'>We will send your request to the drivers selected below.</p>
 </div>
+<form action='/res/driver/{{reskey}}' enctype="multipart/form-data" method="post" id='search_form' class="custom form-item form-horizontal"> 
+<div id='drivermosaic'>
+  {% include "launch/drivermosaic.html" %}
+</div>
+</form>    
+
+<div class='row' style='height:20px'></div>
+
 
 <script type="text/javascript" src="/static/landing/scripts/foundation.min.js"></script>        
 <script type="text/javascript" src="/static/landing/scripts/transition.js"></script> 

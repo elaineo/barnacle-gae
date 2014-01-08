@@ -1,36 +1,55 @@
 {% for d in drivers %}
-  <div class='span4'>
-    <table class="table table-bordered table-hover clicky" data-fb='{{d.fbid}}'>
-    <tr><td>
-    <table>
-    <tr><td style='border: none; position:relative;'>
-    <div style='position:absolute;top:0;'>
-    <input type="checkbox" name="dkey" value="{{d.routekey}}" checked>
+  {{ loop.cycle('<div class="row">', '', '') | safe }}
+  <div class='span4 mosaic'>
+    <table class="clicky" data-fb='{{d.fbid}}'>
+    <tr><td style='position:relative;width:120px;'>
+    <div  class='driveroverlay' style='top:8px;'>
+    <input type="checkbox" name="dkey" id="dkey" value="{{d.routekey}}" checked>
+    <label for="dkey"></label>
     </div>
-    <img style='width:100px' src="{{d.profile_thumb}}">
-    </td><td class="capacity" style='border: none;'>
-    {% if d.capacity == 0 %}<img src='/static/img/icons/icocap0.png'> Compact
-    {% elif d.capacity == 1 %}<img src='/static/img/icons/icocap1.png'> SUV
-    {% elif d.capacity == 2 %}<img src='/static/img/icons/icocap2.png'> Pickup
-    {% elif d.capacity == 3 %}<img src='/static/img/icons/icocap3.png'> Hauler
-    {% elif d.capacity == 4 %}<img src='/static/img/icons/icocap4.png'> Carry On
+    <div  class='driveroverlay' style='bottom:8px;'>
+    {% if d.ins == True %}
+       <img src="/static/barnacle64.png" data-toggle="popover" data-content="Insured up to $500" class="info_ins">
     {% endif %}
-    </br>
-    </td></tr></table>
-    <h4>{{d.first_name}} &nbsp;&nbsp;</h4>
+    {% if d.bank == True %}
+      <img src="/static/img/icons/bankver.png" class="info_bank" data-toggle="popover" data-content="Bank Account Verified.">
+    {% endif %}
+    </div>    
+    <img src="{{d.profile_thumb}}">
+    </td>
+    <td class="capacity" >
+    {% if d.capacity == 0 %}<img src='/static/img/icons/icocap0_wh.png'> 
+    {% elif d.capacity == 1 %}<img src='/static/img/icons/icocap1_wh.png'>
+    {% elif d.capacity == 2 %}<img src='/static/img/icons/icocap2_wh.png'>
+    {% elif d.capacity == 3 %}<img src='/static/img/icons/icocap3_wh.png'>
+    {% elif d.capacity == 4 %}<img src='/static/img/icons/icocap4_wh.png'>
+    {% endif %}
+    <br><br>
+    <p>{{d.first_name}} &nbsp;&nbsp;</p>
     <div class="avgrating">
     <span class="rating-starsOff" style="width:95px;">
     <span class="rating-starsOn" style="width:19px">{{d.avg_rating}}</span>
     </span>
     </div>        
-    <a href='{{d.prof_url}}' target='_blank'>view profile</a><br><br>
-    Deliveries Completed: <b>{{d.deliv_completed}}</b><br> 
-    <div style='height:40px'>
-    {{d.insured | safe}} <br>
-    {{d.bankver | safe}}                
-    </div><br>
-    Arrival Date: {{d.delivend}}
+    <p>{{d.delivend}} </p>
+    <a href='{{d.prof_url}}' target='_blank'>more >></a><br><br>    
+    
     <!-- Networks: {% for n in d.networks %} {{n}}{% endfor %} -->
     </td></tr></table>
   </div>
+ {{ loop.cycle('', '', '</div>') | safe}}
 {% endfor %}
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.mosaic').click(function() {
+    $sel = $(this).find('input[name=dkey]').get(0);
+    console.log( $sel);
+    $sel.setAttribute('checked',!$sel.getAttribute('checked'));
+  });
+  $('button.next').click(function() {
+      $('form#search_form').submit();
+  });
+});
+
+</script>

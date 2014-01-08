@@ -1,11 +1,21 @@
 
 /* Custom Forms ---------------------- */
 form.custom { /* Custom input, disabled */ }
-form.custom span.custom { display: inline-block; width: 16px; height: 16px; position: relative; top: 2px; border: solid 1px #cccccc; background: white; }
+form.custom span.custom { display:inline-block;
+    width:20px;
+    height:20px;
+    margin:-4px 4px 0 0;
+    background:url('/static/img/icons/checkbox.png') left top no-repeat;
+    cursor:pointer;
+    padding:0!important;
+position: relative;    }
 form.custom span.custom.radio { -webkit-border-radius: 100px; -moz-border-radius: 100px; -ms-border-radius: 100px; -o-border-radius: 100px; border-radius: 100px; }
-form.custom span.custom.checkbox:before { content: ""; display: block; line-height: 0.8; height: 14px; width: 14px; text-align: center; position: absolute; top: 0; left: 0; font-size: 14px; color: #fff; }
+form.custom span.custom.checkbox:before {     display:inline-block;
+    width:20px; height:20px;
+    background:url('/static/img/icons/checkbox.png') left top no-repeat;
+    cursor:pointer; }
 form.custom span.custom.radio.checked:before { content: ""; display: block; width: 8px; height: 8px; -webkit-border-radius: 100px; -moz-border-radius: 100px; -ms-border-radius: 100px; -o-border-radius: 100px; border-radius: 100px; background: #222222; position: relative; top: 3px; left: 3px; }
-form.custom span.custom.checkbox.checked:before { content: "\00d7"; color: #222222; }
+form.custom span.custom.checkbox.checked:before { width:20px; height:20px;content: ""; color: #222222; background-position: 0 -20px; }
 form.custom div.custom.dropdown { display: block; position: relative; width: auto; height: 28px; margin-bottom: 9px; margin-top: 2px; }
 form.custom div.custom.dropdown ul { overflow-y: auto; max-height: 200px; }
 form.custom div.custom.dropdown a.current { display: block; width: auto; line-height: 26px; min-height: 28px; padding: 0; padding-left: 6px; padding-right: 38px; border: solid 1px #dddddd; color: #141414; background-color: white; white-space: nowrap; }
@@ -31,7 +41,6 @@ form.custom div.custom.dropdown ul li.selected:hover { background: #cdebf5; curs
 form.custom div.custom.dropdown ul li.selected:hover:after { color: black; }
 form.custom div.custom.dropdown ul.show { display: block; }
 form.custom .custom.disabled { background-color: #dddddd; }
-
 /* Correct FF custom dropdown height */
 @-moz-document url-prefix() { form.custom div.custom.dropdown a.selector { height: 28px; } }
 

@@ -5,7 +5,7 @@ from google.appengine.ext import ndb
 from google.appengine.api import mail
 
 from Handlers.BaseHandler import *
-from Handlers.Launch.ReserveHandler import fill_driver_params, fill_res_params
+from Handlers.Launch.ReserveHandler import  fill_res_params
 from Handlers.Tracker.TrackerHandler import create_from_res
 
 from Models.Launch.Driver import *
@@ -65,7 +65,7 @@ class CheckoutHandler(BaseHandler):
         customer = self.__create_cust(uri,email)
         charge = res.rates*100
         customer.debit(amount=charge)
-        self.params['d'] = fill_driver_params(res.driver.get())
+        self.params['d'] = res.driver.get().params_fill({})
         self.params.update(fill_res_params(res))
         eparams = self.params
         eparams.update(self.params['d'])

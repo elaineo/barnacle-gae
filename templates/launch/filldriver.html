@@ -5,89 +5,21 @@
 {% include "launch/forms/progress.html" %}
 {% include "launch/forms/header_driver.html" %}
 
-
-
 {% endblock %}
 {% block content %}
-<link rel="stylesheet" href="/static/css/drivers.css" />
-<form enctype="multipart/form-data" method="post" class="form-horizontal" id="driver_form">
-<div class="row">
-  <div class="span10 offset1">    
-   <p>Your package will be delivered by one of the matching drivers below. </p>
-   <p>You may filter this based on your needs.</p>
-  </div>
-</div>
-<div class="row">
-  <div class="span4">            
-    <div class="control-group">
-       <label class="control-label">Space Needed:</label>
-        <div class="controls input-xlarge">
-        <select  name="vcap" class="expand" id='vcap'>
-          <option  name="vcap" value="0" selected>Passenger Seat</option>
-          <option  name="vcap"  value="1">Trunk</option>
-          <option  name="vcap" value="2">Wagon</option>
-        </select>
-        </div>
-    </div>
-  </div>
-  <div class="span5">  
-    <div class="control-group">
-        <label class="control-label" for="dates">Deliver By:</label>
-        <div class="controls">
-          <input type="date" name="enddate" min="{{today}}" value="{{delivby}}" id="enddate" autocomplete="off">
-        </div>
-    </div>    
-  </div>
-  <div class="span2"><button id='next_btn' class="button secondary"> Next</button></div>  
-</div>
-<div class="row">
-  <div class="span10 offset1" id='drivermosaic'>
-  {% include "launch/drivermosaic.html" %}
-  <br>
-  Don't see any results you like? Post a <button class="btn btn-info btn-small" id="postreq_btn">Delivery Request</button>
-  </div>
-</div>
-</form>
   <script>
 $(document).ready(function(){  
     $('.navicoreq').addClass('onbutton');   
     user_rating();
     // tooltips
-    $('.info_ins').popover({trigger: 'hover'});    
-    $('.info_bank').popover({trigger: 'hover'});    
-    //Detect change in filters
-    $('#enddate').change(function() {
-      submitSearch();
-    });
-    $('#vcap').change(function() {
-      submitSearch();
-    });
+    $('.info_ins').popover({trigger:'hover', container:'body'});
+    $('.info_bank').popover({trigger: 'hover',container:'body'});
     $('#next_btn').click(function(event) {
       event.preventDefault();
       $('#driver_form').submit();
     });
 });
-function submitSearch() {
-  data = {'vcap' : $('select#vcap').val(),
-          'delivend': $('#enddate').val() };
-  $.ajax({
-    type: "POST",
-    dataType: "text",
-    accepts: "text/html",
-    contentType: "application/json; charset=utf-8",
-    url: '/res/filter/{{reskey}}',
-    data: JSON.stringify(data),
-    success: function(response) {
-      console.log(response);
-      //update search results
-      $('#drivermosaic').html(response);
-    }, 
-    error: function(XMLHttpRequest, textStatus, errorThrown) { 
-      console.log("Status: " + textStatus); 
-      console.log("Error: " + errorThrown); 
-    }       
-  });  
-}
+
 function user_rating(){
     $(".avgrating").each(function() {
       $(this).find('.rating-starsOn').each(function() {

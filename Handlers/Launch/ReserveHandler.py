@@ -29,10 +29,8 @@ class ReserveHandler(BaseHandler):
             self.__where()
         elif (action=='edit') and key:  #WHAT
             self.__what(key)        
-        elif (action=='filter') and key:
-            self.__filter(key)       
-        elif (action=='checkout') and key:
-            self.__create_checkout(key)
+        elif (action=='driver') and key:
+            self.__who(key)       
         else:
             self.__create_res()
             
@@ -111,35 +109,11 @@ class ReserveHandler(BaseHandler):
             d = Driver.by_userkey(route.userkey)
             p = d.params_fill(p)
             drivers.append(p)   
-        self.params['reskey'] = key
+        self.params['reskey'] = p.key
         self.params['drivers'] = drivers  
-        self.params['today'] = datetime.now().strftime('%Y-%m-%d')
-        self.params['res_title'] = res.locstart + ' to ' + res.locend
         self.render('launch/filldriver.html', **self.params)    
                     
-        
-    def __filter(self, key):
-        # retrieve search, filter matching drivers
-        res = ndb.Key(urlsafe=key).get()
-        data = json.loads(unicode(self.request.body, errors='replace'))
-        capacity = data.get('vcap')
-        vcap = parse_unit(capacity)
-        enddate = data.get('delivend')
-        if enddate:
-            delivend = parse_date(enddate)
-        else:
-            delivend = datetime.now().date()+timedelta(days=365)
-        drivers = []
-        for r in res.matches:
-            route = r.get()
-            if route.capacity > vcap and route.delivend <= delivend:
-                p = route.to_search()
-                d = Driver.by_userkey(route.userkey)
-                p = d.params_fill(p)
-                drivers.append(p)
-        response = {'status': 'ok'}
-        self.params['drivers'] = drivers  
-        self.render('launch/drivermosaic.html', **self.params)   
+         
         
     def __driverres(self,key):
         # retrieve search, find matching drivers
@@ -171,6 +145,7 @@ class ReserveHandler(BaseHandler):
             # p['delivend'] = route.delivend.strftime('%m/%d/%Y')
             # d = Driver.by_userkey(route.userkey)
             p={}
+            p['capacity'] = 0
             p = d.params_fill(p)
             drivers.append(p)
 #rating, #completed, checkbox, vehicle, date arriving, insured, bank (tooltip)
@@ -181,33 +156,12 @@ class ReserveHandler(BaseHandler):
         self.params['res_title'] = res.locstart + ' to ' + res.locend
         self.render('launch/filldriver.html', **self.params)    
 
-    def __create_checkout(self,key):
-        rates = self.request.get('rates')
-        rates = parse_rate(rates)
-        items = self.request.get('items')
-        email = self.request.get('email')
-        if email and (email != self.user_prefs.email):
-            u = self.user_prefs.key.get()
-            u.email = email
-            u.put()
+    def __who(self,key):
+        routes = self.request.get_all('dkey')
         res = ndb.Key(urlsafe=key).get()
-        # image upload
-        img = self.request.get("file")
-        # Create request
-        stats = ReqStats(distance=int(res.dist))
-        p = Request(userkey = self.user_prefs.key, capacity=res.capacity, 
-            delivby=res.delivby, 
-            start=res.start, dest=res.dest, locstart=res.locstart, 
-            locend=res.locend, matches=res.matches, stats=stats)
-        if img: 
-            imgstore = ImageStore.new(img)
-            imgstore.put()
-            p.img_id = imgstore.key.id()
-        p.rates = rates
-        p.items = items
-        p.put() 
+        logging.info(routes)
 
-        self.redirect('/checkout/'+p.key.urlsafe())                
+        self.redirect('/checkout/'+res.key.urlsafe())                
         
     def __jsondump(self,key):
         try:
@@ -232,26 +186,6 @@ class ReserveHandler(BaseHandler):
             ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
         return ptg, ptstr
 
-def fill_driver_params(u): 
-    p = {  'first_name': u.first_name,
-            'profile_url': u.profile_url(),
-            'profile_thumb': u.profile_image_url('small'),
-            'deliv_completed': u.deliveries_completed(),
-            'fbid' : u.userid,
-            'key' : u.key.urlsafe()
-        }
-    if u.ins:
-        p['insured'] = ins_str
-        p['ins_email'] = ins_str_email
-    else:
-        p['insured'] = ''
-        p['ins_email'] = ''
-    if u.bank:
-        p['bank'] = bank_str
-    else:
-        p['bank'] = ''
-    return p
-    
 def fill_res_params(r):
     r = { 'reskey' : r.key.urlsafe() ,
           'price' : r.rates,

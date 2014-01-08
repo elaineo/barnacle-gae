@@ -428,34 +428,6 @@ button.wait {
     height: 26px;
     cursor: wait !important;
 }
-input[type=checkbox].css-checkbox {
-position: absolute; 
-overflow: hidden; 
-clip: rect(0 0 0 0); 
-height:1px; 
-width:1px; 
-margin:-1px; 
-padding:0;
-border:0;
-}
-
-input[type=checkbox].css-checkbox + label.css-label {
-padding-left:20px;
-height:20px; 
-display:inline-block;
-line-height:20px;
-background-repeat:no-repeat;
-background-position: 0 0;
-font-size:15px;
-vertical-align:middle;
-cursor:pointer;
-}
-
-input[type=checkbox].css-checkbox:checked + label.css-label {
-background-position: 0 -20px;
-}
-
-.css-label{ background-image:url(http://csscheckbox.com/checkboxes/web-two-style.png); }
 .ship-item {
     border: 0;
     width: 100%;
@@ -486,6 +458,11 @@ background-position: 0 -20px;
 }
 .item-bg.selected {
   background: rgba(104, 104, 104, 0.68); 
+  -webkit-transition: all .1s ease-in;
+-moz-transition: all .1s ease-in;
+-o-transition: all .1s ease-in;
+-ms-transition: all .1s ease-in;
+transition: all .1s ease-in;
 }
 .v-cat {
     background:url('/static/img/icons/v-cat.gif') 50% 50% no-repeat;
@@ -510,6 +487,39 @@ background-position: 0 -20px;
 .v-car {
     background:url('/static/img/icons/v-car.gif') 50% 50% no-repeat;
     background-size: contain;
+}
+.driveroverlay {
+  position: absolute;
+  z-index: 2;
+}
+.driveroverlay img {
+  height:32px;
+}
+
+.mosaic table {
+  background: rgba(23, 23, 23, 0.72); 
+  margin: 4px;
+  border-spacing: 4px;
+  width:100%;
+}
+.mosaic table:hover {
+    background: rgba(104, 104, 104, 0.68); 
+    cursor:pointer;
+}
+.mosaic td {
+  padding: 4px;
+  vertical-align: top;
+  overflow: hidden;
+}
+.mosaic .capacity img{
+  height: 16px;
+  float:right;
+}
+.mosaic p {
+  font-size:21px;
+  font-weight:200;
+  margin: 0;  
+  color: #fff;
 }
 /* -----------------------------------------
    08. Footer

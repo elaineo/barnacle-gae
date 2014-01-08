@@ -78,11 +78,15 @@ $(document).ready(function(){
     $(this).addClass('selected');
     var cat = $(this).attr('data-cat');
     $('input#category').val(cat);
-    window.location.hash = 'insurance';
+    scrollToAnchor('#insurance');
   });
   $('button.next').click(function() {
     if ($('input#category').val() != '')
       $('form#search_form').submit();
   });
 });
+function scrollToAnchor(aid){
+    var aTag = $(aid);
+    $('html,body').animate({scrollTop: aTag.offset().top},'slow');
+}
 </script>
