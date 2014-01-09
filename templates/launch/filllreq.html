@@ -9,5 +9,15 @@
 </div>
 {% endblock %}
 {% block content %}
-
+<script>
+  
+$(document).ready(function(){
+    $('i.prog0').addClass('blue-text');
+    $('.navicoreqs').addClass('onbutton');  
+    /* Give the heading a pretty picture */
+    hh = $('.heading').height()+20;
+    $('.wash').height(hh);
+    $('.hero_container').height(hh);
+});
+</script> 
 {% endblock %}

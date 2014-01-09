@@ -100,6 +100,8 @@ class ReserveHandler(BaseHandler):
         results = keepers
         logging.info(results)
         # if there are no drivers, redirect to next page to complete request
+        if len(results) < 1:
+            self.redirect('/checkout/'+p.key.urlsafe())
         drivers = []
         for r in results:
             route = ndb.Key(urlsafe=r.doc_id).get()

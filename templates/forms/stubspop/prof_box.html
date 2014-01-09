@@ -14,8 +14,11 @@
             </span>
             </div>
         Deliveries Completed: <b>{{deliv_completed}}</b><br> 
-        <div style='max-height:40px'>
-        {{insured | safe}} <br><br>
+        <div class="insured">
+        {% if ins == True %}
+           <img src="/static/barnacle64.png"> &nbsp;Insured up to $500
+           <br>
+        {% endif %}
         </div>
         <b>Mutual Friends</b><br>
         <div id='dumpfriends' >None.</div>

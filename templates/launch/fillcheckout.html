@@ -2,16 +2,7 @@
 {% block title%}Let's Go!{% endblock %}
 {% block heading %}
  <!-- Progress bar and button -->
- <div class="row">
-  <div class="span2 offset5" style='color:#fff'>
-    <table style='border:0;width:100%'><tr>
-    <td width='25%'><i class="icon-circle"></i></td>
-    <td width='25%'><i class="icon-circle"></i></td>
-    <td width='25%'><i class="icon-circle"></i></td>
-    <td width='25%'><i class="icon-circle"></i></td>
-    </tr></table>
-  </div>
-</div>
+{% include "launch/forms/progress.html" %}
 {% include "launch/forms/header_checkout.html" %}
 
 {% endblock %}
@@ -27,6 +18,8 @@
  <script>
   
 $(document).ready(function(){
+    $('i.prog3').addClass('blue-text');
+    $('button.next').hide();
     $('.navicoreqs').addClass('onbutton');  
     //click_submit('#request_btn','#request_form');
     var mapURL = '/res/json/{{reskey}}';

@@ -526,6 +526,9 @@ transition: all .1s ease-in;
     padding: 10px;
 	background: #eee;
     color: #000;}
+.insured img {
+    max-height: 32px;
+}
 /* -----------------------------------------
    08. Footer
 ----------------------------------------- */
