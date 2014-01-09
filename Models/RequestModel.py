@@ -81,7 +81,7 @@ class Request(ndb.Model):
             'rates' : cls.rates,
             'capacity' : cls.capacity,
             'category' : cls.category,
-            'reqitems' : cls.items,
+            'items' : cls.items,
             'num_offers' : cls.num_offers(),
             'num_matches' : len(cls.matches),
             'image_url' : cls.image_url()

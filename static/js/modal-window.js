@@ -2,7 +2,7 @@ function add_confirmation_dialog(action, button){
     $('#'+button).click(function(event){
         event.preventDefault();
         delete_form = '<form method="post" action="' + action + '"><br><button type="submit" class="button small info">Yes</button>&nbsp;<button id="cancel" type="button" class="button small info">Cancel</button></form>';
-        $('body').append('<div id="confirm" class="modal hide fade in" style="display: none; "><div class="modal-body"><h4>Are you sure?</h4><p>This action cannot be undone.</p>' + delete_form + '</div></div>');
+        $('body').append('<div id="confirm" class="modal fade in" style="display: none; "><div class="modal-body"><h4>Are you sure?</h4><p>This action cannot be undone.</p>' + delete_form + '</div></div>');
         
         $('#confirm').modal();
         $('#cancel').on('click', function(){

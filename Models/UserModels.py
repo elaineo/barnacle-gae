@@ -28,7 +28,6 @@ class UserPrefs(ndb.Model):
     cust_id = ndb.StringProperty() # customer payment ID
     first_name = ndb.StringProperty()
     last_name = ndb.StringProperty()
-    zip = ndb.StringProperty()  #eventually kill this
     location = ndb.StringProperty()
     fblocation = ndb.StringProperty()    
     locpt = ndb.GeoPtProperty(default=ndb.GeoPt(37.4,-122))

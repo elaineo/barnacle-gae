@@ -87,10 +87,16 @@ class DebugUtils(BaseHandler):
             delete_all_in_index(CL_INDEX)                               
             self.write('cl stuff gone.')       
         elif action=='populate':
+            fakefb = BarnacleModel.query()
             for f in fakefb:
-                u = UserPrefs(userid=f[1], email=f[2], first_name=f[3], last_name=f[4], about=f[5], location=f[6])
+                stats = UserStats(code='elaine')
+                sett = UserSettings()
+                u = UserPrefs(userid=f.userid, email='help@gobarnacle.com',
+                first_name=f.first_name, last_name=f.last_name, about=f.about, 
+                location=f.fblocation, img_id=f.img_id, settings=sett, stats=stats)
                 u.put()
-                d = Driver(userkey=u.key).put()
+                d = Driver(userkey=u.key, bank=True,ins=True).put()
+                self.write(u.key.urlsafe())
             self.write('users created.') 
         elif action=='createreviews':  
             users = UserPrefs.query().fetch()

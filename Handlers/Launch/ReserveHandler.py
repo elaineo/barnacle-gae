@@ -104,8 +104,8 @@ class ReserveHandler(BaseHandler):
             self.redirect('/checkout/'+p.key.urlsafe())
         drivers = []
         for r in results:
-            route = ndb.Key(urlsafe=r.doc_id).get()
             q = search_todict(r)
+            route = ndb.Key(urlsafe=q['routekey']).get()            
             q['capacity'] = route.capacity
             q['delivend'] = route.delivend.strftime('%m/%d/%Y')
             d = Driver.by_userkey(route.userkey)

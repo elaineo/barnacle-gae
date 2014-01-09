@@ -1,3 +1,5 @@
+fakeppl = []
+
 fakeaccts = ['e0@test.com 1234', 'e1@test.com 1234', 'e2@test.com 1234', 'e3@test.com 1234', 'e4@test.com 1234', 'e5@test.com 1234', 'e6@test.com 1234', 'e7@test.com 1234', 'e8@test.com 1234', 'e9@test.com 1234']
 
 fakeprefs = ['p2p e0@test.com e0@test.com Tanner Wood hello 90210',
@@ -10,20 +12,6 @@ fakeprefs = ['p2p e0@test.com e0@test.com Tanner Wood hello 90210',
 'p2p e7@test.com e7@test.com Judy Lin  None 94043', 
 'p2p e8@test.com e8@test.com Lynn Conway  hi 91107', 
 'p2p e9@test.com e9@test.com Candy Kendall  hi 90210']
-
-fakefb = ['fb 1000 1000 Lilly Berry heyhey 03818',
-'fb 803779570 803779570 Mike Harmon heyhey 95070',
-'fb 1001 1001 VJ Ken hello 75034',
-'fb 1015500491 1015500491 Aidan Yeaw hello 94025',
-'fb 1002 1002 Jenny Fields hello 07022',
-'fb 100004507184486 100004507184486 Jenny Fields hello 91775',
-'fb 1003 1003 Ellen James hello 55052',
-'fb 100006264160574 100006264160574 Warren Low hello 95001',
-'fb 1004 1004 Helen Garp hello 24101',
-'fb 1005 1005 Jen Wu hello 38749',
-'fb 1006 1006 Judy Li hello 95051',
-'fb 1007 1007 Cherrie Wei boo 91108',
-'fb 1008 1008 Carli Ying hello 91776']
 
 fakeroutes = ['18636 16150 9/10/2013 9/14/2013',
 '36580 36555 9/10/2013 9/12/2013',
