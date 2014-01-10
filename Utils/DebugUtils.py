@@ -39,6 +39,8 @@ class DebugUtils(BaseHandler):
             ndb.delete_multi( ZimModel.query().fetch(keys_only=True))
             # delete_all_in_index(ROUTE_INDEX)
             # delete_all_in_index(REQUEST_INDEX)
+        elif action=='clearexp':
+            clean_index(REQUEST_INDEX)
         elif action=='qtask':
             taskqueue.add(url='/debug/clearall')
         elif action=='cities':
@@ -61,25 +63,6 @@ class DebugUtils(BaseHandler):
             for d in data:
                 d.key.delete()                
             self.write('users gone.')
-        elif action=='importusers':
-            users = Request.query()
-            ujson = []
-            ids = []
-            for u in users:
-                try:                    
-                    ids.append(int(u.userkey.get().userid))
-                except:
-                    continue
-            self.response.headers['Content-Type'] = "application/json"
-            self.write(json.dumps(ids))
-        elif action=='googleblows':
-            data = Route.query()
-            for p in data:
-                if len(p.pathpts)<3:
-                    logging.info(p)
-                    p,d = RouteUtils().setloc(p,p.locstart,p.locend)
-                    p.put()
-            return
         elif action=='clearcl':
             data = CLModel.query()
             for d in data:
@@ -98,6 +81,33 @@ class DebugUtils(BaseHandler):
                 d = Driver(userkey=u.key, bank=True,ins=True).put()
                 self.write(u.key.urlsafe())
             self.write('users created.') 
+        elif action=='createroutes':
+            drivers = UserPrefs.query()#.filter(UserPrefs.email=='help@gobarnacle.com')
+            drivers = [d.key for d in drivers]
+            i5cities = [{'city': 'Los Angeles', 'lat': 34.0522342, 'lon': -118.2436849}, {'city': 'San Diego', 'lat': 32.9947953, 'lon': -116.924239}, {'city': 'San Jose', 'lat': 37.3393857, 'lon': -121.8949555}, {'city': 'Sacramento', 'lat': 38.5815719, 'lon': -121.4943996}, {'city': 'Long Beach', 'lat': 33.768321, 'lon': -118.1956168},  {'city': 'Bakersfield', 'lat': 35.3732921, 'lon': -119.0187125}, {'city': 'Santa Ana', 'lat': 33.7455731, 'lon': -117.8678338}, {'city': 'Reno', 'lat': 39.5296329, 'lon': -119.8138027}, {'city': 'Fremont', 'lat': 37.5482697, 'lon': -121.9885719}, {'city': 'Tacoma', 'lat': 47.2528768, 'lon': -122.4442906}, {'city': 'Oxnard', 'lat': 34.1975048, 'lon': -119.1770516}, {'city': 'Glendale', 'lat': 34.1425078, 'lon': -118.255075}, {'city': 'Oceanside', 'lat': 33.1958696, 'lon': -117.3794834}, {'city': 'Santa Rosa', 'lat': 38.4404674, 'lon': -122.7144314}, {'city': 'Eugene', 'lat': 44.0520691, 'lon': -123.0867536}, {'city': 'Pasadena', 'lat': 34.1477849, 'lon': -118.1445155},  {'city': 'Santa Clara', 'lat': 37.3541079, 'lon': -121.9552356}, {'city': 'Seattle', 'lat': 47.6062095, 'lon': -122.3320708},  {'city': 'Portland', 'lat': 45.5234515, 'lon': -122.6762071},{'city': 'Oakland', 'lat': 37.8043637, 'lon': -122.2711137}]
+            today = datetime.today()
+            nextmonth = today + timedelta(weeks=4)
+            for i in range(0,20):
+                d = random.choice(drivers)
+                r0 = random.choice(i5cities)
+                r1 = random.choice(i5cities)
+                rr = RepeatRoute()
+                rr.period = random.randint(0,1)
+                rr.dayweek = [random.randint(0,6)]
+                rr.weekmonth = [random.randint(1,4)]
+                capacity=random.choice([0,1,4])
+                start = ndb.GeoPt(r0['lat'], r0['lon'])
+                dest =  ndb.GeoPt(r1['lat'], r1['lon'])
+                r = Route(userkey=d, capacity=capacity, repeatr=rr, 
+                delivstart=today, delivend=nextmonth, start=start, dest=dest,
+                locstart=r0['city'], locend=r1['city'])
+                try:
+                    r.pathpts, dist = getPath(start,dest)
+                    r.put()
+                    create_route_doc(r.key.urlsafe(), r)
+                except:
+                    logging.error('failed on '+r0['city'] + ' to ' + r1['city'])
+                    continue
         elif action=='createreviews':  
             users = UserPrefs.query().fetch()
             for r in fakereviews:  
@@ -235,3 +245,20 @@ def delete_all_in_index(index_name):
             break
         # Delete the documents for the given ids from the Index.
         doc_index.delete(document_ids)
+        
+def clean_index(index_name):
+    """Delete all the docs without corresponding datastore entries."""
+    doc_index = search.Index(name=index_name)
+
+    # Get a list of documents populating only the doc_id field and extract the ids.
+    document_ids = [document.doc_id
+                    for document in doc_index.get_range(ids_only=True)]
+    for doc in document_ids:
+        if doc.endswith('_RT'):
+            key = doc[:-3]
+        else:
+            key = doc
+        r = ndb.Key(urlsafe=key).get()
+        if not r:
+            doc_index.delete(doc)
+            logging.info(doc)

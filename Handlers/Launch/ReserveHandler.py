@@ -22,6 +22,7 @@ class ReserveHandler(BaseHandler):
             self.render('launch/fillitem.html', **self.params)
         else:
             self.params['route_title'] = 'Ship Your Stuff'
+            self.params['today'] = datetime.now().strftime('%Y-%m-%d')
             self.render('launch/filllreq.html', **self.params)
                             
     def post(self, action=None,key=None):

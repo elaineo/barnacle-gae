@@ -36,11 +36,7 @@ class UserPrefs(ndb.Model):
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
     img_id = ndb.IntegerProperty()      # set to -1 if using FB picture
     settings = ndb.StructuredProperty(UserSettings)
-    stats = ndb.StructuredProperty(UserStats)
-    @classmethod
-    def by_email(cls, email):
-        u = cls.query(cls.email == email)
-        return u    
+    stats = ndb.StructuredProperty(UserStats) 
     def fullname(self):
         if self.first_name and self.last_name:
             return self.first_name + ' ' + self.last_name
@@ -147,7 +143,7 @@ class UserPrefs(ndb.Model):
 
     @classmethod
     def by_email(cls, email):
-        u = cls.query().filter(cls.email == email).get()
+        u = cls.query().filter(cls.email == email)
         return u        
     
 class Review(ndb.Model):
