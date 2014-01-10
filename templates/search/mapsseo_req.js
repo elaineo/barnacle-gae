@@ -63,7 +63,7 @@ function initialize() {
         clickable: true,
         title: 'Get me to {{mark.loc}}',
         animation: google.maps.Animation.DROP,
-        icon: '/static/img/icons/map/marker-barnacle.png'
+        icon: '/static/img/icons/map/marker-barnacle.png',
         raiseOnDrag: false,
         visible: true
     });
