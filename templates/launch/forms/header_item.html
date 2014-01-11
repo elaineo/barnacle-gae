@@ -80,8 +80,15 @@ $(document).ready(function(){
     $('input#category').val(cat);
     scrollToAnchor('#insurance');
   });
-  $('button.next').click(function() {
-    if ($('input#category').val() != '') {
+  $('button.next').click(function() {  
+    event.preventDefault();
+    loggedIn = checkLoginStatus();
+    console.log(loggedIn);
+    if (!loggedIn) {
+      loginPlease();
+      return;
+    }  else if ($('input#category').val() != '') {
+      console.log(loggedIn);
       $('button.next').attr('disabled', 'disabled');
       $('button.next').addClass('wait');
       $('form#search_form').submit();      

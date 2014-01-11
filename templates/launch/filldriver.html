@@ -16,10 +16,15 @@ $(document).ready(function(){
     $('.info_ins').popover({trigger:'hover', container:'body'});
     $('.info_bank').popover({trigger: 'hover',container:'body'});
     $('button.next').click(function(event) {
+        loggedIn = checkLoginStatus();
+        if (!loggedIn) {
+          loginPlease();
+          return;
+        }        
       $('button.next').attr('disabled', 'disabled');
-      $('button.next').addClass('wait');      
-      $('#driver_form').submit();
-    });
+      $('button.next').addClass('wait');            
+      $('#search_form').submit();
+    });    
 });
 
 function user_rating(){
