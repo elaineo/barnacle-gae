@@ -273,17 +273,18 @@ class RouteHandler(BaseHandler):
         rtr = bool(data.get('rtr'))
         capacity = parse_unit(capacity)
         if (repeatr<2):
-            weekr = data.get('weekr')
-            dayweek = [int(w) for w in weekr]
+            weekr = data.get('weekr')            
             if len(weekr)==0:
                 repeatr=2
             else:
+                dayweek = [int(w) for w in weekr]
                 rr = RepeatRoute(period=repeatr, dayweek=dayweek,weekmonth=[])
         if (repeatr==1):
             monthr = data.get('monthr')
             if len(monthr)==0:
                 repeatr=0
-            rr.weekmonth = [int(m) for m in monthr]
+            else:
+                rr.weekmonth = [int(m) for m in monthr]
         details = data.get('details')
         startdate = data.get('delivstart')
         enddate = data.get('delivend')
