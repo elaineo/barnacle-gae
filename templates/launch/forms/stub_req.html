@@ -5,7 +5,7 @@
 <div class='row-fluid'>
   <div class='span6'>
     <div class='row-fluid'>
-      <div class='span4'>
+      <div class='hidden-phone span4'>
         <p><h1 class='h1label'>From:</h1></p>
         <p><h1 class='h1label'>To:</h1></p>
       </div>
@@ -17,13 +17,15 @@
       </div>
     </div><!--end row-->      
     <div class='row-fluid'>
-      <div class='span4'>
-        <h1 class='h1label'>Deliver By:</h1>
+      <div class='hidden-phone span4'>
+        <h1 class='h1label visible-desktop'>Deliver By:</h1>
+        <h1 class='h1label hidden-desktop'>By:</h1>
       </div>
       <div class='span8'>
         <input type="date" name="reqdate" min="{{today}}" value="anytime" id="reqdate" autocomplete="off" style='width: 250px!important; height: 40px!important;'>
       </div>
     </div><!--end row-->
+    <div class='row-fluid' style='height:20px'></div><!--end row-->    
     <input type='hidden' name="startlat" id="startlat">
     <input type='hidden' name="startlon" id="startlon">
     <input type='hidden' name="startstr" id="startstr">
@@ -83,7 +85,7 @@ $(document).ready(function(){
     $('input#destlon').val(temp);    
     temp = $('input#startstr').val();
     $('input#startstr').val($('input#deststr').val());
-    $('input#deststr').val(temp);    
+    $('input#deststr').val(temp);  
   });
 });
 </script>

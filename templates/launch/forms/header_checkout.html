@@ -33,7 +33,7 @@
     </div>
     <div class="row-fluid"> 
       <div class='span3'>Card Number:</div>
-      <div class='span6'><input type='text' class='card-number span12' maxlength='16'></div>
+      <div class='span6'><input type='text' class='card-number input-large' maxlength='16'></div>
       <span class="text-error" id='cc-err'></span>
     </div>
     <div class="row-fluid"> 
@@ -53,7 +53,7 @@
       </div>
       <div class="span6">
         <span class="add-on hidden-phone">$</span>
-          <input class="span5" type="number" name="rates" value="{{sugg_rates}}" onkeyup="validate_rate()" min="0">
+          <input class="input-small" type="number" name="rates" value="{{sugg_rates}}" onkeyup="validate_rate()" min="0">
       </div>
     </div>   
     <div class="row-fluid hidden-phone" style='height:20px'></div> 
@@ -91,7 +91,7 @@
         <img src='/static/img/icons/k-gift.png'>
         {% endif %}
       </div>
-      <div class="span6 hidden-phone">
+      <div class="span6">
         <img src="{{image_url}}">
       </div>
     </div>

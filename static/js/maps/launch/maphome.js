@@ -27,6 +27,7 @@ function initialize_home(mapURL) {
     var temp = marker0.getPosition();
     marker0.setPosition(marker1.getPosition());
     marker1.setPosition(temp);  
+    marker1.setVisible(true);    
   });
     
     $.getJSON(mapURL, function(route){   

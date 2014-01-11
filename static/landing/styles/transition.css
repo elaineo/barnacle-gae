@@ -71,7 +71,7 @@ form.custom .custom.disabled { background-color: #dddddd; }
 .form-search .button { background:#2699ae; border: 1px solid #2699ae; }
 .form-search .button:hover,
 .form-search .button:focus { color: white; background-color: #5cabb8; border: 1px solid #5cabb8; }
-.form-search .h1label { color: #fff; text-align: right; height:40px; padding:0px; margin:0px}
+.form-search .h1label { color: #fff; text-align: right; height:40px; padding:0px; margin:0px; font-size: 22px;}
 .form-search .input-addr { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px;  line-height: 16px;}
 /* Buttons with Dropdowns ---------------------- */
 .button.dropdown { position: relative; padding-right: 44px; /* Sizes */ /* Triangles */ /* Flyout List */ /* Split Dropdown Buttons */ }
