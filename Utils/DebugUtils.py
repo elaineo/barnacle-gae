@@ -40,7 +40,7 @@ class DebugUtils(BaseHandler):
             # delete_all_in_index(ROUTE_INDEX)
             # delete_all_in_index(REQUEST_INDEX)
         elif action=='clearexp':
-            clean_index(REQUEST_INDEX)
+            clean_index(ROUTE_INDEX)
         elif action=='qtask':
             taskqueue.add(url='/debug/clearall')
         elif action=='cities':
@@ -82,7 +82,7 @@ class DebugUtils(BaseHandler):
                 self.write(u.key.urlsafe())
             self.write('users created.') 
         elif action=='createroutes':
-            drivers = UserPrefs.query()#.filter(UserPrefs.email=='help@gobarnacle.com')
+            drivers = UserPrefs.query().filter(UserPrefs.email=='help@gobarnacle.com')
             drivers = [d.key for d in drivers]
             i5cities = [{'city': 'Los Angeles', 'lat': 34.0522342, 'lon': -118.2436849}, {'city': 'San Diego', 'lat': 32.9947953, 'lon': -116.924239}, {'city': 'San Jose', 'lat': 37.3393857, 'lon': -121.8949555}, {'city': 'Sacramento', 'lat': 38.5815719, 'lon': -121.4943996}, {'city': 'Long Beach', 'lat': 33.768321, 'lon': -118.1956168},  {'city': 'Bakersfield', 'lat': 35.3732921, 'lon': -119.0187125}, {'city': 'Santa Ana', 'lat': 33.7455731, 'lon': -117.8678338}, {'city': 'Reno', 'lat': 39.5296329, 'lon': -119.8138027}, {'city': 'Fremont', 'lat': 37.5482697, 'lon': -121.9885719}, {'city': 'Tacoma', 'lat': 47.2528768, 'lon': -122.4442906}, {'city': 'Oxnard', 'lat': 34.1975048, 'lon': -119.1770516}, {'city': 'Glendale', 'lat': 34.1425078, 'lon': -118.255075}, {'city': 'Oceanside', 'lat': 33.1958696, 'lon': -117.3794834}, {'city': 'Santa Rosa', 'lat': 38.4404674, 'lon': -122.7144314}, {'city': 'Eugene', 'lat': 44.0520691, 'lon': -123.0867536}, {'city': 'Pasadena', 'lat': 34.1477849, 'lon': -118.1445155},  {'city': 'Santa Clara', 'lat': 37.3541079, 'lon': -121.9552356}, {'city': 'Seattle', 'lat': 47.6062095, 'lon': -122.3320708},  {'city': 'Portland', 'lat': 45.5234515, 'lon': -122.6762071},{'city': 'Oakland', 'lat': 37.8043637, 'lon': -122.2711137}]
             today = datetime.today()

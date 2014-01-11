@@ -158,7 +158,6 @@ class SearchEntry(ndb.Model):
         params['delivby'] = self.delivby.strftime('%m/%d/%Y')
         params['locstart'] = self.locstart
         params['locend'] = self.locend
-        params['capacity'] = self.capacity
         return params
     
 class ExpiredRequest(ndb.Model):

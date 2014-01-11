@@ -110,7 +110,7 @@ class Route(ndb.Model):
             if self.repeatr.dayweek == None:
                 return r
             if self.repeatr.period == 1:
-                weekmonths = ['1st', '2nd', '3rd', '4th']
+                weekmonths = ['1st', '2nd', '3rd', '4th', '5th']
                 mstring = ''
                 for m in self.repeatr.weekmonth:
                     mstring = mstring + ' and ' + weekmonths[m]
