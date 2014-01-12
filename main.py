@@ -45,7 +45,7 @@ sys.path.append('/Pages')
 
 app = webapp2.WSGIApplication([('/', HomePage),
                   webapp2.Route('/img', handler=ImagePage),
-                  webapp2.Route('/img/([0-9]+)', handler=ImagePage),
+                  webapp2.Route('/img/<id:[0-9]+>', handler=ImagePage),
                                 ('/home', GuestPage),
                                 ('/splash', SplashPage),   
 # LAUNCH!
