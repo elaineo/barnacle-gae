@@ -263,7 +263,7 @@ def priceEst(req, distance):
     else:
         seats = 50
     gas = 0.7*distance / (35*miles2m)
-    seed = random.randint(-50,50)
+    seed = random.randint(0,99)
     price = 50 + seats + int(gas) + seed
     #TODO: take dist from fwy into account
     return price, seed

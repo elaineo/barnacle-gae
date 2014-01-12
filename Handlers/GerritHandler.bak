@@ -46,7 +46,8 @@ class GerritHandler(BaseHandler):
             self.write(sum([g.rates for g in gerrit]) / gerrit.count() )
 
         elif action=='wow':
-            self.write('Total users \t New users \t Active users \t Active reqs \t New reqs \t Reqs w matches \t Active routes \t New routes<br>')
+            client.send("Content-Type: text/plain\n\n")
+            self.write('TotalUsers \t NewUsers \t ActiveUsers \t TotalReqs \t ActiveReqs \t NewReqs \t MatchedReqs \t TotalRoutes \t ActiveRoutes \t NewRoutes<br>')
             for weeknum in range(1,5):
                 currweek = datetime.now() - timedelta(weeks=weeknum-1)
                 lastweek = datetime.now() - timedelta(weeks=weeknum)
@@ -55,7 +56,10 @@ class GerritHandler(BaseHandler):
                 users = str(UserPrefs.query(UserPrefs.creation_date < currweek).count())
                 active_week0 = str(UserPrefs.query().filter(ndb.AND(UserPrefs.last_active > lastweek, UserPrefs.last_active < currweek)).count())
                 join_week0 = str(UserPrefs.query().filter(ndb.AND(UserPrefs.creation_date > lastweek, UserPrefs.creation_date < currweek)).count())
-                
+                # Total Barnacles
+                reqsq = Request.query()
+                total_requests = str(reqsq.count())
+    
                 # Active Barnacles
                 reqs = Request.query().filter(Request.created < currweek)
                 # Barnacles created in last week
@@ -68,12 +72,16 @@ class GerritHandler(BaseHandler):
                     if r.matches:
                         if (True in [m.get().created < currweek for m in r.matches]):
                             matches = matches + 1
-                
+            
+                # Total Routes
+                routesq = Route.query()
+                total_routes = str(routesq.count())
+                                    
                 # Active Routes
                 routes = str(Route.query().filter(Route.created < currweek).count())
                 routes_week0 = str(Route.query().filter(ndb.AND(Route.created > lastweek, Route.created < currweek)).count())            
                 
-                self.write(currweek.strftime('%Y-%m-%d') + '\t' + users + '\t' + join_week0 + '\t' + active_week0 + '\t' + requests + '\t' + requests_week0 + '\t' + str(matches) + '\t' + routes + '\t' + routes_week0 + '<br>')
+                self.write(currweek.strftime('%Y-%m-%d') + '\t' + users + '\t' + join_week0 + '\t' + active_week0 + '\t' + totalrequests + '\t' +requests + '\t' + requests_week0 + '\t' + str(matches) + '\t' + totalroutes + '\t' + routes + '\t' + routes_week0 + '<br>')
 
         elif action=='repeat': 
             routes = Request.query()

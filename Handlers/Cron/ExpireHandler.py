@@ -67,7 +67,33 @@ class ExpireHandler(BaseHandler):
                     exp.put()
                     doff.append(exp.to_dict())
                 q.key.delete()
+        # Orphan reservations
+        deadres = Reservation.query().filter(Reservation.deliverby<now) 
+        for q in deadres:
+            if q.confirmed:
+                exp = ExpiredReservation(sender=q.sender, receiver=q.receiver, 
+                route=q.route, items=q.items, price=q.price,
+                deliverby=q.deliverby, start=q.start, dest=q.dest, 
+                locstart=q.locstart, locend=q.locend, 
+                sender_name=q.sender_name(), rcvr_name=q.receiver_name(),
+                img_id=q.img_id)
+                exp.put()
+                dresv.append(exp.to_dict())
+            q.key.delete()            
+        deadreq = DeliveryOffer.query().filter(DeliveryOffer.deliverby<now) 
+        for q in deadreq:
+            if q.confirmed:
+                exp = ExpiredReservation(sender=q.sender, receiver=q.receiver, 
+                route=q.route, items=q.items, price=q.price,
+                deliverby=q.deliverby, start=q.start, dest=q.dest, 
+                locstart=q.locstart, locend=q.locend, 
+                sender_name=q.sender_name(), rcvr_name=q.receiver_name(),
+                img_id=q.img_id)
+                exp.put()
+                doff.append(exp.to_dict())
+            q.key.delete()            
 
+            
         deadcl = CLModel.query().filter(CLModel.delivend<now)
         cl_index = search.Index(name=PATHPT_INDEX)
         bodycount = 0

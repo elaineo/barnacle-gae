@@ -7,7 +7,9 @@ import logging
 
 class ImagePage(BaseHandler):
     """ handles images """
-    def get(self, id):
+    def get(self, id=None):
+        if not id:
+            return
         img = ImageStore.get_by_id(int(id))
         mode = self.request.get("mode")
         fakehash = self.request.get("key")

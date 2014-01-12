@@ -44,7 +44,8 @@ from Handlers.ReviewHandler import *
 sys.path.append('/Pages')
 
 app = webapp2.WSGIApplication([('/', HomePage),
-                               ('/img/([0-9]+)', ImagePage),
+                  webapp2.Route('/img', handler=ImagePage),
+                  webapp2.Route('/img/([0-9]+)', handler=ImagePage),
                                 ('/home', GuestPage),
                                 ('/splash', SplashPage),   
 # LAUNCH!

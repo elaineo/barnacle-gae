@@ -97,10 +97,10 @@ def create_note(self, receiver, subject, body):
               to=recv_email,
               subject=subject,
               body=body, html=html)
-    params['receiverid'] = 'x'              
+    params['receiverid'] = 'bcc'              
     html = self.render_str('email/createnote.html', **params)
     mail.send_mail(sender=noreply_email,
-              to=recv_email,
+              to=bcc_email,
               subject=subject,
               body=body, html=html)    
 

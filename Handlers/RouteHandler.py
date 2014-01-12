@@ -219,7 +219,7 @@ class RouteHandler(BaseHandler):
 
         price, seed = priceEst(p, distance)
         stats = ReqStats(sugg_price = price, seed = seed, distance = distance)
-        p.rates = price
+        p.rates = 0
         p.stats = stats
 
         try:
