@@ -98,7 +98,11 @@ class BaseHandler(webapp2.RequestHandler):
             self.params.update(gen_header(self.user_prefs))
         else:
             self.params.update(gen_header(None))
-
+            # set referer cookie if not from Barnacle
+            referer = self.request.referer
+            if referer[0:25]!='http://www.gobarnacle.com/'[0:25]:
+                self.set_secure_cookie('referral', referer)
+            
 
 def gen_header(up=None):
     header = {}
