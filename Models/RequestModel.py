@@ -171,6 +171,7 @@ class ExpiredRequest(ndb.Model):
     locend = ndb.StringProperty() #text descr of location    
     oldkey = ndb.KeyProperty()
     img_id = ndb.IntegerProperty()     
+    stats = ndb.StructuredProperty(ReqStats)
     
     def to_dict(cls):
         route = {

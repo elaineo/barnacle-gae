@@ -52,7 +52,7 @@ class ExpireHandler(BaseHandler):
         req_index = search.Index(name=REQUEST_INDEX)
         for r in deadreqs:
             exr = ExpiredRequest(userkey=r.userkey, rates=r.rates, oldkey=r.key, 
-            locstart=r.locstart, locend=r.locend, img_id=r.img_id,
+            locstart=r.locstart, locend=r.locend, img_id=r.img_id, stats=r.stats,
             items=r.items, delivby = r.delivby, start=r.start, dest=r.dest)
             exr.put()
             req_index.delete(r.key.urlsafe())

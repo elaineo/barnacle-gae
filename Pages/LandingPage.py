@@ -49,6 +49,8 @@ class CouponPage(BaseHandler):
             if not c:
                 self.redirect('/')                
             self.params['bizname'] = c.name
+            c.views = c.views+1
+            c.put()
             # set cookie so we know where they came from
             self.set_secure_cookie('code', action.upper())
             referer = self.request.referer
