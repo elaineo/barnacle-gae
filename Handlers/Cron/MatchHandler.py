@@ -215,7 +215,7 @@ def find_reqmatch(route):
     pathpts = [roundPoint(pp, precision) for pp in route.pathpts]    
     results = Request.search_route(pathpts, route.delivstart, route.delivend, precision)
     if route.roundtrip:
-        results = results + Request.search_route(reversed(pathpts), route.delivend, route.delivend, precision)
+        results = results + Request.search_route(list(reversed(pathpts)), route.delivend, route.delivend, precision)
     return [m.key for m in results]
     
 def find_routematch(req):
