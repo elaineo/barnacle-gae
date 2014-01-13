@@ -125,7 +125,6 @@ class SearchableRequestHandler(BaseHandler):
         ## find nearest major cities
         startc = search_points(start, 'loc', CITY_INDEX)
         destc = search_points(dest, 'loc', CITY_INDEX)
-        logging.info(startc)
         response = {}
         for doc in startc.results:
             d = search_todict(doc)
@@ -164,7 +163,6 @@ class SearchableRequestHandler(BaseHandler):
             rdump['waypts'] = pp
         else:
             results = search_points_start(dist,'REQUEST_INDEX',delivend.strftime('%Y-%m-%d'),delivstart.strftime('%Y-%m-%d'),'delivby','start',start)
-            logging.info(results)
 
             r = []
             for doc in results.results:

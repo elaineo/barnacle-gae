@@ -74,6 +74,7 @@ class CouponPage(BaseHandler):
             c = Codes.by_name(name.upper())
             if not c:
                 c = Codes(name=name.upper(),category=int(cat))
+                c.code = name[0:3].upper() + str(random.randint(0,99)) + 'JAN'  
                 c.put()
             self.params['last_biz'] = c.name
             self.params['last_code'] = c.code

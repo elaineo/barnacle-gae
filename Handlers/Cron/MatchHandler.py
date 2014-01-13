@@ -39,6 +39,7 @@ class MatchHandler(BaseHandler):
             senders = []       
             for r in requests:
                 self.__updatereq(r)
+                # check for deleted matches (JIRA bug)
                 if (True in [m.get().created > self.day_ago() for m in r.matches]):
                     senders.append(r.userkey)
             drivers = list(set(senders))

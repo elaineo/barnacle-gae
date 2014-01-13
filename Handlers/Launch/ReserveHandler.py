@@ -106,12 +106,13 @@ class ReserveHandler(BaseHandler):
         drivers = []
         for r in results:
             q = search_todict(r)
-            route = ndb.Key(urlsafe=q['routekey']).get()            
-            q['capacity'] = route.capacity
-            q['delivend'] = route.delivend.strftime('%m/%d/%Y')
-            d = Driver.by_userkey(route.userkey)
-            q = d.params_fill(q)
-            drivers.append(q)   
+            route = ndb.Key(urlsafe=q['routekey']).get()    
+            if route:
+                q['capacity'] = route.capacity
+                q['delivend'] = route.delivend.strftime('%m/%d/%Y')
+                d = Driver.by_userkey(route.userkey)
+                q = d.params_fill(q)
+                drivers.append(q)   
         self.params['reskey'] = p.key.urlsafe()
         self.params['drivers'] = drivers  
         self.render('launch/filldriver.html', **self.params)    

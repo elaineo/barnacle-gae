@@ -10,10 +10,7 @@ class Codes(ndb.Model):
     category = ndb.IntegerProperty(default=4)    # 0 - pets, 1 - auto, 2 - equip
     views = ndb.IntegerProperty(default=0)
     last_view = ndb.DateTimeProperty(auto_now=True)
-    creation_date = ndb.DateTimeProperty(auto_now_add=True)    
-    
-    def _pre_put_hook(self):
-        self.code = self.name[0:3].upper() + str(random.randint(0,99)) + 'JAN'   
+    creation_date = ndb.DateTimeProperty(auto_now_add=True)                
     
     @classmethod
     def by_code(cls,code):

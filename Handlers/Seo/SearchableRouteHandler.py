@@ -87,8 +87,6 @@ class SearchableRouteHandler(BaseHandler):
             startpt = field_byname(c, "start")
             dist0 = HaversinDist(
                 start.lat, start.lon, startpt.latitude, startpt.longitude)
-            logging.info(startpt)
-            logging.info(dist0)
             if dist0 < dist:
                 keepers.append(c)
         return keepers, [start.lat,start.lon]
