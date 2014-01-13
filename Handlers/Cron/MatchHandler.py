@@ -73,7 +73,17 @@ class MatchHandler(BaseHandler):
         elif action=='updateroute' and key:
             r = ndb.Key(urlsafe=key).get()
             self.__updateroute(r)        
-            
+        elif action=='cleanmatch' and key:
+            # delete the key in matches 
+            r = ndb.Key(urlsafe=key).get()
+            type = r.__class__.__name__
+            if type=='Route':
+                matches = Request.by_match(r.key)   
+            elif type=='Request':
+                matches = Route.by_match(r.key)                
+            for m in matches:
+                m.matches.remove(r.key)
+                m.put()            
                     
     def post(self, action=None):
         if action=='dumprequests':

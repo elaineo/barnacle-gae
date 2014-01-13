@@ -117,7 +117,7 @@ class RouteHandler(BaseHandler):
             r = ndb.Key(urlsafe=key).get()
             if r and r.userkey==self.user_prefs.key:
                 # check to make sure nothing was confirmed
-                # delete associated reservations
+                # delete associated reservations                
                 type = r.__class__.__name__
                 if type=='Route':
                     if Reservation.route_confirmed(r.key)>0:
@@ -132,7 +132,9 @@ class RouteHandler(BaseHandler):
                         return
                     res = DeliveryOffer.by_route(r.key)
                     for q in res:
-                       q.key.delete()                        
+                       q.key.delete()           
+                # delete from matches
+                taskqueue.add(url='/match/cleanmatch/'+key, method='get')
                 # delete in search docs
                 delete_doc(r.key.urlsafe(),type)
                 r.key.delete()

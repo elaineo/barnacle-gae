@@ -60,7 +60,10 @@ class Request(ndb.Model):
         if self.stats:
             self.stats.views = self.stats.views+1
             self.put()
-            
+
+    @classmethod
+    def by_match(cls,key):
+        return cls.query().filter(cls.matches==key)            
     @classmethod
     def by_userkey(cls,userkey):
         return cls.query().filter(cls.userkey==userkey)

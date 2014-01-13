@@ -134,6 +134,9 @@ class Route(ndb.Model):
     @classmethod
     def get_all(cls):
         return cls.query()
+    @classmethod
+    def by_match(cls,key):
+        return cls.query().filter(cls.matches==key)
     
     def __eq__(self, other):
         return self.userid==other.userid and self.created==other.created
