@@ -83,12 +83,11 @@ class ExpireHandler(BaseHandler):
         deadreq = DeliveryOffer.query().filter(DeliveryOffer.deliverby<now) 
         for q in deadreq:
             if q.confirmed:
-                exp = ExpiredReservation(sender=q.sender, receiver=q.receiver, 
-                route=q.route, items=q.items, price=q.price,
-                deliverby=q.deliverby, start=q.start, dest=q.dest, 
+                exp = ExpiredOffer(sender=q.sender, receiver=q.receiver, 
+                route=q.route, price=q.price,
+                deliverby=q.deliverby, 
                 locstart=q.locstart, locend=q.locend, 
-                sender_name=q.sender_name(), rcvr_name=q.receiver_name(),
-                img_id=q.img_id)
+                sender_name=q.sender_name(), rcvr_name=q.receiver_name())
                 exp.put()
                 doff.append(exp.to_dict())
             q.key.delete()            
