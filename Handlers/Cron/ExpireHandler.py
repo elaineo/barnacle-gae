@@ -34,17 +34,6 @@ class ExpireHandler(BaseHandler):
             if r.roundtrip:
                 route_index.delete(r.key.urlsafe()+'_RT')
             drouts.append(exr.to_dict())
-            for q in Reservation.by_route(r.key):
-                if q.confirmed:
-                    exp = ExpiredReservation(sender=q.sender, receiver=q.receiver, 
-                    route=q.route, items=q.items, price=q.price,
-                    deliverby=q.deliverby, start=q.start, dest=q.dest, 
-                    locstart=q.locstart, locend=q.locend, 
-                    sender_name=q.sender_name(), rcvr_name=q.receiver_name(),
-                    img_id=q.img_id)
-                    exp.put()
-                    dresv.append(exp.to_dict())
-                q.key.delete()
             r.key.delete()
         deadreqs = Request.query().filter(Request.delivby<now)
         dreqs=[]
@@ -58,38 +47,27 @@ class ExpireHandler(BaseHandler):
             req_index.delete(r.key.urlsafe())
             r.key.delete()
             drouts.append(exr.to_dict())
-            for q in DeliveryOffer.by_route(r.key):
-                if q.confirmed:
-                    exp = ExpiredOffer(sender=q.sender, receiver=q.receiver, 
-                    route=q.route, price=q.price, 
-                    deliverby=q.deliverby, locstart=q.locstart, locend=q.locend, 
-                    sender_name=q.sender_name(),rcvr_name=q.receiver_name())
-                    exp.put()
-                    doff.append(exp.to_dict())
-                q.key.delete()
         # Orphan reservations
         deadres = Reservation.query().filter(Reservation.deliverby<now) 
         for q in deadres:
-            if q.confirmed:
-                exp = ExpiredReservation(sender=q.sender, receiver=q.receiver, 
-                route=q.route, items=q.items, price=q.price,
-                deliverby=q.deliverby, start=q.start, dest=q.dest, 
-                locstart=q.locstart, locend=q.locend, 
-                sender_name=q.sender_name(), rcvr_name=q.receiver_name(),
-                img_id=q.img_id)
-                exp.put()
-                dresv.append(exp.to_dict())
+            exp = ExpiredReservation(sender=q.sender, receiver=q.receiver, 
+            route=q.route, items=q.items, price=q.price,
+            deliverby=q.deliverby, start=q.start, dest=q.dest, 
+            locstart=q.locstart, locend=q.locend, 
+            sender_name=q.sender_name(), rcvr_name=q.receiver_name(),
+            img_id=q.img_id, confirmed=q.confirmed)
+            exp.put()
+            dresv.append(exp.to_dict())
             q.key.delete()            
         deadreq = DeliveryOffer.query().filter(DeliveryOffer.deliverby<now) 
         for q in deadreq:
-            if q.confirmed:
-                exp = ExpiredOffer(sender=q.sender, receiver=q.receiver, 
-                route=q.route, price=q.price,
-                deliverby=q.deliverby, 
-                locstart=q.locstart, locend=q.locend, 
-                sender_name=q.sender_name(), rcvr_name=q.receiver_name())
-                exp.put()
-                doff.append(exp.to_dict())
+            exp = ExpiredOffer(sender=q.sender, receiver=q.receiver, 
+            route=q.route, price=q.price,
+            deliverby=q.deliverby, confirmed=q.confirmed,
+            locstart=q.locstart, locend=q.locend, 
+            sender_name=q.sender_name(), rcvr_name=q.receiver_name())
+            exp.put()
+            doff.append(exp.to_dict())
             q.key.delete()            
 
             

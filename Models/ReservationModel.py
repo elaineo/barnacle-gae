@@ -205,9 +205,8 @@ class ExpiredReservation(ndb.Model):
     locend = ndb.StringProperty()    
     sender_name = ndb.StringProperty() 
     rcvr_name = ndb.StringProperty()     
-    start = ndb.GeoPtProperty()
-    dest = ndb.GeoPtProperty()
     items = ndb.TextProperty()    # description of goods
+    confirmed = ndb.BooleanProperty(default=False)
     img_id = ndb.IntegerProperty()     
     
     @classmethod
@@ -256,6 +255,7 @@ class ExpiredOffer(ndb.Model):
     sender_name = ndb.StringProperty() 
     rcvr_name = ndb.StringProperty() 
     deliverby = ndb.DateProperty()
+    confirmed = ndb.BooleanProperty(default=False)
     
     def to_dict(cls):
         r = cls.route.get()
