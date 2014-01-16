@@ -143,7 +143,7 @@ class UserPrefs(ndb.Model):
 
     @classmethod
     def by_email(cls, email):
-        u = cls.query().filter(cls.email == email)
+        u = cls.query(cls.email == email).get()
         return u        
     
 class Review(ndb.Model):

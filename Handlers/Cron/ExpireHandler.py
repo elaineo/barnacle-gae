@@ -52,7 +52,7 @@ class ExpireHandler(BaseHandler):
         for q in deadres:
             exp = ExpiredReservation(sender=q.sender, receiver=q.receiver, 
             route=q.route, items=q.items, price=q.price,
-            deliverby=q.deliverby, start=q.start, dest=q.dest, 
+            deliverby=q.deliverby, 
             locstart=q.locstart, locend=q.locend, 
             sender_name=q.sender_name(), rcvr_name=q.receiver_name(),
             img_id=q.img_id, confirmed=q.confirmed)

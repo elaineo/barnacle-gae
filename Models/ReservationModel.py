@@ -251,7 +251,7 @@ class ExpiredOffer(ndb.Model):
     route = ndb.KeyProperty()       # route being reserved
     price = ndb.IntegerProperty()   # Offer price
     locstart = ndb.StringProperty() 
-    locend = ndb.StringProperty()    
+    locend = ndb.StringProperty()        
     sender_name = ndb.StringProperty() 
     rcvr_name = ndb.StringProperty() 
     deliverby = ndb.DateProperty()
