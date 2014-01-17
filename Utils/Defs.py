@@ -7,7 +7,7 @@ signin_reg = '<ul class="button-group radius right fblogin"><li><a class="small 
 
 www_home = 'http://www.gobarnacle.com'
 info_email = 'Barnacle <admin@gobarnacle.com>'
-bcc_email = 'bcc@gobarnacle.com'
+bcc_email = 'Barnacle <bcc@gobarnacle.com>'
 email_domain = '@p2ppostal.appspotmail.com'
 noreply_email = 'Barnacle Notification <noreply@p2ppostal.appspotmail.com>'
 

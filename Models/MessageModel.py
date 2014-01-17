@@ -8,8 +8,6 @@ class Message(ndb.Model):
     subject = ndb.StringProperty(default='(no subject)')
     msg = ndb.TextProperty()
     created = ndb.DateTimeProperty(auto_now_add=True)
-    sender_visible = ndb.BooleanProperty(default=True)
-    receiver_visible = ndb.BooleanProperty(default=True)
     unread = ndb.BooleanProperty(default=True)
     @classmethod
     def by_sender(cls, sender):

@@ -53,10 +53,11 @@ class ApplyHandler(BaseHandler):
         except:
             freq = 0
         try:
+            dob = parse_date(fb['birthday'])        
             dist = [int(w) for w in d['dist']]
         except:
             dist = []
-        dob = parse_date(fb['birthday'])
+            dob = None
         try:
             dr = DriverModel( first_name = first_name, last_name = last_name, 
                 email = email, freq = freq, dist = dist, dob = dob, 

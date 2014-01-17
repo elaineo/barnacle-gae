@@ -74,7 +74,8 @@ def create_msg(self, sender, receiver, subject, msg):
     params['senderid'] = sender.id()
     params['receiverid'] = receiver.id()
     html =  self.render_str('email/usermsg.html', **params)
-    mail.send_mail(sender=send_email,
+    mail.send_mail(sender=bcc_email,
+                    reply_to=send_email,
                     to=recv_email,
                     subject=subject,
                     body=body,html=html)
