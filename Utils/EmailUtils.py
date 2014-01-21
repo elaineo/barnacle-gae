@@ -5,7 +5,7 @@ import re
 from Handlers.BaseHandler import *
 from Models.UserModels import *
 from Utils.Defs import noreply_email, email_domain, msg_start
-from Utils.Defs import confirm_res_sub, info_email, bcc_email, noreply_email
+from Utils.Defs import confirm_res_sub, info_email, bcc_email, noreply_email, help_email
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 
 class EmailHandler(InboundMailHandler):
@@ -23,10 +23,14 @@ class EmailHandler(InboundMailHandler):
             logging.error("couldn't find " + mail_message.to)
             return
 
-        mail_message.sender = sender_email
+        #mail_message.sender = sender_email
+        mail_message.sender = noreply_email
         mail_message.to = to_email
         mail_message.bcc = bcc_email
-        mail_message.reply_to = sender_email
+        if sender_email == noreply_email:
+            mail_message.reply_to = help_email
+        else:
+            mail_message.reply_to = sender_email
         mail_message.send()
 
 def extract_email(email):
@@ -37,19 +41,19 @@ def extract_email(email):
         return email
 
 def encode_email_address(email):
-    # Patch for if already encoded.
-    # I don't know why it does this and I am too sick to figure it out
     if email_domain in email:
         try:
             id = int(email.split('@')[0])
             k = UserPrefs.get_by_id(id)
         except ValueError:
             return 'Barnacle Notification <' + email + '>'
+    elif email == noreply_email:
+        return noreply_email
     else:
         k = UserPrefs.by_email(email)
     if k is None:  ##this is going to be an issue for ppl who don't have email addr
         logging.info("Not found: "+ email)
-        return info_email
+        return noreply_email
     return k.first_name + ' via Barnacle <' + str(k.key.id()) + email_domain + '>'
 
 def decode_email_address(email):
@@ -74,14 +78,16 @@ def create_msg(self, sender, receiver, subject, msg):
     params['senderid'] = sender.id()
     params['receiverid'] = receiver.id()
     html =  self.render_str('email/usermsg.html', **params)
-    mail.send_mail(sender=bcc_email,
-                    reply_to=send_email,
+    mail.send_mail(sender=send_email,
+                    #reply_to=send_email,
                     to=recv_email,
                     subject=subject,
                     body=body,html=html)
+    # headers={"References": email_thread_id})
     params['receiverid'] = 'bcc'
     html =  self.render_str('email/usermsg.html', **params)                    
-    mail.send_mail(sender=send_email, 
+    mail.send_mail(sender=send_email,
+                    #reply_to=send_email, 
                     to=bcc_email,
                     subject=subject,
                     body=body,html=html)                    
@@ -108,9 +114,9 @@ def create_note(self, receiver, subject, body):
 def send_info(to_email, subject, body, html=None):
     if html:
         mail.send_mail(to=to_email, bcc=bcc_email,
-            sender=info_email, subject=subject,
+            sender=noreply_email, subject=subject,
             body=body, html=html)
     else:
         mail.send_mail(to=to_email, bcc=bcc_email,
-            sender=info_email, subject=subject,
+            sender=noreply_email, subject=subject,
             body=body)

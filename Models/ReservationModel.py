@@ -238,9 +238,7 @@ class ExpiredReservation(ndb.Model):
             'locstart': cls.locstart,
             'locend': cls.locend,
             'sender_name':cls.sender_name,
-            'receiver_name':cls.rcvr_name,            
-            'start' : {cls.start.lat, cls.start.lon},
-            'dest' : {cls.dest.lat, cls.dest.lon}
+            'receiver_name':cls.rcvr_name
         }
         return res
         
