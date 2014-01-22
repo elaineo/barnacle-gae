@@ -7,13 +7,11 @@
   <script>
 $(document).ready(function(){
     {% if m==1 %}
-      window.location.hash = 'notif-msg';
+      display_modal_msg('Message Sent!');
     {% endif %}
     {% if m==2 %}
-      window.location.hash = 'notif-rev';
+      display_modal_msg('Thank you for your review!');
     {% endif %}
 });
 </script>
-<div id='notif-msg' class="modal hide fade in" style="display: none; "><div class="modal-body"><h4>Message Sent!</h4></div></div>
-<div id='notif-rev' class="modal hide fade in" style="display: none; "><div class="modal-body"><h4>Thank you for your review!</h4></div></div>
 {% endblock %}
