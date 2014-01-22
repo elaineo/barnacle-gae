@@ -1,6 +1,7 @@
 from Handlers.BaseHandler import *
 from Models.MessageModel import *
 from Utils.EmailUtils import create_msg
+from Utils.Defs import post_msg_end
 import json
 import logging
 
@@ -25,6 +26,7 @@ class MessageHandler(BaseHandler):
             self.redirect('/#signin-box')
         receiver = self.request.get('receiver')
         cc = bool(self.request.get('cc'))
+        key = self.request.get('key')
         try:
             receiver = ndb.Key(urlsafe=receiver)
         except:
@@ -35,7 +37,13 @@ class MessageHandler(BaseHandler):
             subject = '(no subject)'
         msg = self.request.get('msg')
         sender = self.user_prefs.key
-        create_msg(self, sender, receiver, subject, msg)
+        try: 
+            #linked to a route
+            url = ndb.Key(urlsafe=key).get()
+            msg = msg + post_msg_end % key
+        except:
+            pass
+        create_msg(self, sender, receiver, subject, msg)        
         if cc:  # cuz cc doesn't work. i'm too sick to figure it out.
             create_msg(self, sender, sender, subject, msg)
         recv = receiver.get()

@@ -459,7 +459,7 @@ def fill_route_params(key,is_route=False):
                         'rates' : p.rates,
                         'delivby' : p.delivby.strftime('%m/%d/%Y') })    
     message_url = '/message?'
-    message_url += 'receiver=' + u.key.urlsafe() + '&subject=' +p.locstart+' to ' +p.locend
+    message_url += 'receiver=' + u.key.urlsafe() + '&subject=' +p.locstart+' to ' +p.locend + '&key=' + key
     params['message_url'] = message_url
     return params
     

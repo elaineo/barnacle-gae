@@ -15,6 +15,7 @@ help_email = 'Barnacle Help <help@gobarnacle.com>'
 msg_start = 'Barnacle message from %s:\n\n'
 res_msg_end = '\n\nThis is regarding the following reservation: http://www.gobarnacle.com/reserve/%s'
 do_msg_end = '\n\nThis is regarding the following delivery: http://www.gobarnacle.com/reserve/%s'
+post_msg_end = '\n\nThis is regarding the following post: http://www.gobarnacle.com/route/%s'
 
 review_msg = ' has left a review for you on Barnacle. Sign in to your account to check it out: http://www.gobarnacle.com/account'
 
