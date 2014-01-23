@@ -83,7 +83,7 @@ def create_msg(self, sender, receiver, subject, msg):
                     to=recv_email,
                     subject=subject,
                     body=body,html=html)
-    # headers={"References": email_thread_id})               
+    # headers={"References": email_thread_id})    
 
 def create_note(self, receiver, subject, body):
     params = {}
@@ -94,9 +94,10 @@ def create_note(self, receiver, subject, body):
     recv_email = str(receiver.id()) + email_domain
     html = self.render_str('email/createnote.html', **params)
     mail.send_mail(sender=noreply_email, 
-              to=recv_email,
+              to=receiver.email,
               subject=subject,
               body=body, html=html)
+    logging.info("Note sent to: " + receiver.email + " Re: " + subject)    
 
 def send_info(to_email, subject, body, html=None):
     if html:
@@ -107,3 +108,4 @@ def send_info(to_email, subject, body, html=None):
         mail.send_mail(to=to_email,
             sender=noreply_email, subject=subject,
             body=body)
+    logging.info("Note sent to: " + to_email + " Re: " + subject)
