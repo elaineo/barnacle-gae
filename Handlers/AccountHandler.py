@@ -1,10 +1,11 @@
 from Handlers.BaseHandler import *
 from Models.UserModels import *
 from Models.UserUtils import *
+from Utils.Defs import CITY_DB_PATH
 import hashlib
 import logging
 import json
-
+import pygeoip
 
 class SignupPage(BaseHandler):
     """ User sign up page """
@@ -99,12 +100,20 @@ class SignupPage(BaseHandler):
                 logging.info('New account')
             else:
                 response = { 'status': 'existing'}
-                logging.info('Existing account login')
+                # lookup ip address
+                gi = pygeoip.GeoIP(CITY_DB_PATH)
+                geo = gi.record_by_addr(remoteip) 
+                if geo:
+                    geocity = geo.get('city')
+                else:
+                    geocity = None
+                logging.info('Existing account login from ' + (geocity if geocity else ''))
                 if not up.stats:
-                    up.stats = UserStats(ip_addr=[remoteip])
+                    up.stats = UserStats(ip_addr=[remoteip], locations=[geocity])
                     up.put()
                 elif remoteip not in up.stats.ip_addr:
                     up.stats.ip_addr.append(remoteip)
+                    up.stats.locations.append(geocity)
                     up.put()
             # set cookies
             self.login(fbid, 'fb')

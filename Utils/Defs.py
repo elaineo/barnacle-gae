@@ -1,3 +1,8 @@
+import os.path as path
+
+DATA_DIR = path.join(path.dirname(path.realpath(__file__)), 'data')
+CITY_DB_PATH = path.join(DATA_DIR, 'GeoCityIP.dat')
+
 geocode_url = 'http://maps.googleapis.com/maps/api/geocode/json?'
 directions_url = 'http://maps.googleapis.com/maps/api/directions/json?'
 tz_url = 'https://maps.googleapis.com/maps/api/timezone/json?'
