@@ -121,7 +121,7 @@ class Request(ndb.Model):
                 if mode:
                     buf += '&mode=' + mode
                 return buf
-        return '/static/img/barnacle.png'
+        return '/static/img/icons/nophoto1.png'
         
         
     def __eq__(self, other):

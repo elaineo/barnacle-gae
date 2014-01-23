@@ -3,6 +3,7 @@ from google.appengine.ext import ndb
 from Models.UserModels import *
 
 class Message(ndb.Model):
+    routekey = ndb.KeyProperty()
     sender = ndb.KeyProperty()
     receiver = ndb.KeyProperty()
     subject = ndb.StringProperty(default='(no subject)')
