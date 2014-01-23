@@ -66,8 +66,11 @@ class GerritHandler(BaseHandler):
                 matches = 0
                 for r in reqs:
                     if r.matches:
-                        if (True in [m.get().created < currweek for m in r.matches]):
-                            matches = matches + 1
+                        try:
+                            if (True in [m.get().created < currweek for m in r.matches]):
+                                matches = matches + 1
+                        except:
+                            logging.error(r.key.urlsafe())
                 
                 # Active Routes
                 routes = str(Route.query().filter(Route.created < currweek).count())

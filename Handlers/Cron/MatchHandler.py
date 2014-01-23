@@ -39,7 +39,7 @@ class MatchHandler(BaseHandler):
             senders = []       
             for r in requests:
                 self.__updatereq(r)
-                # check for deleted matches (JIRA bug)
+                # check for deleted matches 
                 if (True in [m.get().created > self.day_ago() for m in r.matches]):
                     senders.append(r.userkey)
             drivers = list(set(senders))
@@ -83,7 +83,13 @@ class MatchHandler(BaseHandler):
                 matches = Route.by_match(r.key)                
             for m in matches:
                 m.matches.remove(r.key)
-                m.put()            
+                m.put()     
+            # for m in r.matches:              
+                # try: 
+                    # m.get()
+                # except:
+                    # r.matches.remove(m)
+                    # r.put()
                     
     def post(self, action=None):
         if action=='dumprequests':

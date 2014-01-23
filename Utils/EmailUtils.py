@@ -83,14 +83,7 @@ def create_msg(self, sender, receiver, subject, msg):
                     to=recv_email,
                     subject=subject,
                     body=body,html=html)
-    # headers={"References": email_thread_id})
-    params['receiverid'] = 'bcc'
-    html =  self.render_str('email/usermsg.html', **params)                    
-    mail.send_mail(sender=send_email,
-                    #reply_to=send_email, 
-                    to=bcc_email,
-                    subject=subject,
-                    body=body,html=html)                    
+    # headers={"References": email_thread_id})               
 
 def create_note(self, receiver, subject, body):
     params = {}
@@ -104,19 +97,13 @@ def create_note(self, receiver, subject, body):
               to=recv_email,
               subject=subject,
               body=body, html=html)
-    params['receiverid'] = 'bcc'              
-    html = self.render_str('email/createnote.html', **params)
-    mail.send_mail(sender=noreply_email,
-              to=bcc_email,
-              subject=subject,
-              body=body, html=html)    
 
 def send_info(to_email, subject, body, html=None):
     if html:
-        mail.send_mail(to=to_email, bcc=bcc_email,
+        mail.send_mail(to=to_email,
             sender=noreply_email, subject=subject,
             body=body, html=html)
     else:
-        mail.send_mail(to=to_email, bcc=bcc_email,
+        mail.send_mail(to=to_email,
             sender=noreply_email, subject=subject,
             body=body)
