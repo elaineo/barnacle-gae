@@ -29,7 +29,6 @@ class ImagePage(BaseHandler):
 
 class ImageHandler(BaseHandler):
     def get(self, action=None, sender=None, receiver=None):  
-        logging.info('email open: '+ action + ' from ' + sender + ' to '+receiver)
         self.response.headers['Content-Type'] = "image/png"
         img = ImageStore.get_by_id(int(blank_id))
         self.write(img.image_orig)

@@ -168,7 +168,10 @@ class RouteUtils():
             if not dest:
                 q = r.dest
             a = r.locend.split(',')
-            abbrevloc = a[-3]+', '+a[-2].split()[0]
+            try:
+                abbrevloc = a[-3]+', '+a[-2].split()[0]
+            except:
+                apprevloc = a[0]
             m = {'lat': q.lat,
                 'lon':q.lon,
                 'loc':abbrevloc,
