@@ -80,6 +80,13 @@ class SignupPage(BaseHandler):
             location = data['location']['name']
         except:
             location = 'Mountain View, CA'
+        # lookup ip address
+        gi = pygeoip.GeoIP(CITY_DB_PATH)
+        geo = gi.record_by_addr(remoteip) 
+        if geo:
+            geocity = geo.get('city') #hehehe
+        else:
+            geocity = ''
         # I guess we can assume there won't be an error for now
         if not fbid:
             response = { 'status': 'fail'}
@@ -89,7 +96,7 @@ class SignupPage(BaseHandler):
             if not up:
                 referral = self.read_secure_cookie('referral')
                 code = self.read_secure_cookie('code')
-                stats = UserStats(referral=referral, code=code, ip_addr=[remoteip])
+                stats = UserStats(referral=referral, code=code, ip_addr=[remoteip], locations=[geocity])
                 sett = UserSettings(notify=[1,2,3,4])
                 up = UserPrefs(account_type = 'fb', email = email, userid = fbid, first_name = first_name, last_name = last_name, img_id = -1, settings=sett, location = location, fblocation = location, 
                 stats=stats)
@@ -100,21 +107,14 @@ class SignupPage(BaseHandler):
                 logging.info('New account')
             else:
                 response = { 'status': 'existing'}
-                # lookup ip address
-                gi = pygeoip.GeoIP(CITY_DB_PATH)
-                geo = gi.record_by_addr(remoteip) 
-                if geo:
-                    geocity = geo.get('city')
-                else:
-                    geocity = None
                 logging.info('Existing account login from ' + (geocity if geocity else ''))
-                if not up.stats:
+                if not up.stats and remoteip:
                     up.stats = UserStats(ip_addr=[remoteip], locations=[geocity])
-                    up.put()
                 elif remoteip not in up.stats.ip_addr:
                     up.stats.ip_addr.append(remoteip)
+                if geocity not in up.stats.locations:
                     up.stats.locations.append(geocity)
-                    up.put()
+                up.put()
             # set cookies
             self.login(fbid, 'fb')
             self.set_current_user()
