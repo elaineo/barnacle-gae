@@ -6,16 +6,16 @@ import json
 import logging
 
 class MessageHandler(BaseHandler):
-    def get(self,action=None):
-        if not action:
-            self.__blank()
+    def get(self,action=None,key=None):
+        if key and action=='route':
+            self.__dumpmsgs(key)
         elif action=='box':
             self.__msgbox()
-        elif action=='json':
-            self.__msgjson()
     def post(self,action=None,key=None):
         if not action:
             self.__newmsg()
+        elif key and action=='route':
+            self.__route(key)
         elif action=='send':
             self.__newmsg()
         elif action=='view':
@@ -54,17 +54,45 @@ class MessageHandler(BaseHandler):
         # self.response.headers['Content-Type'] = "application/json"
         # self.write(json.dumps(response))            
 
-    def __blank(self):
-        receiver = self.request.get('receiver')
-        subject = self.request.get('subject')
-        msg = self.request.get('msg')
-        if not receiver:
-            self.redirect('/account')
+    def __route(self,key):
+        #Message regarding a route
+        # Scenarios:
+        #   new msg from sender
+        #   response from driver
+        #   response from sender
+        self.response.headers['Content-Type'] = "application/json"                
+        data = json.loads(unicode(self.request.body, errors='replace'))
+        logging.info(data)
+        if not self.user_prefs:
+            response = {'status':'Not logged in.'}
+            self.write(json.dumps(response))
             return
-        self.params['recv_name'] = ndb.Key(urlsafe=receiver).get().first_name
-        self.params['receiver'] = receiver
-        self.params['subject'] = subject
-        self.render('message.html', **self.params)
+        try:
+            r = ndb.Key(urlsafe=key).get()
+            receiver = ndb.Key(urlsafe=data.get('receiver'))
+        except:
+            response = {'status':'Invalid Route.'}
+            self.write(json.dumps(response))
+            return        
+        msg = data.get('msg')   
+        type = bool(data.get('type'))  #new stream (0) or response (1)
+        m = Message(sender=self.user_prefs.key, msg=msg)
+        if receiver == self.user_prefs.key: #responding to my own msg
+            m.receiver=r.userkey
+        else:
+            m.receiver=receiver
+        m.put()
+        # does this stream already exist? check to make sure
+        s = Stream.by_route_part(r.key,receiver)
+        if not s:
+            subject = r.locstart + ' to ' + r.locend
+            s = Stream(routekey=r.key, participant=self.user_prefs.key, subject=subject)
+            s.messages = [m.key]
+        else:
+            s.messages.append(m.key)
+        s.put()
+        response = {'status':'ok'}
+        self.write(json.dumps(response))
         
     def __msgbox(self):
         if not self.user_prefs:
@@ -79,10 +107,14 @@ class MessageHandler(BaseHandler):
         self.params['msgs'] = msgs
         self.render('message_box.html', **self.params)
     
-    def __msgjson(self):
+    def __dumpmsgs(self,key):
         self.response.headers['Content-Type'] = "application/json"
-        msgs = Message.by_receiver(self.user_prefs.key)
-        self.write(json.dumps([m.to_jdict() for m in msgs]))
+        # streams sorted by date
+        streams = Stream.by_routekey(ndb.Key(urlsafe=key))
+        response = []        
+        for s in streams:
+            response.append(s.to_dict())
+        self.write(json.dumps(response))
     
     def __view(self, key):
         m = ndb.Key(urlsafe=key).get()

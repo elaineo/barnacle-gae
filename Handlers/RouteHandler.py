@@ -229,6 +229,7 @@ class RouteHandler(BaseHandler):
             self.params.update(fill_route_params(p.key.urlsafe(),False))
             self.params['update_url'] = '/post/update/' + p.key.urlsafe()
             self.params['email'] = self.user_prefs.email
+            self.params['rates'] = price
             self.render('request_review.html', **self.params)            
             taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
             taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
@@ -458,9 +459,8 @@ def fill_route_params(key,is_route=False):
                         'num_offers' : p.num_offers(),
                         'rates' : p.rates,
                         'delivby' : p.delivby.strftime('%m/%d/%Y') })    
-    message_url = '/message?'
-    message_url += 'receiver=' + u.key.urlsafe() + '&subject=' +p.locstart+' to ' +p.locend + '&key=' + key
-    params['message_url'] = message_url
+    p.locend + '&key=' + key
+    params['message_url'] = p.message_url()
     return params
     
 class DumpHandler(BaseHandler):

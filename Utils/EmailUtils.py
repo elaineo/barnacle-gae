@@ -91,13 +91,13 @@ def create_note(self, receiver, subject, body):
     params['action'] = 'note'
     params['senderid'] = 'barnacle'
     params['receiverid'] = receiver.id()
-    recv_email = str(receiver.id()) + email_domain
+    recv_email = receiver.get().email#str(receiver.id()) + email_domain
     html = self.render_str('email/createnote.html', **params)
     mail.send_mail(sender=noreply_email, 
-              to=receiver.email,
+              to=recv_email,
               subject=subject,
               body=body, html=html)
-    logging.info("Note sent to: " + receiver.email + " Re: " + subject)    
+    logging.info("Note sent to: " + recv_email + " Re: " + subject)    
 
 def send_info(to_email, subject, body, html=None):
     if html:

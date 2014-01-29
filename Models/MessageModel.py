@@ -2,11 +2,28 @@ import json
 from google.appengine.ext import ndb
 from Models.UserModels import *
 
-class Message(ndb.Model):
-    routekey = ndb.KeyProperty()
+class Stream(ndb.Model):
+    routekey = ndb.KeyProperty(required=True)  #all msgs associated with a routekey
+    subject = ndb.StringProperty(default='(no subject)')
+    messages = ndb.KeyProperty(repeated=True)
+    participant = ndb.KeyProperty(required=True)
+    last_active = ndb.DateTimeProperty(auto_now=True)
+    @classmethod
+    def by_routekey(cls, key):
+        return cls.query(cls.routekey==key).order(-cls.last_active)
+    @classmethod
+    def by_route_part(cls, routekey, pkey):
+        return cls.query(ndb.AND(cls.routekey==routekey, cls.participant==pkey)).get()
+    def to_dict(cls):
+        s = { 'sender' : cls.participant.urlsafe(),
+                'msgs' : [m.get().to_dict_min() for m in cls.messages] }
+                #.sort(key=lambda x: x.created)
+        return s
+        
+        
+class Message(ndb.Model):    
     sender = ndb.KeyProperty()
     receiver = ndb.KeyProperty()
-    subject = ndb.StringProperty(default='(no subject)')
     msg = ndb.TextProperty()
     created = ndb.DateTimeProperty(auto_now_add=True)
     unread = ndb.BooleanProperty(default=True)
@@ -29,10 +46,9 @@ class Message(ndb.Model):
     def mark_as_read(self):
         self.unread = False
         self.put()        
-    def to_jdict(self):
+    def to_dict(self):
         d={}
         d['msg']=self.msg
-        d['subject']=self.subject
         d['created'] = self.created.strftime('%Y-%b-%d %X')
         d['unread']=self.unread
         d['sender_name'] = self.sender_name()
@@ -44,7 +60,7 @@ class Message(ndb.Model):
         d['send_id']=self.sender_userid()
         return d
         
-    def to_jdict_min(self):
+    def to_dict_min(self):
         d={}
         d['sender_thumb']=self.sender.get().profile_image_url('small')
         d['sender_prof_url']=self.get_profile_url()

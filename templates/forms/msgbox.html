@@ -1,0 +1,98 @@
+<form id='reply_form'>
+
+<div class="row"><div class="span8 offset1 hide" id="msgSent"><p>Message Sent!</p></div></div>
+<div class="row-fluid">
+  <div class="span8 offset1 hide" id="createNewMsg">
+    <p>
+      <div class="control-group">
+      <label class="control-label" for="msg">Messages will be visible to all users.</label>
+        <div class="controls">
+          <textarea class="input-xxlarge" rows="5" name="msg">{{msg}}</textarea>
+        </div><button type="submit" class="button info small" id="submitmsg_btn">send</button>
+        </div>    
+    </p>
+    <input type='hidden' name='receiver' value='{{driverkey}}'>
+  </div>
+</div>
+
+</form>
+<h4>Conversations</h4>
+<div id='dumpmsgs'></div>
+<script type="text/javascript">
+$(document).ready(function(){
+    dumpmsgs();
+    $('#message_btn').click(function() { 
+        $('#msgSent').addClass('hide');
+        $('#createNewMsg').toggleClass('hide'); });
+    $('#submitmsg_btn').click(function(event) { 
+        event.preventDefault();
+        form = $(this).closest("form")
+        sendmsg('#submitmsg_btn', form); 
+    });
+    $('#dumpmsgs').on('click', 'span', function() {
+        console.log(this);
+        $newMsg = $(this).next().find('#createNewMsg');
+        $newMsg.toggleClass('hide');
+    });
+    $('#dumpmsgs').on('click', 'button', function(event) {
+        event.preventDefault();        
+        form = $(this).closest("form")
+        form.find('#msgSent').addClass('hide');
+        sendmsg($(this), form); 
+    });    
+});
+
+function dumpmsgs() {
+    $('#dumpmsgs').html('');       
+    $.getJSON('{{message_url}}', function(streams){
+        console.log(streams);
+        for (s in streams) {
+          var $mcontent = $('<div/>', {
+            class: 'dumpsm'
+          });        
+          msgs = streams[s].msgs;
+          for (m in msgs) {
+            $mcontent.append('<div class="row-fluid"><div class="span1"><a href="'+msgs[m].sender_prof_url+
+            '"><img src="'+msgs[m].sender_thumb+'"></a></div>'+
+            '<div class="span6"><a href="'+msgs[m].sender_prof_url+
+            '">'+ msgs[m].sender+'</a><br><span class="xsm">'+msgs[m].created+'</span><br>'+msgs[m].msg+'</div></div>');
+          }
+          $mcontent.append('<span class="stream_reply"><a>Reply</a></span>');
+          $replyForm = $('#reply_form').clone();
+          $replyForm.find('#msgSent').addClass('hide');
+          $replyForm.find('#createNewMsg').addClass('hide');
+          $replyForm.attr('id', streams[s].sender + '_form');
+          $recv = $replyForm.find('input');
+          $recv.val(streams[s].sender);
+          $mcontent.append($replyForm);
+          $('#dumpmsgs').append($mcontent);            
+        }
+    });
+}
+function sendmsg(btn_id, form) {
+  $(btn_id).attr('disabled', 'disabled');
+  $(btn_id).addClass('wait');
+  var msgInput = form.find('textarea[name=msg]');
+  var recInput = form.find('input[name=receiver]');
+  var msg = msgInput.val();
+  msgInput.val('');
+  var receiver = recInput.val();
+  data = {'msg': msg, 'receiver': receiver}
+  $.ajax({
+    type: "POST",
+    dataType: "json",
+    contentType: "application/json; charset=utf-8",    
+    url: "{{message_url}}",
+    data: JSON.stringify(data),
+    success: function(response) {
+        console.log(form);
+        $('#createNewMsg').addClass('hide');
+        form.find('#msgSent').removeClass('hide');
+        $(btn_id).removeAttr('disabled');
+        $(btn_id).removeClass('wait');  
+        // refresh msgs
+        dumpmsgs();
+    }
+  });
+}
+</script>

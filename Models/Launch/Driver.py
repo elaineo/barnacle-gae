@@ -40,7 +40,7 @@ class Driver(ndb.Model):
         params['profile_url'] = u.profile_url()
         params['profile_thumb'] = u.profile_image_url('small')
         params['fbid'] = u.userid
-        params['key'] = self.userkey
+        params['driverkey'] = self.userkey.urlsafe()
         params['avg_rating'] = Review.avg_rating(self.userkey)
         params['location'] = u.location
         params['about'] = u.about

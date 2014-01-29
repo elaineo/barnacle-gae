@@ -48,6 +48,9 @@ class Request(ndb.Model):
     def reserve_url(self):
         """ url for making reservation """
         return '/reserve/route/' + self.key.urlsafe()
+    def message_url(self):        
+        return '/message/route/' + self.key.urlsafe()                
+        
     def num_offers(self):
         r = DeliveryOffer.by_route(self.key)
         return r.count()    

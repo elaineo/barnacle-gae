@@ -268,7 +268,7 @@ class ReservationHandler(BaseHandler):
             self.params['reqdate'] = reqdate
             self.params['offer'] = rates
             self.params['msg'] = msg
-            self.params['route_title'] = 'Edit Offer'
+            self.params['reserve_title'] = 'Edit Offer'
             self.params.update(fill_route_params(route.key.urlsafe(),False))
             self.render('forms/filloffer.html', **self.params)                                 
     
@@ -333,7 +333,7 @@ class ReservationHandler(BaseHandler):
             self.params['reqdate'] = reqdate
             self.params['offer'] = rates
             self.params['msg'] = msg
-            self.params['route_title'] = 'Edit Reservation'
+            self.params['reserve_title'] = 'Edit Reservation'
             self.params.update(fill_route_params(route.key.urlsafe(),True))
             self.render('forms/fillreserve.html', **self.params)
 
@@ -415,7 +415,7 @@ def fill_reserve_params(key,resoffer=False):
         'delete_url':p.delete_url(),
         'decline_url':p.decline_url(),
         'confirm_url':p.confirm_url(),
-        'send_message_url': p.send_message_url(),
+        'message_url': p.message_url(),
         'reservekey' : key,
         'msg_ok' : True #(0 in u.get_notify() and 0 in o.get_notify())
         }

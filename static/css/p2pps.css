@@ -296,11 +296,13 @@ position: absolute;
     font-size: 1.0em;
 }
 .dumpsm{
-    font: 0.9em/1.2em 'Open Sans', sans-serif;
+    font: 0.9em/1.2em 'Open Sans', sans-serif;    
+    padding-bottom: 10px;
 }
 .dumpsm img {
-    width: 80px;
-    height: 80px;
+    max-width: 70px;
+    max-height: 70px;
+    padding: 5px;
 }
 .xsm {
     font: 0.8em/1.0em 'Open Sans', sans-serif;

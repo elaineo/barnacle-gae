@@ -2,6 +2,7 @@ import os.path as path
 
 DATA_DIR = path.join(path.dirname(path.realpath(__file__)), 'data')
 CITY_DB_PATH = path.join(DATA_DIR, 'GeoCityIP.dat')
+CITYV6_DB_PATH = path.join(DATA_DIR, 'GeoCityv6.dat')
 
 geocode_url = 'http://maps.googleapis.com/maps/api/geocode/json?'
 directions_url = 'http://maps.googleapis.com/maps/api/directions/json?'

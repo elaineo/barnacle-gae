@@ -40,8 +40,11 @@ class MatchHandler(BaseHandler):
             for r in requests:
                 self.__updatereq(r)
                 # check for deleted matches 
-                if (True in [m.get().created > self.day_ago() for m in r.matches]):
-                    senders.append(r.userkey)
+                try:
+                    if (True in [m.get().created > self.day_ago() for m in r.matches]):
+                        senders.append(r.userkey)
+                except:
+                    pass
             drivers = list(set(senders))
             logging.info(senders)
             # go through the list and send notifications
@@ -84,12 +87,11 @@ class MatchHandler(BaseHandler):
             for m in matches:
                 m.matches.remove(r.key)
                 m.put()     
-            # for m in r.matches:              
-                # try: 
-                    # m.get()
-                # except:
-                    # r.matches.remove(m)
-                    # r.put()
+        elif action=='cleanmatches':
+            requests = Request.query() 
+            for r in requests:
+                r.matches=[]
+                r.put()
                     
     def post(self, action=None):
         if action=='dumprequests':

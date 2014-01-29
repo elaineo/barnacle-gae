@@ -82,11 +82,11 @@ class SignupPage(BaseHandler):
             location = 'Mountain View, CA'
         # lookup ip address
         gi = pygeoip.GeoIP(CITY_DB_PATH)
-        geo = gi.record_by_addr(remoteip) 
+        geo = gi.record_by_addr(remoteip)         
         if geo:
             geocity = geo.get('city') #hehehe
         else:
-            geocity = ''
+            geocity = ''   
         # I guess we can assume there won't be an error for now
         if not fbid:
             response = { 'status': 'fail'}
@@ -96,7 +96,11 @@ class SignupPage(BaseHandler):
             if not up:
                 referral = self.read_secure_cookie('referral')
                 code = self.read_secure_cookie('code')
-                stats = UserStats(referral=referral, code=code, ip_addr=[remoteip], locations=[geocity])
+                try:
+                    stats = UserStats(referral=referral, code=code, ip_addr=[remoteip], locations=[geocity])
+                except:
+                    logging.info(geocity)
+                    stats = UserStats(referral=referral, code=code)
                 sett = UserSettings(notify=[1,2,3,4])
                 up = UserPrefs(account_type = 'fb', email = email, userid = fbid, first_name = first_name, last_name = last_name, img_id = -1, settings=sett, location = location, fblocation = location, 
                 stats=stats)
@@ -108,13 +112,17 @@ class SignupPage(BaseHandler):
             else:
                 response = { 'status': 'existing'}
                 logging.info('Existing account login from ' + (geocity if geocity else ''))
-                if not up.stats and remoteip:
-                    up.stats = UserStats(ip_addr=[remoteip], locations=[geocity])
-                elif remoteip not in up.stats.ip_addr:
-                    up.stats.ip_addr.append(remoteip)
-                if geocity not in up.stats.locations:
-                    up.stats.locations.append(geocity)
-                up.put()
+                try:
+                    if not up.stats and remoteip:
+                        up.stats = UserStats(ip_addr=[remoteip], locations=[geocity])
+                    elif remoteip not in up.stats.ip_addr:
+                        up.stats.ip_addr.append(remoteip)
+                    if geocity not in up.stats.locations:
+                        up.stats.locations.append(geocity)
+                    up.put()
+                except:
+                    logging.error(geocity)
+                    logging.error(remoteip)
             # set cookies
             self.login(fbid, 'fb')
             self.set_current_user()

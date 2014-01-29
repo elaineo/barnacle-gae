@@ -48,9 +48,9 @@ class Reservation(ndb.Model):
     def decline_url(self):
         """ url for declining reservation"""
         return '/reserve/decline/' + self.key.urlsafe()        
-    def send_message_url(self):
+    def message_url(self):
         """ url for adding message"""
-        return '/reserve/msg/' + self.key.urlsafe()
+        return '/message/route/' + self.route.urlsafe()
     def sender_name(self):
         return self.sender.get().nickname()
     def receiver_name(self):
@@ -143,9 +143,9 @@ class DeliveryOffer(ndb.Model):
     def decline_url(self):
         """ url for declining reservation"""
         return '/reserve/decline/' + self.key.urlsafe()                
-    def send_message_url(self):
+    def message_url(self):
         """ url for adding message"""
-        return '/reserve/msg/' + self.key.urlsafe()
+        return '/message/route/' + self.route.urlsafe()
     def sender_name(self):
         return self.sender.get().nickname()
     def receiver_name(self):

@@ -43,6 +43,12 @@ indexes:
   - name: created
     direction: desc
 
+- kind: Stream
+  properties:
+  - name: routekey
+  - name: last_active
+    direction: desc
+
 - kind: TrackerModel
   properties:
   - name: driver
