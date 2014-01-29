@@ -5,11 +5,12 @@ from Handlers.BaseHandler import *
 from Handlers.Launch.CheckoutHandler import *
 from Handlers.RouteHandler import fill_route_params
 from Handlers.Tracker.TrackerHandler import create_from_res
+from Handlers.MessageHandler import create_message
 from Models.ReservationModel import *
 from Models.Launch.Driver import *
 from Utils.RouteUtils import *
 from Utils.ValidUtils import *
-from Utils.EmailUtils import create_note, create_msg
+from Utils.EmailUtils import create_note
 from Utils.Defs import *
 import logging
 
@@ -251,9 +252,7 @@ class ReservationHandler(BaseHandler):
             return  
 
         if msg:
-            subject = 'Delivery Offer from ' + self.user_prefs.nickname()
-            create_msg(self, sender=self.user_prefs.key, receiver=route.userkey, 
-                            subject=subject, msg=msg)
+            create_message(route, None, route.userkey, self.user_prefs.key, msg)
         try:
             p.put() 
             if new_res:
@@ -433,4 +432,5 @@ def fill_reserve_params(key,resoffer=False):
         params.update( {'delivok' : int(p.deliverby != r.delivby) })
     if p.confirmed:
         params['track_url'] = p.track_url()
+    params['userkey'] = r.userkey.urlsafe()
     return params

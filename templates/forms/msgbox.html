@@ -11,7 +11,7 @@
         </div><button type="submit" class="button info small" id="submitmsg_btn">send</button>
         </div>    
     </p>
-    <input type='hidden' name='receiver' value='{{driverkey}}'>
+    <input type='hidden' name='receiver' value='{{userkey}}'>
   </div>
 </div>
 
@@ -22,9 +22,19 @@
 $(document).ready(function(){
     dumpmsgs();
     $('#message_btn').click(function() { 
+        loggedIn = checkLoginStatus();
+        if (!loggedIn) {
+          loginPlease();
+          return;
+        }
         $('#msgSent').addClass('hide');
         $('#createNewMsg').toggleClass('hide'); });
     $('#submitmsg_btn').click(function(event) { 
+        loggedIn = checkLoginStatus();
+        if (!loggedIn) {
+          loginPlease();
+          return;
+        }
         event.preventDefault();
         form = $(this).closest("form")
         sendmsg('#submitmsg_btn', form); 
@@ -35,6 +45,11 @@ $(document).ready(function(){
         $newMsg.toggleClass('hide');
     });
     $('#dumpmsgs').on('click', 'button', function(event) {
+        loggedIn = checkLoginStatus();
+        if (!loggedIn) {
+          loginPlease();
+          return;
+        }
         event.preventDefault();        
         form = $(this).closest("form")
         form.find('#msgSent').addClass('hide');
@@ -46,6 +61,8 @@ function dumpmsgs() {
     $('#dumpmsgs').html('');       
     $.getJSON('{{message_url}}', function(streams){
         console.log(streams);
+        if (streams.length < 1)
+          $('#dumpmsgs').prev('h4').hide();
         for (s in streams) {
           var $mcontent = $('<div/>', {
             class: 'dumpsm'
@@ -56,15 +73,17 @@ function dumpmsgs() {
             '"><img src="'+msgs[m].sender_thumb+'"></a></div>'+
             '<div class="span6"><a href="'+msgs[m].sender_prof_url+
             '">'+ msgs[m].sender+'</a><br><span class="xsm">'+msgs[m].created+'</span><br>'+msgs[m].msg+'</div></div>');
+          }          
+          if (streams[s].reply ==true) {
+            $mcontent.append('<span class="stream_reply"><a>Reply</a></span>');
+            $replyForm = $('#reply_form').clone();
+            $replyForm.find('#msgSent').addClass('hide');
+            $replyForm.find('#createNewMsg').addClass('hide');
+            $replyForm.attr('id', streams[s].sender + '_form');
+            $recv = $replyForm.find('input');
+            $recv.val(streams[s].sender);
+            $mcontent.append($replyForm);
           }
-          $mcontent.append('<span class="stream_reply"><a>Reply</a></span>');
-          $replyForm = $('#reply_form').clone();
-          $replyForm.find('#msgSent').addClass('hide');
-          $replyForm.find('#createNewMsg').addClass('hide');
-          $replyForm.attr('id', streams[s].sender + '_form');
-          $recv = $replyForm.find('input');
-          $recv.val(streams[s].sender);
-          $mcontent.append($replyForm);
           $('#dumpmsgs').append($mcontent);            
         }
     });
@@ -74,6 +93,11 @@ function sendmsg(btn_id, form) {
   $(btn_id).addClass('wait');
   var msgInput = form.find('textarea[name=msg]');
   var recInput = form.find('input[name=receiver]');
+  if (msgInput == '') {
+    $(btn_id).removeAttr('disabled');
+    $(btn_id).removeClass('wait');      
+    return;
+  }
   var msg = msgInput.val();
   msgInput.val('');
   var receiver = recInput.val();

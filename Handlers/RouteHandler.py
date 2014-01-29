@@ -443,6 +443,7 @@ def fill_route_params(key,is_route=False):
     d = Driver.by_userkey(p.userkey)
     if d:
         params.update(d.params_fill(params))
+    params['userkey'] = u.key.urlsafe()
     #else: they must be a driver if they have a route...
     if is_route:
         params.update({ 'details' : p.details,

@@ -8,7 +8,6 @@
   <div class="span8 offset1">
     <div class= "btn-group">
       <button type="submit" class="button info" id="viewprof_btn">View {{first_name}}'s profile</button>
-      <button type="submit" class="button primary" id="reserve_btn">Reserve this Route</button>
     </div>
   <button type="submit" class="button facebook tiny" id='fb_btn'>Facebook Share</button>
   </div>
@@ -66,7 +65,13 @@
 <button class="button compl tiny" disabled>{{num_confirmed}} Confirmed Reservations</button>
         {% endif %}
     {% endif %}    
+        {% if edit_allow == False %} 
+  <button type="submit" class="button primary" id="reserve_btn">Reserve this Route</button>
+  <button type="submit" class="button secondary" id="message_btn">Ask a Question</button>   
+    {% endif %}
 </div></div>
+<br>
+{% include 'forms/msgbox.html' %}
 <script type="text/javascript">
 $(document).ready(function(){
     caption = '{{first_name}} has a new Delivery Route on Barnacle';
@@ -77,8 +82,7 @@ $(document).ready(function(){
       if (name=='fb')
         window.open(fb_url, '', 'width=800,height=500,scrollbars=no,location=no');
     }			     
-    click_redirect('#viewprof_btn','{{profile_url}}');
-    click_redirect('#message_btn','{{message_url}}');        
+    click_redirect('#viewprof_btn','{{profile_url}}');      
     click_redirect('#reserve_btn','{{reserve_url}}');
     click_redirect('#editpost_btn','{{edit_url}}');
     click_facebook('#fb_btn',fb_url);

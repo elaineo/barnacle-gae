@@ -297,12 +297,16 @@ position: absolute;
 }
 .dumpsm{
     font: 0.9em/1.2em 'Open Sans', sans-serif;    
-    padding-bottom: 10px;
+    margin-bottom: 10px;
+    background: rgba(70,70,70,0.04);
 }
 .dumpsm img {
     max-width: 70px;
     max-height: 70px;
     padding: 5px;
+}
+.stream_reply {
+    cursor: pointer;
 }
 .xsm {
     font: 0.8em/1.0em 'Open Sans', sans-serif;

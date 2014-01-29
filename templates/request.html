@@ -51,10 +51,12 @@
         {% endif %}
     {% endif %} 
 </div>
+    {% if edit_allow == False %} 
 <div class="span5">
-  <button type="submit" class="button compl" id="reserve_btn">Offer to Deliver</button>  
+  <button type="submit" class="button primary" id="reserve_btn">Offer to Deliver</button>  
   <button type="submit" class="button secondary" id="message_btn">Ask a Question</button>   
 </div>
+    {% endif %}
 </div>
 <br>
 {% include 'forms/msgbox.html' %}
@@ -67,8 +69,7 @@ $(document).ready(function(){
       if (name=='fb')
         window.open(fb_url, '', 'width=800,height=500,scrollbars=no,location=no');
     }
-    click_redirect('#viewprof_btn','{{profile_url}}');
-    //click_redirect('#message_btn','{{message_url}}');        
+    click_redirect('#viewprof_btn','{{profile_url}}');    
     click_redirect('#reserve_btn','{{reserve_url}}');
     click_redirect('#editpost_btn','{{edit_url}}');
     add_confirmation_dialog('{{delete_url}}',"delete_btn");    

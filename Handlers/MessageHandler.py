@@ -16,10 +16,7 @@ class MessageHandler(BaseHandler):
             self.__newmsg()
         elif key and action=='route':
             self.__route(key)
-        elif action=='send':
-            self.__newmsg()
-        elif action=='view':
-            self.__view(key)            
+
     def __newmsg(self):
         # this is going to be handled by the front end unless they have a fake cookie
         if not self.user_prefs:
@@ -75,22 +72,15 @@ class MessageHandler(BaseHandler):
             self.write(json.dumps(response))
             return        
         msg = data.get('msg')   
-        type = bool(data.get('type'))  #new stream (0) or response (1)
-        m = Message(sender=self.user_prefs.key, msg=msg)
         if receiver == self.user_prefs.key: #responding to my own msg
-            m.receiver=r.userkey
+            pkey = self.user_prefs.key
+            receiver=r.userkey
+        elif receiver == r.userkey:  # starting a new thread
+            pkey = self.user_prefs.key
         else:
-            m.receiver=receiver
-        m.put()
-        # does this stream already exist? check to make sure
-        s = Stream.by_route_part(r.key,receiver)
-        if not s:
-            subject = r.locstart + ' to ' + r.locend
-            s = Stream(routekey=r.key, participant=self.user_prefs.key, subject=subject)
-            s.messages = [m.key]
-        else:
-            s.messages.append(m.key)
-        s.put()
+            pkey = receiver            
+        create_message(r, pkey, receiver, self.user_prefs.key, msg)    
+            
         response = {'status':'ok'}
         self.write(json.dumps(response))
         
@@ -113,7 +103,13 @@ class MessageHandler(BaseHandler):
         streams = Stream.by_routekey(ndb.Key(urlsafe=key))
         response = []        
         for s in streams:
-            response.append(s.to_dict())
+            sp = s.to_dict()
+            # permission to reply?
+            sp['reply'] = False
+            if self.user_prefs:
+                if self.user_prefs.key == s.participant or self.user_prefs.key == s.routekey.get().userkey:
+                    sp['reply'] = True
+            response.append(sp)
         self.write(json.dumps(response))
     
     def __view(self, key):
@@ -122,3 +118,23 @@ class MessageHandler(BaseHandler):
             m.mark_as_read()
             m.put()
         
+def create_message(route, participant, receiver, sender, msg):
+    m = Message(sender=sender, msg=msg)
+    m.receiver=receiver
+    m.put()
+    if participant:
+        pkey = participant
+    else:
+        pkey = sender
+    logging.error(route.key)
+    logging.error(pkey)
+    s = Stream.by_route_part(route.key,pkey)        
+    logging.error(s)
+    # does this stream already exist? check to make sure
+    if not s:
+        subject = route.locstart + ' to ' + route.locend
+        s = Stream(routekey=route.key, participant=sender, subject=subject)
+        s.messages = [m.key]
+    else:
+        s.messages.append(m.key)        
+    s.put()
