@@ -34,6 +34,11 @@ class LandingPage(BaseHandler):
             self.params['seosub'] = 'shipments'
             self.params['items'] = 'stuff'
             self.render('landing/biz.html', **self.params)            
+        elif action=='event':
+            self.params['seodir'] = 'event'
+            self.params['seosub'] = 'shipments'
+            self.params['items'] = 'stuff'
+            self.render('landing/event.html', **self.params)             
         elif action=='auto':
             self.params['seodir'] = 'auto'
             self.params['seosub'] = 'shipments'
@@ -63,6 +68,8 @@ class CouponPage(BaseHandler):
                 self.redirect('/welcome/equip#coupon?'+c.name)             
             elif c.category==3:
                 self.redirect('/welcome/music#coupon?'+c.name)
+            elif c.category==4:
+                self.redirect('/welcome/event#coupon?'+c.name)
             else:
                 self.redirect('/welcome/biz#coupon?'+c.name)                   
             
@@ -74,7 +81,7 @@ class CouponPage(BaseHandler):
             c = Codes.by_name(name.upper())
             if not c:
                 c = Codes(name=name.upper(),category=int(cat))
-                c.code = name[0:3].upper() + str(random.randint(0,99)) + 'JAN'  
+                c.code = name[0:3].upper() + str(random.randint(0,99)) + 'FEB'  
                 c.put()
             self.params['last_biz'] = c.name
             self.params['last_code'] = c.code
