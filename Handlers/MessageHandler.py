@@ -1,7 +1,8 @@
 from Handlers.BaseHandler import *
 from Models.MessageModel import *
-from Utils.EmailUtils import create_msg
+from Utils.EmailUtils import send_info
 from Utils.Defs import post_msg_end
+from Utils.DefsEmail import msgwall_txt
 import json
 import logging
 
@@ -9,12 +10,8 @@ class MessageHandler(BaseHandler):
     def get(self,action=None,key=None):
         if key and action=='route':
             self.__dumpmsgs(key)
-        elif action=='box':
-            self.__msgbox()
     def post(self,action=None,key=None):
-        if not action:
-            self.__newmsg()
-        elif key and action=='route':
+        if key and action=='route':
             self.__route(key)
 
     def __newmsg(self):
@@ -79,7 +76,7 @@ class MessageHandler(BaseHandler):
             pkey = self.user_prefs.key
         else:
             pkey = receiver            
-        create_message(r, pkey, receiver, self.user_prefs.key, msg)    
+        create_message(self, r, pkey, receiver, self.user_prefs.key, msg)    
             
         response = {'status':'ok'}
         self.write(json.dumps(response))
@@ -118,7 +115,7 @@ class MessageHandler(BaseHandler):
             m.mark_as_read()
             m.put()
         
-def create_message(route, participant, receiver, sender, msg):
+def create_message(self, route, participant, receiver, sender, msg):
     m = Message(sender=sender, msg=msg)
     m.receiver=receiver
     m.put()
@@ -126,10 +123,7 @@ def create_message(route, participant, receiver, sender, msg):
         pkey = participant
     else:
         pkey = sender
-    logging.error(route.key)
-    logging.error(pkey)
     s = Stream.by_route_part(route.key,pkey)        
-    logging.error(s)
     # does this stream already exist? check to make sure
     if not s:
         subject = route.locstart + ' to ' + route.locend
@@ -138,3 +132,10 @@ def create_message(route, participant, receiver, sender, msg):
     else:
         s.messages.append(m.key)        
     s.put()
+    params = {'url': route.post_url()}
+    htmlbody =  self.render_str('email/msgwall.html', **params)
+    textbody = msgwall_txt % params
+    try:
+        send_info(receiver.get().email, s.subject, textbody, htmlbody)        
+    except:
+        pass        

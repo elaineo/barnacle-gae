@@ -1,0 +1,8 @@
+{% extends "email/ebase.html" %}
+{% block content %}
+        <h4><font color='#666'>You have a new message</font></h4>
+        <p>There is a new message on your page. Click the link below to view and reply to your message.
+        </p>
+        <br>        
+        <a href="{{url}}">{{url}}</a>
+{% endblock %}        

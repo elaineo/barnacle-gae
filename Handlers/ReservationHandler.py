@@ -252,7 +252,7 @@ class ReservationHandler(BaseHandler):
             return  
 
         if msg:
-            create_message(route, None, route.userkey, self.user_prefs.key, msg)
+            create_message(self, route, None, route.userkey, self.user_prefs.key, msg)
         try:
             p.put() 
             if new_res:

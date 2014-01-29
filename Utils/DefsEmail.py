@@ -64,3 +64,9 @@ sharetrack_txt = """
         Track %(first_name)s\'s progress in real time with the Barnacle Driver Tracker.\n\n 
         %(first_name)s\'s Tracking Page: %(url)s
 """
+
+msgwall_txt = """
+        You have a new message\n\n
+        There is a new message on your page. Click the link below to view and reply to your message.\n\n
+        %(url)s
+"""        

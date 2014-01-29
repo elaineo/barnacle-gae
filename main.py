@@ -101,8 +101,6 @@ app = webapp2.WSGIApplication([('/', HomePage),
     webapp2.Route('/reserve/<action>/<key:[\w\-]{20,}>', handler=ReservationHandler),
     webapp2.Route('/reserve/<key:[\w\-]{20,}>', handler=ReservationHandler),
 # message
-    webapp2.Route('/message', handler=MessageHandler),
-    webapp2.Route('/message/<action>', handler=MessageHandler),
     webapp2.Route('/message/<action>/<key:[\w\-]{20,}>', handler=MessageHandler),
 # reviews
    webapp2.Route('/review/<action>/<key:[\w\-]{20,}>', handler=ReviewHandler),

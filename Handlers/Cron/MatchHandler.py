@@ -81,11 +81,11 @@ class MatchHandler(BaseHandler):
             r = ndb.Key(urlsafe=key).get()
             type = r.__class__.__name__
             if type=='Route':
-                matches = Request.by_match(r.key)   
-            elif type=='Request':
-                matches = Route.by_match(r.key)                
+                matches = Request.by_match(ndb.Key(urlsafe=key))   
+            else:
+                matches = Route.by_match(ndb.Key(urlsafe=key))                
             for m in matches:
-                m.matches.remove(r.key)
+                m.matches.remove(ndb.Key(urlsafe=key))
                 m.put()     
         elif action=='cleanmatches':
             requests = Request.query() 
