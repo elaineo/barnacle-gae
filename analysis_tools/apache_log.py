@@ -7,8 +7,12 @@ from datetime import datetime, timedelta
 # GET /favicon.ico HTTP/1.1
 
 # appcfg.py request_logs ./ 20131220.txt -n 0
+# appcfg.py request_logs ./ 'date +"%Y%m%d".txt' -n 0
+# appcfg.py request_logs ./ --severity=0 -n 0 20140120-level0.txt
+# appcfg.py --append --num_days=0 --include_all request_logs /path/to/your/app/ /var/log/gae/yourapp.log
 
-  # Regex for the Apache common log format.
+
+# Regex for the Apache common log format.
 parts = [r'(?P<host>[\S:]+)',                   # host %h
 r'\S+',                             # indent %l (unused)
 r'(?P<user>\S+)',                   # user %u
@@ -254,11 +258,20 @@ BOT_LIST = RUSSIAN_BOT + ['Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.g
  'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1) Netscape/8.0.4',
  'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; T312461)']
 
+def remove_image_request(df):
+    return df[~df.request.str.contains('/img/')]
 
 def remove_static_request(df):
     df = df[~df.request.str.startswith('HEAD /static')]
     return df[~df.request.str.contains('GET /static')]
 
+def google_crawl(df):
+    """return dictionary (date, set(pages) crawled"""
+    df = df[df.agent == GOOGLE_BOT_USER_AGENT]
+    df = df[df.host.str.startswith('66.249')]
+    df = remove_static_request(df)
+    df = df[~df.request.str.startswith('GET /robots.txt HTTP/1.1')]
+    return df[~df.request.str.contains('GET /sitemap.xml HTTP/1.1')]
 
 def is_google_bot(agent):
     if 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)' == agent:
