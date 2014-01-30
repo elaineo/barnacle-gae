@@ -1,7 +1,7 @@
 from Handlers.BaseHandler import *
 from Models.UserModels import *
 from Models.UserUtils import *
-from Utils.Defs import CITY_DB_PATH
+from Utils.Defs import CITY_DB_PATH, CITYV6_DB_PATH
 import hashlib
 import logging
 import json
@@ -82,7 +82,10 @@ class SignupPage(BaseHandler):
             location = 'Mountain View, CA'
         # lookup ip address
         gi = pygeoip.GeoIP(CITY_DB_PATH)
-        geo = gi.record_by_addr(remoteip)         
+        geo = gi.record_by_addr(remoteip)    
+        if not geo: 
+            gi = pygeoip.GeoIP(CITYV6_DB_PATH)
+            geo = gi.record_by_addr(remoteip)                
         if geo:
             geocity = geo.get('city') #hehehe
         else:
