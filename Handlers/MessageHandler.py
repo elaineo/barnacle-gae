@@ -106,6 +106,8 @@ class MessageHandler(BaseHandler):
             if self.user_prefs:
                 if self.user_prefs.key == s.participant or self.user_prefs.key == s.routekey.get().userkey:
                     sp['reply'] = True
+                    # update read status
+                    s.read_status(self.user_prefs.key)
             response.append(sp)
         self.write(json.dumps(response))
     

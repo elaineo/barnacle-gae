@@ -19,6 +19,12 @@ class Stream(ndb.Model):
                 'msgs' : [m.get().to_dict_min() for m in cls.messages] }
                 #.sort(key=lambda x: x.created)
         return s
+    def read_status(cls,key):
+        for m in cls.messages:
+            msg = m.get()
+            if msg.receiver == key:
+                msg.unread=False
+                msg.put()
         
         
 class Message(ndb.Model):    
