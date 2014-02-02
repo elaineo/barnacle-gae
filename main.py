@@ -111,7 +111,6 @@ app = webapp2.WSGIApplication([('/', HomePage),
    ('/suicide',CloseHelper),
     webapp2.Route('/img/<action>/<sender>/<receiver>', handler=ImageHandler),
 # Footer
-   ('/loc', LocationPage),
    ('/about', AboutPage),
    ('/how', HowItWorksPage),
    ('/privacy', PrivacyPage),
