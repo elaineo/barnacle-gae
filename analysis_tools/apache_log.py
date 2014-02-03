@@ -265,6 +265,14 @@ def remove_static_request(df):
     df = df[~df.request.str.startswith('HEAD /static')]
     return df[~df.request.str.contains('GET /static')]
 
+def remove_robot_request(df):
+    df_robot = df[df.request.str.startswith('GET /robots.txt HTTP/1.1')]
+    robot_hosts = set(df_robot.host)
+    return df[[h not in robot_hosts for h in df.host]]
+
+def remove_pages_i_dont_care_about(df):
+    return remove_google_bot(remove_robot_request(remove_image_request(remove_static_request(df))))
+
 def google_crawl(df):
     """return dictionary (date, set(pages) crawled"""
     df = df[df.agent == GOOGLE_BOT_USER_AGENT]
@@ -284,8 +292,9 @@ def is_bot(agent):
     return False
 
 def remove_google_bot(df):
-    flag = [not is_google_bot(a) for a in df.agent]
-    return df[flag]
+    flag = [is_google_bot(a) for a in df.agent]
+    google_hosts = set(df[flag].host)
+    return df[[h not in google_hosts for h in df.host]]
 
 def remove_bots(df):
     flag = [not is_bot(a) for a in df.agent]
@@ -321,6 +330,16 @@ def generic_filter(regex, field):
         not_flag = [not f for f in flag]
         return df[flag], df[not_flag]
     return filter_by
+
+def ipsort(l):
+    """sort ip address for easier viewing"""
+    l = list(l)
+    def mykey(x):
+        s = x.split('.')
+        return int(s[0])*16777216 + int(s[1])*65536 + int(s[2])*256 + int(s[3])
+    l.sort(key = mykey)
+    return l
+
 
 filter_iphone = generic_filter('iPhone', 'agent')
 filter_ipad = generic_filter('iPad', 'agent')
