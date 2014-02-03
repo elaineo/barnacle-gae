@@ -1,0 +1,127 @@
+{% extends "mobile/base.html" %}
+{% block content %}
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="/static/js/maps/mapsxswcost.js"></script>
+<link rel="stylesheet" href="/static/css/jquery-ui.css" />
+<h2>Submit a Request.</h2>
+<h4>Cities en route: Seattle, Portland, SF Bay Area, Sacramento, Eureka, Humboldt, Arcata, Greater Los Angeles, San Diego, Phoenix, Tuscon, El Paso, San Antonio, Austin</h4>
+ <form enctype="multipart/form-data" method="post" class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" >Business name: </label>
+        <div class="controls">
+          <input type="text" name="name">
+        </div>
+    </div>
+     <div class="control-group">
+      <label class="control-label" for="dropoff">Origin:</label>
+        <div class="controls">
+          <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{reqstart}}">
+          <span class="help-inline error" id='map0Err'>{{error_route}}</span>
+        </div>
+
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="capacity">En route from the Bay Area?
+        </label>
+        <div class="controls" id="vcapRadios">
+            <label class="radio inline">
+              <input type="radio" name="i5" id="i5yes" value="1" checked> 
+              Yes
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="i5" id="i5no" value="0"> 
+              No
+            </label>
+        </div>
+   </div>       
+    
+    <div class="control-group">
+        <label class="control-label" for="dest">Destination:</label>
+        <div class="controls">SXSW
+        </div>
+    </div>       
+
+    <div class="control-group">
+        <label class="control-label" for="enddate">Pickup Dates:</label>
+        <div class="controls">
+          <small>From</small> <input type="text" name="startdate" value="{{delivstart}}" id="startdate" autocomplete="off" class='input-medium'>
+          <small>To</small> <input type="text" name="enddate" value="{{delivend}}" id="enddate" autocomplete="off" class='input-medium'>
+        </div>
+    </div>    
+    <div class="control-group">
+        <label class="control-label" for="capacity">Space Needed:<br>
+        </label>
+        <div class="controls" id="vcapRadios">
+            <label class="radio inline">
+              <input type="radio" name="vcap" id="cap0" value="1" checked> 
+              <img src='/static/img/icons/icocap0.png'> <br> Car Trunk
+            </label>
+            <input class="span2" type="number" name="trunks" value="1" onkeyup="validate_rate()" min="0">
+        </div>
+   </div>   
+     <div class="control-group">
+        <label class="control-label">Distance:</label>
+        <div class="controls">
+          <input class='input-small' name='distance' id='distance' >
+        </div>
+    </div>      
+     <div class="control-group">
+        <label class="control-label">Estimated Cost:</label>
+        <div class="controls">
+          <span class="add-on">$</span>
+          <input class='input-small' name='estcost' id='estcost' value="150" >
+        </div>
+    </div>   
+    <input type='hidden' name="startlat" id="startlat">
+    <input type='hidden' name="startlon" id="startlon">
+    <input type='hidden' name="startstr" id="startstr">       
+	<button type="submit" class="btn">submit</button>
+</form>
+<script>
+  $(function() {
+    $( "#startdate" ).datepicker({
+      minDate: "+1d",
+      maxDate: "+1Y",
+      changeMonth: true,
+      onSelect: function( date ) {
+        var date2 = $('#startdate').datepicker('getDate');
+        date2.setDate(date2.getDate()+3);
+        $( "#enddate" ).datepicker( "option", "minDate", date2, "maxDate", "+1Y" );
+      }
+    });
+    $( "#enddate" ).datepicker({
+      minDate: "+4d",
+      maxDate: "+1Y",
+      changeMonth: true,
+      onSelect: function( date ) {
+        var date2 = $('#enddate').datepicker('getDate');
+        date2.setDate(date2.getDate()-3);      
+        $( "#startdate" ).datepicker( "option", "maxDate", date2, "minDate", "+1d" );
+      }
+    });
+    
+  });
+$(document).ready(function(){
+    $('form').click(function() {
+        i5 = $("input[name=i5]:checked").val();
+        console.log(i5);
+        calc_cost(i5);
+    });
+});    
+
+function calc_cost(i5) {
+    trunks = $("input[name=trunks]").val(); 
+    // if it's en route, price is $150 x #trunks
+    if (i5=='1') {
+        $('input#estcost').val(trunks*150);
+    } else {
+      var distance = $('#distance').val();
+      var gas = 0.7*distance / (35*1609)
+      var price = 50 + gas + trunks*150;
+      $('input#estcost').val(price);
+    }
+    
+}
+</script>
+
+{% endblock %}

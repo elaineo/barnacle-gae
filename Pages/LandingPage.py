@@ -49,6 +49,8 @@ class CouponPage(BaseHandler):
     def get(self, action=None):
         if action=='gen':
             self.render('landing/coupongen.html', **self.params)  
+        elif action=='calc':
+            self.render('landing/pricegen.html', **self.params)  
         else: 
             c = Codes.by_code(action.upper())
             if not c:

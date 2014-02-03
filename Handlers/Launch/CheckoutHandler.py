@@ -71,7 +71,8 @@ class CheckoutHandler(BaseHandler):
             customer.debit(amount=charge)
         self.params.update(res.to_dict())
         eparams = self.params
-        self.render('launch/receipt_req.html', **self.params)
+        ## THIS ASSUMES DRIVER HAS BEEN RESERVED
+        self.render('launch/receipt_res.html', **self.params)
         self.send_receipt(email, res, eparams)
         
     def __hold(self, key):
