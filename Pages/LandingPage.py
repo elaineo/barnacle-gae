@@ -1,3 +1,4 @@
+from google.appengine.api import memcache
 from datetime import *
 from Handlers.BaseHandler import *
 from Models.Launch.CustModel import *
@@ -11,9 +12,16 @@ class LandingPage(BaseHandler):
     def get(self, action=None):
         self.params['today'] = datetime.now().strftime('%Y-%m-%d')
         if action=='twitter':
-            tweets = fetch_twitter()
+            tweets = memcache.get('twitter')
             self.response.headers['Content-Type'] = "application/json"
-            self.write(json.dumps(tweets))
+            if tweets is not None:
+                self.write(tweets)
+                return
+            else:
+                tweets = json.dumps(fetch_twitter())
+                memcache.add(key="twitter", value=tweets, time=3600)
+                self.write(tweets)
+                return
         elif action=='pets':
             self.params['seodir'] = 'pets'
             self.params['seosub'] = 'pets'
@@ -28,24 +36,24 @@ class LandingPage(BaseHandler):
             self.params['seodir'] = 'music'
             self.params['seosub'] = 'instruments'
             self.params['items'] = 'Instruments'
-            self.render('landing/music.html', **self.params)            
+            self.render('landing/music.html', **self.params)
         elif action=='biz':
             self.params['seodir'] = 'biz'
             self.params['seosub'] = 'shipments'
             self.params['items'] = 'stuff'
-            self.render('landing/biz.html', **self.params)            
+            self.render('landing/biz.html', **self.params)
         elif action=='event':
             self.params['seodir'] = 'event'
             self.params['seosub'] = 'shipments'
             self.params['items'] = 'stuff'
-            self.render('landing/event.html', **self.params)             
+            self.render('landing/event.html', **self.params)
         elif action=='auto':
             self.params['seodir'] = 'auto'
             self.params['seosub'] = 'shipments'
             self.params['items'] = 'Auto parts'
-            self.render('landing/auto.html', **self.params)            
-            
-class CouponPage(BaseHandler):            
+            self.render('landing/auto.html', **self.params)
+
+class CouponPage(BaseHandler):
     def get(self, action=None):
         if action=='gen':
             self.render('landing/coupongen.html', **self.params)  
@@ -54,7 +62,7 @@ class CouponPage(BaseHandler):
         else: 
             c = Codes.by_code(action.upper())
             if not c:
-                self.redirect('/')                
+                self.redirect('/')
             self.params['bizname'] = c.name
             c.views = c.views+1
             c.put()
@@ -67,14 +75,14 @@ class CouponPage(BaseHandler):
             elif c.category==1:
                 self.redirect('/welcome/auto#coupon?'+c.name)
             elif c.category==2:
-                self.redirect('/welcome/equip#coupon?'+c.name)             
+                self.redirect('/welcome/equip#coupon?'+c.name)
             elif c.category==3:
                 self.redirect('/welcome/music#coupon?'+c.name)
             elif c.category==4:
                 self.redirect('/welcome/event#coupon?'+c.name)
             else:
-                self.redirect('/welcome/biz#coupon?'+c.name)                   
-            
+                self.redirect('/welcome/biz#coupon?'+c.name)
+
     def post(self, action=None):
         if action=='gen':
             name = self.request.get('name')
@@ -83,8 +91,8 @@ class CouponPage(BaseHandler):
             c = Codes.by_name(name.upper())
             if not c:
                 c = Codes(name=name.upper(),category=int(cat))
-                c.code = name[0:3].upper() + str(random.randint(0,99)) + 'FEB'  
+                c.code = name[0:3].upper() + str(random.randint(0,99)) + 'FEB'
                 c.put()
             self.params['last_biz'] = c.name
             self.params['last_code'] = c.code
-            self.render('landing/coupongen.html', **self.params)  
+            self.render('landing/coupongen.html', **self.params)
