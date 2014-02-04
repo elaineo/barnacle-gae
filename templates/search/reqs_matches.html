@@ -17,14 +17,18 @@
     <table class="table table-striped table-hover">
     <thead><tr>
         <th>Origin/Destination</th>
+        <th>Created</th>
         <th>Deliver By</th>
         <th>Offer</th>
         <th>Matches</th>
+        <th>Notes</th>
+        <th>Status</th>
     </tr></thead>
     {% for req in reqdump %}
     <tr>
         <td class='clicky' onclick="document.location.href = '{{req.post_url}}';">{{req.locstart}} to {{req.locend}}      
         </td>
+        <td>{{req.created}}</td>
         <td>{{req.delivby}}</td>
         <td>{{req.rates}}</td>
         {% if req.num_matches!=0 %}
@@ -32,6 +36,8 @@
         {% else %}
         <td style='text-align:center'>{{req.num_matches}}</td>
         {% endif %}
+        <td>{% if req.notes is defined %}{{req.notes}}{% endif %}</td>
+        <td>{{req.status}}</td>
     </tr>
     {% if req.num_matches!=0 %}
     <tr class='hide'><td colspan='4'>

@@ -102,6 +102,10 @@ class GerritHandler(BaseHandler):
             requests = Request.query()
             for r in requests:
                 dump = r.to_dict()
+                if r.stats.notes:
+                    dump['notes'] = r.stats.notes
+                if r.stats.status:
+                    dump['status'] = r.stats.status                    
                 matches = []
                 for q in r.matches:
                     try:

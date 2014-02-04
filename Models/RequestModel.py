@@ -1,9 +1,15 @@
+from protorpc import messages 
 from google.appengine.ext import ndb
+from google.appengine.ext.ndb import msgprop
 from google.appengine.api import search
 from Handlers.BaseHandler import *
 from Utils.Defs import miles2m
 from Utils.RouteUtils import roundPoint
 import logging
+
+class RequestStatus(messages.Enum):
+    PURSUE = 0
+    IGNORE = 1
 
 class ReqStats(ndb.Model):
     """ Other stats we want: 
@@ -13,6 +19,8 @@ class ReqStats(ndb.Model):
     seed = ndb.IntegerProperty()
     distance = ndb.IntegerProperty()
     views = ndb.IntegerProperty(default=0)
+    notes = ndb.TextProperty(default='')
+    status = msgprop.EnumProperty(RequestStatus, default=RequestStatus.PURSUE)
 
 class Request(ndb.Model):
     userkey = ndb.KeyProperty(required=True)  # the user_pref it is connected to
@@ -82,6 +90,7 @@ class Request(ndb.Model):
         route = {
             'post_url' : cls.post_url(),
             'delivby' : cls.delivby.strftime('%m/%d/%Y'),
+            'created' : cls.created.strftime('%m/%d/%Y'),
             'locstart' : cls.locstart,
             'locend' : cls.locend,
             'rates' : cls.rates,

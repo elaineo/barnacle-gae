@@ -80,6 +80,7 @@ def create_msg(self, sender, receiver, subject, msg):
     html =  self.render_str('email/usermsg.html', **params)
     mail.send_mail(sender=send_email,
                     #reply_to=send_email,
+                    bcc=bcc_email,
                     to=recv_email,
                     subject=subject,
                     body=body,html=html)
