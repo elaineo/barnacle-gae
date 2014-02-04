@@ -2,6 +2,7 @@ from google.appengine.api import memcache
 from datetime import *
 from Handlers.BaseHandler import *
 from Models.Launch.CustModel import *
+from Models.Launch.ResModel import *
 from Utils.Twat import *
 
 import json
@@ -47,6 +48,11 @@ class LandingPage(BaseHandler):
             self.params['seosub'] = 'shipments'
             self.params['items'] = 'stuff'
             self.render('landing/event.html', **self.params)
+        elif action=='sxsw':
+            self.params['seodir'] = 'sxsw'
+            self.params['seosub'] = 'shipments'
+            self.params['items'] = 'stuff'
+            self.render('landing/sxsw.html', **self.params)            
         elif action=='auto':
             self.params['seodir'] = 'auto'
             self.params['seosub'] = 'shipments'
@@ -96,3 +102,32 @@ class CouponPage(BaseHandler):
             self.params['last_biz'] = c.name
             self.params['last_code'] = c.code
             self.render('landing/coupongen.html', **self.params)
+        elif action=='sxsw':
+            rates = self.request.get('estdup')
+            rates = int(rates)
+            capacity = self.request.get('vcap')
+            capacity = int(capacity)
+            code = self.request.get('code')
+            start, startstr = self.__get_map_form('start')
+            dest = ndb.GeoPt(30.266184,-97.742325)
+            deststr = 'SXSW 2014'
+            r = ResModel(capacity=capacity, start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest)
+            r.put()
+            self.params.update(r.to_dict())
+            self.params['reskey'] = r.key.urlsafe()
+            self.params['checkout_action'] = '/checkout/' + r.key.urlsafe()
+            self.render('launch/fillcheckout_abbrev.html', **self.params)     
+            
+    def __get_map_form(self,pt):
+        ptlat = self.request.get(pt+'lat')
+        ptlon = self.request.get(pt+'lon')
+        ptstr = self.request.get(pt+'str')        
+        if not ptstr or not ptlat or not ptlon:
+            ptstr = self.request.get(pt)
+            if ptstr:
+                ptg = RouteUtils().getGeoLoc(ptstr)[0]
+            else:
+                ptg = None
+        else:
+            ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
+        return ptg, ptstr            

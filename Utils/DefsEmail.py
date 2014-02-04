@@ -68,5 +68,5 @@ sharetrack_txt = """
 msgwall_txt = """
         You have a new message\n\n
         There is a new message on your page. Click the link below to view and reply to your message.\n\n
-        %(url)s
+        http://www.gobarnacle.com%(url)s
 """        

@@ -4,7 +4,6 @@ from google.appengine.api import mail
 
 from Handlers.BaseHandler import *
 from Handlers.SearchHandler import *
-from Models.Launch.ResModel import *
 from Models.RequestModel import *
 from Models.Launch.Driver import *
 from Utils.RouteUtils import *
