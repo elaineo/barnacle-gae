@@ -102,10 +102,10 @@ class GerritHandler(BaseHandler):
             requests = Request.query()
             for r in requests:
                 dump = r.to_dict()
-                if r.stats.notes:
+                dump['key'] = r.key.urlsafe()
+                if r.stats:
                     dump['notes'] = r.stats.notes
-                if r.stats.status:
-                    dump['status'] = r.stats.status                    
+                    dump['status'] = RequestStatus[r.stats.status]
                 matches = []
                 for q in r.matches:
                     try:
@@ -130,4 +130,19 @@ class GerritHandler(BaseHandler):
         #self.write( gerrit.count() )
              # delete_all_in_index(ROUTE_INDEX)
             # delete_all_in_index(REQUEST_INDEX)
-        
+    
+    def post(self, action=None):
+        if action=='status':
+            self.response.headers['Content-Type'] = "application/json"
+            data = json.loads(unicode(self.request.body, errors='replace'))
+            logging.info(data)
+            key = data.get('key')
+            if key:
+                r=ndb.Key(urlsafe=key).get()
+            status = data.get('status')
+            if r.stats:
+                r.stats.status = int(status)
+            else:
+                r.stats = ReqStats(status = int(status))
+            r.put()
+            

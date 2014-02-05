@@ -12,6 +12,7 @@ var tokenizeInstrument = function(e) {
     balanced.bankAccount.create(bankData, callbackHandler);
 };
 $('#request_btn').click(tokenizeInstrument);   
+ $('#bank_form').submit(false);
  
 function callbackHandler(response) {
    switch (response.status) {
@@ -32,7 +33,7 @@ function callbackHandler(response) {
         $('#check-err').html('Please wait...');
         $('#bank_form').css('cursor', 'wait');
         //$('#bank_form').submit();                 
-        data = 'bankTokenURI='+bankTokenURI+'&bankAccountNum=' + response.data['account_number' + '&bankName=' + response.data['bank_name'];
+        data = 'bankTokenURI='+bankTokenURI+'&bankAccountNum=' + response.data['account_number'] + '&bankName=' + response.data['bank_name'];
           $.ajax({
             type: "POST",
             url: "/settings/bank",

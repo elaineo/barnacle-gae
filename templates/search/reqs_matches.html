@@ -37,7 +37,16 @@
         <td style='text-align:center'>{{req.num_matches}}</td>
         {% endif %}
         <td>{% if req.notes is defined %}{{req.notes}}{% endif %}</td>
-        <td>{{req.status}}</td>
+        <td>
+          <select data-key='{{req.key}}' class="status input-small">
+            <option selected="selected">{{req.status}}</option>
+            <option value="3">PRIORITY</option>
+            <option value="2">PURSUE</option>
+            <option value="1">WATCH</option>
+            <option value="0">IGNORE</option>
+          </select>
+        </td>
+        <td><button class='btn-mini status_btn' disabled='disabled'>Update</button></td>
     </tr>
     {% if req.num_matches!=0 %}
     <tr class='hide'><td colspan='4'>
@@ -71,6 +80,27 @@ $(document).ready(function(){
         var row = $(this).closest('tr').next();
         row.toggleClass('hide');
     });    
+    $('.status_btn').click(function() {
+        var sel = $(this).closest('tr').find('select');
+        var status = sel.val();
+        var key = sel.attr('data-key');
+        $(this).attr('disabled','disabled');
+        response = {'key': key, 'status': status};
+          $.ajax({
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/gerrit/status",
+            data: JSON.stringify(response),
+            success: function(response) {
+                alert('Status updated');
+            }
+          });        
+    });
+    $('.status').change(function() {
+        var row = $(this).closest('tr');
+        row.find('.status_btn').removeAttr('disabled');
+    });
 });
 </script>
 {% endblock %}
