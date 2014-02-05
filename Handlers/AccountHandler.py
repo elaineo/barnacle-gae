@@ -124,8 +124,8 @@ class SignupPage(BaseHandler):
                         up.stats.locations.append(geocity)
                     up.put()
                 except:
-                    logging.error(geocity)
-                    logging.error(remoteip)
+                    logging.info(geocity)
+                    logging.info(remoteip)
             # set cookies
             self.login(fbid, 'fb')
             self.set_current_user()

@@ -5,7 +5,7 @@ from Utils.Defs import miles2m
 from Utils.RouteUtils import roundPoint
 import logging
 
-RequestStatus = ['IGNORE', 'WATCH', 'PURSUE', 'PRIORITY']
+RequestStatus = ['IGNORE', 'WATCH', 'MSGED', 'PURSUE', 'PRIORITY']
 
 class ReqStats(ndb.Model):
     """ Other stats we want: 
