@@ -1,4 +1,7 @@
+var btn_id = '#request_btn';
 var tokenizeInstrument = function(e) {
+   $(this).attr('disabled', 'disabled');
+   $(this).addClass('wait');
    e.preventDefault();     
    $('#acct-err').html('');
    $('#check-err').html('');
@@ -11,7 +14,7 @@ var tokenizeInstrument = function(e) {
     };
     balanced.bankAccount.create(bankData, callbackHandler);
 };
-$('#request_btn').click(tokenizeInstrument);   
+$(btn_id).click(tokenizeInstrument);   
  $('#bank_form').submit(false);
  
 function callbackHandler(response) {
@@ -29,14 +32,13 @@ function callbackHandler(response) {
             name: 'balancedBankURI'
          }).appendTo($form);
 
-        $('#request_btn').attr('disabled', 'disabled');  
         $('#check-err').html('Please wait...');
         $('#bank_form').css('cursor', 'wait');
         //$('#bank_form').submit();                 
         data = 'bankTokenURI='+bankTokenURI+'&bankAccountNum=' + response.data['account_number'] + '&bankName=' + response.data['bank_name'];
           $.ajax({
             type: "POST",
-            url: "/settings/bank",
+            url: "/checkout/bank",
             data: data,
             success: function(response) {
                 if (response.status == "ok") {
@@ -61,4 +63,6 @@ function callbackHandler(response) {
          $('#check-err').html('Our account processor burped, please hit submit again.');
          break;
    }
+   $(btn_id).removeAttr('disabled');
+   $(btn_id).removeClass('wait');    
 }   

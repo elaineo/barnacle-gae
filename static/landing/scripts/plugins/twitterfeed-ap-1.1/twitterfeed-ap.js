@@ -1,10 +1,9 @@
 $(document).ready(function () {
  
-    var displaylimit = 2;
+    var displaylimit = 3;
     var twitterprofile = "GoBarnacle";
     var screenname = "GoBarnacle";
-    var showdirecttweets = true;
-      // Remove directtweets in the future when strangers start tweeting at us
+    var showdirecttweets = false;
     var showretweets = true;
     var showtweetlinks = true;
     var showprofilepic = true;
@@ -14,6 +13,7 @@ $(document).ready(function () {
     //headerHTML += '<a href="https://twitter.com/" ><img src="images/twitter-bird-light.png" width="34" style="float:left;padding:3px 12px 0px 6px" alt="twitter bird" /></a>';
     //headerHTML += '<h1>'+screenname+' <span style="font-size:13px"><a href="https://twitter.com/'+twitterprofile+'" >@'+twitterprofile+'</a></span></h1>';
     loadingHTML += '<div id="loading-container"><img src="/static/landing/images/loading_dark.gif" width="32" height="32" alt="tweet loader" /></div>';
+    // change to dark version of loader.gif
  
     $('#twitter-feed').html(loadingHTML);
  
@@ -69,7 +69,7 @@ $(document).ready(function () {
                     }
                  }
             }
- console.log(feedHTML);
+        console.log(feedHTML);
             $('#twitter-feed').html(feedHTML);
     });
  

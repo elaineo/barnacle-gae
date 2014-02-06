@@ -11,7 +11,7 @@ from Handlers.Tracker.TrackerHandler import create_from_res
 from Models.Launch.Driver import *
 from Models.Launch.ResModel import *
 from Models.Launch.BarnacleModel import *
-from Models.PaymentModel import *
+from Models.Money.PaymentModel import *
 from Models.UserModels import *
 
 from Utils.ValidUtils import parse_rate
@@ -29,10 +29,12 @@ class CheckoutHandler(BaseHandler):
             self.__checkout(key)
         elif action=='confirmhold':
             self.__confirm_hold(key)
+        elif action=='payout':
+            self.__release(key)            
                             
     def post(self, action=None, key=None):
-        if not key:
-            self.redirect('/request')
+        if action=='bank':
+            self.__banksett()
         elif not action:
             self.__process(key)
         elif action=='confirm':
@@ -65,7 +67,8 @@ class CheckoutHandler(BaseHandler):
         res.rates = rates
         res.put()
         
-        customer = self.__create_cust(uri,email)
+        customer = self.__create_cust(email)
+        customer.add_card(uri)        
         charge = res.rates*100
         if charge > 0:    
             customer.debit(amount=charge)
@@ -85,7 +88,8 @@ class CheckoutHandler(BaseHandler):
         msg = self.request.get('msg')
         uri = self.request.get('balancedCreditCardURI')        
         
-        customer = self.__create_cust(uri,email)
+        customer = self.__create_cust(email)
+        customer.add_card(uri)
         p = HoldAccount(uri = uri, userkey = self.user_prefs.key, reskey = res.key, amount = res.price)
         p.put()
         
@@ -130,6 +134,45 @@ class CheckoutHandler(BaseHandler):
         # notify the driver?
         self.redirect('/reserve/'+key)
         
+    def __banksett(self): 
+        self.response.headers['Content-Type'] = "application/json"
+        d = Driver.by_userkey(self.user_prefs.key)
+        if not d:
+            response = { 'status': 'Permission Denied' }
+            self.write(json.dumps(response))     
+            return        
+        d.bank_uri = self.request.get('bankTokenURI')
+        d.bank_acctnum = self.request.get('bankAccountNum')
+        d.bank_name = self.request.get('bankName')
+        d.bank = True
+        d.put()
+        
+        balanced.configure(baccount)        
+        customer = self.__create_cust(self.user_prefs.email)
+        customer.add_bank_account(d.bank_uri)
+        
+        response = { 'status': 'ok' }
+        self.write(json.dumps(response))     
+        return        
+        
+    def __release(self,key):
+        try:
+            res = ndb.Key(urlsafe=key).get()                
+        except:
+            self.abort(400)    
+        t = Transaction.by_reservation(key)   
+        
+        logging.info(t)
+        if t and not t.paid:
+            driver = Driver.by_userkey(t.driver)
+            balanced.configure(baccount)
+        
+            email = Transaction.driver.get().email
+            customer = self.__create_cust(email)
+            customer.credit(amount=res.price)
+            #notify
+               
+        
     def __confirm(self,key):
         try:
             res = ndb.Key(urlsafe=key).get()                
@@ -139,7 +182,8 @@ class CheckoutHandler(BaseHandler):
         tel = self.request.get('tel')
         uri = self.request.get('balancedCreditCardURI')        
 
-        customer = self.__create_cust(uri,email)
+        customer = self.__create_cust(email)
+        customer.add_card(uri)
         charge = res.price*100
         if charge > 0:
             customer.debit(amount=charge)
@@ -158,18 +202,17 @@ class CheckoutHandler(BaseHandler):
         msg = self.user_prefs.first_name + confirm_do_msg % key
         create_note(self,res.sender, confirm_do_sub, msg)
 
-    def __create_cust(self,uri,email=None):
+    def __create_cust(self,email=None):
         #create customer
         # balanced.configure(testaccount)
         balanced.configure(baccount)
         if not self.user_prefs.cust_id:
-            customer = balanced.Customer(email=email, facebook=self.user_prefs.userid, card_uri = uri).save()
+            customer = balanced.Customer(email=email, facebook=self.user_prefs.userid).save()
             u = self.user_prefs.key.get()
             u.cust_id = customer.id
             u.put()
         else:
             customer = balanced.Customer.find('/v1/customers/' + self.user_prefs.cust_id)
-            customer.add_card(uri)
         return customer
         
     def __test(self):

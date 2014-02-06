@@ -57,6 +57,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/apply', handler=ApplyHandler),
    webapp2.Route('/apply/<action>', handler=ApplyHandler),
    webapp2.Route('/checkout/<key:[\w\-]{20,}>', handler=CheckoutHandler),
+   webapp2.Route('/checkout/<action>', handler=CheckoutHandler),
    webapp2.Route('/checkout/<action>/<key:[\w\-]{20,}>', handler=CheckoutHandler),
 # scrape
    webapp2.Route('/scraped/<key:[\w\-]{20,}>', handler=CLHandler),

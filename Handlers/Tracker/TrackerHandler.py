@@ -333,8 +333,8 @@ def create_from_res(r):
     tzoffset = RouteUtils().getTZ(r.dest)
     track = TrackerModel(start = r.start, 
     dest=r.dest, delivend=r.deliverby, locstart=r.locstart, 
-    locend=r.locend, tzoffset=tzoffset, reservation=r.key)
-    # I wish I hadn't done it like this...
+    locend=r.locend, tzoffset=tzoffset, reservation=r.key)    
+    # create transaction as well
     if r.__class__.__name__== 'Reservation':
         track.driver = r.receiver
         track.sender = r.sender
@@ -342,3 +342,5 @@ def create_from_res(r):
         track.driver = r.sender
         track.sender = r.receiver    
     track.put()                
+    trans = Transaction(reservation=r.key, sender=track.sender, driver=track.driver)
+    trans.put()
