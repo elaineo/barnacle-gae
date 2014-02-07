@@ -199,6 +199,7 @@ class ExpiredReservation(ndb.Model):
     sender = ndb.KeyProperty()      # user_prefs of reserver and reservee
     receiver = ndb.KeyProperty()
     route = ndb.KeyProperty()       # route being reserved
+    oldkey = ndb.KeyProperty()
     price = ndb.IntegerProperty()   # Offer price
     deliverby = ndb.DateProperty()
     locstart = ndb.StringProperty() 
@@ -230,6 +231,9 @@ class ExpiredReservation(ndb.Model):
     @classmethod
     def by_route(cls,key):
         return cls.query().filter(cls.route==key)
+    @classmethod
+    def by_key(cls,key):
+        return cls.query().filter(cls.oldkey==key).get()         
         
     def to_dict(cls):
         res = {
@@ -250,6 +254,7 @@ class ExpiredOffer(ndb.Model):
     sender = ndb.KeyProperty()      # user_prefs of reserver and reservee
     receiver = ndb.KeyProperty()
     route = ndb.KeyProperty()       # route being reserved
+    oldkey = ndb.KeyProperty()
     price = ndb.IntegerProperty()   # Offer price
     locstart = ndb.StringProperty() 
     locend = ndb.StringProperty()        
@@ -290,3 +295,6 @@ class ExpiredOffer(ndb.Model):
     @classmethod
     def by_user(cls,userkey):
         return cls.query().filter(ndb.OR(cls.receiver==userkey,cls.sender==userkey))        
+    @classmethod
+    def by_key(cls,key):
+        return cls.query().filter(cls.oldkey==key).get()         

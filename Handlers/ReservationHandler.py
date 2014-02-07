@@ -349,23 +349,29 @@ class ReservationHandler(BaseHandler):
             self.redirect('/reserve/' + p.key.urlsafe())  
             
     def view_reserve_page(self,key):
-        # try:
         p = ndb.Key(urlsafe=key).get()
-        resoffer=(p.__class__.__name__ == 'Reservation')
-        self.params.update(fill_reserve_params(key,resoffer))
-        if self.user_prefs and self.user_prefs.key == p.sender and not p.confirmed:
-            self.params['edit_allow'] = True
-        else:
-            self.params['edit_allow'] = False
         self.params['confirm_allow'] = False
         self.params['is_receiver'] = False
         self.params['is_sender'] = False
-        if self.user_prefs and self.user_prefs.key == p.receiver:
-            self.params['is_receiver'] = True
-            if not p.confirmed:
-                self.params['confirm_allow'] = True
-        if self.user_prefs and self.user_prefs.key == p.sender:                
-            self.params['is_sender'] = True
+        if p:
+            resoffer=(p.__class__.__name__ == 'Reservation')
+            self.params.update(fill_reserve_params(key,resoffer))
+            if self.user_prefs and self.user_prefs.key == p.sender and not p.confirmed:
+                self.params['edit_allow'] = True
+            else:
+                self.params['edit_allow'] = False
+
+            if self.user_prefs and self.user_prefs.key == p.receiver:
+                self.params['is_receiver'] = True
+                if not p.confirmed:
+                    self.params['confirm_allow'] = True
+            if self.user_prefs and self.user_prefs.key == p.sender:                
+                self.params['is_sender'] = True
+        else:
+            #see if it's expired
+            expr = get_expired(key)
+            #TODO: create a receipt page
+                
         if resoffer:
             self.render('reserve.html', **self.params)
         else:
@@ -387,7 +393,13 @@ class ReservationHandler(BaseHandler):
         else:
             ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
         return ptg, ptstr
-            
+
+def get_expired(key):
+    p = ExpiredReservation.by_key(ndb.Key(urlsafe=key))
+    if not p:
+        p = ExpiredOffer.by_key(ndb.Key(urlsafe=key))
+    return p
+        
 def fill_reserve_params(key,resoffer=False):
     p = ndb.Key(urlsafe=key).get()
     r = p.route.get()

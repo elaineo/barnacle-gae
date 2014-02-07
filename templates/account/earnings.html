@@ -27,7 +27,7 @@
     {% for route in routes %}
     <tr>
         <td>{{route.sender}}</td>
-        <td class='clicky' onclick="document.location.href = '{{route.post_url}}';">{{route.locstart}} to {{route.locend}}
+        <td class='clicky' onclick="document.location.href = '{{route.receipt_url}}';">{{route.locstart}} to {{route.locend}}
         </td>
         <td>{{route.delivend}}</td>
         <td>{{route.earnings}}</td>

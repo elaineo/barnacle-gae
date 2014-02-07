@@ -39,6 +39,7 @@ class Transaction(ndb.Model):
     def to_dict(cls):
         route = ExpiredRoute.by_key(cls.route)
         r = { 'sender': cls.sender.get().fullname,
+              'receipt_url' : '/reserve/' + cls.reservation.urlsafe(),
               'locstart' : route.locstart,
               'locend' : route.locend,
               'delivend' : cls.delivend.strftime('%m/%d/%Y'),
