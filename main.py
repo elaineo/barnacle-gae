@@ -18,6 +18,7 @@ from Handlers.NewsHandler import *
 from Handlers.DriverHandler import *
 from Handlers.GerritHandler import *
 from Handlers.Tracker.TrackerHandler import *
+from Handlers.Money.Earnings import *
 from Handlers.Launch.MobileHandler import *
 from Handlers.Launch.ExternalHandler import *
 from Handlers.Seo.SitemapHandler import SitemapHandler
@@ -85,6 +86,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/signup/<action>', handler=SignupPage),
    ('/signout', SignoutPage),
    ('/account', AccountPage),
+   webapp2.Route('/earn/<action>', handler=Earnings),
    webapp2.Route('/settings', handler=SettingsHandler),
    webapp2.Route('/settings/<action>', handler=SettingsHandler),
 # profile

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title%}Earnings{% endblock %}
+{% block heading%}
+<div class="row-fluid">
+  <div class="span3 offset1">
+    <h6>TOTAL EARNINGS</h6>
+    <h4>${{total_paid}}</h4>
+  </div>
+  <div class="span3 offset1">
+    <h6>DIRECT DEPOSIT ACCOUNT</h6>
+    {{bank_acctnum}}<br>
+    <a href='/settings'><button class="button small compl">Update</button></a>
+  </div>
+</div>
+{% endblock %}
+{% block content %}
+
+<div class="row-fluid">
+  <div class="span10 offset1">
+    <table class="table table-striped table-hover">
+    <thead><tr>
+        <th></th>
+        <th>Reservation</th>        
+        <th>Arrival Date</th>
+        <th>Earnings</th>
+    </tr></thead>
+    {% for route in routes %}
+    <tr>
+        <td>{{route.sender}}</td>
+        <td class='clicky' onclick="document.location.href = '{{route.post_url}}';">{{route.locstart}} to {{route.locend}}
+        </td>
+        <td>{{route.delivend}}</td>
+        <td>{{route.earnings}}</td>
+    </tr>
+    {% endfor %}
+     </table>
+  </div>
+</div>
+
+<script>
+$(document).ready(function(){
+    $('.showres').click(function() {
+        var row = $(this).closest('tr').next();
+        row.toggleClass('hide');
+    });
+    $('.showoff').click(function() {
+        var row = $(this).closest('tr').next();
+        row.toggleClass('hide');
+    });    
+});
+</script>
+{% endblock %}

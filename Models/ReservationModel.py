@@ -227,6 +227,9 @@ class ExpiredReservation(ndb.Model):
     @classmethod
     def by_user(cls,userkey):
         return cls.query().filter(ndb.OR(cls.receiver==userkey,cls.sender==userkey))
+    @classmethod
+    def by_route(cls,key):
+        return cls.query().filter(cls.route==key)
         
     def to_dict(cls):
         res = {

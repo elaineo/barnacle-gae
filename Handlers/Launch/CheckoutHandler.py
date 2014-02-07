@@ -170,6 +170,10 @@ class CheckoutHandler(BaseHandler):
             email = Transaction.driver.get().email
             customer = self.__create_cust(email)
             customer.credit(amount=res.price)
+            
+            t.paid = True
+            t.payout = res.price
+            t.put()
             #notify
                
         

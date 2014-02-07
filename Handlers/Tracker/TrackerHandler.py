@@ -6,6 +6,7 @@ from datetime import *
 
 from Handlers.BaseHandler import *
 from Models.Tracker.TrackerModel import *
+from Models.Money.Transaction import *
 from Utils.ValidUtils import parse_date
 from Utils.ConfirmUtils import *
 from Utils.EmailUtils import send_info
@@ -342,5 +343,5 @@ def create_from_res(r):
         track.driver = r.sender
         track.sender = r.receiver    
     track.put()                
-    trans = Transaction(reservation=r.key, sender=track.sender, driver=track.driver)
+    trans = Transaction(reservation=r.key, route=r.route, sender=track.sender, driver=track.driver)
     trans.put()
