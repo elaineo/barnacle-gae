@@ -57,7 +57,7 @@ class ReviewHandler(BaseHandler):
         r = Review.by_reservation(res,sender)
         if r:
             r.rating = rating
-            r.content = content + '\n\n' + r.content
+            r.content = r.content + '<br>' + content
         else:
             r = Review(sender = sender, receiver = recv, rating = rating, content = content, reservation=res)
         r.put()
