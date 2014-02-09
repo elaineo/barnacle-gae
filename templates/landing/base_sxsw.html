@@ -157,7 +157,7 @@
 
             <input type='hidden' name='distance' id='distance' value='0'>            
             <div class="row">
-              <div class="seven offset-by-five columns"><button class="button radius" id='request_btn'><i class="icon-search"></i> &nbsp;BOOK IT</button></div>
+              <div class="seven offset-by-five columns"><button class="button" id='request_btn'><i class="icon-search"></i> &nbsp;BOOK IT</button></div>
             </div>
             <span class="notch"></span>
           </form>
@@ -214,73 +214,19 @@
                 
         <!--Take action-->
         <div class="take-action">
-          <ul class="button-group radius expand left">
+          <ul class="button-group expand left">
             <li><a class="search_btn button large expand">Find a Driver &nbsp;<i class="icon-search"></i></a></li>
           </ul>
           <span class="or-block hide-for-small">- or -</span>
-          <ul class="button-group radius expand right">
+          <ul class="button-group expand right">
           
             
-            <li><a class="post_btn button secondary large expand">Be a Driver &nbsp;<i class="icon-road"></i></a></li>
+            <li><a class="post_btn button compl large expand">Be a Driver &nbsp;<i class="icon-road"></i></a></li>
           </ul>
         </div>
         <!--end take-action-->
       </div><!--end twelve-->
 
-        <!--Status Icons-->
-        <div class="status three columns mobile-one">
-          <div class="icon" data-animation="pulse">
-            <img src="/static/landing/images/steps/status_01.png" width="213" height="149" alt="">
-          </div>
-          <ul class="block-grid">
-            <li class="title">10,000+</li>
-            <li class="subtitle">Users in total</li>
-          </ul>
-        </div>
-        
-        <div class="status three columns mobile-one">
-          <div class="icon" data-animation="pulse">
-            <img src="/static/landing/images/steps/status_02.png" width="213" height="149" alt="">
-          </div>
-          <ul class="block-grid">
-            <li class="title">500</li>
-            <li class="subtitle">Active Drivers</li>
-          </ul>
-        </div>
-        
-        <div class="status three columns mobile-one">
-          <div class="icon" data-animation="pulse">
-            <img src="/static/landing/images/steps/status_03.png" width="213" height="149" alt="">
-          </div>
-          <ul class="block-grid">
-            <li class="title">46</li>
-            <li class="subtitle">Connected Cities</li>
-          </ul>
-        </div>
-        
-        <div class="status three columns mobile-one">
-          <div class="icon" data-animation="pulse">
-            <img src="/static/landing/images/steps/status_04.png" width="213" height="149" alt="">
-          </div>
-          <ul class="block-grid">
-            <li class="title">400+</li>
-            <li class="subtitle">Deliveries Completed</li>
-          </ul>
-        </div>
-        <!--end status icons-->
-      
-    </div><!--end row map-bg-->
-  </div><!--end call-to-actions-->
-</section>
-<!--END CALL TO ACTION SECTION-->
-
-
-
-
-
-<!-- FEATURED TEXT SECTION
-================================================ -->
-<section>
    <div id="feature-text" class="text-center">
     <div class="row">
       
@@ -317,19 +263,52 @@
               <img src="/static/landing/images/small_thumb_03.png" alt="">
             </a>
           </div>
-          <h4>Ship Outside the Box</h4>
+          <h4>No Boxes Needed</h4>
           <p>Your deliveries get their own private seats or trunk space. This means you don't have to worry about crating or packaging your shipments.</p>
         </li>
       </ul>
     </div><!--end row-->
   </div><!--end feature-text-->
-</section>
-<!--END FEATURED TEXT SECTION-->
 
-  
+</section>
+<!--END CALL TO ACTION SECTION-->
+
+
+
+
+
+<!-- FEATURED TEXT SECTION
+================================================ -->
     {% block testimonials %}
     {% endblock %}
 <!--END TESTIMONIALS SECTION-->
+
+<section>
+   <div id="feature-text" class="text-center">
+    <div class="row">
+        <div class="one column"></div>
+        <div class="two columns">
+          <img src="/static/landing/images/profile-{{seodir}}/mumford.jpg" alt="">
+        </div>        
+        <div class="two pull-1 columns">
+          <img src="/static/landing/images/profile-{{seodir}}/viceroy_logo.png" alt="">
+        </div>        
+        <div class="three columns">
+          <p>
+          <img src="/static/landing/images/profile-{{seodir}}/ninjas_logo.png" alt=""></p>
+          <p>
+          <img src="/static/landing/images/profile-{{seodir}}/visually_logo.png" alt=""></p>
+        </div>
+        <div class="three columns">
+          <p>
+          <img src="/static/landing/images/profile-{{seodir}}/threespot_logo.png" alt=""></p>
+        </div>        
+        <div class="one column"></div>
+    </div><!--end row-->
+  </div><!--end feature-text-->
+</section>
+<!--END FEATURED TEXT SECTION-->
+  
 
 
 
@@ -345,7 +324,7 @@
       	<div class="panel">
       		<h4><i class="icon-question-sign"></i> Concerns or questions?</h4>
         	<p>Read more about how it works and contact us with any additional questions.</p>
-          <a href="/how" class="small button radius secondary" target="_blank"><i class="icon-angle-right"></i> HOW IT WORKS</a>
+          <a href="/how" class="small button secondary" target="_blank"><i class="icon-angle-right"></i> HOW IT WORKS</a>
     		</div><!--end panel-->
       </div>
       
@@ -377,7 +356,7 @@
               </div>
             </div>
             <div class="three columns">
-            	<p><button type="submit" id="mc-embedded-subscribe"  name="newsletter-submit" class="small radius button expand">JOIN US</button></p>
+            	<p><button type="submit" id="mc-embedded-subscribe"  name="newsletter-submit" class="small button expand">JOIN US</button></p>
             </div>
 						<div class="twelve column">              
             	<small><i class="icon-lock"></i> <strong>Your <a href="/privacy">privacy</a> is important to us and we will never share your information.</strong></small>            	

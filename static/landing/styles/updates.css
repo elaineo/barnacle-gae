@@ -87,8 +87,8 @@ ul.pagination li a { display: block; padding: 1px 0; color: #555; -webkit-border
 ul.pagination li:hover a, ul.pagination li a:focus { background: #e6e6e6; }
 ul.pagination li.unavailable a { cursor: default; color: #999; }
 ul.pagination li.unavailable:hover a, ul.pagination li.unavailable a:focus { background: transparent; }
-ul.pagination li.current a { background: #2699ae; color: white; font-weight: bold; cursor: default; }
-ul.pagination li.current a:hover, ul.pagination li.current a:focus { background: #2699ae; }
+ul.pagination li.current a { background: #0087A3; color: white; font-weight: bold; cursor: default; }
+ul.pagination li.current a:hover, ul.pagination li.current a:focus { background: #0087A3; }
 
 
 
@@ -158,7 +158,7 @@ ul.pagination li.current a:hover, ul.pagination li.current a:focus { background:
 /*** Callout speech bubble ***/
 .callout-speech-wrapp { margin-bottom: 20px; }
 .callout-speech-wrapp cite { font-size: 1.25em; color: #0095c2; text-align: center; display: block; }
-.callout-speech { position: relative; padding:20px; text-align:center; color:#fff; background:#2699ae; margin-bottom: 40px;
+.callout-speech { position: relative; padding:20px; text-align:center; color:#fff; background:#0087A3; margin-bottom: 40px;
 		-webkit-border-radius: 22px; -moz-border-radius: 22px; -ms-border-radius: 22px; -o-border-radius: 22px; border-radius:22px; }
 .callout-speech:after {content:"\00a0"; background: url(/static/landing/images/callout_corner.png) no-repeat; position: absolute; width: 46px; height: 28px; bottom: -28px; left: 50%; margin-left: -23px; }
 
@@ -201,14 +201,14 @@ ul.pagination li.current a:hover, ul.pagination li.current a:focus { background:
 .tabs.info dd a,
 .tabs.info li a { color: #6f6f6f; display: block; font-size: 14px; height: 40px; line-height: 40px; padding: 0px 23.8px; }
 .tabs.info dd a:focus,
-.tabs.info li a:focus { font-weight: normal; color: #2699ae; }
+.tabs.info li a:focus { font-weight: normal; color: #0087A3; }
 .tabs.info dd.active,
-.tabs.info li.active { border-top: none; border-bottom: 2px solid #2699ae; }
+.tabs.info li.active { border-top: none; border-bottom: 2px solid #0087A3; }
 .tabs.info dd.active a,
-.tabs.info li.active a { cursor: default; color: #3c3c3c; background: #fff; border-left: none; border-right: none; font-weight: normal;border-bottom: 2px solid #2699ae; }
+.tabs.info li.active a { cursor: default; color: #3c3c3c; background: #fff; border-left: none; border-right: none; font-weight: normal;border-bottom: 2px solid #0087A3; }
 .tabs.info dd:first-child,
 .tabs.info li:first-child { margin-left: 0; }
-.tabs.info dd.active a:after { content:"\00a0"; position: absolute; bottom: -7px; left: 50%; margin: 0; margin-left: -5px; border-top: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #2699ae; padding: 0; width: 0; height: 0; }
+.tabs.info dd.active a:after { content:"\00a0"; position: absolute; bottom: -7px; left: 50%; margin: 0; margin-left: -5px; border-top: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #0087A3; padding: 0; width: 0; height: 0; }
 
 .tabs.pill.custom { border-bottom: none; margin: 70px auto; }
 .tabs.pill.custom dd,
@@ -222,7 +222,7 @@ ul.pagination li.current a:hover, ul.pagination li.current a:focus { background:
 .tabs.pill.custom dd.active,
 .tabs.pill.custom li.active { border: none; margin-top: 0; }
 .tabs.pill.custom dd.active a,
-.tabs.pill.custom li.active a { background-color: #2699ae; border: none; color: #fff; font-weight: normal; }
+.tabs.pill.custom li.active a { background-color: #0087A3; border: none; color: #fff; font-weight: normal; }
 .tabs.pill.custom.contained { border-bottom: solid 1px #eee; margin-bottom: 0; }
 .tabs.pill.custom.two-up dd,
 .tabs.pill.custom.two-up li,
@@ -232,7 +232,7 @@ ul.pagination li.current a:hover, ul.pagination li.current a:focus { background:
 .tabs.pill.custom.four-up li,
 .tabs.pill.custom.five-up dd,
 .tabs.pill.custom.five-up li { margin-right: 0; }
-.tabs.pill.custom dd.active a:after { content:"\00a0"; position: absolute; bottom: -10px; left: 50%; margin: 0; margin-left: -10px; border-top: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid #2699ae; padding: 0; width: 0; height: 0; }
+.tabs.pill.custom dd.active a:after { content:"\00a0"; position: absolute; bottom: -10px; left: 50%; margin: 0; margin-left: -10px; border-top: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid #0087A3; padding: 0; width: 0; height: 0; }
 
 
 /*** Accordion ***/

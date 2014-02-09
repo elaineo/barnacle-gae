@@ -1,4 +1,4 @@
-.blue-text { color: #2699ae; }
+.blue-text { color: #0087A3; }
 /* Custom Forms ---------------------- */
 form.custom { /* Custom input, disabled */ }
 form.custom span.custom { display:inline-block;
@@ -60,15 +60,15 @@ form.custom .custom.disabled { background-color: #dddddd; }
 .form-header .lead { color: #fff; font-size: 16.4px; }
 .form-footer { padding: 20px 20px 10px;  border-left: 10px solid #fafafa; border-bottom: 10px solid #fafafa;  border-right: 10px solid #fafafa;background: #f8f8f8 url(/static/landing/images/patterns/gray_pattern.gif); }
 .form-search.custom div.custom.dropdown { display: block; position: relative; width: auto; height: 32px; margin-bottom: 9px; margin-top: 2px; }
-.form-search.custom div.custom.dropdown a.current { display: block; width: auto; line-height: 30px; min-height: 32px; padding: 0; padding-left: 6px; padding-right: 38px; border: solid 1px #2699ae; color: #fff; background-color: #2699ae; white-space: nowrap; }
-.form-search.custom div.custom.dropdown a.selector { position: absolute; width: 27px; height: 32px; display: block; right: 0; top: 0; border: solid 1px #2699ae; }
+.form-search.custom div.custom.dropdown a.current { display: block; width: auto; line-height: 30px; min-height: 32px; padding: 0; padding-left: 6px; padding-right: 38px; border: solid 1px #0087A3; color: #fff; background-color: #0087A3; white-space: nowrap; }
+.form-search.custom div.custom.dropdown a.selector { position: absolute; width: 27px; height: 32px; display: block; right: 0; top: 0; border: solid 1px #0087A3; }
 .form-search.custom div.custom.dropdown a.selector:after { content: ""; display: block; content: ""; display: block; width: 0; height: 0; border: solid 5px; border-color: #fff transparent transparent transparent; position: absolute; left: 50%; top: 50%; margin-top: -2px; margin-left: -5px; }
 .form-search.custom div.custom.dropdown ul { position: absolute; width: auto; display: none; margin: 0; left: 0; top: 31px; margin: 0; padding: 0; background: white; background: rgba(255, 255, 255, 0.95); border: solid 1px #ccC; }
 .form-search.custom div.custom.dropdown ul li { color: #555555; font-size: 13px; cursor: pointer; padding: 3px; padding-left: 6px; padding-right: 38px; min-height: 18px; line-height: 18px; margin: 0; white-space: nowrap; list-style: none; }
 .form-search.custom div.custom.dropdown ul li.selected { background: #ccC; color: black; }
 .form-search.custom div.custom.dropdown ul li:hover { background-color: #ccC; color: black; }
 .form-search.custom div.custom.dropdown ul li.selected:hover { background: #ccC; cursor: default; color: black; }
-.form-search .button { background:#2699ae; border: 1px solid #2699ae; }
+.form-search .button { background:#0087A3; border: 1px solid #0087A3; }
 .form-search .button:hover,
 .form-search .button:focus { color: white; background-color: #5cabb8; border: 1px solid #5cabb8; }
 .form-search .h1label { color: #fff; text-align: right; height:40px; padding:0px; margin:0px; font-size: 22px;}
@@ -93,7 +93,7 @@ form.custom .custom.disabled { background-color: #dddddd; }
 .button.dropdown:hover > ul.no-hover { display: none; }
 .button.dropdown.split { padding: 0; position: relative; /* Sizes */ /* Triangle Spans */ /* Colors */ }
 .button.dropdown.split:after { display: none; }
-.button.dropdown.split:hover, .button.dropdown.split:focus { background-color: #2699ae; }
+.button.dropdown.split:hover, .button.dropdown.split:focus { background-color: #0087A3; }
 .button.dropdown.split.alert:hover, .button.dropdown.split.alert:focus { background-color: #c60f13; }
 .button.dropdown.split.success:hover, .button.dropdown.split.success:focus { background-color: #5da423; }
 .button.dropdown.split.secondary:hover, .button.dropdown.split.secondary:focus { background-color: #e9e9e9; }
@@ -102,7 +102,7 @@ form.custom .custom.disabled { background-color: #dddddd; }
 .button.dropdown.split.large > a { padding: 15px 75px 16px 30px; padding-left: 30px; padding-right: 75px; }
 .button.dropdown.split.small > a { padding: 7px 35px 8px 14px; padding-left: 14px; padding-right: 35px; }
 .button.dropdown.split.tiny > a { padding: 5px 25px 6px 10px; padding-left: 10px; padding-right: 25px; }
-.button.dropdown.split > span { background-color: #2699ae; position: absolute; right: 0; top: 0; height: 100%; width: 30px; border-left: 1px solid #1e728c; -webkit-box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5) inset; -moz-box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5) inset; box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5) inset; -webkit-transition: background-color 0.15s ease-in-out; -moz-transition: background-color 0.15s ease-in-out; -o-transition: background-color 0.15s ease-in-out; transition: background-color 0.15s ease-in-out; }
+.button.dropdown.split > span { background-color: #0087A3; position: absolute; right: 0; top: 0; height: 100%; width: 30px; border-left: 1px solid #1e728c; -webkit-box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5) inset; -moz-box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5) inset; box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5) inset; -webkit-transition: background-color 0.15s ease-in-out; -moz-transition: background-color 0.15s ease-in-out; -o-transition: background-color 0.15s ease-in-out; transition: background-color 0.15s ease-in-out; }
 .button.dropdown.split > span:hover, .button.dropdown.split > span:focus { background-color: #2284a1; }
 .button.dropdown.split > span:after { content: ""; display: block; width: 0; height: 0; border: solid 6px; border-color: white transparent transparent transparent; position: absolute; top: 50%; left: 50%; margin-left: -6px; margin-top: -2px; }
 .button.dropdown.split.secondary > span:after { content: ""; display: block; width: 0; height: 0; border: solid 6px; border-color: #1d1d1d transparent transparent transparent; }

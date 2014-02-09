@@ -240,7 +240,6 @@ class RouteHandler(BaseHandler):
             self.params['rates'] = price
             self.render('request_review.html', **self.params)
             taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
-            taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
             create_request_doc(p.key.urlsafe(), p)
 
         except:  #this should never happen

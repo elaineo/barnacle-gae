@@ -6,7 +6,6 @@
     margin: 0 auto;
     max-width:1000px;
 }
-.header-bg {background: #f8f8f8; padding-top: 20px; }
 .densetxt {
     font: 1.2em/1.6em 'Open Sans', sans-serif;
 }
@@ -68,7 +67,7 @@
 .drivernum {
     float: left;
     font: 1.3em 'Open Sans', sans-serif;
-    color: #2699ae;
+    color: #0087A3;
     padding-right: 8px;
 }
 .driverlabel {
@@ -77,7 +76,7 @@
 }
 .question {
     cursor: pointer;
-    color: #2699ae;
+    color: #0087A3;
 }
 .answer {
     font: 0.95em/1.5em 'Open Sans', sans-serif;
@@ -85,7 +84,7 @@
     color: #999
 }
 .unread {
-    color: #2699ae;
+    color: #0087A3;
     font-weight: bold;  
 }
 
@@ -200,7 +199,7 @@ button:active, .onbutton{
     margin: auto;
 }
 #navhead {
-  background: #f8f8f8;
+  background: #fff;
 }
 #logo {
 -webkit-transition: all .1s ease-in;
@@ -260,7 +259,7 @@ position: absolute;
     line-height: 200%;
     white-space:nowrap;
     text-align:center;
-    color: #2699ae;
+    color: #0087A3;
 }
 .footerbot{
     color: #aaa;
