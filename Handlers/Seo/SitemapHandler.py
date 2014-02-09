@@ -7,6 +7,18 @@ from Utils.SearchDocUtils import closest_city
 import urllib
 import logging
 
+# Generate sitemap.xml
+
+
+def list_to_url_xml(urls, priority = None):
+    """ turns a list of urls into url xml with priority
+    """
+    if priority is not None:
+        priority = '<priority>%1.2f</priority>' % priority
+    else:
+        priority = ''
+    return '\n'.join(['<url><loc>%s</loc>%s</url>' % (url, priority) for url in urls])
+
 
 class SitemapHandler(BaseHandler):
     """
@@ -14,13 +26,15 @@ class SitemapHandler(BaseHandler):
     """
     def get(self,action=None,key=None):
         buf = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-        for route_url in self.get_route_urls():
-            buf += '<url><loc>%s</loc></url>' % route_url
-        for request_url in self.get_request_urls():
-            buf += '<url><loc>%s</loc></url>' % request_url
+        buf += list_to_url_xml(self.get_home_urls(), priority = 0.6)
+        buf += list_to_url_xml(self.get_route_urls())
+        buf += list_to_url_xml(self.get_request_urls())
         buf += '</urlset>'
         self.response.headers['Content-Type'] = 'application/xml'
         self.write(buf)
+
+    def get_home_urls(self):
+        return ['http://www.gobarnalce.com/about', 'http://www.gobarnalce.com/how', 'http://www.gobarnalce.com/blog']
 
     def get_route_urls(self):
         urls = []
@@ -38,6 +52,6 @@ class SitemapHandler(BaseHandler):
             start_nearest_city = closest_city(request.start)['city']
             end_nearest_city = closest_city(request.dest)['city']
             urls.append('http://' + urllib.quote('www.gobarnacle.com/request/from/' + start_nearest_city + '/to/' + end_nearest_city))
-            urls.append('http://' + urllib.quote('www.gobarnacle.com/request/from/' + start_nearest_city))            
-            urls.append('http://' + urllib.quote('www.gobarnacle.com/request/to/' + end_nearest_city))            
+            urls.append('http://' + urllib.quote('www.gobarnacle.com/request/from/' + start_nearest_city))
+            urls.append('http://' + urllib.quote('www.gobarnacle.com/request/to/' + end_nearest_city))
         return set(urls)
