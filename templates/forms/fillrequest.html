@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block title%}{{route_title}}{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="/static/datepicker/css/datepicker.css">
+{% endblock %}
+
 {% block heading %}<h1 class='whiteh1'>{{route_title}}</h1>
   {% include "forms/header_req.html" %}
 {% endblock %}
