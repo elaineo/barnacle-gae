@@ -3,9 +3,11 @@ from google.appengine.ext import ndb
 from google.appengine.api import taskqueue
 from google.appengine.api import memcache
 from Handlers.BaseHandler import *
-from Models.RouteModel import *
-from Models.RequestModel import *
-from Models.Launch.Driver import *
+from Models.Post.Route import *
+from Models.Post.Request import *
+from Models.Post.OfferRoute import *
+from Models.Post.OfferRequest import *
+from Models.User.Driver import *
 from Utils.RouteUtils import *
 from Utils.SearchDocUtils import create_route_doc
 from Utils.SearchDocUtils import create_request_doc
@@ -25,7 +27,7 @@ class RouteHandler(BaseHandler):
                 self.write(jsonall_result)
                 return
             else:
-                routes = Route.get_all()
+                routes = Route.query()
                 rdump = RouteUtils().dumpall(routes)
                 jsonall_result = json.dumps(rdump)
                 memcache.add(key="jsonall", value=jsonall_result, time=3600)
@@ -52,15 +54,15 @@ class RouteHandler(BaseHandler):
             if not self.user_prefs:
                 self.redirect('/post#signin-box')
                 return
-            if p.userkey == self.user_prefs.key:
+            if p.key.parent() == self.user_prefs.key:
                 if p.__class__.__name__ == 'Route':
                     self.params.update(fill_route_params(key,True))
                     self.params['route_title'] = 'Edit Route'
-                    self.render('forms/fillpost.html', **self.params)
+                    self.render('post/forms/fillpost.html', **self.params)
                 else:
                     self.params.update(fill_route_params(key,False))
                     self.params['route_title'] = 'Edit Delivery Request'
-                    self.render('forms/editrequest.html', **self.params)
+                    self.render('post/forms/editrequest.html', **self.params)
                 return
             logging.error(p)
             self.abort(403)
@@ -71,28 +73,26 @@ class RouteHandler(BaseHandler):
             pop = self.request.get('pop')
             # create new request post
             if savsearch and bool(pop):
-                self.params.update(savsearch.params_fill(self.params))
+                self.params.update(savsearch.params_fill())
             self.params['route_title'] = 'Post a Delivery Request'
             self.params['today'] = datetime.now().strftime('%Y-%m-%d')
-            self.render('forms/fillrequest.html', **self.params)
+            self.render('post/forms/fillrequest.html', **self.params)
         elif key: # check if user logged in
             self.view_page(key)
         elif self.user_prefs:
             self.params['createorupdate'] = 'Ready to Drive'
             d = Driver.by_userkey(self.user_prefs.key)
             if not d: #not an existing driver
-                self.params.update(self.user_prefs.params_fill(self.params))
-                self.render('forms/filldriver.html', **self.params)
+                self.params.update(self.user_prefs.params_fill())
+                self.render('user/forms/filldriver.html', **self.params)
                 return
             self.params['route_title'] = 'Drive a New Route'
-            self.render('forms/fillpost.html', **self.params)
+            self.render('post/forms/fillpost.html', **self.params)
         else:
             self.redirect('/#signin-box')
 
     def post(self, action=None,key=None):
-        if action=='request':
-            self.__create_request(key)
-        elif action=='request0':
+        if action=='request0':
             self.__init_request()
         elif action=='update' and key:
             self.__update_request(key)
@@ -106,7 +106,7 @@ class RouteHandler(BaseHandler):
             if not self.user_prefs:
                 self.redirect('/post#signin-box')
                 return
-            if p.userkey == self.user_prefs.key:
+            if p.key.parent() == self.user_prefs.key:
                 if p.__class__.__name__ == 'Route':
                     self.__create_route(key)
                 else:
@@ -121,31 +121,26 @@ class RouteHandler(BaseHandler):
             self.__create_route(key)
 
     def __delete(self, key=None):
-        if key:
+        if key and self.user_prefs:
             r = ndb.Key(urlsafe=key).get()
-            if r and r.userkey==self.user_prefs.key:
+            if r and r.key.parent()==self.user_prefs.key:
                 # check to make sure nothing was confirmed
                 # delete associated reservations
                 type = r.__class__.__name__
+                if r.num_confirmed() > 0:
+                    return
+                for q in r.offers:
+                    q.get().dead = PostStatus.index('DELETED')
+                    q.put()
                 if type=='Route':
-                    if Reservation.route_confirmed(r.key)>0:
-                        return
-                    res = Reservation.by_route(r.key)
-                    for q in res:
-                       q.key.delete()
                     if r.roundtrip:
                         delete_doc(r.key.urlsafe()+'_RT',type)
-                elif type=='Request':
-                    if DeliveryOffer.route_confirmed(r.key)>0:
-                        return
-                    res = DeliveryOffer.by_route(r.key)
-                    for q in res:
-                       q.key.delete()
                 # delete from matches
                 taskqueue.add(url='/match/cleanmatch/'+key, method='get')
                 # delete in search docs
                 delete_doc(r.key.urlsafe(),type)
-                r.key.delete()
+                r.dead = PostStatus.index('DELETED')
+                r.put()
                 self.redirect('/account')
             else:
                 self.abort(403)
@@ -169,9 +164,9 @@ class RouteHandler(BaseHandler):
         logging.info('New Request: '+startstr+' to '+deststr)
 
         p = ndb.Key(urlsafe=key).get()
-        if p and self.user_prefs and p.userkey == self.user_prefs.key:
+        if p and self.user_prefs and p.key.parent() == self.user_prefs.key:
             p.rates = rates
-            p.items = items
+            p.details = items
             p.delivby = delivby
             p.locstart = startstr
             p.locend = deststr
@@ -198,20 +193,20 @@ class RouteHandler(BaseHandler):
             self.view_page(p.key.urlsafe())
         except:
             self.params['error_route'] = 'Invalid Locations'
-            self.params['items'] = items
+            self.params['details'] = items
             self.params['capacity'] = capacity
             self.params['delivby'] = reqdate
             self.params['rates'] = rates
             self.params['route_title'] = 'Edit Delivery Request'
             self.params['today'] = datetime.now().strftime('%Y-%m-%d')
-            self.render('forms/fillrequest.html', **self.params)
+            self.render('post/forms/fillrequest.html', **self.params)
+            
     def __init_request(self,key=None):
         self.response.headers['Content-Type'] = "application/json"
         response = {'status':'ok'}
         data = json.loads(unicode(self.request.body, errors='replace'))
         capacity = data.get('vcap')
         capacity = parse_unit(capacity)
-        #items = self.request.get('items')
         reqdate = data.get('reqdate')
         if reqdate:
             delivby = parse_date(reqdate)
@@ -223,7 +218,7 @@ class RouteHandler(BaseHandler):
 
         logging.info('Initial Request: '+startstr+' to '+deststr)
         distance = data.get('distance')
-        p = Request(userkey=self.user_prefs.key, start=start,
+        p = Request(parent=self.user_prefs.key, start=start,
             dest=dest, capacity=capacity,
             delivby=delivby, locstart=startstr, locend=deststr)
 
@@ -238,7 +233,7 @@ class RouteHandler(BaseHandler):
             self.params['update_url'] = '/post/update/' + p.key.urlsafe()
             self.params['email'] = self.user_prefs.email
             self.params['rates'] = price
-            self.render('request_review.html', **self.params)
+            self.render('post/request_review.html', **self.params)
             taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
             create_request_doc(p.key.urlsafe(), p)
 
@@ -248,7 +243,7 @@ class RouteHandler(BaseHandler):
             self.params['delivby'] = reqdate
             self.params['route_title'] = 'Edit Delivery Request'
             self.params['today'] = datetime.now().strftime('%Y-%m-%d')
-            self.render('forms/fillrequest.html', **self.params)
+            self.render('post/forms/fillrequest.html', **self.params)
 
     def __update_request(self,key):
         rates = self.request.get('rates')
@@ -262,13 +257,15 @@ class RouteHandler(BaseHandler):
         p = ndb.Key(urlsafe=key).get()
         # image upload
         img = self.request.get("file")
-        if p and self.user_prefs and p.userkey == self.user_prefs.key:
+        if p and self.user_prefs and p.key.parent() == self.user_prefs.key:
             if img:
                 imgstore = ImageStore.new(img)
                 imgstore.put()
                 p.img_id = imgstore.key.id()
             p.rates = rates
-            p.items = items
+            p.details = items
+            # get a cc #
+            p.stats.status = RequestStatus.index('PURSUE')
             p.put()
             self.view_page(p.key.urlsafe())
         else:
@@ -313,7 +310,7 @@ class RouteHandler(BaseHandler):
 
         if key: # if editing post
             p = ndb.Key(urlsafe=key).get()
-            if p and self.user_prefs and p.userkey == self.user_prefs.key:
+            if p and self.user_prefs and p.key.parent() == self.user_prefs.key:
                 p.details = details
                 p.capacity = capacity
                 p.delivstart = delivstart
@@ -332,7 +329,7 @@ class RouteHandler(BaseHandler):
                 self.write(json.dumps(response))
                 return
         else: # new post
-            p = Route(userkey=self.user_prefs.key, stats=RouteStats(),
+            p = Route(parent=self.user_prefs.key, stats=RouteStats(),
                 locstart=startstr, locend=deststr,
                 start=start, dest=dest, capacity=capacity, details=details,
                 delivstart=delivstart, delivend=delivend, roundtrip=rtr)
@@ -370,8 +367,11 @@ class RouteHandler(BaseHandler):
             key = keyrt
         p = ndb.Key(urlsafe=key).get()
         if p:
+            if p.dead > 0:
+                view_dead(p)
+                return
             p.increment_views()
-            if self.user_prefs and self.user_prefs.key == p.userkey:
+            if self.user_prefs and self.user_prefs.key == p.key.parent():
                 self.params['edit_allow'] = True
                 if p.num_confirmed > 0:
                     self.params['resdump'] = route_resdump(p.key, p.__class__.__name__)
@@ -383,24 +383,22 @@ class RouteHandler(BaseHandler):
                 self.params['fb_share'] = True
             if p.__class__.__name__ == 'Route':
                 self.params.update(fill_route_params(key,True))
-                self.render('post.html', **self.params)
+                self.render('post/post.html', **self.params)
             else:
                 self.params.update(fill_route_params(key,False))
-                self.render('request.html', **self.params)
-            return
+                self.render('post/request.html', **self.params)
         else:
-            #see if it's expired
-            expr = get_expired(key)
-            if expr: # display expired pages
-                self.params.update(expr.to_dict())
-                if expr.__class__.__name__ == 'ExpiredRoute':
-                    self.render('landing/exppost.html', **self.params)
-                else:
-                    self.render('landing/exprequest.html', **self.params)
-            else:
-                self.abort(409)
+            self.abort(409)
         return
 
+    def view_dead(route):
+        self.params.update(route.to_dict())
+        if route.__class__.__name__ == 'Route':
+            self.render('landing/exppost.html', **self.params)
+        else:
+            self.render('landing/exprequest.html', **self.params)
+        return
+        
     def __get_map_form(self,pt):
         ptlat = self.request.get(pt+'lat')
         ptlon = self.request.get(pt+'lon')
@@ -415,14 +413,10 @@ class RouteHandler(BaseHandler):
             ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)
         return ptg, ptstr
 
-def get_expired(key):
-    p = ExpiredRequest.by_key(ndb.Key(urlsafe=key))
-    if not p:
-        p = ExpiredRoute.by_key(ndb.Key(urlsafe=key))
-    return p
 
 def add_roundtrip(route):
-    p2 = Route(userkey=route.userkey, locstart=route.locend, locend=route.locstart,
+    p2 = Route(parent=route.key.parent(), 
+                locstart=route.locend, locend=route.locstart,
                 start=route.dest, dest=route.start,
                 capacity=route.capacity, details=route.details,
                 delivstart=route.delivend, delivend=route.delivend,
@@ -433,42 +427,13 @@ def add_roundtrip(route):
 
 def fill_route_params(key,is_route=False):
     p = ndb.Key(urlsafe=key).get()
-    u = p.userkey.get()
-    params = {
-        'reserve_url' : p.reserve_url(),
-        'edit_url' : p.edit_url(),
-        'delete_url':p.delete_url(),
-        'routekey' : key,
-        'locstart' : p.locstart,
-        'locend' : p.locend,
-        'capacity' : p.capacity,
-        'num_confirmed' : p.num_confirmed(),
-        'num_matches' : len(p.matches),
-        'msg_ok' : True #(0 in u.get_notify())
-        }
-    params.update(u.params_fill_sm(params))
-    d = Driver.by_userkey(p.userkey)
+    u = p.key.parent().get()
+    params = p.to_dict()
+    params.update(u.params_fill_sm())
+    d = Driver.by_userkey(u.key)
     if d:
-        params.update(d.params_fill(params))
+        params.update(d.params_fill())
     params['userkey'] = u.key.urlsafe()
-    #else: they must be a driver if they have a route...
-    if is_route:
-        params.update({ 'details' : p.details,
-                        'num_requests' : p.num_requests(),
-                        'sugg_rate' :p.suggest_rate(),
-                        'rt' : int(p.roundtrip),
-                        'delivstart' : p.delivstart.strftime('%m/%d/%Y'),
-                        'delivend' : p.delivend.strftime('%m/%d/%Y') })
-        params.update(p.gen_repeat())
-    else:
-        params.update({ 'items' : p.items,
-                        'img_url' : p.image_url(),
-                        'img_thumb' : p.image_url('small'),
-                        'num_offers' : p.num_offers(),
-                        'rates' : p.rates,
-                        'delivby' : p.delivby.strftime('%m/%d/%Y') })
-    p.locend + '&key=' + key
-    params['message_url'] = p.message_url()
     return params
 
 class DumpHandler(BaseHandler):
@@ -514,7 +479,7 @@ class DumpHandler(BaseHandler):
         for r in routes:
             dump = r.to_dict()
             resdump = []
-            for q in Reservation.by_route(r.key):
+            for q in OfferRequest.by_route(r.key):
                 resdump.append(q.to_dict())
             dump['reservations'] = resdump
             routedump.append(dump)
@@ -525,31 +490,27 @@ class DumpHandler(BaseHandler):
         for r in requests:
             dump = r.to_dict()
             offdump = []
-            for q in DeliveryOffer.by_route(r.key):
+            for q in OfferRoute.by_route(r.key):
                 offdump.append(q.to_dict())
             dump['offers'] = offdump
             reqdump.append(dump)
         return reqdump
     def __resdump(self, key):
         resdump = []
-        for q in Reservation.by_sender(key):
+        for q in OfferRequest.by_user(key):
             resdump.append(q.to_dict())
         # Also dump fixed-route things
         return resdump
     def __offdump(self, key):
         offdump = []
-        for q in DeliveryOffer.by_sender(key):
+        for q in OfferRoute.by_user(key):
             offdump.append(q.to_dict())
         return offdump
     def __compdump(self, key):
         compdump = []
-        for q in ExpiredOffer.by_sender(key):
+        for q in OfferRoute.by_user(key,1):
             compdump.append(q.to_dict())
-        for q in ExpiredOffer.by_receiver(key):
-            compdump.append(q.to_dict())
-        for q in ExpiredReservation.by_receiver(key):
-            compdump.append(q.to_dict())
-        for q in ExpiredReservation.by_sender(key):
+        for q in OfferRequest.by_user(key,1):
             compdump.append(q.to_dict())
         return compdump
 
@@ -557,10 +518,10 @@ class DumpHandler(BaseHandler):
 def route_resdump(key, name):
     resdump = []
     if name=='Route':
-        for q in Reservation.by_route(key):
+        for q in OfferRequest.by_route(key):
             resdump.append(q.to_dict())
     elif name=='Request':
-        for q in DeliveryOffer.by_route(key):
+        for q in OfferRoute.by_route(key):
             resdump.append(q.to_dict())
     return resdump
 

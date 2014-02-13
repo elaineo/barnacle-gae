@@ -1,9 +1,9 @@
 from Handlers.BaseHandler import BaseHandler
 from google.appengine.api import mail
-from Models.UserModels import UserPrefs
-from Models.RouteModel import Route
-from Models.RequestModel import Request
-from Models.ReservationModel import Reservation
+from Models.User.Account import UserPrefs
+from Models.Post.Route import Route
+from Models.Post.Request import Request
+from Models.Post.OfferRequest import OfferRequest
 from Models.MessageModel import Message
 from datetime import datetime, timedelta
 from google.appengine.ext import ndb
@@ -46,7 +46,7 @@ class SummaryHandler(BaseHandler):
         return Request.query().count()
 
     def number_of_new_reservations(self):
-        return Reservation.query(Reservation.created > self.day_ago()).count()
+        return OfferRequest.query(OfferRequest.created > self.day_ago()).count()
 
     def number_of_new_messages(self):
         return Message.query(Message.created > self.day_ago()).count()
@@ -86,7 +86,7 @@ class SummaryHandler(BaseHandler):
             self.email_report('help@gobarnacle.com', subject, body)
         elif action=='selfnote' and key:
             r = ndb.Key(urlsafe=key).get()
-            buf = r.items + ' from ' + r.locstart + ' to ' + r.locend 
+            buf = r.details + ' from ' + r.locstart + ' to ' + r.locend 
             buf += '\n http://www.gobarnacle.com' + r.post_url()
             subject = 'New Barnacle request'
             self.email_report('help@gobarnacle.com', subject, buf)

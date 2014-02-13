@@ -1,35 +1,12 @@
-from datetime import *
-import dateutil.parser
 from google.appengine.ext import ndb
-from google.appengine.api import search
-from google.appengine.api import taskqueue
 
 from Handlers.BaseHandler import *
-from Models.ImageModel import ImageStore
 from Models.MessageModel import Message
-from Models.RequestModel import Request
-from Models.ReservationModel import Reservation
-from Models.ReservationModel import DeliveryOffer
-from Models.RouteModel import Route
-from Models.UserModels import *
-from Models.Launch.Driver import *
-from Models.Launch.DriverModel import *
-from Models.Launch.BarnacleModel import *
-from Models.Launch.CLModel import *
-from Models.RequestModel import *
-
-from Utils.data.fakedata import *
-from Utils.data.citylist import *
-from Utils.data.fix_cityshit import *
-from Utils.SearchUtils import *
-from Utils.SearchDocUtils import *
-from Utils.SearchScraped import *
-from Utils.RouteUtils import *
+from Models.Post.Request import Request
+from Models.Post.Route import Route
 
 import json
-import random
 import logging
-import math
         
 class GerritHandler(BaseHandler):
     def get(self, action=None):
@@ -84,18 +61,18 @@ class GerritHandler(BaseHandler):
             rusers = []
             rcount = 0
             for r in routes:
-                if r.userkey in users and r.userkey not in rusers:
+                if r.key.parent() in users and r.key.parent() not in rusers:
                     rcount = rcount+1
-                    rusers.append(r.userkey)
+                    rusers.append(r.key.parent())
                 else:
-                    users.append(r.userkey)
+                    users.append(r.key.parent())
             xroutes = ExpiredRequest.query()
             for r in xroutes:
-                if r.userkey in users and r.userkey not in rusers:
+                if r.key.parent() in users and r.key.parent() not in rusers:
                     rcount = rcount+1
-                    rusers.append(r.userkey)
+                    rusers.append(r.key.parent())
                 else:
-                    users.append(r.userkey)
+                    users.append(r.key.parent())
             self.write(rcount)
         elif action=='matchdump':            
             reqdump = []

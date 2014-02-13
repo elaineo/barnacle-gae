@@ -3,9 +3,10 @@ from google.appengine.ext import ndb
 from google.appengine.api import search
 
 from Handlers.BaseHandler import *
-from Models.RouteModel import *
-from Models.RequestModel import *
-from Models.ReservationModel import *
+from Models.Post.Route import *
+from Models.Post.Request import *
+from Models.Post.OfferRoute import *
+from Models.Post.OfferRequest import *
 from Models.Launch.CLModel import *
 from Utils.SearchDocUtils import *
 from Utils.SearchScraped import *
@@ -19,58 +20,30 @@ class ExpireHandler(BaseHandler):
         deaddump={}
         now = date.today()
         expire_pathpts(PATHPT_INDEX, now.strftime('%Y-%m-%d'), "delivend")
-        
-        deadroutes = Route.query().filter(Route.delivend<now)
-        drouts=[]
-        dresv=[] 
+        deadroutes = Route.query(Route.delivend<now,Route.dead==0)
         route_index = search.Index(name=ROUTE_INDEX)
         for r in deadroutes:
-            exr = ExpiredRoute(userkey=r.userkey, capacity=r.capacity, 
-            details=r.details, delivstart = r.delivstart, delivend=r.delivend,
-            locstart=r.locstart, locend=r.locend, 
-            start=r.start, dest=r.dest, repeatr=r.repeatr, oldkey=r.key)
-            exr.put()
+            r.dead = PostStatus.index('EXPIRED')
+            r.put()
             route_index.delete(r.key.urlsafe())
             if r.roundtrip:
                 route_index.delete(r.key.urlsafe()+'_RT')
-            drouts.append(exr.to_dict())
-            r.key.delete()
-        deadreqs = Request.query().filter(Request.delivby<now)
-        dreqs=[]
-        doff=[]
+
+        deadreqs = Request.query(Request.delivby<now,Request.dead==0)
         req_index = search.Index(name=REQUEST_INDEX)
         for r in deadreqs:
-            exr = ExpiredRequest(userkey=r.userkey, rates=r.rates, oldkey=r.key, 
-            locstart=r.locstart, locend=r.locend, img_id=r.img_id, stats=r.stats,
-            items=r.items, delivby = r.delivby, start=r.start, dest=r.dest)
-            exr.put()
-            req_index.delete(r.key.urlsafe())
-            r.key.delete()
-            drouts.append(exr.to_dict())
+            r.dead = PostStatus.index('EXPIRED')
+            r.put()
+            route_index.delete(r.key.urlsafe())
         # Orphan reservations
-        deadres = Reservation.query().filter(Reservation.deliverby<now) 
+        deadres = OfferRequest.query(OfferRequest.deliverby<now,OfferRequest.dead==0) 
         for q in deadres:
-            exp = ExpiredReservation(sender=q.sender, receiver=q.receiver, 
-            route=q.route, items=q.items, price=q.price,
-            deliverby=q.deliverby, 
-            locstart=q.locstart, locend=q.locend, 
-            sender_name=q.sender_name(), rcvr_name=q.receiver_name(),
-            img_id=q.img_id, confirmed=q.confirmed)
-            exp.put()
-            dresv.append(exp.to_dict())
-            q.key.delete()            
-        deadreq = DeliveryOffer.query().filter(DeliveryOffer.deliverby<now) 
+            q.dead = PostStatus.index('EXPIRED')
+            q.put()
+        deadreq = OfferRoute.query(OfferRoute.deliverby<now, OfferRoute.dead==0) 
         for q in deadreq:
-            exp = ExpiredOffer(sender=q.sender, receiver=q.receiver, 
-            route=q.route, price=q.price,
-            deliverby=q.deliverby, confirmed=q.confirmed,
-            locstart=q.locstart, locend=q.locend, 
-            sender_name=q.sender_name(), rcvr_name=q.receiver_name())
-            exp.put()
-            doff.append(exp.to_dict())
-            q.key.delete()            
-
-            
+            q.dead = PostStatus.index('EXPIRED')
+            q.put()            
         deadcl = CLModel.query().filter(CLModel.delivend<now)
         cl_index = search.Index(name=PATHPT_INDEX)
         bodycount = 0
@@ -90,10 +63,4 @@ class ExpireHandler(BaseHandler):
         deadsearch = SearchEntry.query().filter(SearchEntry.created < hourago)
         for s in deadsearch:
             s.key.delete()            
-                
-        deaddump['exp_routes'] = drouts
-        deaddump['exp_requests'] = dreqs
-        deaddump['exp_reservations'] = dresv
-        deaddump['exp_offers'] = doff
-        self.response.headers['Content-Type'] = "application/json"
-        self.response.out.write(deaddump)
+        return 

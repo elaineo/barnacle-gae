@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title%}{{route_title}}{% endblock %}
+{% block heading%}<h1>{{route_title}}</h1>{% endblock %}
+{% block content %}
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="/static/js/maps/mapsclientno.js"></script>
+<link rel="stylesheet" href="/static/css/jquery-ui.css" />
+<div class="row-fluid">
+  <div class="span10 offset1">
+ <form enctype="multipart/form-data" method="post" id='request_form' class="form-horizontal">
+    {% include "post/forms/stubsform/request_fields.html" %}     
+    <input type="hidden" id="hidecap" value="{{capacity}}">    
+    <input type='hidden' name="startlat" id="startlat">
+    <input type='hidden' name="startlon" id="startlon">
+    <input type='hidden' name="startstr" id="startstr">
+    <input type='hidden' name="destlat" id="destlat">
+    <input type='hidden' name="destlon" id="destlon">
+    <input type='hidden' name="deststr" id="deststr">   
+    <div class='row-fluid'>
+      <div class='span2 offset3'>
+        <button type="submit" class="button secondary" id='request_btn'>Submit</button>
+      </div>
+      <div class='span4'>
+         <label class="checkbox inline">
+           <input type="checkbox" id="fbshare" name='fbshare' value='1' checked> Share on Facebook
+         </label>
+       </div>
+    </div>        
+</form>
+  </div>
+</div>
+<div class='row' style='height:20px'></div>
+{% include 'sizechart.html' %}
+</div>
+ <script>
+  
+$(document).ready(function(){
+    var v = [[0],[0]];
+    click_validloc('#request_btn',['map0','map1'],['start','dest'],v,'#request_form',true);
+});
+  </script>
+  <script type="text/javascript" src="/static/js/validation.js"></script>
+  <script type="text/javascript" src="/static/js/save_image.js"></script>
+{% endblock %}

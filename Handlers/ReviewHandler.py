@@ -1,5 +1,5 @@
 from Handlers.BaseHandler import *
-from Models.UserModels import *
+from Models.Post.Review import *
 from Utils.EmailUtils import create_note
 from Utils.Defs import review_msg, review_sub
 import json
@@ -14,7 +14,7 @@ class ReviewHandler(BaseHandler):
     def __json(self, key):
         self.response.headers['Content-Type'] = "application/json"
         reviews = Review.by_receiver(ndb.Key(urlsafe=key))
-        self.write(json.dumps([r.to_jdict() for r in reviews]))
+        self.write(json.dumps([r.to_dict() for r in reviews]))
     def __index(self, key):
         receiver = self.request.get('receiver')            
         if not self.user_prefs:
@@ -31,7 +31,7 @@ class ReviewHandler(BaseHandler):
             return              
         self.params['recv_name'] = r.first_name
         self.params.update(res.to_dict())
-        self.params = r.params_fill_sm(self.params)
+        self.params = r.params_fill_sm()
         self.render('review.html', **self.params)
     def post(self, key=None):
         receiver = self.request.get('receiver')

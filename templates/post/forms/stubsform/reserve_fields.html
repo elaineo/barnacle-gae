@@ -1,0 +1,125 @@
+    <div class="control-group">
+      <label class="control-label" for="dropoff">Origin:</label>
+        <div class="controls" id="dropoffRadios">
+            <label class="radio inline">
+              <input type="radio" name="dropoff" id="dropoffT" value="1" checked> I drop off item at departure location
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="dropoff" id="dropoffF" value="0"> Driver picks up item from me
+            </label>            
+        </div>
+       <div class="span6" id='dropoffTaddr'>
+           <span class="text-info">{{first_name}}'s Departure Location:&nbsp;&nbsp;&nbsp;
+           {{ locstart }}</span>
+       </div>
+    </div>
+    <div class="control-group" id='dropoffFaddr'>
+        <label class="control-label" for="start">Pickup Address:</label>
+        <div class="controls">
+          <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{res.locstart}}">
+          <span class="help-inline error" id='map0Err'>{{error_route}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="pickup">Destination:</label>
+        <div class="controls" id="pickupRadios">
+            <label class="radio inline">
+              <input type="radio" name="pickup" id="pickupF" value="0" checked> Driver delivers item
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="pickup" id="pickupT" value="1"> I pick up item at destination
+            </label>            
+        </div>
+       <div class="span6" id='pickupTaddr'>
+           <span class="text-info">{{first_name}}'s Arrival Location:&nbsp;&nbsp;&nbsp;
+           {{ locend }}</span>
+       </div>
+    </div>
+    <div class="control-group" id='pickupFaddr'>
+        <label class="control-label" for="dest">Delivery Address:</label>
+        <div class="controls">
+          <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{res.locend}}">
+          <span class="help-inline error" id='map1Err'>{{error_route}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="reqdate">Deliver By:</label>
+        <div class="controls">
+          <input type="text" name="reqdate" value="{{res.delivby}}" id="reqdate" autocomplete="off">
+        </div>
+    </div>    
+    <div class="control-group">
+      <label class="control-label" for="rates">Offer Price:</label>
+        <div class="controls">
+        <span class="add-on">$</span>
+          <input class="span2" type="number" name="rates" value="{{res.price}}" onkeyup="enable_validate()" min="0" id='offer' required>
+        </div>
+   </div>
+     <div class="control-group">
+        <label class="control-label" for="items">Description of item(s) to be delivered:</label>
+        <div class="controls">
+            <textarea class="span5" name="items" rows="2">{{res.details}}</textarea>
+        </div>
+    </div>	
+    <input type="hidden" id="hidepickup" value="{{res.pickup}}">    
+    <input type="hidden" id="hidedropoff" value="{{res.dropoff}}">      
+<script>
+  $(function() {
+    $( "#reqdate" ).datepicker({
+      minDate: 0,
+      maxDate: "+1Y",
+      changeMonth: true
+    });
+  });
+  
+$(document).ready(function(){
+    //fill in some info
+    var pickup = $('input#hidepickup').val();
+    if (pickup != '') {
+        var p = parseInt(pickup);
+        console.log(p);
+        $('input[name=pickup]').get(1-p).removeAttribute('checked');
+        $('input[name=pickup]').get(p).setAttribute('checked',true);
+        if (p==1) 
+            $("#pickupFaddr").css("display","none");
+        else 
+            $("#pickupTaddr").css("display","none");
+    } else 
+        $("#pickupTaddr").css("display","none");
+    var dropoff = $('input#hidedropoff').val();
+    if (dropoff != '') {
+        var q = 1-parseInt(dropoff);
+        $('input[name=dropoff]').get(1-q).removeAttribute('checked');
+        $('input[name=dropoff]').get(q).setAttribute('checked',true);
+        if (q==0) 
+            $("#dropoffFaddr").css("display","none");
+        else
+            $("#dropoffTaddr").css("display","none");
+    } else
+        $("#dropoffFaddr").css("display","none");
+  
+
+    $("#dropoffRadios").click(function(){
+        dr = $("input[name=dropoff]:checked").val();
+        if ( dr== "0" ) {
+            $("#dropoffTaddr").css("display","none"); 
+            $("#dropoffFaddr").slideDown("fast"); 
+        } else {
+            $("#dropoffFaddr").css("display","none"); 
+            $("#dropoffTaddr").slideDown("fast");         
+        }
+     });   
+    $("#pickupRadios").click(function(){
+        pu = $("input[name=pickup]:checked").val();
+        if ( pu== "0" ) {
+            $("#pickupTaddr").css("display","none"); 
+            $("#pickupFaddr").slideDown("fast"); 
+        } else {
+            $("#pickupFaddr").css("display","none"); 
+            $("#pickupTaddr").slideDown("fast");         
+        }
+     }); 
+    $('#offer').click( function() { enable_validate() });
+});    
+
+</script>

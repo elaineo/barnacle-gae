@@ -4,8 +4,8 @@ from google.appengine.ext import ndb
 from google.appengine.api import search
 
 from Handlers.BaseHandler import *
-from Models.ReservationModel import *
-from Models.UserModels import *
+from Models.Post.OfferRequest import *
+from Models.User.Account import *
 from Models.Tracker.TrackerModel import *
 
 import json
@@ -30,8 +30,9 @@ class NewsHandler(BaseHandler):
         elif action=='reviews':
             # all completed deliveries should have a review
             try:
-                exp = ExpiredReservation.by_user(self.user_prefs.key)
-                exp = list(chain(exp, ExpiredOffer.by_user(self.user_prefs.key)))
+                # check to make sure completed
+                exp = OfferRequest.by_user(self.user_prefs.key)
+                exp = list(chain(exp, OfferRoute.by_user(self.user_prefs.key)))
             except:
                 return
             needrevs = []

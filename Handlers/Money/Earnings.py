@@ -1,9 +1,9 @@
 from google.appengine.ext import ndb
 
 from Handlers.BaseHandler import *
-from Models.Launch.Driver import *
+from Models.User.Driver import *
 from Models.Money.Transaction import *
-from Models.UserModels import *
+from Models.User.Account import *
 
 class Earnings(BaseHandler):
     def get(self, action=None):
@@ -18,4 +18,4 @@ class Earnings(BaseHandler):
             for t in trans:
                 routes.append(t.to_dict())
             self.params['routes'] = routes
-            self.render('account/earnings.html', **self.params)   
+            self.render('user/account/earnings.html', **self.params)   

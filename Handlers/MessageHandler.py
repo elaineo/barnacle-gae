@@ -71,8 +71,8 @@ class MessageHandler(BaseHandler):
         msg = data.get('msg')   
         if receiver == self.user_prefs.key: #responding to my own msg
             pkey = self.user_prefs.key
-            receiver=r.userkey
-        elif receiver == r.userkey:  # starting a new thread
+            receiver=r.key.parent()
+        elif receiver == r.key.parent():  # starting a new thread
             pkey = self.user_prefs.key
         else:
             pkey = receiver            
@@ -104,7 +104,9 @@ class MessageHandler(BaseHandler):
             # permission to reply?
             sp['reply'] = False
             if self.user_prefs:
-                if self.user_prefs.key == s.participant or self.user_prefs.key == s.routekey.get().userkey:
+                # get parent of parent
+                sowner = s.key.parent().parent()
+                if self.user_prefs.key == s.participant or self.user_prefs.key == sowner:
                     sp['reply'] = True
                     # update read status
                     s.read_status(self.user_prefs.key)
@@ -129,7 +131,7 @@ def create_message(self, route, participant, receiver, sender, msg):
     # does this stream already exist? check to make sure
     if not s:
         subject = route.locstart + ' to ' + route.locend
-        s = Stream(routekey=route.key, participant=sender, subject=subject)
+        s = Stream(parent=route.key, participant=sender, subject=subject)
         s.messages = [m.key]
     else:
         s.messages.append(m.key)        

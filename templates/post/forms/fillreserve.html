@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title%}{{reserve_title}}{% endblock %}
+{% block heading%}<h1>{{reserve_title}}</h1>{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/jquery-ui.css" />
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="/static/js/maps/mapsclientno.js"></script>
+<div class="row"><div class="span10 offset1">
+ <form enctype="multipart/form-data" method="post" id='reserve_form' class="form-horizontal">
+    {% if permission_err == True %}
+    <span class="help-inline error">
+    Reservation has been confirmed. You may no longer edit.</span>
+    {% endif %}
+    {% include "post/forms/stubsform/reserve_fields.html" %}
+    <!--
+     <div class="control-group">
+        <label class="control-label" for="msg">Include a message (optional):</label>
+        <div class="controls">
+            <textarea class="span5" name="msg" rows="4">{{msg}}</textarea>
+        </div>
+    </div>	-->
+    <input type='hidden' name="startlat" id="startlat">
+    <input type='hidden' name="startlon" id="startlon">
+    <input type='hidden' name="startstr" id="startstr">
+    <input type='hidden' name="destlat" id="destlat">
+    <input type='hidden' name="destlon" id="destlon">
+    <input type='hidden' name="deststr" id="deststr">      
+    <p align="center">
+	<button type="submit" class="button secondary" id='reserve_btn' disabled='disabled'>Submit</button>
+    </p>
+</form>
+</div></div>
+<hr>
+    {% include "post/forms/stubspop/post_stub.html" %}
+
+ <script>
+$(document).ready(function(){
+    enable_validate();
+    vtest = [["input[name=dropoff]:checked","1"],["input[name=pickup]:checked","1"]];
+    click_validloc('#reserve_btn',['map0','map1'],['start','dest'],vtest,'#reserve_form',true);
+});
+function enable_validate() {
+  validate_rate();
+  var rates = $("input#offer").val();
+  if (rates!='') 
+    $('#reserve_btn').removeAttr('disabled'); 
+  else
+    $('#reserve_btn').attr('disabled', 'disabled');
+}
+  </script>
+  <script type="text/javascript" src="/static/js/validation.js"></script>
+{% endblock %}

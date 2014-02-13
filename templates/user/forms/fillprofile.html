@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Barnacle Profile{% endblock %}
+{% block heading %}<h1>Profile Information</h1>{% endblock %}
+{% block content %}
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="/static/js/maps/maps1loc.js"></script>
+<div class="row-fluid">
+  <div class="span8 offset2">
+ <form enctype="multipart/form-data" method="post" id="fillprof_form" class="form-horizontal">
+ {% include 'user/forms/fields/profile_fields.html' %}
+	<p align="center">		
+    <input type='hidden' name="startlat" id="startlat">
+    <input type='hidden' name="startlon" id="startlon">    
+	<button type="submit" class="button secondary" id="fillprof_btn">{{createorupdate}}</button>
+	</p>
+    <label>To establish trust in the community, we require that drivers sign up using their Facebook accounts. Please read our <a href='/privacy'>privacy policy</a> to learn how we protect your information.</label>        
+</form>
+  </div>
+</div>
+<script>
+$(document).ready(function(){
+    click_submit('#fillprof_btn','#fillprof_form');
+});
+</script>
+<script src="/static/js/jquery.validate.js"></script>
+<script type="text/javascript" src="/static/js/validation.js"></script>
+<script type="text/javascript" src="/static/js/save_image.js"></script>
+{% endblock %}

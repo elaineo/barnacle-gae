@@ -1,7 +1,7 @@
 from datetime import *
 from google.appengine.ext import ndb
 from Handlers.BaseHandler import *
-from Models.RequestModel import Request
+from Models.Post.Request import Request
 from Utils.SearchUtils import search_pathpts, search_todict, search_intersect, field_byname, search_points_start
 from Utils.RouteUtils import *
 import logging
@@ -140,7 +140,7 @@ class SearchableRequestHandler(BaseHandler):
         self.response.headers['Content-Type'] = "application/json"
         start,startstr = self.__get_search_form('start')
         if not start:
-            r = Request.get_all()
+            r = Request.query()
             rdump = RouteUtils().dumpreqs(r)
             self.write(json.dumps(rdump))
             return

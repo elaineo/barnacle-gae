@@ -1,19 +1,17 @@
 import json
 from google.appengine.ext import ndb
-from Models.UserModels import *
 
 class Stream(ndb.Model):
-    routekey = ndb.KeyProperty(required=True)  #all msgs associated with a routekey
     subject = ndb.StringProperty(default='(no subject)')
     messages = ndb.KeyProperty(repeated=True)
     participant = ndb.KeyProperty(required=True)
     last_active = ndb.DateTimeProperty(auto_now=True)
     @classmethod
     def by_routekey(cls, key):
-        return cls.query(cls.routekey==key).order(-cls.last_active)
+        return cls.query(ancestor=key).order(-cls.last_active)
     @classmethod
     def by_route_part(cls, routekey, pkey):
-        return cls.query(ndb.AND(cls.routekey==routekey, cls.participant==pkey)).get()
+        return cls.query(cls.participant==pkey, ancestor=routekey).get()
     def to_dict(cls):
         s = { 'sender' : cls.participant.urlsafe(),
                 'msgs' : [m.get().to_dict_min() for m in cls.messages] }

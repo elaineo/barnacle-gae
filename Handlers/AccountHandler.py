@@ -1,5 +1,5 @@
 from Handlers.BaseHandler import *
-from Models.UserModels import *
+from Models.User.Account import *
 from Models.UserUtils import *
 from Utils.Defs import CITY_DB_PATH, CITYV6_DB_PATH
 import hashlib
@@ -75,6 +75,8 @@ class SignupPage(BaseHandler):
         email = data.get('email')
         if not email:
             username = data.get('username')
+            if not username:
+                username = fbid
             email = username+'@facebook.com'                
         try:
             location = data['location']['name']

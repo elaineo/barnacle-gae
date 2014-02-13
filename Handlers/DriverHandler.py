@@ -1,7 +1,7 @@
 from Handlers.BaseHandler import *
 from Models.ImageModel import *
-from Models.UserModels import *
-from Models.Launch.Driver import *
+from Models.User.Account import *
+from Models.User.Driver import *
 from Handlers.ImageHandler import *
 from google.appengine.api import images
 from google.appengine.api import users
@@ -25,7 +25,7 @@ class DriverHandler(BaseHandler):
             self.redirect('/post')
             return
         # else first time being driver
-        self.params.update(self.user_prefs.params_fill(self.params))
+        self.params.update(self.user_prefs.params_fill())
         self.render('forms/filldriver.html', **self.params)
             
     def post(self):       

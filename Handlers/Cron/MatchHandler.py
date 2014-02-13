@@ -3,8 +3,8 @@ from google.appengine.ext import ndb
 from google.appengine.api import search
 
 from Handlers.BaseHandler import *
-from Models.RouteModel import *
-from Models.RequestModel import *
+from Models.Post.Route import *
+from Models.Post.Request import *
 from Utils.SearchUtils import *
 from Utils.Defs import www_home
 from Utils.Defs import request_note_sub
@@ -27,9 +27,8 @@ class MatchHandler(BaseHandler):
             for r in routes:
                 self.__updateroute(r)
                 if (True in [m.get().created > self.day_ago() for m in r.matches]):
-                    drivers.append(r.userkey)
+                    drivers.append(r.key.parent())
             drivers = list(set(drivers))
-            logging.info(drivers)
             # go through the list and send notifications
             for d in drivers:
                 if 3 in d.get().settings.notify:
@@ -42,11 +41,10 @@ class MatchHandler(BaseHandler):
                 # check for deleted matches 
                 try:
                     if (True in [m.get().created > self.day_ago() for m in r.matches]):
-                        senders.append(r.userkey)
+                        senders.append(r.key.parent())
                 except:
                     pass
             drivers = list(set(senders))
-            logging.info(senders)
             # go through the list and send notifications
             for d in senders:
                 if 3 in d.get().settings.notify:
@@ -56,11 +54,11 @@ class MatchHandler(BaseHandler):
             reqcount = 0
             try:
                 # check routes
-                routes = Route.by_userkey(self.user_prefs.key)            
+                routes = Route.by_userkey(self.user_prefs.key)
                 for r in routes:
                     routecount = routecount + len(r.matches)
                 # check requests
-                reqs = Request.by_userkey(self.user_prefs.key)            
+                reqs = Request.by_userkey(self.user_prefs.key)
                 for r in reqs:
                     reqcount = reqcount + len(r.matches)
                 rdump={'status':'ok'}

@@ -7,14 +7,10 @@ from google.appengine.api import taskqueue
 from Handlers.BaseHandler import *
 from Models.ImageModel import ImageStore
 from Models.MessageModel import Message
-from Models.RequestModel import Request
-from Models.ReservationModel import Reservation
-from Models.ReservationModel import DeliveryOffer
-from Models.RouteModel import Route
-from Models.UserModels import *
-from Models.Launch.Driver import *
-from Models.Launch.DriverModel import *
-from Models.Launch.BarnacleModel import *
+from Models.Post.Request import Request
+from Models.Post.Route import Route
+from Models.User.Account import *
+from Models.User.Driver import *
 from Models.Launch.CLModel import *
 from Utils.data.fakedata import *
 from Utils.data.citylist import *
@@ -78,7 +74,7 @@ class DebugUtils(BaseHandler):
                 first_name=f.first_name, last_name=f.last_name, about=f.about, 
                 location=f.fblocation, img_id=f.img_id, settings=sett, stats=stats)
                 u.put()
-                d = Driver(userkey=u.key, bank=True,ins=True).put()
+                d = Driver(parent=u.key, bank=True,ins=True).put()
                 self.write(u.key.urlsafe())
             self.write('users created.') 
         elif action=='createroutes':
@@ -98,7 +94,7 @@ class DebugUtils(BaseHandler):
                 capacity=random.choice([0,1,4])
                 start = ndb.GeoPt(r0['lat'], r0['lon'])
                 dest =  ndb.GeoPt(r1['lat'], r1['lon'])
-                r = Route(userkey=d, capacity=capacity, repeatr=rr, 
+                r = Route(parent=d, capacity=capacity, repeatr=rr, 
                 delivstart=today, delivend=nextmonth, start=start, dest=dest,
                 locstart=r0['city'], locend=r1['city'])
                 try:

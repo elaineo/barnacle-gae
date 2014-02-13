@@ -26,6 +26,11 @@ indexes:
   - name: userid
   - name: creation_date
 
+- kind: Request
+  properties:
+  - name: dead
+  - name: delivby
+
 - kind: Review
   properties:
   - name: receiver
@@ -46,6 +51,12 @@ indexes:
 - kind: Stream
   properties:
   - name: routekey
+  - name: last_active
+    direction: desc
+
+- kind: Stream
+  ancestor: yes
+  properties:
   - name: last_active
     direction: desc
 

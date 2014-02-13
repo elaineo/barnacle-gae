@@ -1,6 +1,5 @@
 from google.appengine.ext import ndb
 from Handlers.BaseHandler import *
-from Models.ReservationModel import *
 from Utils.RouteUtils import *
 import logging
 

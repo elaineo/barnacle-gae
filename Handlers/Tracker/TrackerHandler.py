@@ -336,12 +336,8 @@ def create_from_res(r):
     dest=r.dest, delivend=r.deliverby, locstart=r.locstart, 
     locend=r.locend, tzoffset=tzoffset, reservation=r.key)    
     # create transaction as well
-    if r.__class__.__name__== 'Reservation':
-        track.driver = r.receiver
-        track.sender = r.sender
-    else:
-        track.driver = r.sender
-        track.sender = r.receiver    
+    track.driver = r.driver
+    track.sender = r.sender
     track.put()                
-    trans = Transaction(reservation=r.key, route=r.route, sender=track.sender, driver=track.driver)
+    trans = Transaction(parent=r.key, sender=track.sender, driver=track.driver)
     trans.put()

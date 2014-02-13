@@ -30,13 +30,13 @@
         </td>
         <td>{{route.delivstart}}</td>
         <td>{{route.delivend}}</td>
-        {% if route.num_requests!=0 %}
-        <td style='text-align:center'><button class='btn btn-small btn-primary showres'>{{route.num_requests}}</button></td>
+        {% if route.num_offers!=0 %}
+        <td style='text-align:center'><button class='btn btn-small btn-primary showres'>{{route.num_offers}}</button></td>
         {% else %}
-        <td style='text-align:center'>{{route.num_requests}}</td>
+        <td style='text-align:center'>{{route.num_offers}}</td>
         {% endif %}
     </tr>
-    {% if route.num_requests!=0 %}
+    {% if route.num_offers!=0 %}
     <tr class='hide'><td colspan='4'>
         <table class='table-mini'>
         <thead><tr>
@@ -98,7 +98,7 @@
         </tr></thead>
         {% for res in req.offers %}
         <tr class='clicky' onclick="document.location.href = '{{res.reserve_url}}';">
-            <td>{{res.sender}}</td>
+            <td>{{res.driver}}</td>
             <td>{{res.delivby}}</td>
             <td>${{res.price}}</td>
             <td>{% if res.confirmed==True %}<span class="text-error">Yes</span>{% else %}No{% endif %}</td>
@@ -126,7 +126,7 @@
         </tr></thead>
         {% for res in resdump %}
         <tr class='clicky' onclick="document.location.href = '{{res.reserve_url}}';">
-            <td>{{res.receiver}}</td>
+            <td>{{res.driver}}</td>
             <td>{{res.locstart}}</td><td>{{res.locend}}</td>
             <td>{{res.delivby}}</td>
             <td>${{res.price}}</td>
@@ -152,7 +152,7 @@
         </tr></thead>
         {% for res in offdump %}
         <tr class='clicky' onclick="document.location.href = '{{res.reserve_url}}';">
-            <td>{{res.receiver}}</td>
+            <td>{{res.sender}}</td>
             <td>{{res.locstart}}</td><td>{{res.locend}}</td>            
             <td>{{res.delivby}}</td>
             <td>${{res.price}}</td>

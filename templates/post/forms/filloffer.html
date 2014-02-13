@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title%}{{reserve_title}}{% endblock %}
+{% block heading %}<h1>{{reserve_title}}</h1>{% endblock %}
+{% block content %}
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="/static/js/maps/mapsclientno.js"></script>
+<link rel="stylesheet" href="/static/css/jquery-ui.css" />
+<div class="row"><div class="span10 offset1">
+ <form enctype="multipart/form-data" method="post" id='reserve_form' class="form-horizontal">
+    {% if permission_err == True %}
+    <span class="help-inline error">
+    Reservation has been confirmed. You may no longer edit.</span>
+    {% endif %}
+    <div class="control-group">
+        <label class="control-label" >Deliver By <span id='delivparse'>{{ delivby }}</span>: </label>
+        <div class="controls" id="delivRadios">
+            <label class="radio inline">
+              <input type="radio" name="delivok" id="delivok" value="0" checked> ok
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="delivok" id="delivfast" value="1"> Faster! 
+            </label>  
+          <input type="text" name="reqdate" value="{{res.delivby}}" id="reqdate" autocomplete="off">            
+        </div>
+    </div>    
+    <div class="control-group">
+      <label class="control-label" for="dropoff">Origin:</label>
+        <div class="controls" id="dropoffRadios">
+            <label class="radio inline">
+              <input type="radio" name="dropoff" id="dropoffT" value="1" checked> Sender  drops off item at my address
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="dropoff" id="dropoffF" value="0"> I will pick up item
+            </label>            
+        </div>
+       <div class="span6" id='dropoffFaddr'>
+           <span class="text-info">{{first_name}}'s Location:&nbsp;&nbsp;&nbsp;
+           {{ locstart }}</span>
+       </div>
+    </div>
+    <div class="control-group" id='dropoffTaddr'>
+        <label class="control-label" for="start">Dropoff Location:</label>
+        <div class="controls">
+          <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{res.locstart}}">
+          <span class="help-inline error" id='map0Err'>{{error_route}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="pickup">Destination:</label>
+        <div class="controls" id="pickupRadios">
+            <label class="radio inline">
+              <input type="radio" name="pickup" id="pickupF" value="0" checked> I will deliver item
+            </label>
+            <label class="radio inline">
+              <input type="radio" name="pickup" id="pickupT" value="1"> Sender will pick up item at destination
+            </label>            
+        </div>
+       <div class="span6" id='pickupFaddr'>
+           <span class="text-info">Delivery Location:&nbsp;&nbsp;&nbsp;
+           {{ locend }}</span>
+       </div>
+    </div>
+    <div class="control-group" id='pickupTaddr'>
+        <label class="control-label" for="dest">Pickup Location:</label>
+        <div class="controls">
+          <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{res.locend}}">
+          <span class="help-inline error" id='map1Err'>{{error_route}}</span>
+        </div>
+    </div>    
+    <div class="control-group">
+      <label class="control-label" for="rates">Asking Price:</label>
+        <div class="controls">
+        <span class="add-on">$</span>
+          <input class="span2" type="number" name="rates" value="{{res.price}}" onkeyup="validate_rate()" min="0"> 
+        </div>
+   </div>
+     <div class="control-group">
+        <label class="control-label" for="msg">Include a message (optional):</label>
+        <div class="controls">
+            <textarea class="span5" name="msg" rows="4">{{msg}}</textarea>
+        </div>
+    </div>	
+    <p align="center">
+    <input type="hidden" id="hidedelivok" value="{{delivok}}">
+    <input type="hidden" id="hidepickup" value="{{res.pickup}}">    
+    <input type="hidden" id="hidedropoff" value="{{res.dropoff}}">    
+    <input type='hidden' name="startlat" id="startlat">
+    <input type='hidden' name="startlon" id="startlon">
+    <input type='hidden' name="startstr" id="startstr">
+    <input type='hidden' name="destlat" id="destlat">
+    <input type='hidden' name="destlon" id="destlon">
+    <input type='hidden' name="deststr" id="deststr">        
+	<button type="submit" class="button secondary" id='reserve_btn'>Submit</button>
+    </p>
+</form>
+</div></div>
+<hr>
+    {% include "post/forms/stubspop/request_stub.html" %}
+
+ <script>
+  $(function() {
+  
+    var delivby = $('#delivparse').html();
+    if (delivby != '') {
+        var mmddyy = delivby.split('/');
+        console.log(mmddyy);
+        maxdate = new Date(parseInt(mmddyy[2]),parseInt(mmddyy[0])-1,parseInt(mmddyy[1]));
+    } else
+        maxdate = "+1Y"
+    $( "#reqdate" ).datepicker({
+      minDate: 0,
+      maxDate: maxdate,
+      changeMonth: true
+    });
+  });
+  
+$(document).ready(function(){
+    //fill in some info
+    var delivok = $('input#hidedelivok').val();
+    if (delivok != '') {
+        var d = parseInt(delivok);
+        $('input[name=delivok]').get(1-d).removeAttribute('checked');
+        $('input[name=delivok]').get(d).setAttribute('checked',true);
+        if (d ==0) 
+            $("#reqdate").css("display","none");            
+    } else
+        $("#reqdate").css("display","none");
+        
+    var pickup = $('input#hidepickup').val();
+    if (pickup != '') {
+        var p = parseInt(pickup);
+        $('input[name=pickup]').get(1-p).removeAttribute('checked');
+        $('input[name=pickup]').get(p).setAttribute('checked',true);
+        if (p==1) 
+            $("#pickupFaddr").css("display","none");
+        else 
+            $("#pickupTaddr").css("display","none");
+    } else 
+        $("#pickupTaddr").css("display","none");
+        
+    var dropoff = $('input#hidedropoff').val();
+    if (dropoff != '') {
+        var q = 1-parseInt(dropoff);
+        $('input[name=dropoff]').get(1-q).removeAttribute('checked');
+        $('input[name=dropoff]').get(q).setAttribute('checked',true);
+        if (q==0) 
+            $("#dropoffFaddr").css("display","none");
+        else
+            $("#dropoffTaddr").css("display","none");
+    } else
+        $("#dropoffFaddr").css("display","none");
+    
+    
+    
+    $("#dropoffRadios").click(function(){
+        dr = $("input[name=dropoff]:checked").val();
+        if ( dr== "0" ) {
+
+            $("#dropoffTaddr").css("display","none"); 
+            $("#dropoffFaddr").slideDown("fast"); 
+        } else {
+            $("#dropoffFaddr").css("display","none"); 
+            $("#dropoffTaddr").slideDown("fast");         
+        }
+     });    
+    $("#pickupRadios").click(function(){
+        pu = $("input[name=pickup]:checked").val();
+        if ( pu== "0" ) {
+            $("#pickupTaddr").css("display","none"); 
+            $("#pickupFaddr").slideDown("fast"); 
+        } else {
+            $("#pickupFaddr").css("display","none"); 
+            $("#pickupTaddr").slideDown("fast");         
+        }
+     });       
+    $("#delivRadios").click(function(){
+        del = $("input[name=delivok]:checked").val();
+        if ( del== "0" ) {
+            $("#reqdate").css("display","none"); 
+        } else {
+            $("#reqdate").show();         
+        }
+     });         
+    var vtest = [["input[name=dropoff]:checked","0"],["input[name=pickup]:checked","0"]];
+    click_validloc('#reserve_btn',['map0','map1'],['start','dest'], vtest,'#reserve_form',true);
+});
+  </script>
+  <script type="text/javascript" src="/static/js/validation.js"></script>
+{% endblock %}

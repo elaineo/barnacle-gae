@@ -6,8 +6,9 @@ from Handlers.Launch.CheckoutHandler import *
 from Handlers.RouteHandler import fill_route_params
 from Handlers.Tracker.TrackerHandler import create_from_res
 from Handlers.MessageHandler import create_message
-from Models.ReservationModel import *
-from Models.Launch.Driver import *
+from Models.Post.OfferRequest import *
+from Models.Post.OfferRoute import *
+from Models.User.Driver import *
 from Utils.RouteUtils import *
 from Utils.ValidUtils import *
 from Utils.EmailUtils import create_note
@@ -25,17 +26,16 @@ class ReservationHandler(BaseHandler):
                     p = ndb.Key(urlsafe=key).get()
                     if p.confirmed:
                         return
-                    if p.sender == self.user_prefs.key:
-                        if p.__class__.__name__ == 'Reservation':
-                            self.params.update(fill_route_params(p.route.urlsafe(),True))
-                            self.params.update(fill_reserve_params(key,True))
+                    if p.key.parent() == self.user_prefs.key:
+                        self.params['res'] = p.to_dict()
+                        if p.__class__.__name__ == 'OfferRequest':
+                            self.params.update(fill_route_params(p.route.urlsafe(),True))                            
                             self.params['reserve_title'] = 'Edit Reservation'
-                            self.render('forms/fillreserve.html', **self.params)
+                            self.render('post/forms/fillreserve.html', **self.params)
                         else:
                             self.params.update(fill_route_params(p.route.urlsafe(),False))
-                            self.params.update(fill_reserve_params(key,False))
                             self.params['reserve_title'] = 'Edit Offer'
-                            self.render('forms/filloffer.html', **self.params)                    
+                            self.render('post/forms/filloffer.html', **self.params)
                 except:
                    self.abort(404) 
                    return
@@ -47,12 +47,12 @@ class ReservationHandler(BaseHandler):
                 if p.__class__.__name__ == 'Route':    # trying to reserve existing route
                     self.params.update(fill_route_params(key,True))
                     self.params['reserve_title'] = 'Make a Reservation'
-                    self.render('forms/fillreserve.html', **self.params)
+                    self.render('post/forms/fillreserve.html', **self.params)
                 else:           # offering to deliver
                     self.params.update(fill_route_params(key,False))
                     self.params['reserve_title'] = 'Make a Delivery Offer'
                     self.params['offer'] = p.rates
-                    self.render('forms/filloffer.html', **self.params)     
+                    self.render('post/forms/filloffer.html', **self.params)     
             except:
                 self.abort(403) 
                 return
@@ -90,7 +90,7 @@ class ReservationHandler(BaseHandler):
             else:
                 self.__create_offer(p)
         elif action=='edit':
-            if p.__class__.__name__ == 'Reservation':
+            if p.__class__.__name__ == 'OfferRequest':
                 self.__create_reserve(p.route.get(), key)
             else:
                 self.__create_offer(p.route.get(), key)
@@ -108,17 +108,17 @@ class ReservationHandler(BaseHandler):
             msg = self.request.get('msg')
             try:
                 p = ndb.Key(urlsafe=key).get()
-                if p.__class__.__name__== 'Reservation':
+                if p.__class__.__name__== 'OfferRequest':
                     subject = 'Re: Reservation Request from ' + p.sender_name()
                     body = msg + res_msg_end % key
                 else:
                     subject = 'Re: Delivery Offer from ' + p.sender_name()
                     body = msg + do_msg_end % key
                 # receiver needs to be the other person
-                if p.receiver == self.user_prefs.key:
+                if p.driver == self.user_prefs.key:
                     receiver = p.sender
                 else:
-                    receiver = p.receiver
+                    receiver = p.driver
                 create_msg(self, sender=self.user_prefs.key, receiver=receiver, 
                                 subject=subject, msg=body)
                 return  
@@ -146,13 +146,12 @@ class ReservationHandler(BaseHandler):
         if key:
            # try:
             r = ndb.Key(urlsafe=key).get()
-            if r and r.receiver==self.user_prefs.key:
-                if r.__class__.__name__== 'Reservation':
+            if r: 
+                if r.driver==self.user_prefs.key:
                     #Notify and send message
                     n = r.sender.get().get_notify()
-                    if 1 in n:
-                        msg = self.user_prefs.first_name + confirm_res_msg % key
-                        create_note(self, r.sender, confirm_res_sub, msg)
+                    msg = self.user_prefs.first_name + confirm_res_msg % key
+                    create_note(self, r.sender, confirm_res_sub, msg)
                     # create associated tracker
                     create_from_res(r)
                     # charge the cc
@@ -160,8 +159,8 @@ class ReservationHandler(BaseHandler):
                     return
                 else:
                     # go to checkout
-                    d = Driver.by_userkey(r.sender)
-                    self.params['d'] = d.params_fill({})
+                    d = Driver.by_userkey(r.driver)
+                    self.params['d'] = d.params_fill()
                     self.params['reskey'] = key
                     self.params.update(r.to_dict())
                     self.params['checkout_action'] = '/checkout/confirm/'+key
@@ -177,20 +176,17 @@ class ReservationHandler(BaseHandler):
         if key:
             try:
                 r = ndb.Key(urlsafe=key).get()
-                if r and r.receiver==self.user_prefs.key:
-                    #Notify and send message
-                    n = r.sender.get().get_notify()
-                    if 1 in n:
-                        if r.__class__.__name__== 'Reservation':
-                            msg = self.user_prefs.first_name + decline_res_msg
-                            msg = msg + r.print_html()
-                            create_note(self, r.sender, decline_res_sub, msg)
-                        else:
-                            msg = self.user_prefs.first_name + decline_do_msg
-                            msg = msg + r.print_html()
-                            create_note(self, r.sender, decline_do_sub, msg)
+                if r:
+                    if r.driver==self.user_prefs.key:
+                        msg = self.user_prefs.first_name + decline_res_msg
+                        msg = msg + r.print_html()
+                        create_note(self, r.sender, decline_res_sub, msg)
+                    else:
+                        msg = self.user_prefs.first_name + decline_do_msg
+                        msg = msg + r.print_html()
+                        create_note(self, r.sender, decline_do_sub, msg)
                     routekey=r.route.urlsafe()
-                    r.key.delete()                
+                    r.dead = PostStatus.index('DECLINED')       
                     self.redirect('/post/'+routekey)
                     return
             except:
@@ -206,6 +202,13 @@ class ReservationHandler(BaseHandler):
         dropoff = bool(int(self.request.get('dropoff')))
         pickup = bool(int(self.request.get('pickup')))
         delivok = bool(int(self.request.get('delivok')))
+        
+        ## check to make sure they are a driver
+        d = Driver.by_userkey(self.user_prefs.key)
+        if not d:
+            self.params.update(self.user_prefs.params_fill())
+            self.render('user/forms/filldriver.html', **self.params)
+            return            
         
         if delivok:
             reqdate = self.request.get('reqdate')
@@ -223,42 +226,46 @@ class ReservationHandler(BaseHandler):
             deststr = route.locend 
             dest = route.dest
           
-        try:
-            if not res:
-                p = DeliveryOffer(sender=self.user_prefs.key, receiver=route.userkey, 
-                route=route.key, price=rates, pickup=pickup, dropoff=dropoff, 
-                start=start, dest=dest,
-                locstart=startstr, locend=deststr, deliverby=reqdate)
-                new_res = True
-            else:  #editing reservation
-                new_res = False
-                p = ndb.Key(urlsafe=res).get()
-                if p.confirmed:
-                    self.params['permission_err'] = True
-                    self.params.update(fill_route_params(route.key.urlsafe(),False))
-                    self.render('forms/filloffer.html', **self.params)
-                    return
-                if p and self.user_prefs and p.sender == self.user_prefs.key:  
-                    p.price = rates
-                    p.deliverby = reqdate
-                    p.pickup = pickup
-                    p.dropoff = dropoff
-                    p.locstart = startstr
-                    p.locend = deststr
-                    p.start = start
-                    p.dest = dest
-        except:
-            self.abort(403)
-            return  
+        # try:
+        if not res:
+            p = OfferRoute(parent=self.user_prefs.key,
+            route = route.key,
+            driver=self.user_prefs.key, sender=route.key.parent(), 
+            price=rates, pickup=pickup, dropoff=dropoff, 
+            start=start, dest=dest,
+            locstart=startstr, locend=deststr, deliverby=reqdate)
+            new_res = True
+        else:  #editing reservation
+            new_res = False
+            p = ndb.Key(urlsafe=res).get()
+            if p.confirmed:
+                self.params['permission_err'] = True
+                self.params.update(fill_route_params(route.key.urlsafe(),False))
+                self.render('post/forms/filloffer.html', **self.params)
+                return
+            if p and self.user_prefs and p.driver == self.user_prefs.key:  
+                p.price = rates
+                p.deliverby = reqdate
+                p.pickup = pickup
+                p.dropoff = dropoff
+                p.locstart = startstr
+                p.locend = deststr
+                p.start = start
+                p.dest = dest
+        # except:
+            # self.abort(403)
+            # return  
 
         if msg:
-            create_message(self, route, None, route.userkey, self.user_prefs.key, msg)
+            create_message(self, route, None, route.key.parent(), self.user_prefs.key, msg)
         try:
             p.put() 
             if new_res:
                 do_msg = new_do_msg % p.key.urlsafe()
-                create_note(self, route.userkey, new_do_sub, do_msg)
+                create_note(self, route.key.parent(), new_do_sub, do_msg)
                 logging.info('New Offer: '+ p.key.urlsafe())
+                route.offers.append(p.key)
+                route.put()
             self.redirect('/reserve/' + p.key.urlsafe())      
         except:
             self.params['error_route'] = 'Invalid Dropoff or Pickup Location'
@@ -269,7 +276,7 @@ class ReservationHandler(BaseHandler):
             self.params['msg'] = msg
             self.params['reserve_title'] = 'Edit Offer'
             self.params.update(fill_route_params(route.key.urlsafe(),False))
-            self.render('forms/filloffer.html', **self.params)                                 
+            self.render('post/forms/filloffer.html', **self.params)                                 
     
     def __create_reserve(self, route, res=None):
         rates = self.request.get('rates')
@@ -296,8 +303,9 @@ class ReservationHandler(BaseHandler):
         try:
             if not res:
                 new_res = True
-                p = Reservation(sender=self.user_prefs.key, receiver=route.userkey, 
-                route=route.key, items=items, price=rates, deliverby=reqdate, 
+                p = OfferRequest(parent=self.user_prefs.key, 
+                sender=self.user_prefs.key, driver=route.key.parent(), 
+                route=route.key, details=items, price=rates, deliverby=reqdate, 
                 start=start, dest=dest,
                 pickup=pickup, dropoff=dropoff, locstart=startstr, locend = deststr)
             else:  #editing reservation
@@ -310,7 +318,7 @@ class ReservationHandler(BaseHandler):
                     return
                 if p and self.user_prefs and p.sender == self.user_prefs.key:  
                     p.price = rates
-                    p.items = items
+                    p.details = items
                     p.deliverby = reqdate
                     p.pickup = pickup
                     p.dropoff = dropoff                
@@ -323,28 +331,29 @@ class ReservationHandler(BaseHandler):
             return  
                             
         try:
-            p.put()                     
+            p.put()             
         except:
             self.params['error_route'] = 'Invalid Start or Destination'
             self.params['pickup'] = int(pickup)
             self.params['dropoff'] = int(dropoff)
-            self.params['items'] = items
+            self.params['details'] = items
             self.params['reqdate'] = reqdate
             self.params['offer'] = rates
             self.params['msg'] = msg
             self.params['reserve_title'] = 'Edit Reservation'
             self.params.update(fill_route_params(route.key.urlsafe(),True))
-            self.render('forms/fillreserve.html', **self.params)
+            self.render('post/forms/fillreserve.html', **self.params)
 
         if new_res:
-            d = Driver.by_userkey(p.receiver)
-            self.params['d'] = d.params_fill({})
+            d = Driver.by_userkey(p.driver)
+            self.params['d'] = d.params_fill()
             self.params['reskey'] = p.key.urlsafe()
-            self.params.update(fill_reserve_params(p.key.urlsafe(),True))
             self.params.update(p.to_dict())
             self.params['checkout_action'] = '/checkout/hold/'+p.key.urlsafe()
             logging.info('New Reservation: '+ p.key.urlsafe())
-            self.render('launch/reservation.html', **self.params)            
+            self.render('post/reservation.html', **self.params)
+            route.offers.append(p.key)
+            route.put()            
         else:
             self.redirect('/reserve/' + p.key.urlsafe())  
             
@@ -352,33 +361,37 @@ class ReservationHandler(BaseHandler):
         p = ndb.Key(urlsafe=key).get()
         self.params['confirm_allow'] = False
         self.params['is_receiver'] = False
-        self.params['is_sender'] = False
+        self.params['is_sender'] = False        
         if p:
-            resoffer=(p.__class__.__name__ == 'Reservation')
-            self.params.update(fill_reserve_params(key,resoffer))
-            if self.user_prefs and self.user_prefs.key == p.sender and not p.confirmed:
-                self.params['edit_allow'] = True
-            else:
-                self.params['edit_allow'] = False
-
-            if self.user_prefs and self.user_prefs.key == p.receiver:
+            route = p.route.get()
+            self.params['message_url'] = route.message_url()
+            self.params['post_url'] = route.post_url()
+            self.params['first_name'] = route.first_name()
+            resoffer=(p.__class__.__name__ == 'OfferRequest')
+            self.params['res'] = p.to_dict()
+            logging.info(p.to_dict())
+            self.params['edit_allow'] = False
+            
+            if self.user_prefs and self.user_prefs.key==p.key.parent():
+                self.params['is_sender'] = True                
+                if not p.confirmed:
+                    self.params['edit_allow'] = True
+                
+            elif self.user_prefs and (self.user_prefs.key==p.driver or self.user_prefs.key==p.sender):
                 self.params['is_receiver'] = True
                 if not p.confirmed:
                     self.params['confirm_allow'] = True
-            if self.user_prefs and self.user_prefs.key == p.sender:                
-                self.params['is_sender'] = True
+                
         else:
             #see if it's expired
-            expr = get_expired(key)
             #TODO: create a receipt page
-                
+            if p.dead>0:
+                logging.info('Expired offer')
+                self.abort(409)
         if resoffer:
-            self.render('reserve.html', **self.params)
+            self.render('post/reserve.html', **self.params)
         else:
-            self.render('offer.html', **self.params)
-        # except:
-            # self.abort(409)
-            # return       
+            self.render('post/offer.html', **self.params)    
             
     def __get_map_form(self,pt):
         ptlat = self.request.get(pt+'lat')
@@ -392,57 +405,4 @@ class ReservationHandler(BaseHandler):
                 ptg = None
         else:
             ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
-        return ptg, ptstr
-
-def get_expired(key):
-    p = ExpiredReservation.by_key(ndb.Key(urlsafe=key))
-    if not p:
-        p = ExpiredOffer.by_key(ndb.Key(urlsafe=key))
-    return p
-        
-def fill_reserve_params(key,resoffer=False):
-    p = ndb.Key(urlsafe=key).get()
-    r = p.route.get()
-    u = p.sender.get()
-    o = p.receiver.get()
-    params = {
-        'sender_profile_url' : u.profile_url(),
-        'sender_prof_thumb': u.profile_image_url('small'),
-        'receiver_profile_url' : o.profile_url(),
-        'receiver_prof_thumb': o.profile_image_url('small'),
-        'sender_first_name': u.nickname(),
-        'sender_last_name': u.last_name,
-        'receiver_first_name': o.nickname(),
-        'receiver_last_name': o.last_name,
-        'offer': p.price,
-        'reqdate' : p.deliverby.strftime('%m/%d/%Y'),
-        'confirmed' : p.confirmed,
-        'pickup' : int(p.pickup),
-        'dropoff' : int(p.dropoff), 
-        'reqstart' : p.locstart,
-        'reqend' : p.locend,
-        'post_url' : r.post_url(),
-        'edit_url' : p.edit_url(),
-        'delete_url':p.delete_url(),
-        'decline_url':p.decline_url(),
-        'confirm_url':p.confirm_url(),
-        'message_url': p.message_url(),
-        'reservekey' : key,
-        'msg_ok' : True #(0 in u.get_notify() and 0 in o.get_notify())
-        }
-    if p.dropoff:
-        params.update( { 'dropoffstr' : dropoffstr_1 } )
-    else:
-        params.update( { 'dropoffstr' : dropoffstr_0 } )
-    if p.pickup: 
-        params.update( { 'pickupstr' : pickupstr_1 } )
-    else:
-        params.update( { 'pickupstr' : pickupstr_0 } )
-    if resoffer:
-        params.update( {'items' : p.items })
-    else:
-        params.update( {'delivok' : int(p.deliverby != r.delivby) })
-    if p.confirmed:
-        params['track_url'] = p.track_url()
-    params['userkey'] = r.userkey.urlsafe()
-    return params
+        return ptg, ptstr       

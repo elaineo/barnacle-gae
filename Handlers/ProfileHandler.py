@@ -1,10 +1,10 @@
 from Handlers.BaseHandler import *
 from Models.ImageModel import *
-from Models.UserModels import *
-from Models.RouteModel import *
-from Models.RequestModel import *
+from Models.User.Account import *
+from Models.Post.Route import *
+from Models.Post.Request import *
 from Models.MessageModel import *
-from Models.Launch.Driver import *
+from Models.User.Driver import *
 from Handlers.ImageHandler import *
 from google.appengine.api import images
 from google.appengine.api import users
@@ -18,7 +18,7 @@ class ProfileHandler(BaseHandler):
         if not key and not action:
             self.__index()
         elif action=='drivestart':
-            self.render('drivestart.html',**self.params)
+            self.render('user/drivestart.html',**self.params)
             return
         elif action=='drive':
             self.__index()
@@ -33,9 +33,9 @@ class ProfileHandler(BaseHandler):
             self.set_current_user()
             self.fill_header()
         else:
-            self.params.update(self.user_prefs.params_fill(self.params))
+            self.params.update(self.user_prefs.params_fill())
             self.params['createorupdate'] = 'Update Profile'
-        self.render('forms/fillprofile.html', **self.params)
+        self.render('user/forms/fillprofile.html', **self.params)
     
     def __public(self,key):
         """ Public viewable profile """
@@ -46,7 +46,7 @@ class ProfileHandler(BaseHandler):
         else:
             m = 0
         if userprefs:
-            self.params.update(userprefs.params_fill(self.params))
+            self.params.update(userprefs.params_fill())
             self.params.update(fill_prof_stub_params(userprefs.key))            
             self.params['fbfriend'] = False
             self.params['m'] =m
@@ -55,7 +55,7 @@ class ProfileHandler(BaseHandler):
                 if self.user_prefs.key != userprefs.key:
                     self.params['fbfriend'] = True
                     self.params['fbid'] = userprefs.userid
-            self.render('profile.html',**self.params)
+            self.render('user/profile.html',**self.params)
         else:
             self.abort(400)
             return  
@@ -85,12 +85,12 @@ class ProfileHandler(BaseHandler):
         self.user_prefs.put()
         d = Driver.by_userkey(self.user_prefs.key)
         if not d:
-            d = Driver(userkey = self.user_prefs.key)
+            d = Driver(parent=self.user_prefs.key)
             d.put()
             #new driver, send email
             logging.info('New driver :' + email)
             self.send_driver_info(email)
-            self.render('drivestart.html',**self.params)
+            self.render('user/drivestart.html',**self.params)
         else:            
             self.redirect('/post')
         
@@ -136,12 +136,12 @@ class AccountPage(ProfileHandler):
             self.redirect('/#signin-box')
             return         
         if self.user_prefs: # check to see if user preferences exists
-            self.params.update(self.user_prefs.params_fill(self.params))
+            self.params.update(self.user_prefs.params_fill())
         key = self.user_prefs.key
         self.params.update(fill_prof_stub_params(self.user_prefs.key))
         q = Message.by_receiver(key)
         self.params['newcnt'] = sum(int(m.unread) for m in q)
-        self.render('account.html',**self.params)
+        self.render('user/account.html',**self.params)
         
 def fill_prof_stub_params(key):
     posts = []
@@ -168,6 +168,6 @@ def fill_prof_stub_params(key):
         params['dispreqs']=False
     d = Driver.by_userkey(key)
     if d:
-        params.update(d.params_fill(params))
+        params.update(d.params_fill())
     return params
     

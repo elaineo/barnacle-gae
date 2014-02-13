@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{# View Reservation #}
+{% block title%}{{res.first_name}}'s Delivery Offer{% endblock %}
+{% block heading %}<h1>{{res.first_name}}'s Delivery Offer</h1>{% endblock %}
+{% block content %}
+
+<div class="row-fluid"><div class="span6 offset1">
+    {% if edit_allow == True %} 
+<button type="submit" class="button small info" id="editres_btn">Edit Offer</button>
+<button type="submit" class="button small secondary" id='delete_btn'>Delete Offer</button>
+    {% endif %}
+    {% if confirmed == True %} 
+<a href="{{track_url}}"><button class="button small primary">Track Delivery</button></a>
+    {% endif %}
+</div></div>
+    {% include "post/forms/stubspop/offer_stub.html" %}
+    {% include "post/res_buttons_stub.html" %}
+
+
+{% endblock %}

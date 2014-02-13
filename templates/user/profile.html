@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title%}{{first_name}}{% endblock %}
+{% block heading%}<h1>{{first_name}}</h1>{% endblock %}
+{% block content %}
+{% include "user/profile_stub.html" %}
+  <script>
+$(document).ready(function(){
+    {% if m==1 %}
+      display_modal_msg('Message Sent!');
+    {% endif %}
+    {% if m==2 %}
+      display_modal_msg('Thank you for your review!');
+    {% endif %}
+});
+</script>
+{% endblock %}

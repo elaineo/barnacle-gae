@@ -3,7 +3,6 @@ import sys
 
 from Handlers.BaseHandler import *
 from Handlers.ImageHandler import *
-from Models.UserModels import *
 from Handlers.AccountHandler import *
 from Handlers.ProfileHandler import *
 from Handlers.RouteHandler import *

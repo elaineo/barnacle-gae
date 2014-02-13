@@ -4,8 +4,7 @@ from google.appengine.api import mail
 
 from Handlers.BaseHandler import *
 from Handlers.SearchHandler import *
-from Models.RequestModel import *
-from Models.Launch.Driver import *
+from Models.User.Driver import *
 from Utils.RouteUtils import *
 from Utils.ValidUtils import *
 from Utils.Defs import MV_geolat, MV_geolon, SG_geolat, SG_geolon, MV_string, SG_string
@@ -73,7 +72,7 @@ class ReserveHandler(BaseHandler):
         
         res = ndb.Key(urlsafe=key).get()
         
-        p = Request(userkey=self.user_prefs.key, category=category, 
+        p = Request(parent=self.user_prefs.key, category=category, 
             items=items, delivby=res.delivby, start=res.start, dest=res.dest, 
             locstart=res.locstart, locend=res.locend)
         
@@ -109,8 +108,8 @@ class ReserveHandler(BaseHandler):
             if route:
                 q['capacity'] = route.capacity
                 q['delivend'] = route.delivend.strftime('%m/%d/%Y')
-                d = Driver.by_userkey(route.userkey)
-                q = d.params_fill(q)
+                d = Driver.by_userkey(route.key.parent())
+                q = d.params_fill()
                 drivers.append(q)   
         self.params['reskey'] = p.key.urlsafe()
         self.params['drivers'] = drivers  
@@ -146,10 +145,10 @@ class ReserveHandler(BaseHandler):
             # p = search_todict(r)
             # p['capacity'] = route.capacity
             # p['delivend'] = route.delivend.strftime('%m/%d/%Y')
-            # d = Driver.by_userkey(route.userkey)
+            # d = Driver.by_userkey(route.key.parent())
             p={}
             p['capacity'] = 0
-            p = d.params_fill(p)
+            p = d.params_fill()
             drivers.append(p)
 #rating, #completed, checkbox, vehicle, date arriving, insured, bank (tooltip)
 #location, about            
@@ -204,7 +203,7 @@ def fill_res_params(r):
     
 def fill_route_params(key,is_route=False):
     p = ndb.Key(urlsafe=key).get()
-    u = p.userkey.get()
+    u = p.key.parent().get()
     params = {
         'profile_url' : u.profile_url(),
         'reserve_url' : p.reserve_url(),

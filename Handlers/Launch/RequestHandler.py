@@ -4,7 +4,6 @@ from google.appengine.api import mail
 
 
 from Handlers.BaseHandler import *
-from Models.Launch.ReqModel import *
 from Utils.RouteUtils import *
 from Utils.ValidUtils import *
 from Utils.Defs import MV_geolat, MV_geolon, SG_geolat, SG_geolon, MV_string, SG_string, ins_str
@@ -40,13 +39,12 @@ class RequestHandler(BaseHandler):
         else:
             delivend = datetime.now()+timedelta(weeks=1)
            
-        p = ReqModel( user=self.user_prefs.key,
-            locstart=startstr, locend=deststr, 
-            start=start, dest=dest, capacity=capacity, 
-            delivstart=delivstart, delivend=delivend, details=details,
-            email=email)            
+        # p = Reservation( locstart=startstr, locend=deststr, 
+            # start=start, dest=dest, capacity=capacity, 
+            # delivstart=delivstart, delivend=delivend, details=details,
+            # email=email)            
         try:                
-            p.put()            
+            # p.put()            
             self.render('/launch/thanksreq.html', **self.params)  
         except:
             self.params['error_route'] = 'Invalid Route'

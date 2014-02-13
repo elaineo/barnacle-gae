@@ -1,6 +1,6 @@
 from Handlers.BaseHandler import *
-from Models.UserModels import *
-from Models.Launch.Driver import *
+from Models.User.Account import *
+from Models.User.Driver import *
 import logging
 
 class SettingsHandler(BaseHandler):
@@ -10,8 +10,8 @@ class SettingsHandler(BaseHandler):
             self.params['notify'] = {'notify' : self.user_prefs.get_notify() }
             d = Driver.by_userkey(self.user_prefs.key)
             if d:
-                self.params.update(d.params_fill(self.params))
-            self.render('forms/settings.html', **self.params)  
+                self.params.update(d.params_fill())
+            self.render('user/forms/settings.html', **self.params)  
         else:
             self.redirect("/")
                     

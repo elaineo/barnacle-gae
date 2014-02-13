@@ -8,11 +8,9 @@ from Handlers.BaseHandler import *
 from Handlers.Launch.ReserveHandler import  fill_res_params
 from Handlers.Tracker.TrackerHandler import create_from_res
 
-from Models.Launch.Driver import *
-from Models.Launch.ResModel import *
-from Models.Launch.BarnacleModel import *
+from Models.User.Driver import *
 from Models.Money.PaymentModel import *
-from Models.UserModels import *
+from Models.User.Account import *
 
 from Utils.ValidUtils import parse_rate
 from Utils.data.paydefs import *
@@ -100,7 +98,7 @@ class CheckoutHandler(BaseHandler):
         res_msg = new_res_msg % key
         if msg:
             res_msg = res_msg + '\n\n----Message from Sender----\n\n' + msg
-        create_note(self, res.receiver, new_res_sub, res_msg)    
+        create_note(self, res.driver, new_res_sub, res_msg)    
         self.redirect('/reserve/' + key)  
 
     def __confirm_hold(self,key):
@@ -126,8 +124,8 @@ class CheckoutHandler(BaseHandler):
         
         res.confirmed=True
         res.put()        
-        d = Driver.by_userkey(res.receiver)
-        self.params = d.params_fill(self.params)
+        d = Driver.by_userkey(res.driver)
+        self.params = d.params_fill()
         self.params['reskey'] = key
         self.params.update(res.to_dict())        
         self.send_receipt(customer.email, res, self.params) 
@@ -195,7 +193,7 @@ class CheckoutHandler(BaseHandler):
         res.put()        
         create_from_res(res)
         d = Driver.by_userkey(res.sender)
-        self.params['d'] = d.params_fill({})
+        self.params['d'] = d.params_fill()
         self.params['reskey'] = key
         self.params.update(res.to_dict())      
         eparams = self.params

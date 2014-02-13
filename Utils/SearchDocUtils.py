@@ -1,7 +1,7 @@
 from google.appengine.ext import ndb
 from google.appengine.api import search
-from Models.RouteModel import *
-from Models.RequestModel import *
+from Models.Post.Route import *
+from Models.Post.Request import *
 from Utils.SearchUtils import search_points, search_todict
 import logging
 ROUTE_INDEX = 'ROUTE_INDEX'
@@ -10,7 +10,7 @@ CITY_INDEX = 'CITY_INDEX'
 
 def create_route_doc(keysafe, route):
     index = search.Index(name=ROUTE_INDEX)
-    u = route.userkey.get()
+    u = route.key.parent().get()
     startpoint = search.GeoPoint(route.start.lat,route.start.lon)
     destpoint = search.GeoPoint(route.dest.lat,route.dest.lon)
 
@@ -34,7 +34,7 @@ def create_route_doc(keysafe, route):
 
 def create_request_doc(keysafe, route):
     index = search.Index(name=REQUEST_INDEX)
-    u = route.userkey.get()
+    u = route.key.parent().get()
     startpoint = search.GeoPoint(route.start.lat,route.start.lon)
     destpoint = search.GeoPoint(route.dest.lat,route.dest.lon)
     # everything that will be returned in search results should be in a field
