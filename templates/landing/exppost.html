@@ -2,11 +2,11 @@
 {# Public View of Posts #}
 {% block title%}{{locstart}} to {{locend}}{% endblock %}
 {% block heading %}<h1 class='whiteh1'>Ship Outside the Box</h1>
-  {% include "forms/header_req.html" %}
+  {% include "post/forms/header_req.html" %}
 {% endblock %}
 {% block content %}
 <h1>{{name}}'s Route from {{locstart}} to {{locend}}</h1>
-    {% include "forms/stubspop/exppost_stub.html" %}    
+    {% include "post/forms/stubspop/exppost_stub.html" %}    
 
 {% endblock %}
 

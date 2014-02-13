@@ -1,0 +1,35 @@
+<div class="row-fluid">    
+    <div class="span8 offset1 dropshadow">
+        <table onclick="document.location.href= 'https://www.facebook.com/profile.php?id={{fbid}}';">
+        <tr><td style='vertical-align:middle; padding:10px; cursor:pointer;'>
+        <div id='dumpimg'></div>
+        <b id='dumpname'></b> 
+        </td><td style='padding:10px'>
+        <b>Mutual Friends</b><br>
+        <div id='dumpfriends' >None.</div>
+        <!-- Networks: {% for n in networks %} {{n}}{% endfor %} -->
+        </td></tr></table>
+    </div>
+</div>
+<script>
+$(document).ready(function(){
+    user_rating();
+    
+    $(document).on('fbload', function(){
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+              dumpFriends('{{fbid}}','#dumpfriends', 6);
+              dumpResponse('{{fbid}}');
+            }
+        });
+    });
+});
+function FBResponseHandler(dumpcont) {
+  
+  var imgstr = '<img style="width:50px" src="'+dumpcont.img+'">';
+  console.log(imgstr);
+  $('#dumpimg').html(imgstr);
+  $('#dumpname').html(dumpcont.first_name);
+}
+</script>
+<script src="/static/js/profile.js"></script>

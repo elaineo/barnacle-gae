@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block title%}{{name}}'s Delivery Request{% endblock %}
 {% block heading %}<h1 class='whiteh1'>Ship Outside the Box</h1>
-  {% include "forms/header_req.html" %}
+  {% include "post/forms/header_req.html" %}
 {% endblock %}
 
 {% block content %}
 <h1>{{name}}'s Delivery Request from {{locstart}} to {{locend}}</h1>
-    {% include "forms/stubspop/exprequest_stub.html" %}
+    {% include "post/forms/stubspop/exprequest_stub.html" %}
 
 <br>
 {% endblock %}

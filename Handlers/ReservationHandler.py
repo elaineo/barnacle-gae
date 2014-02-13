@@ -315,7 +315,7 @@ class ReservationHandler(BaseHandler):
                 if p.confirmed:
                     self.params['permission_err'] = True
                     self.params.update(fill_route_params(route.key.urlsafe(),True))
-                    self.render('forms/fillreserve.html', **self.params)
+                    self.render('post/forms/fillreserve.html', **self.params)
                     return
                 if p and self.user_prefs and p.sender == self.user_prefs.key:  
                     p.price = rates
