@@ -25,7 +25,7 @@
           <option  name="vcap" value="2">Wagon</option>
         </select>
       </div>
-    </div><!--end row-->            
+    </div><!--end row-->
     <div class="control-group">
       <label class="control-label">Deliver By:</label>
       <div class="controls">
@@ -37,7 +37,7 @@
     <input type='hidden' name="startstr" id="startstr">
     <input type='hidden' name="destlat" id="destlat">
     <input type='hidden' name="destlon" id="destlon">
-    <input type='hidden' name="deststr" id="deststr">         
+    <input type='hidden' name="deststr" id="deststr">
     <input type='hidden' name="items" value="{{items}}">
 
     <div class="control-group">
@@ -45,24 +45,26 @@
     </div>
 </form>
 
-<script type="text/javascript" src="/static/landing/scripts/foundation.min.js"></script>        
+<script type="text/javascript" src="/static/landing/scripts/foundation.min.js"></script>
 <script type="text/javascript" src="/static/landing/scripts/transition.js"></script>
- <script>
-  
+<script type="text/javascript" src="/static/datepicker/js/bootstrap-datepicker.js"></script>
+
+<script>
 $(document).ready(function(){
     var v = [[0],[0]];
     click_ajax('#request_btn',['map0','map1'],['start','dest'],v,'#request_form',true, false);
 });
+$('#reqdate').datepicker();
   </script>
  <script>
-  
+
 $(document).ready(function(){
     /* Give the heading a pretty picture */
     hh = $('.heading').height()+20;
     $('.wash').height(hh);
     $('.hero_container').height(hh);
 });
-  </script>  
+  </script>
   <script type="text/javascript" src="/static/js/validation.js"></script>
     <script type="text/javascript">
 function submitCallback(data, formURL) {
@@ -81,7 +83,7 @@ function submitCallback(data, formURL) {
       console.log(timestamp);
       document.open();
       document.write(response);
-      document.close(); 
+      document.close();
     }
   });
 }
