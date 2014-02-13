@@ -44,11 +44,19 @@ class ReservationHandler(BaseHandler):
                 self.redirect('/post/'+key+'#signin-box')
             try:
                 p = ndb.Key(urlsafe=key).get()
+                self.params['res']={}
                 if p.__class__.__name__ == 'Route':    # trying to reserve existing route
                     self.params.update(fill_route_params(key,True))
                     self.params['reserve_title'] = 'Make a Reservation'
                     self.render('post/forms/fillreserve.html', **self.params)
                 else:           # offering to deliver
+                    ## check to make sure they are a driver
+                    d = Driver.by_userkey(self.user_prefs.key)
+                    if not d:
+                        self.params['createorupdate'] = 'Ready to Drive'
+                        self.params.update(self.user_prefs.params_fill())
+                        self.render('user/forms/filldriver.html', **self.params)
+                        return            
                     self.params.update(fill_route_params(key,False))
                     self.params['reserve_title'] = 'Make a Delivery Offer'
                     self.params['offer'] = p.rates
@@ -201,14 +209,7 @@ class ReservationHandler(BaseHandler):
         msg = self.request.get('msg')
         dropoff = bool(int(self.request.get('dropoff')))
         pickup = bool(int(self.request.get('pickup')))
-        delivok = bool(int(self.request.get('delivok')))
-        
-        ## check to make sure they are a driver
-        d = Driver.by_userkey(self.user_prefs.key)
-        if not d:
-            self.params.update(self.user_prefs.params_fill())
-            self.render('user/forms/filldriver.html', **self.params)
-            return            
+        delivok = bool(int(self.request.get('delivok')))        
         
         if delivok:
             reqdate = self.request.get('reqdate')

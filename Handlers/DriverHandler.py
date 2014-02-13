@@ -26,7 +26,7 @@ class DriverHandler(BaseHandler):
             return
         # else first time being driver
         self.params.update(self.user_prefs.params_fill())
-        self.render('forms/filldriver.html', **self.params)
+        self.render('user/forms/filldriver.html', **self.params)
             
     def post(self):       
         # make this a function inside  profilehandler
