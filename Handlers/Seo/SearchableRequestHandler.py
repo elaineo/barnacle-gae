@@ -34,7 +34,7 @@ class SearchableRequestHandler(BaseHandler):
             self.render('search/seo_requests_to.html', **self.params)
         elif origin.upper() == 'USA':
             #return everything
-            posts = Request.get_all()
+            posts = Request.query(Request.dead==0)
             self.params['posts'] = [p.to_search() for p in posts]
             rdump = RouteUtils().dumpreqs(posts)
             self.params['markers'] = rdump['markers']

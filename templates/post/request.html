@@ -5,7 +5,7 @@
 {% block content %}
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <div class="row"><div class="span10 offset1">
-    {% if num_offers!=0 and edit_allow==True %}
+    {% if num_offers>0 and edit_allow==True %}
     <table class='table table-striped table-hover table-condensed table-mini'>
         <thead><tr>
         <td>From</td>
@@ -23,7 +23,7 @@
         {% endfor %}
         </table>
     {% endif %}
-    {% if num_matches!=0 and edit_allow==True %}
+    {% if num_matches>0 and edit_allow==True %}
     <table class='table table-striped table-hover table-condensed table-mini'>
     <thead><tr>
     <td colspan=2><span class="text-error">Matching Routes</span></td>

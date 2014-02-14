@@ -15,4 +15,4 @@ class OfferRoute(Offer):
         
     def to_dict(self):
         offer = self.base_dict()
-        return offer        
+        return offer                

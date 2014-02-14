@@ -1,7 +1,7 @@
 from google.appengine.ext import ndb
 
 from Handlers.BaseHandler import *
-from Models.MessageModel import Message
+from Models.Message import *
 from Models.Post.Request import Request
 from Models.Post.Route import Route
 

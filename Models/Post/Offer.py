@@ -109,3 +109,17 @@ class Offer(ndb.Model):
         else:
             route.update( { 'pickupstr' : pickupstr_0 } )        
         return route        
+        
+class ExpiredOffer(ndb.Model):
+    """ Make an offer to deliver """
+    sender = ndb.KeyProperty()      # user_prefs of reserver and reservee
+    receiver = ndb.KeyProperty()
+    route = ndb.KeyProperty()       # route being reserved
+    oldkey = ndb.KeyProperty()
+    price = ndb.IntegerProperty()   # Offer price
+    locstart = ndb.StringProperty() 
+    locend = ndb.StringProperty()        
+    sender_name = ndb.StringProperty() 
+    rcvr_name = ndb.StringProperty() 
+    deliverby = ndb.DateProperty()
+    confirmed = ndb.BooleanProperty(default=False)        

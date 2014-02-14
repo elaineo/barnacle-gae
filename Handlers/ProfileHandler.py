@@ -3,7 +3,7 @@ from Models.ImageModel import *
 from Models.User.Account import *
 from Models.Post.Route import *
 from Models.Post.Request import *
-from Models.MessageModel import *
+from Models.Message import *
 from Models.User.Driver import *
 from Handlers.ImageHandler import *
 from google.appengine.api import images
@@ -11,6 +11,7 @@ from google.appengine.api import users
 from Utils.DefsEmail import welcome_txt
 from Utils.Defs import welcome_sub
 from Utils.EmailUtils import send_info
+from Models.Post.Review import *
 import logging
 
 class ProfileHandler(BaseHandler):

@@ -9,8 +9,8 @@ class Post(ndb.Model):
     capacity = ndb.IntegerProperty(default=0) # car (0), SUV (1), flatbed (2), hauler (3) carryon (-1)
     details = ndb.TextProperty() # text describing
     created = ndb.DateTimeProperty(auto_now_add=True)
-    start = ndb.GeoPtProperty(required=True)
-    dest = ndb.GeoPtProperty(required=True)
+    start = ndb.GeoPtProperty()
+    dest = ndb.GeoPtProperty()
     locstart = ndb.StringProperty(required=True) #text descr of location
     locend = ndb.StringProperty(required=True) #text descr of location
     matches = ndb.KeyProperty(repeated=True)  #store keys of matches

@@ -41,7 +41,7 @@ class SearchableRouteHandler(BaseHandler):
             self.render('search/seo_route_to.html', **self.params)
         elif origin.upper() == 'USA':
             #return everything
-            posts = Route.get_all()
+            posts = Route.query(Route.dead==0)
             self.params['posts'] = [p.to_search() for p in posts]
             rdump = RouteUtils().dumpall(posts)
             self.params['center'] = rdump['center']

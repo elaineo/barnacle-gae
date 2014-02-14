@@ -39,4 +39,4 @@ class Driver(ndb.Model):
     @classmethod
     def by_userkey(cls, key):
         u = cls.query(ancestor=key).get()
-        return u             
+        return u        

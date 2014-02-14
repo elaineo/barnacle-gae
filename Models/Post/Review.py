@@ -36,7 +36,7 @@ class Review(ndb.Model):
         return exist_r.get()
     @classmethod
     def avg_rating(cls, receiver):
-        revs = cls.query().filter(cls.receiver==receiver)
+        revs = cls.query(cls.receiver==receiver)
         s = sum(r.rating for r in revs)
         cnt = float(revs.count())
         if cnt > 0:

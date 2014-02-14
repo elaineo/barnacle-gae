@@ -6,15 +6,17 @@ from google.appengine.api import taskqueue
 
 from Handlers.BaseHandler import *
 from Models.ImageModel import ImageStore
-from Models.MessageModel import Message
-from Models.Post.Request import Request
-from Models.Post.Route import Route
+from Models.Message import Message
+from Models.Post.Request import *
+from Models.Post.Route import *
+from Models.Post.OfferRoute import *
+from Models.Post.Review import *
+from Models.Message import *
 from Models.User.Account import *
 from Models.User.Driver import *
 from Models.Launch.CLModel import *
 from Utils.data.fakedata import *
 from Utils.data.citylist import *
-from Utils.data.fix_cityshit import *
 from Utils.SearchUtils import *
 from Utils.SearchDocUtils import *
 from Utils.SearchScraped import *
@@ -65,18 +67,6 @@ class DebugUtils(BaseHandler):
                 d.key.delete()
             delete_all_in_index(CL_INDEX)                               
             self.write('cl stuff gone.')       
-        elif action=='populate':
-            fakefb = BarnacleModel.query()
-            for f in fakefb:
-                stats = UserStats(code='elaine')
-                sett = UserSettings()
-                u = UserPrefs(userid=f.userid, email='help@gobarnacle.com',
-                first_name=f.first_name, last_name=f.last_name, about=f.about, 
-                location=f.fblocation, img_id=f.img_id, settings=sett, stats=stats)
-                u.put()
-                d = Driver(parent=u.key, bank=True,ins=True).put()
-                self.write(u.key.urlsafe())
-            self.write('users created.') 
         elif action=='createroutes':
             drivers = UserPrefs.query().filter(UserPrefs.email=='help@gobarnacle.com')
             drivers = [d.key for d in drivers]
@@ -119,6 +109,20 @@ class DebugUtils(BaseHandler):
             # need to make a dummy call because strptime has problems with multithreading
             datetime.strptime('2012-01-01', '%Y-%m-%d')
             self.render('share/cldata.html', **self.params)
+        elif action=='reset':
+            # routes = ExpiredOffer.query()
+            # for r in routes:
+                # try:
+                    # rn = OfferRoute(parent=r.sender, route=r.route, sender=r.receiver, driver=r.sender, price=r.price, deliverby=r.deliverby, locstart=r.locstart, locend=r.locend, confirmed=r.confirmed, dead=1)
+                    # rn.put()
+                    # r.key.delete()
+                # except:
+                    # continue
+            streamz = ReviewNew.query()
+            for d in streamz:
+                dn = Review(parent=d.key.parent(), sender=d.sender, receiver=d.receiver, rating=d.rating,content=d.content,created=d.created) 
+                dn.put()
+                d.key.delete()
     
     def post(self, action=None):        
         if action=='createcl':

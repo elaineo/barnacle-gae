@@ -232,6 +232,8 @@ class RouteHandler(BaseHandler):
             self.params.update(fill_route_params(p.key.urlsafe(),False))
             self.params['update_url'] = '/post/update/' + p.key.urlsafe()
             self.params['email'] = self.user_prefs.email
+            if self.user_prefs.tel:
+                self.params['tel'] = self.user_prefs.tel
             self.params['rates'] = price
             self.render('post/request_review.html', **self.params)
             taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
@@ -250,10 +252,15 @@ class RouteHandler(BaseHandler):
         rates = parse_rate(rates)
         items = self.request.get('items')
         email = self.request.get('email')
+        tel = self.request.get('tel')
         if email and (email != self.user_prefs.email):
             u = self.user_prefs.key.get()
             u.email = email
             u.put()
+        if tel and (tel != self.user_prefs.tel):
+            u = self.user_prefs.key.get()
+            u.tel = tel
+            u.put()            
         p = ndb.Key(urlsafe=key).get()
         # image upload
         img = self.request.get("file")
@@ -377,6 +384,7 @@ class RouteHandler(BaseHandler):
                     self.params['resdump'] = route_resdump(p.key, p.__class__.__name__)
                 if len(p.matches) > 0:
                     self.params['matchdump'] = route_matchdump(p)
+                    logging.info(self.params['matchdump'])
             else:
                 self.params['edit_allow'] = False
             if self.user_prefs and self.user_prefs.account_type == 'fb':

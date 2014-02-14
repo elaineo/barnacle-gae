@@ -4,7 +4,7 @@ from Models.User.Account import UserPrefs
 from Models.Post.Route import Route
 from Models.Post.Request import Request
 from Models.Post.OfferRequest import OfferRequest
-from Models.MessageModel import Message
+from Models.Message import Message
 from datetime import datetime, timedelta
 from google.appengine.ext import ndb
 

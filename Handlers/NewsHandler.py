@@ -6,6 +6,7 @@ from google.appengine.api import search
 from Handlers.BaseHandler import *
 from Models.Post.OfferRequest import *
 from Models.User.Account import *
+from Models.Post.Review import *
 from Models.Tracker.TrackerModel import *
 
 import json

@@ -80,7 +80,14 @@
       </div><div class="span6">
           <input type="email" name="email" value="{{email}}">
       </div>
-    </div>   
+    </div> 
+    <div class="row-fluid">
+      <div class="span6">
+        <p class="plabel">Phone Number</p> <i class="icon-info-sign" id='info_phone' data-toggle="popover" data-content='This allows us to contact you regarding your request. You can change your notification preferences under Dashboard Settings.'></i>:
+      </div><div class="span6">
+          <input type="tel" name="tel" value="{{tel}}">
+      </div>
+    </div>  
     </form>
     </div>
   </div>
@@ -92,6 +99,7 @@ $(document).ready(function(){
     initialize_map(mapURL);
     $('#info_offer').popover({trigger: 'hover'});
     $('#info_email').popover({trigger: 'hover'});
+    $('#info_phone').popover({trigger: 'hover'});
     });
 </script>
 <script type="text/javascript" src="/static/js/save_image.js"></script>

@@ -14,7 +14,6 @@ class RouteStats(ndb.Model):
 class Route(Post):
     roundtrip = ndb.BooleanProperty(default=False)
     repeatr = ndb.StructuredProperty(RepeatRoute)
-    created = ndb.DateTimeProperty(auto_now_add=True)
     delivstart = ndb.DateProperty(required=True)
     delivend = ndb.DateProperty(required=True)
     pathpts = ndb.GeoPtProperty(repeated=True)     
@@ -80,3 +79,4 @@ class Route(Post):
         if self.stats:
             self.stats.views = self.stats.views+1
             self.put()
+            
