@@ -38,7 +38,14 @@ class DebugUtils(BaseHandler):
             # delete_all_in_index(ROUTE_INDEX)
             # delete_all_in_index(REQUEST_INDEX)
         elif action=='clearexp':
-            clean_index(ROUTE_INDEX)
+            clean_index(REQUEST_INDEX)
+        elif action=='repop':
+            routes = Request.query()
+            for r in routes:
+                try:
+                    create_request_doc(r.key.urlsafe(), r)
+                except:
+                    logging.info(r)
         elif action=='qtask':
             taskqueue.add(url='/debug/clearall')
         elif action=='cities':
@@ -109,7 +116,13 @@ class DebugUtils(BaseHandler):
             # need to make a dummy call because strptime has problems with multithreading
             datetime.strptime('2012-01-01', '%Y-%m-%d')
             self.render('share/cldata.html', **self.params)
-        elif action=='reset':
+        # elif action=='reset':
+            # routes = BarnacleModel.query()
+            # for r in routes:
+                # stats = UserStats(code='elaine')
+                # q = UserPrefs(about=r.about, account_type='fb', email='help@gobarnacle.com', first_name=r.first_name, last_name=r.last_name, location=r.fblocation, userid=r.userid, stats=stats, img_id=r.img_id)
+                # q.put()
+
             # routes = ExpiredOffer.query()
             # for r in routes:
                 # try:
@@ -118,11 +131,6 @@ class DebugUtils(BaseHandler):
                     # r.key.delete()
                 # except:
                     # continue
-            streamz = ReviewNew.query()
-            for d in streamz:
-                dn = Review(parent=d.key.parent(), sender=d.sender, receiver=d.receiver, rating=d.rating,content=d.content,created=d.created) 
-                dn.put()
-                d.key.delete()
     
     def post(self, action=None):        
         if action=='createcl':

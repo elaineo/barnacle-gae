@@ -133,4 +133,3 @@ class UserPrefs(ndb.Model):
     def by_email(cls, email):
         u = cls.query(cls.email == email).get()
         return u        
-    

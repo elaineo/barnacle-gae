@@ -98,7 +98,6 @@ class MessageHandler(BaseHandler):
         self.response.headers['Content-Type'] = "application/json"
         # streams sorted by date
         streams = Stream.by_routekey(ndb.Key(urlsafe=key))
-        logging.info(ndb.Key(urlsafe=key))
         response = []        
         for s in streams:
             sp = s.to_dict()

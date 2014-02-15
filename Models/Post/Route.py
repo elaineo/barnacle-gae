@@ -43,13 +43,14 @@ class Route(Post):
             'delivend' : cls.delivend.strftime('%b-%d-%y'),
             'start' : cls.locstart,
             'dest' : cls.locend,
-            'thumb_url': u.profile_image_url('small'),
-            'first_name' : u.first_name,
-            'fbid' : u.userid,
             'roundtrip' : int(cls.roundtrip)
         }
         if cls.details:
             route['details'] = cls.details[:200]
+        if u:
+            route['thumb_url'] = u.profile_image_url('small')
+            route['first_name'] = u.first_name
+            route['fbid'] = u.userid
         return route             
     
     def gen_repeat(self):
