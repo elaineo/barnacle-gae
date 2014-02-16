@@ -2,8 +2,9 @@ from google.appengine.ext import ndb
 
 from Handlers.BaseHandler import *
 from Models.Message import *
-from Models.Post.Request import Request
-from Models.Post.Route import Route
+from Models.Post.Request import *
+from Models.Post.Route import *
+from Models.Post.Post import *
 
 import json
 import logging
@@ -81,12 +82,17 @@ class GerritHandler(BaseHandler):
                 dump = r.to_dict()
                 dump['key'] = r.key.urlsafe()
                 if r.stats:
+                    if r.stats.status > 10:
+                        continue
                     dump['notes'] = r.stats.notes
                     dump['status'] = RequestStatus[r.stats.status]
                 matches = []
                 for q in r.matches:
                     try:
-                        matches.append(q.get().to_dict())
+                        qq = q.get()
+                        logging.info(qq)
+                        if qq.dead==0:
+                            matches.append(qq.to_dict())
                     except:
                         continue
                 dump['matches'] = matches

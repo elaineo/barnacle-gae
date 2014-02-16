@@ -5,6 +5,7 @@ from Utils.Defs import miles2m
 from Utils.RouteUtils import roundPoint
 import logging
 
+#use this for status, PostStatus for dead
 RequestStatus = ['IGNORE', 'INCOMP', 'WATCH', 'PURSUE', 'PRIORITY']
 
 class ReqStats(ndb.Model):

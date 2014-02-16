@@ -45,6 +45,9 @@ class Post(ndb.Model):
     def num_offers(self):
         return len(self.offers)
         
+    def num_matches(self):
+        return len([m for m in self.matches if m.get().dead==0])        
+        
     def num_confirmed(self):
         q = [r for r in self.offers if r.get().confirmed]
         return len(q)
@@ -64,7 +67,7 @@ class Post(ndb.Model):
             'details' : cls.details,
             'num_confirmed' : cls.num_confirmed(), 
             'num_offers': cls.num_offers(),
-            'num_matches' : len(cls.matches)
+            'num_matches' : cls.num_matches()
         }
         return route    
             

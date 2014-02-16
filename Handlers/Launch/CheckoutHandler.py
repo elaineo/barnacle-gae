@@ -192,7 +192,7 @@ class CheckoutHandler(BaseHandler):
         res.confirmed=True
         res.put()        
         create_from_res(res)
-        d = Driver.by_userkey(res.sender)
+        d = Driver.by_userkey(res.driver)
         self.params['d'] = d.params_fill()
         self.params['reskey'] = key
         self.params.update(res.to_dict())      
