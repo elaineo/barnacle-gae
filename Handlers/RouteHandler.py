@@ -375,7 +375,7 @@ class RouteHandler(BaseHandler):
         p = ndb.Key(urlsafe=key).get()
         if p:
             if p.dead > 0:
-                view_dead(p)
+                self.view_dead(p)
                 return
             p.increment_views()
             if self.user_prefs and self.user_prefs.key == p.key.parent():
@@ -399,8 +399,8 @@ class RouteHandler(BaseHandler):
             self.abort(409)
         return
 
-    def view_dead(route):
-        self.params.update(route.to_dict())
+    def view_dead(self,route):
+        self.params.update(route.to_dict(True))
         if route.__class__.__name__ == 'Route':
             self.render('landing/exppost.html', **self.params)
         else:

@@ -27,12 +27,19 @@ class Route(Post):
         else:
             return ''        
         
-    def to_dict(cls):
+    def to_dict(cls,incl_user=False):
         route = cls.base_dict()
         route.update({ 'rt' : int(cls.roundtrip),
                     'delivstart' : cls.delivstart.strftime('%m/%d/%Y'),
                     'delivend' : cls.delivend.strftime('%m/%d/%Y') })
         route.update(cls.gen_repeat())
+        if incl_user:
+            u = cls.key.parent().get()
+            udict = {
+                'prof_img' : u.profile_image_url('small'),
+                'first_name' : u.nickname()
+            }
+            route.update(udict)        
         return route
     
     def to_search(cls):

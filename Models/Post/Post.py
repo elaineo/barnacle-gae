@@ -49,8 +49,15 @@ class Post(ndb.Model):
         return len([m for m in self.matches if m.get().dead==0])        
         
     def num_confirmed(self):
-        q = [r for r in self.offers if r.get().confirmed]
-        return len(q)
+        q=0
+        for r in self.offers:
+            try:
+                rr = r.get()
+                if rr.confirmed:
+                    q=q+1
+            except:
+                continue
+        return q
     
     def base_dict(cls):
         route = {
