@@ -90,7 +90,6 @@ class GerritHandler(BaseHandler):
                 for q in r.matches:
                     try:
                         qq = q.get()
-                        logging.info(qq)
                         if qq.dead==0:
                             matches.append(qq.to_dict())
                     except:

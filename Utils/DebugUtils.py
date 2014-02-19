@@ -33,19 +33,12 @@ class TestUtils(BaseHandler):
 class DebugUtils(BaseHandler):
     def get(self, action=None):
         if action=='clearall':
-            # delete_all_in_index(ZIM_INDEX)
+            delete_all_in_index(ZIM_INDEX)
             # ndb.delete_multi( ZimModel.query().fetch(keys_only=True))
             # delete_all_in_index(ROUTE_INDEX)
-            delete_all_in_index(REQUEST_INDEX)
+            # delete_all_in_index(REQUEST_INDEX)
         elif action=='clearexp':
             clean_index(REQUEST_INDEX)
-        elif action=='repop':
-            routes = Request.query()
-            for r in routes:
-                try:
-                    create_request_doc(r.key.urlsafe(), r)
-                except:
-                    logging.info(r)
         elif action=='qtask':
             taskqueue.add(url='/debug/clearall')
         elif action=='cities':

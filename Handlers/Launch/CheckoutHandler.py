@@ -202,7 +202,7 @@ class CheckoutHandler(BaseHandler):
         self.send_receipt(email, res, eparams) 
         # notify the driver
         msg = self.user_prefs.first_name + confirm_do_msg % key
-        create_note(self,res.sender, confirm_do_sub, msg)
+        create_note(self,res.driver, confirm_do_sub, msg)
 
     def __create_cust(self,email=None):
         #create customer

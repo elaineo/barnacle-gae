@@ -43,9 +43,9 @@ class ReservationHandler(BaseHandler):
             if not self.user_prefs:
                 self.redirect('/post/'+key+'#signin-box')
             try:
-                p = ndb.Key(urlsafe=key).get()
-                self.params['res']={}
+                p = ndb.Key(urlsafe=key).get()            
                 if p.__class__.__name__ == 'Route':    # trying to reserve existing route
+                    self.params['res']={}
                     self.params.update(fill_route_params(key,True))
                     self.params['reserve_title'] = 'Make a Reservation'
                     self.render('post/forms/fillreserve.html', **self.params)
@@ -57,9 +57,9 @@ class ReservationHandler(BaseHandler):
                         self.params.update(self.user_prefs.params_fill())
                         self.render('user/forms/filldriver.html', **self.params)
                         return            
+                    self.params['res']={'price':p.rates}
                     self.params.update(fill_route_params(key,False))
                     self.params['reserve_title'] = 'Make a Delivery Offer'
-                    self.params['offer'] = p.rates
                     self.render('post/forms/filloffer.html', **self.params)     
             except:
                 self.abort(403) 
