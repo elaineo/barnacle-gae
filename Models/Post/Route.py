@@ -2,6 +2,7 @@ from google.appengine.ext import ndb
 from Models.Post.Post import Post
 from Models.User.Account import *
 from Models.Tracker.TrackerModel import *
+from Models.User.Driver import *
 
 class RepeatRoute(ndb.Model):
     period = ndb.IntegerProperty() # weekly (0), or monthly (1)
@@ -28,18 +29,14 @@ class Route(Post):
             return ''        
         
     def to_dict(cls,incl_user=False):
-        route = cls.base_dict()
+        route = cls.base_dict(incl_user)
         route.update({ 'rt' : int(cls.roundtrip),
                     'delivstart' : cls.delivstart.strftime('%m/%d/%Y'),
                     'delivend' : cls.delivend.strftime('%m/%d/%Y') })
         route.update(cls.gen_repeat())
-        if incl_user:
-            u = cls.key.parent().get()
-            udict = {
-                'prof_img' : u.profile_image_url('small'),
-                'first_name' : u.nickname()
-            }
-            route.update(udict)        
+        d = Driver.by_userkey(cls.key.parent())
+        if d:
+            route.update(d.params_fill())        
         return route
     
     def to_search(cls):

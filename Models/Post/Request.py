@@ -32,20 +32,12 @@ class Request(Post):
             self.put()
         
     def to_dict(cls,incl_user=False):
-        route = cls.base_dict()
+        route = cls.base_dict(incl_user)
         route['delivby'] = cls.delivby.strftime('%m/%d/%Y')
         route['rates'] = cls.rates
         route['category'] = cls.category
         route['img_url'] = cls.image_url()
         route['img_thumb'] = cls.image_url('small')
-
-        if incl_user:
-            u = cls.key.parent().get()
-            udict = {
-                'prof_img' : u.profile_image_url('small'),
-                'first_name' : u.nickname()
-            }
-            route.update(udict)
         return route
         
     def to_search(cls):

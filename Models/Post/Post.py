@@ -59,7 +59,7 @@ class Post(ndb.Model):
                 continue
         return q
     
-    def base_dict(cls):
+    def base_dict(cls, incl_user=False):
         route = {
             'routekey' : cls.key.urlsafe(),
             'reserve_url' : cls.reserve_url(),
@@ -76,6 +76,9 @@ class Post(ndb.Model):
             'num_offers': cls.num_offers(),
             'num_matches' : cls.num_matches()
         }
+        if incl_user:
+            u = cls.key.parent().get()
+            route.update(u.params_fill_sm())
         return route    
             
     @classmethod

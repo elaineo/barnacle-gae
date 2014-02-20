@@ -3,7 +3,6 @@ from google.appengine.ext import ndb
 
 from Handlers.BaseHandler import *
 from Handlers.Launch.CheckoutHandler import *
-from Handlers.RouteHandler import fill_route_params
 from Handlers.Tracker.TrackerHandler import create_from_res
 from Handlers.MessageHandler import create_message
 from Models.Post.OfferRequest import *
@@ -28,12 +27,12 @@ class ReservationHandler(BaseHandler):
                         return
                     if p.key.parent() == self.user_prefs.key:
                         self.params['res'] = p.to_dict()
+                        route = p.route.get()
+                        self.params.update(route.to_dict(True))
                         if p.__class__.__name__ == 'OfferRequest':
-                            self.params.update(fill_route_params(p.route.urlsafe(),True))                            
                             self.params['reserve_title'] = 'Edit Reservation'
                             self.render('post/forms/fillreserve.html', **self.params)
                         else:
-                            self.params.update(fill_route_params(p.route.urlsafe(),False))
                             self.params['reserve_title'] = 'Edit Offer'
                             self.render('post/forms/filloffer.html', **self.params)
                 except:
@@ -42,28 +41,27 @@ class ReservationHandler(BaseHandler):
         elif action=='route' and key:
             if not self.user_prefs:
                 self.redirect('/post/'+key+'#signin-box')
-            try:
-                p = ndb.Key(urlsafe=key).get()            
-                if p.__class__.__name__ == 'Route':    # trying to reserve existing route
-                    self.params['res']={}
-                    self.params.update(fill_route_params(key,True))
-                    self.params['reserve_title'] = 'Make a Reservation'
-                    self.render('post/forms/fillreserve.html', **self.params)
-                else:           # offering to deliver
-                    ## check to make sure they are a driver
-                    d = Driver.by_userkey(self.user_prefs.key)
-                    if not d:
-                        self.params['createorupdate'] = 'Ready to Drive'
-                        self.params.update(self.user_prefs.params_fill())
-                        self.render('user/forms/filldriver.html', **self.params)
-                        return            
-                    self.params['res']={'price':p.rates}
-                    self.params.update(fill_route_params(key,False))
-                    self.params['reserve_title'] = 'Make a Delivery Offer'
-                    self.render('post/forms/filloffer.html', **self.params)     
-            except:
-                self.abort(403) 
-                return
+            # try:
+            p = ndb.Key(urlsafe=key).get()                    
+            self.params.update(p.to_dict(True))
+            if p.__class__.__name__ == 'Route':    # trying to reserve existing route
+                self.params['res']={}
+                self.params['reserve_title'] = 'Make a Reservation'
+                self.render('post/forms/fillreserve.html', **self.params)
+            else:           # offering to deliver
+                ## check to make sure they are a driver
+                d = Driver.by_userkey(self.user_prefs.key)
+                if not d:
+                    self.params['createorupdate'] = 'Ready to Drive'
+                    self.params.update(self.user_prefs.params_fill())
+                    self.render('user/forms/filldriver.html', **self.params)
+                    return            
+                self.params['res']={'price':p.rates}
+                self.params['reserve_title'] = 'Make a Delivery Offer'
+                self.render('post/forms/filloffer.html', **self.params)     
+            # except:
+                # self.abort(403) 
+                # return
         elif action=='jsonres' and key:
             try:
                 res = ndb.Key(urlsafe=key).get()
@@ -134,20 +132,20 @@ class ReservationHandler(BaseHandler):
                 self.abort(400) 
                 return                
     def __delete(self, key=None):
+        logging.error(key)
         if key:
             try:
                 r = ndb.Key(urlsafe=key).get()
                 if r.confirmed:
                     return
-                if r and r.sender==self.user_prefs.key:
+                if r and self.user_prefs and self.user_prefs.key==r.key.parent():
                     post = r.route.urlsafe()
-                    r.key.delete()
-                    self.redirect('/post/'+post)
-                    return
+                    r.dead = PostStatus.index('DELETED')
+                    r.put()
             except:
                 self.abort(403) 
                 return
-        self.abort(403)
+        self.redirect('/post/'+post)
         return
 
     def __confirm(self, key=None):
@@ -238,10 +236,10 @@ class ReservationHandler(BaseHandler):
             new_res = True
         else:  #editing reservation
             new_res = False
-            p = ndb.Key(urlsafe=res).get()
+            p = ndb.Key(urlsafe=res).get()            
             if p.confirmed:
                 self.params['permission_err'] = True
-                self.params.update(fill_route_params(route.key.urlsafe(),False))
+                self.params.update(route.get().to_dict(True))
                 self.render('post/forms/filloffer.html', **self.params)
                 return
             if p and self.user_prefs and p.driver == self.user_prefs.key:  
@@ -276,7 +274,7 @@ class ReservationHandler(BaseHandler):
             self.params['offer'] = rates
             self.params['msg'] = msg
             self.params['reserve_title'] = 'Edit Offer'
-            self.params.update(fill_route_params(route.key.urlsafe(),False))
+            self.params.update(route.get().to_dict(True))
             self.render('post/forms/filloffer.html', **self.params)                                 
     
     def __create_reserve(self, route, res=None):
@@ -314,7 +312,7 @@ class ReservationHandler(BaseHandler):
                 p = ndb.Key(urlsafe=res).get()
                 if p.confirmed:
                     self.params['permission_err'] = True
-                    self.params.update(fill_route_params(route.key.urlsafe(),True))
+                    self.params.update(route.get().to_dict(True))
                     self.render('post/forms/fillreserve.html', **self.params)
                     return
                 if p and self.user_prefs and p.sender == self.user_prefs.key:  
@@ -342,7 +340,7 @@ class ReservationHandler(BaseHandler):
             self.params['offer'] = rates
             self.params['msg'] = msg
             self.params['reserve_title'] = 'Edit Reservation'
-            self.params.update(fill_route_params(route.key.urlsafe(),True))
+            self.params.update(route.get().to_dict(True))
             self.render('post/forms/fillreserve.html', **self.params)
 
         if new_res:

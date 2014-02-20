@@ -97,6 +97,7 @@ class UserPrefs(ndb.Model):
         if params['avg_rating'] < 1:
             params['avg_rating'] = 5        
         params['fbid'] = self.userid
+        params['userkey'] = self.key.urlsafe()
         return params
     
     def params_fill(self):

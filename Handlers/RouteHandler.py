@@ -55,12 +55,11 @@ class RouteHandler(BaseHandler):
                 self.redirect('/post#signin-box')
                 return
             if p.key.parent() == self.user_prefs.key:
+                self.params.update(p.to_dict(True))
                 if p.__class__.__name__ == 'Route':
-                    self.params.update(fill_route_params(key,True))
                     self.params['route_title'] = 'Edit Route'
                     self.render('post/forms/fillpost.html', **self.params)
                 else:
-                    self.params.update(fill_route_params(key,False))
                     self.params['route_title'] = 'Edit Delivery Request'
                     self.render('post/forms/editrequest.html', **self.params)
                 return
@@ -229,7 +228,7 @@ class RouteHandler(BaseHandler):
 
         try:
             p.put()
-            self.params.update(fill_route_params(p.key.urlsafe(),False))
+            self.params.update(p.to_dict(True))
             self.params['update_url'] = '/post/update/' + p.key.urlsafe()
             self.params['email'] = self.user_prefs.email
             if self.user_prefs.tel:
@@ -389,11 +388,10 @@ class RouteHandler(BaseHandler):
                 self.params['edit_allow'] = False
             if self.user_prefs and self.user_prefs.account_type == 'fb':
                 self.params['fb_share'] = True
+            self.params.update(p.to_dict(True))
             if p.__class__.__name__ == 'Route':
-                self.params.update(fill_route_params(key,True))
                 self.render('post/post.html', **self.params)
             else:
-                self.params.update(fill_route_params(key,False))
                 self.render('post/request.html', **self.params)
         else:
             self.abort(409)
@@ -431,18 +429,6 @@ def add_roundtrip(route):
                 roundtrip=route.roundtrip,repeatr=route.repeatr,
                 pathpts=route.pathpts)
     create_route_doc(route.key.urlsafe()+'_RT', p2)
-
-
-def fill_route_params(key,is_route=False):
-    p = ndb.Key(urlsafe=key).get()
-    u = p.key.parent().get()
-    params = p.to_dict()
-    params.update(u.params_fill_sm())
-    d = Driver.by_userkey(u.key)
-    if d:
-        params.update(d.params_fill())
-    params['userkey'] = u.key.urlsafe()
-    return params
 
 class DumpHandler(BaseHandler):
     def get(self, key=None):

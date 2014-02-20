@@ -5,7 +5,6 @@ from google.appengine.ext import ndb
 from google.appengine.api import mail
 
 from Handlers.BaseHandler import *
-from Handlers.Launch.ReserveHandler import  fill_res_params
 from Handlers.Tracker.TrackerHandler import create_from_res
 
 from Models.User.Driver import *
