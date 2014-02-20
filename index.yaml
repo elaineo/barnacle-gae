@@ -16,15 +16,15 @@ indexes:
   - name: created
     direction: desc
 
-- kind: Post
+- kind: OfferRequest
   properties:
-  - name: ptype
-  - name: activity
+  - name: dead
+  - name: deliverby
 
-- kind: Post
+- kind: OfferRoute
   properties:
-  - name: userid
-  - name: creation_date
+  - name: dead
+  - name: deliverby
 
 - kind: Request
   properties:
@@ -35,12 +35,12 @@ indexes:
   properties:
   - name: receiver
   - name: created
-
-- kind: Review
-  properties:
-  - name: receiver
-  - name: created
     direction: desc
+
+- kind: Route
+  properties:
+  - name: dead
+  - name: delivend
 
 - kind: SearchEntry
   properties:
@@ -49,18 +49,7 @@ indexes:
     direction: desc
 
 - kind: Stream
-  properties:
-  - name: routekey
-  - name: last_active
-    direction: desc
-
-- kind: Stream
   ancestor: yes
   properties:
   - name: last_active
     direction: desc
-
-- kind: TrackerModel
-  properties:
-  - name: driver
-  - name: status

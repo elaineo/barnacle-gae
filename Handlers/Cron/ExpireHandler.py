@@ -20,7 +20,7 @@ class ExpireHandler(BaseHandler):
         deaddump={}
         now = date.today()
         expire_pathpts(PATHPT_INDEX, now.strftime('%Y-%m-%d'), "delivend")
-        deadroutes = Route.query(Route.delivend<now,Route.dead==0)
+        deadroutes = Route.query(Route.dead==0,Route.delivend<now)        
         route_index = search.Index(name=ROUTE_INDEX)
         for r in deadroutes:
             r.dead = PostStatus.index('EXPIRED')

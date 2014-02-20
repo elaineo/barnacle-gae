@@ -10,6 +10,7 @@ from Models.Message import Message
 from Models.Post.Request import *
 from Models.Post.Route import *
 from Models.Post.OfferRoute import *
+from Models.Post.OfferRequest import *
 from Models.Post.Review import *
 from Models.Message import *
 from Models.User.Account import *
@@ -38,7 +39,11 @@ class DebugUtils(BaseHandler):
             # delete_all_in_index(ROUTE_INDEX)
             # delete_all_in_index(REQUEST_INDEX)
         elif action=='clearexp':
-            clean_index(REQUEST_INDEX)
+            offers = OfferRequest.query()
+            for q in offers:
+                r = q.route.get()
+                if not r:
+                    logging.info(q)
         elif action=='qtask':
             taskqueue.add(url='/debug/clearall')
         elif action=='cities':

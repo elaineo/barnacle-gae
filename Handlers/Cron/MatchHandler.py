@@ -31,8 +31,11 @@ class MatchHandler(BaseHandler):
             drivers = list(set(drivers))
             # go through the list and send notifications
             for d in drivers:
-                if 3 in d.get().settings.notify:
-                    self.__send_match2d(d)
+                try:
+                    if 3 in d.get().settings.notify:
+                        self.__send_match2d(d)
+                except:
+                    continue
         elif action=='requests':
             requests = Request.query()
             senders = []       
@@ -44,11 +47,14 @@ class MatchHandler(BaseHandler):
                         senders.append(r.key.parent())
                 except:
                     pass
-            drivers = list(set(senders))
+            senders = list(set(senders))
             # go through the list and send notifications
             for d in senders:
-                if 3 in d.get().settings.notify:
-                    self.__send_match2s(d)
+                try:
+                    if 3 in d.get().settings.notify:
+                        self.__send_match2s(d)
+                except:
+                    continue
         elif action=='matches':
             routecount = 0
             reqcount = 0

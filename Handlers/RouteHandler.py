@@ -129,8 +129,9 @@ class RouteHandler(BaseHandler):
                 if r.num_confirmed() > 0:
                     return
                 for q in r.offers:
-                    q.get().dead = PostStatus.index('DELETED')
-                    q.put()
+                    route = q.get()
+                    route.dead = PostStatus.index('DELETED')
+                    route.put()
                 if type=='Route':
                     if r.roundtrip:
                         delete_doc(r.key.urlsafe()+'_RT',type)

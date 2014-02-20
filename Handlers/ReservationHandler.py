@@ -386,7 +386,7 @@ class ReservationHandler(BaseHandler):
             #TODO: create a receipt page
             if p.dead>0:
                 logging.info('Expired offer')
-                self.abort(409)
+            self.abort(409)
         if resoffer:
             self.render('post/reserve.html', **self.params)
         else:
