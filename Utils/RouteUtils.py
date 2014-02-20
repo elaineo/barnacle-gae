@@ -138,12 +138,13 @@ class RouteUtils():
         paths=[]
         lats=[]
         lngs=[]
+        #db getting too big, round points
         for r in routes:
             lats.append(r.dest.lat)
             lngs.append(r.dest.lon)
             pathpts = []
-            for p in r.pathpts:
-                pathpts.append([p.lat,p.lon])        
+            for p in r.pathpts[0::10]:
+                pathpts.append([round(p.lat,2),round(p.lon,2)])  
             paths.append(pathpts)
         
         if len(lats) != 0:

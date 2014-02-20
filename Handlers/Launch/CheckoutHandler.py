@@ -70,6 +70,8 @@ class CheckoutHandler(BaseHandler):
         if charge > 0:    
             customer.debit(amount=charge)
         self.params.update(res.to_dict())
+        driver = res.driver.get()
+        self.params['email'] = driver.email
         eparams = self.params
         ## THIS ASSUMES DRIVER HAS BEEN RESERVED
         self.render('launch/receipt_res.html', **self.params)
@@ -194,7 +196,9 @@ class CheckoutHandler(BaseHandler):
         d = Driver.by_userkey(res.driver)
         self.params['d'] = d.params_fill()
         self.params['reskey'] = key
-        self.params.update(res.to_dict())      
+        self.params.update(res.to_dict())     
+        driver = res.driver.get()
+        self.params['email'] = driver.email        
         eparams = self.params
         eparams.update(self.params['d'])
         self.render('launch/receipt_res.html', **self.params)

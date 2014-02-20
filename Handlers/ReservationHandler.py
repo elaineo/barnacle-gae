@@ -368,7 +368,6 @@ class ReservationHandler(BaseHandler):
             self.params['first_name'] = route.first_name()
             resoffer=(p.__class__.__name__ == 'OfferRequest')
             self.params['res'] = p.to_dict()
-            logging.info(p.to_dict())
             self.params['edit_allow'] = False
             
             if self.user_prefs and self.user_prefs.key==p.key.parent():
