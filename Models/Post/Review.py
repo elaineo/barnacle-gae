@@ -49,7 +49,7 @@ class Review(ndb.Model):
         """ Retrieve link to profile thumbnail or default """
         s = self.sender.get()
         return s.profile_image_url('small')
-    def to_jdict(self):
+    def to_dict(self):
         d={ 'sender' : self.sender.urlsafe(),
             'receiver' : self.receiver.urlsafe(),
             'rating': self.rating,

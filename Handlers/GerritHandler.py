@@ -5,12 +5,27 @@ from Models.Message import *
 from Models.Post.Request import *
 from Models.Post.Route import *
 from Models.Post.Post import *
+from Utils.RouteUtils import *
+from Utils.SearchUtils import search_pathpts, search_todict, search_intersect, field_byname
+from Utils.data.citylist import cities
+
 
 import json
 import logging
+import urllib
+
+city_dict = {}
+for c in cities:
+    city_dict[c['city']] = ndb.GeoPt(c['lat'], c['lon'])
         
 class GerritHandler(BaseHandler):
-    def get(self, action=None):
+    def get(self, action=None, loc=None):
+        if loc and action=='start':
+            origin = urllib.unquote(loc)
+            posts, center = self.__get_routes_from(origin)
+            drivers = list(set(dump_results(posts)))
+            self.write(json.dumps(drivers))
+    
         if action=='hello':
             gerrit = Request.query().filter(Request.rates > 0)
             
@@ -98,20 +113,7 @@ class GerritHandler(BaseHandler):
                 reqdump.append(dump)  
             self.params['reqdump'] = reqdump
             self.render('search/reqs_matches.html', **self.params)
-        if action=='cl':
 
-            gerrit = UserPrefs.query(UserPrefs.stats.referral.IN(['craigslist']))
-            
-            ### I commented this out cuz this file was preventing other stuff from running -- E
-            
-            # for
-            # self.write( "COUNT")
-            # self.write(gerrit.count() )
-        
-        
-        #self.write( gerrit.count() )
-             # delete_all_in_index(ROUTE_INDEX)
-            # delete_all_in_index(REQUEST_INDEX)
     
     def post(self, action=None):
         if action=='status':
@@ -128,3 +130,35 @@ class GerritHandler(BaseHandler):
                 r.stats = ReqStats(status = int(status))
             r.put()
             
+    def __get_routes_from(self, origin):
+        if origin not in city_dict:
+            return []
+        start = city_dict[origin]
+        delivend = datetime.now() + timedelta(days=365)
+        dist = 100  # miles
+        results = search_pathpts(
+            dist, 'ROUTE_INDEX', delivend.strftime('%Y-%m-%d'), 'delivstart', start).results
+        keepers = []
+        for c in results:
+            startpt = field_byname(c, "start")
+            dist0 = HaversinDist(
+                start.lat, start.lon, startpt.latitude, startpt.longitude)
+            if dist0 < dist:
+                keepers.append(c)
+        return keepers, [start.lat,start.lon]            
+        
+        
+def dump_results(results):
+    posts = []
+    drivers = []
+    for doc in results:
+        d = search_todict(doc)
+        posts.append(d)        
+    results = [ndb.Key(urlsafe=p['routekey']).get() for p in posts]           
+    for r in results:
+        try:
+            u = r.key.parent()
+            drivers.append(u.get().email)
+        except:
+            continue
+    return drivers
