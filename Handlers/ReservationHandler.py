@@ -192,7 +192,8 @@ class ReservationHandler(BaseHandler):
                         msg = msg + r.print_html()
                         create_note(self, r.sender, decline_do_sub, msg)
                     routekey=r.route.urlsafe()
-                    r.dead = PostStatus.index('DECLINED')       
+                    r.dead = PostStatus.index('DECLINED')
+                    r.put()
                     self.redirect('/post/'+routekey)
                     return
             except:
@@ -372,12 +373,12 @@ class ReservationHandler(BaseHandler):
             
             if self.user_prefs and self.user_prefs.key==p.key.parent():
                 self.params['is_sender'] = True                
-                if not p.confirmed:
+                if p.dead==0:
                     self.params['edit_allow'] = True
                 
             elif self.user_prefs and (self.user_prefs.key==p.driver or self.user_prefs.key==p.sender):
                 self.params['is_receiver'] = True
-                if not p.confirmed:
+                if p.dead==0:
                     self.params['confirm_allow'] = True
                 
         else:

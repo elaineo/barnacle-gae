@@ -3,7 +3,7 @@ from Models.User.Account import *
 
 """ Base class for Routes and Requests """
 """ Parent will be a user """
-PostStatus = ['ALIVE', 'EXPIRED', 'DELETED', 'DONE', 'DECLINED', 'FLAGGED']    
+PostStatus = ['UNCONFIRMED', 'EXPIRED', 'DELETED', 'DONE', 'DECLINED', 'FLAGGED', 'CONFIRMED']    
     
 class Post(ndb.Model):
     capacity = ndb.IntegerProperty(default=0) # car (0), SUV (1), flatbed (2), hauler (3) carryon (-1)

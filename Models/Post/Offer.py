@@ -101,13 +101,19 @@ class Offer(ndb.Model):
             'dropoff' : int(cls.dropoff)
         }
         if cls.dropoff:
-            route.update( { 'dropoffstr' : dropoffstr_1 } )
+            route['dropoffstr'] = dropoffstr_1 
         else:
-            route.update( { 'dropoffstr' : dropoffstr_0 } )
+            route['dropoffstr'] = dropoffstr_0 
         if cls.pickup: 
-            route.update( { 'pickupstr' : pickupstr_1 } )
+            route['pickupstr'] = pickupstr_1 
         else:
-            route.update( { 'pickupstr' : pickupstr_0 } )        
+            route['pickupstr'] = pickupstr_0
+        if cls.confirmed:
+            route['track_url'] = '/track/view/' ##TODO: Figure this out
+        if cls.dead > 0:
+            route['status'] = PostStatus[cls.dead]
+        else:
+            route['status'] = ''
         return route        
         
 class ExpiredOffer(ndb.Model):

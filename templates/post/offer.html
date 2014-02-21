@@ -9,10 +9,11 @@
 <button type="submit" class="button small info" id="editres_btn">Edit Offer</button>
 <button type="submit" class="button small secondary" id='delete_btn'>Delete Offer</button>
     {% endif %}
-    {% if confirmed == True %} 
-<a href="{{track_url}}"><button class="button small primary">Track Delivery</button></a>
+    {% if res.confirmed == True %} 
+<a href="{{res.track_url}}"><button class="button small primary">Track Delivery</button></a>
     {% endif %}
-</div></div>
+</div>
+</div>
     {% include "post/forms/stubspop/offer_stub.html" %}
     {% include "post/res_buttons_stub.html" %}
 
