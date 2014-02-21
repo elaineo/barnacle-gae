@@ -12,12 +12,12 @@ from Utils.PolylineCode import poly_decode
 
 miles2m = 1609
 
-class RouteUtils():            
+class RouteUtils():
     def setloc(self,r,startstr,endstr):
         route=r
         # route.start,route.locstart=self.getGeoLoc(startstr)
         # route.dest,route.locend=self.getGeoLoc(endstr)
-        if route.start and route.dest: 
+        if route.start and route.dest:
             route.pathpts, d = getPath(route.start,route.dest)
             return route, d
         else:
@@ -27,11 +27,11 @@ class RouteUtils():
         route=p
         route.start,route.locstart=self.getGeoLoc(startstr)
         route.dest,route.locend=self.getGeoLoc(endstr)
-        if not route.start or not route.dest: 
+        if not route.start or not route.dest:
             return None
         else:
             return route
-            
+
     def getGeoLoc(self,location):
         loc = urllib2.quote(location)
         geo_url = geocode_url +  'address=' + loc + '&sensor=false'
@@ -40,8 +40,8 @@ class RouteUtils():
             results = json.loads(req.content)['results']
         except:
             logging.error('HTTPError from google geo')
-            raise HTTPError 
-            return              
+            raise HTTPError
+            return
         try:
             cloc = results[0]
             lat=cloc['geometry']['location']['lat']
@@ -53,14 +53,14 @@ class RouteUtils():
         except IndexError:
             logging.error(req.content)
             logging.error('IndexError' + location)
-            return None, 'invalid' 
-            
+            return None, 'invalid'
+
     def getTZ(self,loc):
         ts = str(time.time())
         data = "location=" + str(loc.lat) + "," + str(loc.lon) + "&timestamp=" + ts + "&sensor=true"
         req = urlfetch.fetch(tz_url+data)
-        results = json.loads(req.content)['rawOffset'] 
-        return int(results)   
+        results = json.loads(req.content)['rawOffset']
+        return int(results)
 
     def estPath(self,start,dest, fudge=100):
         """ Precision of path determined by total dist.
@@ -72,18 +72,18 @@ class RouteUtils():
             results = json.loads(req.content)['routes'][0]['legs'][0]
         except:
             logging.error(req.content)
-            logging.error('HTTPError from google dir') 
+            logging.error('HTTPError from google dir')
             return [start,dest], -1
         dist = results['distance']['value']   #dist in metres
         precision = precisionDist(dist/miles2m * fudge)
-        pathpts = [roundPoint(start,precision)]        
+        pathpts = [roundPoint(start,precision)]
         for s in results['steps']:
             polyline = s['polyline']['points']
-            pathsegment = poly_decode(polyline, precision)              
+            pathsegment = poly_decode(polyline, precision)
             pathpts = pathpts + pathsegment
         pathpts.append(roundPoint(dest,precision))
         return pathpts, precision
-        
+
     def dumproute(self,r):
         route = {}
         route['center'] = findCenter([r.start, r.dest])
@@ -104,7 +104,7 @@ class RouteUtils():
         route['waypts'] = pathpts
         for q in pts:
             markers.append([q.lat,q.lon])
-        route['zoom'] = map_zoom_pts(pts)           
+        route['zoom'] = map_zoom_pts(pts)
         route['markers'] = markers
         return json.dumps(route)
 
@@ -115,7 +115,7 @@ class RouteUtils():
         for q in pts:
             markers.append([q.lat,q.lon])
         route['markers'] = markers
-        route['zoom'] = map_zoom_pts(pts)       
+        route['zoom'] = map_zoom_pts(pts)
         return json.dumps(route)
 
     def dumptrack(self,r,pts):
@@ -125,14 +125,14 @@ class RouteUtils():
         for q in pts:
             markers.append([q.lat,q.lon])
         route['markers'] = markers
-        route['zoom'] = map_zoom_pts(pts) 
+        route['zoom'] = map_zoom_pts(pts)
         points = [q.loc for q in r.points]
         pathpts = []
         for p in points:
             pathpts.append([p.lat,p.lon])
-        route['waypts'] = pathpts        
-        return json.dumps(route)        
-        
+        route['waypts'] = pathpts
+        return json.dumps(route)
+
     def dumpall(self,routes):
         route = {}
         paths=[]
@@ -144,9 +144,9 @@ class RouteUtils():
             lngs.append(r.dest.lon)
             pathpts = []
             for p in r.pathpts[0::10]:
-                pathpts.append([round(p.lat,2),round(p.lon,2)])  
+                pathpts.append([p.lat, p.lon])
             paths.append(pathpts)
-        
+
         if len(lats) != 0:
             lat = sum(lats)/len(lats)
             lng = sum(lngs)/len(lngs)
@@ -157,11 +157,11 @@ class RouteUtils():
         maxh = max(lats) - min(lats)
         maxw = max(lngs) - min(lngs)
         route['zoom'] = zoom_max(maxh,maxw)
-        route['center'] = [lat,lng]        
+        route['center'] = [lat,lng]
         route['paths'] = paths
         return route
-        
-    def dumpreqs(self,reqs, dest=True):        
+
+    def dumpreqs(self,reqs, dest=True):
         route = {}
         markers = []
         for r in reqs:
@@ -182,7 +182,7 @@ class RouteUtils():
             markers.append(m)
         route['markers'] = markers
         return route
-        
+
 def map_zoom_pts(pts):
     # calculate map zoom
     lats = [x.lat for x in pts]
@@ -195,9 +195,9 @@ def zoom_max(max0,max1):
     # calculate map zoom
     b=max([1,max0+max1])
     a = math.log10(b)
-    zoom = round(10-a*3.5)    
+    zoom = round(10-a*3.5)
     return zoom
-    
+
 def HaversinRev(center,d):
     #return an approximate bounding box
     # d = 2r arcsin (sqrt(sin2((Lat2-Lat1)/2)+cos(Lat1)cos(Lat2)sin2((Lon2-Lon1)/2)))
@@ -211,28 +211,28 @@ def HaversinRev(center,d):
     minLon = center.lon - 2*dLon
     bb = { 'maxLat':maxLat, 'minLat':minLat, 'maxLon':maxLon,'minLon':minLon }
     return bb
-    
+
 def HaversinDist(startlat, startlon, destlat, destlon):
     # d = 2r asin sqrt(haversin(lat2-lat1) + cos(lat1)cos(lat2)haversin(lon2-lon1)
     # haversin theta = sin^2(theta/2)
-    
+
     degrees_to_radians = math.pi/180.0
-        
+
     phi1 = (90.0 - startlat)*degrees_to_radians
     phi2 = (90.0 - destlat)*degrees_to_radians
-        
+
     theta1 = startlon*degrees_to_radians
     theta2 = destlon*degrees_to_radians
-        
+
     # Compute spherical distance from spherical coordinates.
-        
-    # For two locations in spherical coordinates 
+
+    # For two locations in spherical coordinates
     # (1, theta, phi) and (1, theta, phi)
-    # cosine( arc length ) = 
+    # cosine( arc length ) =
     #    sin phi sin phi' cos(theta-theta') + cos phi cos phi'
     # distance = rho * arc length
-    
-    cos = (math.sin(phi1)*math.sin(phi2)*math.cos(theta1 - theta2) + 
+
+    cos = (math.sin(phi1)*math.sin(phi2)*math.cos(theta1 - theta2) +
            math.cos(phi1)*math.cos(phi2))
     try:
         arc = math.acos( cos )
@@ -252,12 +252,12 @@ def precisionDist(dist):
 def roundPoint(point, prec):
     p = ndb.GeoPt(lat=round(point.lat,prec),lon=round(point.lon,prec))
     return p
-    
+
 def findCenter(pts):
     lat = sum([x.lat for x in pts])/len(pts)
     lng = sum([x.lon for x in pts])/len(pts)
     return [lat,lng]
-    
+
 def priceEst(req, distance):
     # Estimate an offer price for a given request
     if req.capacity==0:
@@ -271,33 +271,33 @@ def priceEst(req, distance):
     price = 50 + seats + int(gas) + seed
     #TODO: take dist from fwy into account
     return price, seed
-    
+
 def pathEst(start, dest, steps=None, dist=None, fudge=100):
     """ Precision of path determined by total dist.
       0.1 ~ 10 miles <-- improve later """
     precision = precisionDist(dist/miles2m * fudge)
-    pathpts = [roundPoint(start,precision)]        
+    pathpts = [roundPoint(start,precision)]
     for s in steps:
         polyline = s['polyline']['points']
-        pathsegment = poly_decode(polyline, precision)              
+        pathsegment = poly_decode(polyline, precision)
         pathpts = pathpts + pathsegment
     pathpts.append(roundPoint(dest,precision))
-    return pathpts, precision    
-    
+    return pathpts, precision
+
 def pathPrec(start,steps,distance):
     pathpts = [start]
     precision = -1
     for s in steps:
         # distance = s['distance']['value']   #dist in metres
         polyline = s['polyline']['points']
-        pathsegment = poly_decode(polyline, precision)[0::100]              
+        pathsegment = poly_decode(polyline, precision)[0::100]
         # lat = s['end_location']['b']
         # lon = s['end_location']['d']
         # pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
         pathpts = pathpts + pathsegment
     return pathpts
-    
-    
+
+
 #### Stuff that calls the Google Maps API. If all else fails. Hopefully never need to use it ######
 def getPath(start,dest):
     pathpts = [start]
@@ -311,15 +311,15 @@ def getPath(start,dest):
     except:
         logging.error(req.content)
         logging.error('HTTPError from google dir')
-        return [start,dest], 1000      
+        return [start,dest], 1000
     precision = -1
     distance = results['distance']['value']
     for s in results['steps']:
         # distance = s['distance']['value']   #dist in metres
         polyline = s['polyline']['points']
-        pathsegment = poly_decode(polyline, precision)[0::100]              
+        pathsegment = poly_decode(polyline, precision)[0::100]
         lat = s['end_location']['lat']
         lon = s['end_location']['lng']
         pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
         pathpts = pathpts + pathsegment
-    return pathpts, distance    
+    return pathpts, distance
