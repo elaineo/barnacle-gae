@@ -17,6 +17,12 @@ import logging
 import json
 import time
 
+def special_json_format(rdump):
+    rdump['paths'] = [[('%1.2f' % a, '%1.2f' % b) for a, b in pathpts] for pathpts in rdump['paths']]
+    jsonall_result = json.dumps(rdump, separators=(',',':'))
+    jsonall_result = jsonall_result.replace('"','').replace('paths','"paths"').replace('zoom','"zoom"').replace('center','"center"')
+    return jsonall_result
+
 class RouteHandler(BaseHandler):
     """ Post a new route """
     def get(self, action=None,key=None):
@@ -29,7 +35,7 @@ class RouteHandler(BaseHandler):
             else:
                 routes = Route.query()
                 rdump = RouteUtils().dumpall(routes)
-                jsonall_result = json.dumps(rdump)
+                jsonall_result = special_json_format(rdump)
                 memcache.add(key="jsonall", value=jsonall_result, time=3600)
                 self.write(jsonall_result)
                 return
@@ -200,7 +206,7 @@ class RouteHandler(BaseHandler):
             self.params['route_title'] = 'Edit Delivery Request'
             self.params['today'] = datetime.now().strftime('%Y-%m-%d')
             self.render('post/forms/fillrequest.html', **self.params)
-            
+
     def __init_request(self,key=None):
         self.response.headers['Content-Type'] = "application/json"
         response = {'status':'ok'}
@@ -260,7 +266,7 @@ class RouteHandler(BaseHandler):
         if tel and (tel != self.user_prefs.tel):
             u = self.user_prefs.key.get()
             u.tel = tel
-            u.put()            
+            u.put()
         p = ndb.Key(urlsafe=key).get()
         # image upload
         img = self.request.get("file")
@@ -405,7 +411,7 @@ class RouteHandler(BaseHandler):
         else:
             self.render('landing/exprequest.html', **self.params)
         return
-        
+
     def __get_map_form(self,pt):
         ptlat = self.request.get(pt+'lat')
         ptlon = self.request.get(pt+'lon')
@@ -422,7 +428,7 @@ class RouteHandler(BaseHandler):
 
 
 def add_roundtrip(route):
-    p2 = Route(parent=route.key.parent(), 
+    p2 = Route(parent=route.key.parent(),
                 locstart=route.locend, locend=route.locstart,
                 start=route.dest, dest=route.start,
                 capacity=route.capacity, details=route.details,
