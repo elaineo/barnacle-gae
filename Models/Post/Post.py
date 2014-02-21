@@ -43,10 +43,26 @@ class Post(ndb.Model):
         return '/message/route/' + self.key.urlsafe()        
     
     def num_offers(self):
-        return len([m for m in self.offers if m.get().dead==0])
+        q=0
+        for r in self.offers:
+            try:
+                rr = r.get()
+                if rr.dead==0:
+                    q=q+1
+            except:
+                continue
+        return q    
         
     def num_matches(self):
-        return len([m for m in self.matches if m.get().dead==0])        
+        q=0
+        for r in self.matches:
+            try:
+                rr = r.get()
+                if rr.dead==0:
+                    q=q+1
+            except:
+                continue
+        return q        
         
     def num_confirmed(self):
         q=0

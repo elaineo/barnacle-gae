@@ -272,7 +272,7 @@ def priceEst(req, distance):
     #TODO: take dist from fwy into account
     return price, seed
     
-def pathEst(start, dest, steps=None, dist=None, fudge=100):
+def pathEst(start, dest, steps=None, dist=0, fudge=100):
     """ Precision of path determined by total dist.
       0.1 ~ 10 miles <-- improve later """
     precision = precisionDist(dist/miles2m * fudge)
