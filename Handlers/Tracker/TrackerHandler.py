@@ -12,7 +12,7 @@ from Utils.ConfirmUtils import *
 from Utils.EmailUtils import send_info
 from Utils.DefsEmail import sharetrack_txt
 from Utils.Defs import www_home
-from Utils.RouteUtils import *
+from Utils.RouteUtils import RouteUtils
 
 class TrackerHandler(BaseHandler):
     def get(self, action=None, key=None):
@@ -40,7 +40,7 @@ class TrackerHandler(BaseHandler):
             except:
                 self.abort(400)
                 return  
-            rdump = RouteUtils().dumptrack(route, [route.start,route.dest])
+            rdump = RouteUtils.dumptrack(route, [route.start,route.dest])
             self.response.headers['Content-Type'] = "application/json"
             self.write(rdump)
         elif action=='view' and key:
@@ -297,14 +297,6 @@ class TrackerHandler(BaseHandler):
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))   
         
-    def __debug(self):
-        locstart='Mountain View, CA'
-        locend = 'San Gabriel, CA'        
-        delivend = datetime.now()+timedelta(weeks=1)
-        t = TrackerModel(driver=self.user_prefs.key, locstart=locstart, locend =locend, delivend=delivend)
-        t = RouteUtils().setpoints(t,locstart,locend)
-        t.put()
-        return
 
     def __debugcheckin(self):            
         loc = ndb.GeoPt(lat=34, lon=-119.08)
@@ -331,7 +323,7 @@ class TrackerHandler(BaseHandler):
                 continue                
                 
 def create_from_res(r):
-    tzoffset = RouteUtils().getTZ(r.dest)
+    tzoffset = RouteUtils.getTZ(r.dest)
     track = TrackerModel(start = r.start, 
     dest=r.dest, delivend=r.deliverby, locstart=r.locstart, 
     locend=r.locend, tzoffset=tzoffset, reservation=r.key)    

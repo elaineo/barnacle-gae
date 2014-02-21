@@ -5,7 +5,7 @@ from google.appengine.api import mail
 from Handlers.BaseHandler import *
 from Handlers.SearchHandler import *
 from Models.User.Driver import *
-from Utils.RouteUtils import *
+from Utils.RouteUtils import RouteUtils, HaversinDist
 from Utils.ValidUtils import *
 from Utils.Defs import MV_geolat, MV_geolon, SG_geolat, SG_geolon, MV_string, SG_string
 
@@ -76,7 +76,7 @@ class ReserveHandler(BaseHandler):
             items=items, delivby=res.delivby, start=res.start, dest=res.dest, 
             locstart=res.locstart, locend=res.locend)
         
-        price, seed = priceEst(p, res.dist)
+        price, seed = RouteUtils.priceEst(p, res.dist)
         stats = ReqStats(sugg_price=price, seed=seed, distance=int(res.dist))
         p.stats = stats
             
@@ -171,7 +171,7 @@ class ReserveHandler(BaseHandler):
             res = ndb.Key(urlsafe=key).get()
         except: 
             self.abort(400)
-        rdump = RouteUtils().dumppts([res.start,res.dest])                
+        rdump = RouteUtils.dumppts([res.start,res.dest])                
         self.response.headers['Content-Type'] = "application/json"                
         self.write(rdump)              
                         
@@ -182,7 +182,7 @@ class ReserveHandler(BaseHandler):
         if not ptstr or not ptlat or not ptlon:
             ptstr = self.request.get(pt)
             if ptstr:
-                ptg = RouteUtils().getGeoLoc(ptstr)[0]
+                ptg = RouteUtils.getGeoLoc(ptstr)[0]
             else:
                 ptg = None
         else:

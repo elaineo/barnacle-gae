@@ -8,7 +8,7 @@ from Models.Post.Request import *
 from Models.Post.OfferRoute import *
 from Models.Post.OfferRequest import *
 from Models.User.Driver import *
-from Utils.RouteUtils import *
+from Utils.RouteUtils import RouteUtils
 from Utils.SearchDocUtils import create_route_doc
 from Utils.SearchDocUtils import create_request_doc
 from Utils.SearchDocUtils import delete_doc
@@ -34,7 +34,7 @@ class RouteHandler(BaseHandler):
                 return
             else:
                 routes = Route.query()
-                rdump = RouteUtils().dumpall(routes)
+                rdump = RouteUtils.dumpall(routes)
                 jsonall_result = special_json_format(rdump)
                 memcache.add(key="jsonall", value=jsonall_result, time=3600)
                 self.write(jsonall_result)
@@ -46,9 +46,9 @@ class RouteHandler(BaseHandler):
                 self.abort(400)
                 return
             if route.__class__.__name__ =='Route':
-                rdump = RouteUtils().dumproute(route)
+                rdump = RouteUtils.dumproute(route)
             else:
-                rdump = RouteUtils().dumppts([route.start,route.dest])
+                rdump = RouteUtils.dumppts([route.start,route.dest])
             self.response.headers['Content-Type'] = "application/json"
             self.write(rdump)
         elif action=='edit' and key:
@@ -228,7 +228,7 @@ class RouteHandler(BaseHandler):
             dest=dest, capacity=capacity,
             delivby=delivby, locstart=startstr, locend=deststr)
 
-        price, seed = priceEst(p, distance)
+        price, seed = RouteUtils.priceEst(p, distance)
         stats = ReqStats(sugg_price = price, seed = seed, distance = distance)
         p.rates = 0
         p.stats = stats
@@ -353,10 +353,9 @@ class RouteHandler(BaseHandler):
         path = data.get('legs')
         distance = data.get('distance')
         try:
-            p.pathpts = pathPrec(start, path, distance)
+            p.pathpts = RouteUtils.pathPrec(start, path, distance)
         except:
             #Somehow, the front end did not return this data. must be invalid route
-            # p.pathpts, dist = getPath(start,dest)
             response = {'status':'invalid'}
             self.write(json.dumps(response))
             return
@@ -419,7 +418,7 @@ class RouteHandler(BaseHandler):
         if not ptstr or not ptlat or not ptlon:
             ptstr = self.request.get(pt)
             if ptstr:
-                ptg = RouteUtils().getGeoLoc(ptstr)[0]
+                ptg = RouteUtils.getGeoLoc(ptstr)[0]
             else:
                 ptg = None
         else:

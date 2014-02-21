@@ -1,7 +1,7 @@
 from Handlers.BaseHandler import *
 from Models.Post.Route import *
 from Models.Post.Request import *
-from Utils.RouteUtils import *
+from Utils.RouteUtils import RouteUtils, HaversinDist
 from Utils.SearchUtils import *
 from Utils.SearchScraped import *
 from Utils.SearchDocUtils import *
@@ -212,7 +212,7 @@ class SearchHandler(BaseHandler):
         ptstr = self.request.get(pt)
         if not ptlat or not ptlon:            
             if ptstr:
-                ptg = RouteUtils().getGeoLoc(ptstr)[0]
+                ptg = RouteUtils.getGeoLoc(ptstr)[0]
             else:
                 ptg = None
         else:
@@ -236,7 +236,7 @@ def search_requests(start,dest=None, dist=None, path=None, distance=None, startd
     ## Change this to a query
     if dest:
         ### Get a set of low-res pathpts            
-        pathpts, precision = pathEst(start, dest,path, distance)
+        pathpts, precision = RouteUtils.pathEst(start, dest,path, distance)
         results = Request.search_route(pathpts, delivstart, delivend, precision)
         for r in results:
             posts.append(r.to_search())

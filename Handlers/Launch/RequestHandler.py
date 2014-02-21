@@ -4,7 +4,7 @@ from google.appengine.api import mail
 
 
 from Handlers.BaseHandler import *
-from Utils.RouteUtils import *
+from Utils.RouteUtils import RouteUtils
 from Utils.ValidUtils import *
 from Utils.Defs import MV_geolat, MV_geolon, SG_geolat, SG_geolon, MV_string, SG_string, ins_str
 
@@ -66,7 +66,7 @@ class RequestHandler(BaseHandler):
         if not ptstr or not ptlat or not ptlon:
             ptstr = self.request.get(pt)
             if ptstr:
-                ptg = RouteUtils().getGeoLoc(ptstr)[0]
+                ptg = RouteUtils.getGeoLoc(ptstr)[0]
             else:
                 ptg = None
         else:

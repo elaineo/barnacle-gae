@@ -95,6 +95,10 @@ class Post(ndb.Model):
         if incl_user:
             u = cls.key.parent().get()
             route.update(u.params_fill_sm())
+        if cls.dead > 0:
+            route['status'] = PostStatus[cls.dead]
+        else:
+            route['status'] = ''            
         return route    
             
     @classmethod

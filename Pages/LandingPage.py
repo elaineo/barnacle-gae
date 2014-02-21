@@ -3,6 +3,7 @@ from datetime import *
 from Handlers.BaseHandler import *
 from Models.Launch.CustModel import *
 from Models.Launch.ResModel import *
+from Utils.RouteUtils import RouteUtils
 from Utils.Twat import *
 
 import json
@@ -125,7 +126,7 @@ class CouponPage(BaseHandler):
         if not ptstr or not ptlat or not ptlon:
             ptstr = self.request.get(pt)
             if ptstr:
-                ptg = RouteUtils().getGeoLoc(ptstr)[0]
+                ptg = RouteUtils.getGeoLoc(ptstr)[0]
             else:
                 ptg = None
         else:

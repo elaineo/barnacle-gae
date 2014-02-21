@@ -1,4 +1,5 @@
 from google.appengine.ext import ndb
+from Utils.RouteUtils import RouteUtils
 import dateutil.parser
 from datetime import *
 import re
@@ -32,7 +33,7 @@ def get_search_json(data,pt):
     ptstr = data.get(pt)
     if not ptlat or not ptlon:            
         if ptstr:
-            ptg = RouteUtils().getGeoLoc(ptstr)[0]
+            ptg = RouteUtils.getGeoLoc(ptstr)[0]
         else:
             ptg = None
     else:

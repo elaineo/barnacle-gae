@@ -33,7 +33,7 @@ class SearchableRouteHandler(BaseHandler):
                 self.params['center'] = center
                 if len(posts) > 0:
                     self.params['posts'] = [p.to_search() for p in posts]
-                    rdump = RouteUtils().dumpall(posts)
+                    rdump = RouteUtils.dumpall(posts)
                     self.params['center'] = rdump['center']
                     self.params['paths'] = rdump['paths']              
             except:
@@ -43,7 +43,7 @@ class SearchableRouteHandler(BaseHandler):
             #return everything
             posts = Route.query(Route.dead==0)
             self.params['posts'] = [p.to_search() for p in posts]
-            rdump = RouteUtils().dumpall(posts)
+            rdump = RouteUtils.dumpall(posts)
             self.params['center'] = rdump['center']
             self.params['paths'] = rdump['paths']
             self.render('search/seo_route_all.html', **self.params)        
@@ -54,7 +54,7 @@ class SearchableRouteHandler(BaseHandler):
                 self.params['center'] = center
                 if len(posts) > 0:
                     self.params['posts'] = [p.to_search() for p in posts]
-                    rdump = RouteUtils().dumpall(posts)
+                    rdump = RouteUtils.dumpall(posts)
                     self.params['center'] = rdump['center']
                     self.params['paths'] = rdump['paths']  
             except:
@@ -67,7 +67,7 @@ class SearchableRouteHandler(BaseHandler):
                 self.params['center'] = center
                 if len(posts) > 0:
                     self.params['posts'] = [p.to_search() for p in posts]
-                    rdump = RouteUtils().dumpall(posts)
+                    rdump = RouteUtils.dumpall(posts)
                     self.params['center'] = rdump['center']
                     self.params['paths'] = rdump['paths']  
             except:

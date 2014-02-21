@@ -14,7 +14,7 @@ class CLHandler(BaseHandler):
             except:
                 self.abort(400)
                 return  
-            rdump = RouteUtils().dumproute(route)
+            rdump = RouteUtils.dumproute(route)
             self.response.headers['Content-Type'] = "application/json"
             self.write(rdump)
         elif key: # check if user logged in

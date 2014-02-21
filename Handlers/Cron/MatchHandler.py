@@ -10,7 +10,7 @@ from Utils.Defs import www_home
 from Utils.Defs import request_note_sub
 from Utils.EmailUtils import send_info
 from Utils.DefsEmail import *
-from Utils.RouteUtils import HaversinDist
+from Utils.RouteUtils import *
 
 import json
 import logging
@@ -136,7 +136,7 @@ class MatchHandler(BaseHandler):
             dist = 100
             path = data.get('legs')
             distance = data.get('distance')
-            pathpts, precision = pathEst(r.start, r.dest,path, distance)
+            pathpts, precision = RouteUtils.pathEst(r.start, r.dest,path, distance)
             now = datetime.now()
             later = (datetime.now() + timedelta(365))
             results = Request.search_route(pathpts, now, later, precision)

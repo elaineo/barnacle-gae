@@ -1,6 +1,5 @@
 from google.appengine.ext import ndb
 from Handlers.BaseHandler import *
-from Utils.RouteUtils import *
 import logging
 from datetime import *
 

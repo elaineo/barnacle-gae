@@ -39,11 +39,8 @@ class DebugUtils(BaseHandler):
             # delete_all_in_index(ROUTE_INDEX)
             # delete_all_in_index(REQUEST_INDEX)
         elif action=='clearexp':
-            offers = OfferRequest.query()
-            for q in offers:
-                r = q.route.get()
-                if not r:
-                    logging.info(q)
+            clean_index(REQUEST_INDEX)
+            clean_index(ROUTE_INDEX)
         elif action=='qtask':
             taskqueue.add(url='/debug/clearall')
         elif action=='cities':

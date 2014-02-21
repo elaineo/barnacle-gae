@@ -1,6 +1,6 @@
 from google.appengine.ext import ndb
 from Handlers.BaseHandler import *
-from Utils.RouteUtils import *
+from Utils.RouteUtils import RouteUtils
 import logging
 
 class CLModel(ndb.Model):
@@ -16,7 +16,7 @@ class CLModel(ndb.Model):
     pathpts = ndb.GeoPtProperty(repeated=True)        
 
     def _pre_put_hook(self):
-        p = RouteUtils().setloc(self, self.locstart, self.locend)        
+        p = RouteUtils.setloc(self, self.locstart, self.locend)        
         if p:
             self = p
         else:

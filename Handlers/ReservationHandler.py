@@ -8,7 +8,7 @@ from Handlers.MessageHandler import create_message
 from Models.Post.OfferRequest import *
 from Models.Post.OfferRoute import *
 from Models.User.Driver import *
-from Utils.RouteUtils import *
+from Utils.RouteUtils import RouteUtils
 from Utils.ValidUtils import *
 from Utils.EmailUtils import create_note
 from Utils.Defs import *
@@ -69,9 +69,9 @@ class ReservationHandler(BaseHandler):
             except:
                 self.abort(400)
             if route.__class__.__name__=='Route':
-                rdump = RouteUtils().dumproutepts(route,[res.start,res.dest])
+                rdump = RouteUtils.dumproutepts(route,[res.start,res.dest])
             else:
-                rdump = RouteUtils().dumproutepts(res,[route.start,route.dest])                
+                rdump = RouteUtils.dumproutepts(res,[route.start,route.dest])                
             self.response.headers['Content-Type'] = "application/json"                
             self.write(rdump)      
         elif key: 
@@ -399,7 +399,7 @@ class ReservationHandler(BaseHandler):
         if not ptstr or not ptlat or not ptlon:
             ptstr = self.request.get(pt)
             if ptstr:
-                ptg = RouteUtils().getGeoLoc(ptstr)[0]
+                ptg = RouteUtils.getGeoLoc(ptstr)[0]
             else:
                 ptg = None
         else:

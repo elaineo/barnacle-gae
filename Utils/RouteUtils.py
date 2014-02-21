@@ -12,27 +12,19 @@ from Utils.PolylineCode import poly_decode
 
 miles2m = 1609
 
-class RouteUtils():
-    def setloc(self,r,startstr,endstr):
+class RouteUtils:
+    ####Won't need setloc as soon as I fix CLModel
+    @staticmethod
+    def setloc(r,startstr,endstr):
         route=r
-        # route.start,route.locstart=self.getGeoLoc(startstr)
-        # route.dest,route.locend=self.getGeoLoc(endstr)
         if route.start and route.dest:
             route.pathpts, d = getPath(route.start,route.dest)
             return route, d
         else:
             return route, None
 
-    def setpoints(self,p,startstr,endstr):
-        route=p
-        route.start,route.locstart=self.getGeoLoc(startstr)
-        route.dest,route.locend=self.getGeoLoc(endstr)
-        if not route.start or not route.dest:
-            return None
-        else:
-            return route
-
-    def getGeoLoc(self,location):
+    @staticmethod
+    def getGeoLoc(location):
         loc = urllib2.quote(location)
         geo_url = geocode_url +  'address=' + loc + '&sensor=false'
         try:
@@ -55,14 +47,16 @@ class RouteUtils():
             logging.error('IndexError' + location)
             return None, 'invalid'
 
-    def getTZ(self,loc):
+    @staticmethod
+    def getTZ(loc):
         ts = str(time.time())
         data = "location=" + str(loc.lat) + "," + str(loc.lon) + "&timestamp=" + ts + "&sensor=true"
         req = urlfetch.fetch(tz_url+data)
         results = json.loads(req.content)['rawOffset']
         return int(results)
 
-    def estPath(self,start,dest, fudge=100):
+    @staticmethod
+    def estPath(start,dest, fudge=100):
         """ Precision of path determined by total dist.
           0.1 ~ 10 miles <-- improve later """
         locs='origin=' + str(start) + '&destination=' + str(dest)
@@ -84,7 +78,8 @@ class RouteUtils():
         pathpts.append(roundPoint(dest,precision))
         return pathpts, precision
 
-    def dumproute(self,r):
+    @staticmethod
+    def dumproute(r):
         route = {}
         route['center'] = findCenter([r.start, r.dest])
         pathpts = []
@@ -94,7 +89,8 @@ class RouteUtils():
         route['zoom'] = zoom_max(abs(r.start.lat-r.dest.lat),abs(r.start.lon-r.dest.lon))
         return json.dumps(route)
 
-    def dumproutepts(self,r,pts):
+    @staticmethod
+    def dumproutepts(r,pts):
         route = {}
         route['center'] = findCenter([pts[0],pts[-1]])
         pathpts = []
@@ -108,7 +104,8 @@ class RouteUtils():
         route['markers'] = markers
         return json.dumps(route)
 
-    def dumppts(self,pts):
+    @staticmethod
+    def dumppts(pts):
         route = {}
         route['center'] = findCenter(pts)
         markers = []
@@ -118,7 +115,8 @@ class RouteUtils():
         route['zoom'] = map_zoom_pts(pts)
         return json.dumps(route)
 
-    def dumptrack(self,r,pts):
+    @staticmethod
+    def dumptrack(r,pts):
         route = {}
         route['center'] = findCenter(pts)
         markers = []
@@ -133,7 +131,8 @@ class RouteUtils():
         route['waypts'] = pathpts
         return json.dumps(route)
 
-    def dumpall(self,routes):
+    @staticmethod
+    def dumpall(routes):
         route = {}
         paths=[]
         lats=[]
@@ -161,7 +160,8 @@ class RouteUtils():
         route['paths'] = paths
         return route
 
-    def dumpreqs(self,reqs, dest=True):
+    @staticmethod
+    def dumpreqs(reqs, dest=True):
         route = {}
         markers = []
         for r in reqs:
@@ -182,6 +182,51 @@ class RouteUtils():
             markers.append(m)
         route['markers'] = markers
         return route
+        
+    @staticmethod
+    def priceEst(req, distance):
+        # Estimate an offer price for a given request
+        if req.capacity==0:
+            seats = 25
+        elif req.capacity==1:
+            seats = 40
+        else:
+            seats = 50
+        gas = 0.7*distance / (35*miles2m)
+        seed = random.randint(0,99)
+        price = 50 + seats + int(gas) + seed
+        #TODO: take dist from fwy into account
+        return price, seed
+        
+    @staticmethod
+    def pathEst(start, dest, steps=None, dist=0, fudge=100):
+        """ Precision of path determined by total dist.
+          0.1 ~ 10 miles <-- improve later """
+        precision = precisionDist(dist/miles2m * fudge)
+        pathpts = [roundPoint(start,precision)]
+        for s in steps:
+            polyline = s['polyline']['points']
+            pathsegment = poly_decode(polyline, precision)
+            pathpts = pathpts + pathsegment
+        pathpts.append(roundPoint(dest,precision))
+        return pathpts, precision
+
+    @staticmethod
+    def pathPrec(start,steps,distance):
+        pathpts = [start]
+        precision = -1
+        for s in steps:
+            # distance = s['distance']['value']   #dist in metres
+            polyline = s['polyline']['points']
+            pathsegment = poly_decode(polyline, precision)[0::100]
+            # lat = s['end_location']['b']
+            # lon = s['end_location']['d']
+            # pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
+            pathpts = pathpts + pathsegment
+        return pathpts
+
+
+
 
 def map_zoom_pts(pts):
     # calculate map zoom
@@ -258,46 +303,6 @@ def findCenter(pts):
     lng = sum([x.lon for x in pts])/len(pts)
     return [lat,lng]
 
-def priceEst(req, distance):
-    # Estimate an offer price for a given request
-    if req.capacity==0:
-        seats = 25
-    elif req.capacity==1:
-        seats = 40
-    else:
-        seats = 50
-    gas = 0.7*distance / (35*miles2m)
-    seed = random.randint(0,99)
-    price = 50 + seats + int(gas) + seed
-    #TODO: take dist from fwy into account
-    return price, seed
-    
-def pathEst(start, dest, steps=None, dist=0, fudge=100):
-    """ Precision of path determined by total dist.
-      0.1 ~ 10 miles <-- improve later """
-    precision = precisionDist(dist/miles2m * fudge)
-    pathpts = [roundPoint(start,precision)]
-    for s in steps:
-        polyline = s['polyline']['points']
-        pathsegment = poly_decode(polyline, precision)
-        pathpts = pathpts + pathsegment
-    pathpts.append(roundPoint(dest,precision))
-    return pathpts, precision
-
-def pathPrec(start,steps,distance):
-    pathpts = [start]
-    precision = -1
-    for s in steps:
-        # distance = s['distance']['value']   #dist in metres
-        polyline = s['polyline']['points']
-        pathsegment = poly_decode(polyline, precision)[0::100]
-        # lat = s['end_location']['b']
-        # lon = s['end_location']['d']
-        # pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
-        pathpts = pathpts + pathsegment
-    return pathpts
-
-
 #### Stuff that calls the Google Maps API. If all else fails. Hopefully never need to use it ######
 def getPath(start,dest):
     pathpts = [start]
@@ -322,4 +327,4 @@ def getPath(start,dest):
         lon = s['end_location']['lng']
         pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
         pathpts = pathpts + pathsegment
-    return pathpts, distance
+    return pathpts, distance        

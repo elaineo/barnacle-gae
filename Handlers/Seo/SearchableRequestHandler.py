@@ -26,7 +26,7 @@ class SearchableRequestHandler(BaseHandler):
                 posts, center = self.__get_reqs_to(dest)            
                 posts = dump_results(posts) 
                 self.params['posts'] = [p.to_search() for p in posts]
-                rdump = RouteUtils().dumpreqs(posts, dest=True)
+                rdump = RouteUtils.dumpreqs(posts, dest=True)
                 self.params['markers'] = rdump['markers']
                 self.params['center'] = center
             except:
@@ -36,7 +36,7 @@ class SearchableRequestHandler(BaseHandler):
             #return everything
             posts = Request.query(Request.dead==0)
             self.params['posts'] = [p.to_search() for p in posts]
-            rdump = RouteUtils().dumpreqs(posts)
+            rdump = RouteUtils.dumpreqs(posts)
             self.params['markers'] = rdump['markers']
             self.params['center'] = [40,-99]
             self.render('search/seo_requests_all.html', **self.params)            
@@ -45,7 +45,7 @@ class SearchableRequestHandler(BaseHandler):
                 posts, center = self.__get_reqs_from(origin)            
                 posts = dump_results(posts) 
                 self.params['posts'] = [p.to_search() for p in posts]
-                rdump = RouteUtils().dumpreqs(posts, dest=False)
+                rdump = RouteUtils.dumpreqs(posts, dest=False)
                 self.params['markers'] = rdump['markers']
                 self.params['center'] = center
             except:
@@ -55,7 +55,7 @@ class SearchableRequestHandler(BaseHandler):
             try:
                 posts, center = self.__get_reqs(origin, dest)
                 self.params['posts'] = [p.to_search() for p in posts]
-                rdump = RouteUtils().dumpreqs(posts)
+                rdump = RouteUtils.dumpreqs(posts)
                 self.params['markers'] = rdump['markers']
                 self.params['center'] = center
             except:
@@ -81,7 +81,7 @@ class SearchableRequestHandler(BaseHandler):
         delivstart = datetime.now()
         delivend = delivstart + timedelta(days=365)
 
-        pathpts, precision = RouteUtils().estPath(start, dest, dist)
+        pathpts, precision = RouteUtils.estPath(start, dest, dist)
         results = Request.search_route(pathpts, delivstart, delivend, precision)
         center = findCenter([start,dest])
         return results, center
@@ -141,7 +141,7 @@ class SearchableRequestHandler(BaseHandler):
         start,startstr = self.__get_search_form('start')
         if not start:
             r = Request.query()
-            rdump = RouteUtils().dumpreqs(r)
+            rdump = RouteUtils.dumpreqs(r)
             self.write(json.dumps(rdump))
             return
         # this is optional
@@ -154,12 +154,12 @@ class SearchableRequestHandler(BaseHandler):
         posts = []
         if dest:            
             ### Get a set of low-res pathpts
-            pathpts, precision = RouteUtils().estPath(start, dest,dist)
+            pathpts, precision = RouteUtils.estPath(start, dest,dist)
             pp = []
             for p in pathpts:
                 pp.append([p.lat,p.lon])
             results = Request.search_route(pathpts, delivstart, delivend, precision)
-            rdump = RouteUtils().dumpreqs(results)
+            rdump = RouteUtils.dumpreqs(results)
             rdump['waypts'] = pp
         else:
             results = search_points_start(dist,'REQUEST_INDEX',delivend.strftime('%Y-%m-%d'),delivstart.strftime('%Y-%m-%d'),'delivby','start',start)
@@ -167,7 +167,7 @@ class SearchableRequestHandler(BaseHandler):
             r = []
             for doc in results.results:
                 r.append(ndb.Key(urlsafe=doc.doc_id).get())
-            rdump = RouteUtils().dumpreqs(r)
+            rdump = RouteUtils.dumpreqs(r)
         self.write(json.dumps(rdump))
         
         
