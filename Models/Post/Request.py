@@ -95,7 +95,9 @@ class Request(Post):
             if start in pathpts and dest in pathpts:
                 # Make sure it's going the right way
                 if pathpts.index(start) <= pathpts.index(dest):
-                    results.append(q)
+                    # Make sure it's not garbage
+                    if q.stats.status > RequestStatus.index('INCOMP'):
+                        results.append(q)
         return results
        
 #save what they searched

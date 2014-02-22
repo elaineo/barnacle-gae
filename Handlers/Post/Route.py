@@ -65,6 +65,7 @@ class RouteHandler(PostHandler):
                 self.params.update(p.to_dict(True))
                 self.params['route_title'] = 'Edit Route'
                 self.render('post/forms/fillpost.html', **self.params)
+                return
             logging.error(p)
             self.abort(403)
             return

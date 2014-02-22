@@ -68,9 +68,6 @@ form.custom .custom.disabled { background-color: #dddddd; }
 .form-search.custom div.custom.dropdown ul li.selected { background: #ccC; color: black; }
 .form-search.custom div.custom.dropdown ul li:hover { background-color: #ccC; color: black; }
 .form-search.custom div.custom.dropdown ul li.selected:hover { background: #ccC; cursor: default; color: black; }
-.form-search .button { background:#0087A3; border: 1px solid #0087A3; }
-.form-search .button:hover,
-.form-search .button:focus { color: white; background-color: #5cabb8; border: 1px solid #5cabb8; }
 .form-search .h1label { color: #fff; text-align: right; height:40px; padding:0px; margin:0px; font-size: 22px;}
 .form-search .input-addr { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px;  line-height: 16px;}
 /* Buttons with Dropdowns ---------------------- */

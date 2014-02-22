@@ -153,9 +153,8 @@ class RequestHandler(PostHandler):
         logging.info('Initial Request: '+startstr+' to '+deststr)
         distance = data.get('distance')
         p = Request(parent=self.user_prefs.key, start=start,
-            dest=dest, capacity=capacity,
+            dest=dest, capacity=capacity, 
             delivby=delivby, locstart=startstr, locend=deststr)
-
         price, seed = RouteUtils.priceEst(p, distance)
         stats = ReqStats(sugg_price = price, seed = seed, distance = distance)
         p.rates = 0
@@ -209,6 +208,7 @@ class RequestHandler(PostHandler):
             p.stats.status = RequestStatus.index('PURSUE')
             p.put()
             self.view_page(p.key.urlsafe())
+            logging.info('Complete request')
         else:
             self.redirect('/request')
 
