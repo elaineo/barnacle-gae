@@ -22,7 +22,7 @@
                 <td>{{post.dest}}</td>
                 <td>{% if post.roundtrip == 1 %}Round Trip{% endif %}</td>
                 <td>{{post.delivend}}</td>
-                <td><a href='http://www.gobarnacle.com/post/{{post.routekey}}'>view</a></td>
+                <td><a href='http://www.gobarnacle.com{{post.post_url}}'>view</a></td>
             </tr>
             {% endfor %}            
         </table>

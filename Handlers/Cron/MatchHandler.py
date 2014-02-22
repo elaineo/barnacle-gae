@@ -178,7 +178,7 @@ class MatchHandler(BaseHandler):
             if p['thumb_url'][0]=='/':
                 p['thumb_url'] = www_home + p['thumb_url']                
             posts.append(p)
-            unroll=unroll + "\n" + p['start'] + "\t" + p['dest'] + "\t" + p['delivby'] + "\t" + www_home + "/post/request/"+p['routekey']
+            unroll=unroll + "\n" + p['start'] + "\t" + p['dest'] + "\t" + p['delivby'] + "\t" + www_home + p['post_url']
         params = {'posts': posts}
         unrollparams = {'posts': unroll}
         self.params['action'] = 'match2driver'
@@ -202,7 +202,7 @@ class MatchHandler(BaseHandler):
             unroll=unroll + "\n" + p['start'] + "\t" + p['dest'] + "\t"
             if p['roundtrip'] == 1:
                 unroll = unroll + "Roundtrip"
-            unroll = unroll + "\t" + p['delivend'] + "\t" + www_home + "/post/"+p['routekey']
+            unroll = unroll + "\t" + p['delivend'] + "\t" + www_home + p['post_url']
         params = {'posts': posts}
         unrollparams = {'posts': unroll}
         self.params['action'] = 'match2sender'

@@ -139,7 +139,8 @@ class SearchHandler(BaseHandler):
                         'dest': d['locend'],
                         'fbid': d['fbid'],
                         'delivstart': d['delivstart'].strftime('%b-%d-%y'),
-                        'delivend': d['delivend'].strftime('%b-%d-%y')
+                        'delivend': d['delivend'].strftime('%b-%d-%y'),
+                        'post_url' : '/route/' + d['routekey']
                     }
                 posts.append(p)
             except:
@@ -252,8 +253,10 @@ def search_requests(start,dest=None, dist=None, path=None, distance=None, startd
                     'dest': d['locend'],
                     'delivby': d['delivby'].strftime('%b-%d-%y'),
                     'fbid' : d['fbid'],
-                    'routekey': d['routekey']
+                    'routekey': d['routekey'],
+                    'post_url' : '/request/' + d['routekey']
                 }
             posts.append(p)
 
     return posts        
+    

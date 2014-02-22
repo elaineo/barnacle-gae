@@ -82,7 +82,7 @@
         I don't have any packages to send. Can I use Barnacle to hitch a ride?</a>
       </div>
       <div id="collapse2" class="accordion-body collapse">
-        <div class="accordion-inner">You may arrange a ride with our drivers by <a href='/search'>searching for a driver</a> or submitting a <a href='/post/request'>request</a>. Please note that Barnacle does not provide insurance for human cargo.
+        <div class="accordion-inner">You may arrange a ride with our drivers by <a href='/search'>searching for a driver</a> or submitting a <a href='/request'>request</a>. Please note that Barnacle does not provide insurance for human cargo.
         </div>
       </div>
     </div>
@@ -106,7 +106,7 @@
       </div>
       <div id="collapse4" class="accordion-body collapse">
         <div class="accordion-inner">      
-        Please submit a <a href='/post/request'>delivery request</a>. 
+        Please submit a <a href='/request'>delivery request</a>. 
         We will notify you if we find an available driver. When we find a match, we will send you a link to confirm your reservation. 
         </div>    
       </div>
@@ -261,7 +261,7 @@
 <script type="text/javascript" src="/static/js/maps/maphomesm.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    var mapURL = '/post/jsonall';
+    var mapURL = '/route/json';
     initialize_home(mapURL);
     click_redirect('.post_btn','/drive');
 });

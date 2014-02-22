@@ -20,6 +20,18 @@ class Route(Post):
     pathpts = ndb.GeoPtProperty(repeated=True)     
     stats = ndb.StructuredProperty(RouteStats)
 
+    def post_url(self):
+        """ url for public view of post """
+        return '/route/' + self.key.urlsafe()
+
+    def edit_url(self):
+        """ url for editing post"""
+        return '/route/edit/' + self.key.urlsafe()
+
+    def delete_url(self):
+        """ url for deleting post"""
+        return '/route/delete/' + self.key.urlsafe()    
+    
     def track_url(self):
         """ if confirmed url for tracking page """
         t = TrackerModel.by_route(self.key).get()
@@ -32,7 +44,11 @@ class Route(Post):
         route = cls.base_dict(incl_user)
         route.update({ 'rt' : int(cls.roundtrip),
                     'delivstart' : cls.delivstart.strftime('%m/%d/%Y'),
-                    'delivend' : cls.delivend.strftime('%m/%d/%Y') })
+                    'delivend' : cls.delivend.strftime('%m/%d/%Y'),
+                    'edit_url' : cls.edit_url(),
+                    'delete_url':cls.delete_url(),
+                    'post_url' : cls.post_url()
+                    })
         route.update(cls.gen_repeat())
         d = Driver.by_userkey(cls.key.parent())
         if d:
@@ -42,6 +58,9 @@ class Route(Post):
     def to_search(cls):
         u = cls.key.parent().get()
         route = {
+            'edit_url' : cls.edit_url(),
+            'delete_url':cls.delete_url(),
+            'post_url' : cls.post_url(),
             'routekey' : cls.key.urlsafe(),
             'delivstart' : cls.delivstart.strftime('%b-%d-%y'),
             'delivend' : cls.delivend.strftime('%b-%d-%y'),

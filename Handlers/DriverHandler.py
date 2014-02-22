@@ -22,7 +22,7 @@ class DriverHandler(BaseHandler):
         self.params['createorupdate'] = 'Ready to Drive'
         d = Driver.by_userkey(self.user_prefs.key)
         if d: #existing driver
-            self.redirect('/post')
+            self.redirect('/route')
             return
         # else first time being driver
         self.params.update(self.user_prefs.params_fill())

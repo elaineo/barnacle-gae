@@ -40,7 +40,7 @@ class ReservationHandler(BaseHandler):
                    return
         elif action=='route' and key:
             if not self.user_prefs:
-                self.redirect('/post/'+key+'#signin-box')
+                self.redirect('/route/'+key+'#signin-box')
             # try:
             p = ndb.Key(urlsafe=key).get()                    
             self.params.update(p.to_dict(True))

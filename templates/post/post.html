@@ -76,7 +76,7 @@
 $(document).ready(function(){
     caption = '{{first_name}} has a new Delivery Route on Barnacle';
     description = '{{first_name}} will be driving from {{ locstart }} to {{ locend }} between {{ delivstart }} and {{ delivend }} and can deliver your stuff!'
-    fb_url='https://www.facebook.com/dialog/feed?app_id=540602052657989&link=http://www.gobarnacle.com/post/{{routekey}}&picture=http://www.gobarnacle.com/static/img/barnacle.png&name=Barnacle&caption='+escape(caption)+'&description='+escape(description)+'&redirect_uri=http://www.gobarnacle.com/suicide'
+    fb_url='https://www.facebook.com/dialog/feed?app_id=540602052657989&link=http://www.gobarnacle.com{{post_url}}&picture=http://www.gobarnacle.com/static/img/barnacle.png&name=Barnacle&caption='+escape(caption)+'&description='+escape(description)+'&redirect_uri=http://www.gobarnacle.com/suicide'
     if(window.location.href.indexOf('?')>0) {
       var name = window.location.href.split('?')[1]
       if (name=='fb')

@@ -16,7 +16,7 @@
         <th>Deliver By</th>
     </tr></thead>
         {% for post in posts %}
-    <tr class='clicky' data-fb='{{post.fbid}}' onclick="document.location.href = '/post/request/{{post.routekey}}';">
+    <tr class='clicky' data-fb='{{post.fbid}}' onclick="document.location.href = '{{post.post_url}}';">
         <td rowspan='2'>
         <img height="50px" src="{{post.thumb_url}}"><br>
         {{post.first_name}}</td>

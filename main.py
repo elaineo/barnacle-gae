@@ -1,13 +1,20 @@
 import webapp2
 import sys
 
+# Routes and Reservations
+from Handlers.Post.Route import RouteHandler
+from Handlers.Post.Request import RequestHandler
+from Handlers.Post.Dump import DumpHandler
+
+from Handlers.Post.Reservation import ReservationHandler
+from Handlers.Post.Review import ReviewHandler
+
 from Handlers.BaseHandler import *
+from Handlers.MessageHandler import *
 from Handlers.ImageHandler import *
 from Handlers.AccountHandler import *
 from Handlers.ProfileHandler import *
-from Handlers.RouteHandler import *
 from Handlers.Launch.CLHandler import *
-from Handlers.ReservationHandler import *
 from Handlers.SearchHandler import *
 from Handlers.Cron.ExpireHandler import *
 from Handlers.Cron.MatchHandler import *
@@ -30,7 +37,6 @@ from Utils.ErrorUtils import *
 
 ## Launch!
 from Handlers.Launch.ApplyHandler import *
-from Handlers.Launch.RequestHandler import *
 from Handlers.Launch.ReserveHandler import *
 from Handlers.Launch.CheckoutHandler import *
 
@@ -38,8 +44,6 @@ from Pages.LandingPage import *
 from Pages.HomePage import *
 from Pages.ContactPage import *
 
-from Handlers.MessageHandler import *
-from Handlers.ReviewHandler import *
 
 sys.path.append('/Pages')
 
@@ -53,7 +57,6 @@ app = webapp2.WSGIApplication([('/', HomePage),
     webapp2.Route('/res/<action>/<key>', handler=ReserveHandler),
     webapp2.Route('/res/<action>', handler=ReserveHandler),
     webapp2.Route('/res', handler=ReserveHandler),
-    webapp2.Route('/request', handler=RequestHandler),
    webapp2.Route('/apply', handler=ApplyHandler),
    webapp2.Route('/apply/<action>', handler=ApplyHandler),
    webapp2.Route('/checkout/<key:[\w\-]{20,}>', handler=CheckoutHandler),
@@ -94,11 +97,18 @@ app = webapp2.WSGIApplication([('/', HomePage),
     webapp2.Route('/profile/<action>', handler=ProfileHandler),
     webapp2.Route('/profile', handler=ProfileHandler),
     webapp2.Route('/routes', handler=DumpHandler),
-# post routes
+# Routes and Requests (eventually phase out posts)
     webapp2.Route('/post/<action>/<key:[\w\-]{20,}>', handler=RouteHandler),
     webapp2.Route('/post/<key:[\w\-]{20,}>', handler=RouteHandler),
     webapp2.Route('/post/<action>', handler=RouteHandler),
     webapp2.Route('/post', handler=RouteHandler),
+    webapp2.Route('/route/<action>/<key:[\w\-]{20,}>', handler=RouteHandler),
+    webapp2.Route('/route/<key:[\w\-]{20,}>', handler=RouteHandler),
+    webapp2.Route('/route/<action>', handler=RouteHandler),
+    webapp2.Route('/route', handler=RouteHandler),    
+    webapp2.Route('/request/<action>/<key:[\w\-]{20,}>', handler=RequestHandler),
+    webapp2.Route('/request/<key:[\w\-]{20,}>', handler=RequestHandler),
+    webapp2.Route('/request', handler=RequestHandler),        
 # reservations
     webapp2.Route('/reserve/<action>/<key:[\w\-]{20,}>', handler=ReservationHandler),
     webapp2.Route('/reserve/<key:[\w\-]{20,}>', handler=ReservationHandler),

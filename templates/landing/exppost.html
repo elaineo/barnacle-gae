@@ -47,8 +47,8 @@ function getRequestDump(data) {
                 buf = '<tr class="clicky"';
                 if (typeof q.posts[k].fbid != 'undefined') 
                   buf += 'data-fb="'+ q.posts[k].fbid+'" ';
-                buf += 'onclick="document.location.href = \'/post\/';
-                buf += q.posts[k].routekey +'\';"><td ';
+                buf += 'onclick="document.location.href = \'';
+                buf += q.posts[k].post_url +'\';"><td ';
                 if (typeof q.posts[k].fbid != 'undefined') 
                   buf += 'rowspan="2"';
                 buf += '><img height="50px" src="';

@@ -15,19 +15,7 @@ class Post(ndb.Model):
     locend = ndb.StringProperty(required=True) #text descr of location
     matches = ndb.KeyProperty(repeated=True)  #store keys of matches
     offers = ndb.KeyProperty(repeated=True)  #store keys of offers
-    dead = ndb.IntegerProperty(default=0)    # see PostStatus   
-    
-    def post_url(self):
-        """ url for public view of post """
-        return '/post/' + self.key.urlsafe()
-
-    def edit_url(self):
-        """ url for editing post"""
-        return '/post/edit/' + self.key.urlsafe()
-
-    def delete_url(self):
-        """ url for deleting post"""
-        return '/post/delete/' + self.key.urlsafe()
+    dead = ndb.IntegerProperty(default=0)    # see PostStatus      
         
     def first_name(self):
         return self.key.parent().get().first_name
@@ -79,9 +67,6 @@ class Post(ndb.Model):
         route = {
             'routekey' : cls.key.urlsafe(),
             'reserve_url' : cls.reserve_url(),
-            'edit_url' : cls.edit_url(),
-            'delete_url':cls.delete_url(),
-            'post_url' : cls.post_url(),
             'message_url' : cls.message_url(),
             'capacity' : cls.capacity,
             'created' : cls.created.strftime('%m/%d/%Y'),

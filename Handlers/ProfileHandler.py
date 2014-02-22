@@ -93,7 +93,7 @@ class ProfileHandler(BaseHandler):
             self.send_driver_info(email)
             self.render('user/drivestart.html',**self.params)
         else:            
-            self.redirect('/post')
+            self.redirect('/route')
         
         
     def __profile(self):

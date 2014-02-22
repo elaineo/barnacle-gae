@@ -25,7 +25,19 @@ class Request(Post):
     delivby = ndb.DateProperty(required=True)
     stats = ndb.StructuredProperty(ReqStats)
     img_id = ndb.IntegerProperty()     
-        
+
+    def post_url(self):
+        """ url for public view of post """
+        return '/request/' + self.key.urlsafe()
+
+    def edit_url(self):
+        """ url for editing post"""
+        return '/request/edit/' + self.key.urlsafe()
+
+    def delete_url(self):
+        """ url for deleting post"""
+        return '/request/delete/' + self.key.urlsafe()    
+    
     def increment_views(self):
         if self.stats:
             self.stats.views = self.stats.views+1
@@ -38,11 +50,17 @@ class Request(Post):
         route['category'] = cls.category
         route['img_url'] = cls.image_url()
         route['img_thumb'] = cls.image_url('small')
+        route['edit_url'] = cls.edit_url()
+        route['delete_url'] = cls.delete_url()
+        route['post_url'] = cls.post_url()
         return route
         
     def to_search(cls):
         u = cls.key.parent().get()
         route = {
+            'edit_url' : cls.edit_url(),
+            'delete_url':cls.delete_url(),
+            'post_url' : cls.post_url(),
             'routekey' : cls.key.urlsafe(),
             'delivby' : cls.delivby.strftime('%b-%d-%y'),
             'start' : cls.locstart,

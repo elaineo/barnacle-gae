@@ -12,7 +12,7 @@
 </div>    
 <div class="row">
     <div class="span10 offset1">
- <form enctype="multipart/form-data" method="post" id='route_form' class="form-horizontal" action="/post">
+ <form enctype="multipart/form-data" method="post" id='route_form' class="form-horizontal" action="/route">
 
      <div class="control-group">
         <div class="controls" id="rtRadios">
@@ -232,7 +232,7 @@ $(document).ready(function(){
     //click_submit('#route_btn','#route_form');
     var v = [[0],[0]];
     click_ajax('#route_btn',['map0','map1'],['start','dest'],v,'#route_form',true, true);
-    click_redirect('#postreq_btn','/post/request');
+    click_redirect('#postreq_btn','/request');
     $("#dayWeekOpts").css("display","none");
     $("#weekMonthOpts").css("display","none");
     $("#repeatRadios").click(function(){
