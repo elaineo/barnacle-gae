@@ -169,9 +169,6 @@ class RequestHandler(PostHandler):
                 self.params['tel'] = self.user_prefs.tel
             self.params['rates'] = price
             self.render('post/request_review.html', **self.params)
-            taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
-            create_request_doc(p.key.urlsafe(), p)
-
         except:  #this should never happen
             self.params['error_route'] = 'Invalid Locations'
             self.params['capacity'] = capacity
@@ -209,6 +206,8 @@ class RequestHandler(PostHandler):
             p.put()
             self.view_page(p.key.urlsafe())
             logging.info('Complete request')
+            taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
+            create_request_doc(p.key.urlsafe(), p)
         else:
             self.redirect('/request')
 

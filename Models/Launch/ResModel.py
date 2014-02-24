@@ -8,6 +8,7 @@ class ResModel(ndb.Model):
     capacity = ndb.IntegerProperty(default=0) # seat (0), trunk (1), big (2),    
     details = ndb.TextProperty() 
     delivstart = ndb.DateProperty()
+    delivby = ndb.DateProperty()
     start = ndb.GeoPtProperty(required=True)
     locstart = ndb.StringProperty(required=True) #text descr of location
     dest = ndb.GeoPtProperty(required=True)

@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="/static/landing/styles/updates.css">
   <link rel="stylesheet" href="/static/landing/styles/custom.css">
   <style type="text/css">
-    #header { padding-top: 20px; padding-bottom: 40px; background: url(/static/landing/images/profile-{{seodir}}/header_image_bg.jpg) top center no-repeat; max-width: 1170px; margin: 0 auto; 
+    #header { padding-top: 20px; padding-bottom: 40px; background: url(/static/landing/images/profile-{{seodir}}/header_image_vegas.jpg) top center no-repeat; max-width: 1170px; margin: 0 auto; 
     box-shadow: inset 0 50px 50px -50px #171717;
     -moz-box-shadow: inset 0 50px 50px -50px #171717;
     -webkit-box-shadow: inset 0 50px 50px -50px #171717;
@@ -86,16 +86,17 @@
     <div class="five columns hide-for-small">
 
     </div>
-    <div class="three columns login-buttons" style='text-transform: uppercase;
-	font-size: 0.85em; line-height: 1.5em;' id='user_head'>
-        <img src='/static/landing/images/profile-sxsw/sxsw_logo.png' style='position:absolute; margin-top:0;'>
+    <div class="three columns login-buttons" id='user_head'>
+        <img src='/static/landing/images/profile-sxsw/vegas_sign.png' style='position:absolute; margin-top:0;'>
     </div>
     <!--end login buttons-->
   </div>
   
 <div id="header">
 	<div class="row">
-   		
+    
+
+		
     <div class="twelve columns">
       <div class="row">
       
@@ -105,7 +106,7 @@
             <p class="lead text-resize">Give your {{seosub}} a ride with our nationwide network of commuters.</p>
           </div>
           <!--Search form-->
-          <form action="/c/sxsw" method="post" class="custom form-search" id='request_form'>
+          <form action="/c/vegas" method="post" class="custom form-search" id='request_form'>
             <div class="row">
               <div class="five mobile-four columns">
                 <label class="right inline">Origin:</label>
@@ -114,7 +115,14 @@
                 <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}">
               </div>
             </div><!--end row-->
-
+            <div class="row">
+              <div class="five mobile-four columns">
+                <label class="right inline">Deliver By:</label>
+              </div>
+              <div class="seven mobile-four columns">
+                <input type="date" name="reqdate" min="{{today}}" value="{{delivby}}" id="reqdate" autocomplete="off">
+              </div>
+            </div><!--end row-->
             <div class="row">
               <div class="five mobile-four columns">
                 <label class="right inline">Space Needed:</label>
@@ -429,7 +437,7 @@ function calc_cost() {
   
     <!-- maps and other stuff for the form -->
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
-<script src="/static/js/maps/mapsxswcost.js"></script>
+<script src="/static/js/maps/mapvegascost.js"></script>
   
   <!-- 3rd Plugins -->
 	<!-- jQuery & Foundation Framework -->
