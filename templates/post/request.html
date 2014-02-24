@@ -17,7 +17,7 @@
         <tr class='clicky' onclick="document.location.href = '{{res.reserve_url}}';">
             <td>{{res.sender}}</td>
             <td>{{res.delivby}}</td>
-            <td>${{res.price}}</td>
+            <td>${{res.rates}}</td>
             <td>{% if res.confirmed==True %}<span class="text-error">Yes</span>{% else %}No{% endif %}</td>
         </tr>
         {% endfor %}

@@ -11,7 +11,7 @@ class OfferRequest(Offer):
         rout = cls.driver_name() + '\'s route from ' + cls.locstart + ' to ' + cls.locend
         rout += '\nDeliver By: ' + cls.deliverby.strftime('%m/%d/%Y')
         rout += '\nItems: ' + cls.details
-        rout += '\nOffer price: ' + str(cls.price)
+        rout += '\nOffer price: ' + str(cls.rates)
         return rout
         
     def image_url(self, mode = 'original'):

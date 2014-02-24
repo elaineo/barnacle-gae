@@ -10,7 +10,7 @@ class OfferRoute(Offer):
     def print_html(cls):
         rout = cls.sender_name() + '\'s Delivery Request'
         rout += '\nDeliver By: ' + cls.deliverby.strftime('%m/%d/%Y')
-        rout += '\nOffer price: ' + str(cls.price)
+        rout += '\nOffer price: ' + str(cls.rates)
         return rout 
         
     def to_dict(self):

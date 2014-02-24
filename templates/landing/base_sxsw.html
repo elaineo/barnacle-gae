@@ -394,8 +394,13 @@ function calc_cost() {
     var trunks = 0.5*vcap;
     console.log(vcap);
     // if it's en route, price is $150 x #trunks
-    if (code.length==5){
-        $('input#estcost').val(trunks*150);
+    if (code.toLowerCase() == 'jtg12') {
+        $('input#estcost').val('$750');
+        $('input#estdup').val(750);
+    }
+    else if (code.length==5){
+        $('input#estcost').val('$'+trunks*150);
+        $('input#estdup').val(trunks*150);
     } else {
       var distance = $('#distance').val();
       var gas = 0.7*distance / (35*1609)

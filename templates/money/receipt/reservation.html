@@ -6,9 +6,11 @@
       <h2><br>Thank You</h2><br>
         <p>Thank you for your reservation. You will receive an email confirmation shortly. </p>
         <p>The driver will be given your contact information and will be in touch to work out the details of scheduled pickup/dropoff times.</p>
+        {% if display_driver == True %}
         <p>You may also <a href='mailto:{{email}}'>contact your driver</a> if you would like to provide any additional delivery information, such as a contact number for the recipient. 
         You can access your reservation at any time through your <a href='/account'>dashboard</a>.
         </p>
+        {% endif %}
         <p>Questions? Please <a href='mailto:help@gobarnacle.com'>contact us</a> directly.</p>
         <br>
         <p class="arial"><h4>Reservation Details</h4>
@@ -23,6 +25,7 @@
       <div class='span8'><p>{{ locend }}
       <br><small>{{ pickupstr }}<br>{{ delivby }}</small></p></div>
     </div>      
+    {% if display_driver == True %}
     <div class="row-fluid">
       <div class='span2'>Driver:</div>
       <div class='span6'><a href='{{d.profile_url}}'>{{d.first_name}}</a>
@@ -33,6 +36,7 @@
       </span>
       </div>
     </div>   
+    {% endif %}
     <div class="row-fluid">
       <div class='span2'>Size:</div>
       <div class='span2 icons'>

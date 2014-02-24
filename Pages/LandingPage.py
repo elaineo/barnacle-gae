@@ -2,7 +2,8 @@ from google.appengine.api import memcache
 from datetime import *
 from Handlers.BaseHandler import *
 from Models.Launch.CustModel import *
-from Models.Launch.ResModel import *
+from Models.Post.Reservation import Reservation
+from Utils.ValidUtils import parse_date
 from Utils.RouteUtils import RouteUtils
 from Utils.Twat import *
 
@@ -117,11 +118,11 @@ class CouponPage(BaseHandler):
             start, startstr = self.__get_map_form('start')
             dest = ndb.GeoPt(30.266184,-97.742325)
             deststr = 'SXSW 2014'
-            r = ResModel(capacity=capacity, start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest)
+            r = Reservation(capacity=capacity, start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest)
             r.put()
             self.params.update(r.to_dict())
             self.params['reskey'] = r.key.urlsafe()
-            self.params['checkout_action'] = '/checkout/' + r.key.urlsafe()
+            self.params['checkout_action'] = '/checkout/res/' + r.key.urlsafe()
             self.render('launch/fillcheckout_abbrev.html', **self.params)     
         elif action=='vegas':
             rates = self.request.get('estdup')
@@ -133,16 +134,16 @@ class CouponPage(BaseHandler):
             if reqdate:
                 delivby = parse_date(reqdate)
             else:
-                delivby = datetime.now()+timedelta(months=1)            
+                delivby = datetime.now()+timedelta(weeks=2)            
             
             start, startstr = self.__get_map_form('start')
             dest = ndb.GeoPt(36.114646,-115.172816)
-            deststr = 'Vegas'
-            r = ResModel(capacity=capacity, start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest, delivby=delivby)
+            deststr = 'Las Vegas, Nevada'
+            r = Reservation(capacity=capacity, start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest, delivby=delivby)
             r.put()
             self.params.update(r.to_dict())
             self.params['reskey'] = r.key.urlsafe()
-            self.params['checkout_action'] = '/checkout/' + r.key.urlsafe()
+            self.params['checkout_action'] = '/checkout/res/' + r.key.urlsafe()
             self.render('launch/fillcheckout_abbrev.html', **self.params)
     def __get_map_form(self,pt):
         ptlat = self.request.get(pt+'lat')

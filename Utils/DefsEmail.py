@@ -11,7 +11,18 @@ resreceipt_txt = """
         %(delivby)s\n\n
         Driver: %(first_name)s
         %(ins_email)s\n\n
-        Total: $%(price)d
+        Total: $%(rates)d
+"""
+
+resreceipt_anon = """
+        Thank you for your reservation with Barnacle.\n
+        If you have any questions or schedule changes, please contact us at 
+        help@gobarnacle.com.\n\n
+        Reservation Details\n\n
+        Origin:  %(locstart)s\n
+        Destination: %(locend)s\n
+        %(delivby)s\n\n
+        Total: $%(rates)d
 """
 
 receipt_txt = """
@@ -27,7 +38,7 @@ receipt_txt = """
         Driver: %(first_name)s
         %(ins_email)s\n\n
         Special instructions: %(details)s\n\n
-        Total: $%(price)d
+        Total: $%(rates)d
 """
 
 welcome_txt = """

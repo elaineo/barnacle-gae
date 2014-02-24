@@ -38,6 +38,8 @@ class CheckoutHandler(BaseHandler):
             self.__confirm(key)
         elif action=='hold':
             self.__hold(key)
+        elif action=='res':
+            self.__process_anon(key)
             
     def __checkout(self,key):
         try:
@@ -72,9 +74,31 @@ class CheckoutHandler(BaseHandler):
         self.params.update(res.to_dict())
         driver = res.driver.get()
         self.params['email'] = driver.email
+        self.params['disp_driver'] = True
         eparams = self.params
         ## THIS ASSUMES DRIVER HAS BEEN RESERVED
-        self.render('launch/receipt_res.html', **self.params)
+        self.render('money/receipt/reservation.html', **self.params)
+        self.send_receipt(email, res, eparams)
+       
+    def __process_anon(self,key):
+        #Make an anonymous booking
+        try:
+            res = ndb.Key(urlsafe=key).get()                
+        except:
+            self.abort(400)    
+        email = self.request.get('email')
+        tel = self.request.get('tel')
+        uri = self.request.get('balancedCreditCardURI')        
+        
+        customer = self.__create_anon(email,tel)
+        customer.add_card(uri)        
+        charge = res.rates*100
+        if charge > 0:    
+            customer.debit(amount=charge)
+        self.params.update(res.to_dict())
+        self.params['disp_driver'] = False
+        eparams = self.params
+        self.render('money/receipt/reservation.html', **self.params)
         self.send_receipt(email, res, eparams)
         
     def __hold(self, key):
@@ -89,10 +113,10 @@ class CheckoutHandler(BaseHandler):
         
         customer = self.__create_cust(email)
         customer.add_card(uri)
-        p = HoldAccount(uri = uri, userkey = self.user_prefs.key, reskey = res.key, amount = res.price)
+        p = HoldAccount(uri = uri, userkey = self.user_prefs.key, reskey = res.key, amount = res.rates)
         p.put()
         
-        charge = res.price*100
+        charge = res.rates*100
         hold = balanced.Hold(source_uri=uri, amount=charge)
 
         # notify the driver -- add message
@@ -115,7 +139,7 @@ class CheckoutHandler(BaseHandler):
         customer = balanced.Customer.find('/v1/customers/' + cust_id)
         customer.add_card(p.uri)
             
-        charge = res.price*100
+        charge = res.rates*100
         if charge >0:
             customer.debit(amount=charge)
         
@@ -128,7 +152,9 @@ class CheckoutHandler(BaseHandler):
         d = Driver.by_userkey(res.driver)
         self.params = d.params_fill()
         self.params['reskey'] = key
-        self.params.update(res.to_dict())        
+        self.params.update(res.to_dict())    
+        
+        self.params['disp_driver'] = True
         self.send_receipt(customer.email, res, self.params) 
         # notify the driver?
         self.redirect('/reserve/'+key)
@@ -168,10 +194,10 @@ class CheckoutHandler(BaseHandler):
         
             email = Transaction.driver.get().email
             customer = self.__create_cust(email)
-            customer.credit(amount=res.price)
+            customer.credit(amount=res.rates)
             
             t.paid = True
-            t.payout = res.price
+            t.payout = res.rates
             t.put()
             #notify
                
@@ -187,7 +213,7 @@ class CheckoutHandler(BaseHandler):
 
         customer = self.__create_cust(email)
         customer.add_card(uri)
-        charge = res.price*100
+        charge = res.rates*100
         if charge > 0:
             customer.debit(amount=charge)
         res.confirmed=True
@@ -198,10 +224,11 @@ class CheckoutHandler(BaseHandler):
         self.params['reskey'] = key
         self.params.update(res.to_dict())     
         driver = res.driver.get()
-        self.params['email'] = driver.email        
+        self.params['email'] = driver.email      
+        self.params['disp_driver'] = True
         eparams = self.params
         eparams.update(self.params['d'])
-        self.render('launch/receipt_res.html', **self.params)
+        self.render('money/receipt/reservation.html', **self.params)
         self.send_receipt(email, res, eparams) 
         # notify the driver
         msg = self.user_prefs.first_name + confirm_do_msg % key
@@ -220,6 +247,12 @@ class CheckoutHandler(BaseHandler):
             customer = balanced.Customer.find('/v1/customers/' + self.user_prefs.cust_id)
         return customer
         
+    def __create_anon(self,email=None,tel=None):
+        #create anonymous customer
+        balanced.configure(baccount)
+        customer = balanced.Customer(email=email, phone=tel).save()
+        return customer        
+        
     def __test(self):
         balanced.configure(testaccount)
         # buyer = balanced.Marketplace.my_marketplace.create_buyer(
@@ -229,15 +262,12 @@ class CheckoutHandler(BaseHandler):
         customer = balanced.Customer().save()
         logging.info(customer.id)
 
-    def send_receipt(self, email, res, params):
-        params['action'] = 'receipt'
-        params['senderid'] = 'barnacle'
-        u = UserPrefs.by_email(email)
-        if u:
-            params['receiverid'] = u.key.id()
-        else:
-            params['receiverid'] = email
+    def send_receipt(self, email, res, params, anon=False):        
         htmlbody =  self.render_str('email/receipt.html', **params)
-        textbody = resreceipt_txt % params
+        if anon:
+            textbody = resreceipt_txt % params
+        else:
+            textbody = resreceipt_anon % params
         send_info(to_email=email, subject=confirm_res_sub, 
             body=textbody, html=htmlbody)
+            

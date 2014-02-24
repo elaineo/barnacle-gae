@@ -15,7 +15,7 @@ class Offer(ndb.Model):
     route = ndb.KeyProperty(required=True)
     sender = ndb.KeyProperty(required=True)      # this is the sender
     driver = ndb.KeyProperty(required=True)    # this is the driver
-    price = ndb.IntegerProperty()   # Offer price
+    rates = ndb.IntegerProperty()   # Offer price
     created = ndb.DateTimeProperty(auto_now_add=True)
     deliverby = ndb.DateProperty(required=True)
     pickup = ndb.BooleanProperty(default=False)     # sender picks up shit at dest
@@ -93,7 +93,7 @@ class Offer(ndb.Model):
             'delivby' : cls.deliverby.strftime('%m/%d/%Y'),
             'sender' : cls.sender_name(),
             'driver' : cls.driver_name(),
-            'price' : cls.price,
+            'rates' : cls.rates,
             'locstart' : cls.locstart,
             'locend' : cls.locend,
             'confirmed' : cls.confirmed,

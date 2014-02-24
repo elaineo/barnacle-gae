@@ -18,10 +18,12 @@
             <br><font size='-1'>{{ pickupstr }}</font>
             <br><font size='-1'>{{ delivby }}</font></td>
           </tr>
+       {% if disp_driver == True %}
           <tr><td>Driver:</td>
             <td>{{first_name}}
             <br>{{ins_email}}</td>
           </tr>
+        {% endif %}
           <tr><td>Size:</td>
             <td>
       {% if capacity == 0 %} Passenger Seat
@@ -31,7 +33,7 @@
           </tr>
           <tr>
             <td><b>Total:</b></td>
-            <td><b>${{ price }} </b></td>
+            <td><b>${{ rates }} </b></td>
           </tr>
         </table>
 {% endblock %}        

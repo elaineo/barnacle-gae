@@ -56,7 +56,7 @@ class ReservationHandler(BaseHandler):
                     self.params.update(self.user_prefs.params_fill())
                     self.render('user/forms/filldriver.html', **self.params)
                     return            
-                self.params['res']={'price':p.rates}
+                self.params['res']={'rates':p.rates}
                 self.params['reserve_title'] = 'Make a Delivery Offer'
                 self.render('post/forms/filloffer.html', **self.params)     
             # except:
@@ -231,7 +231,7 @@ class ReservationHandler(BaseHandler):
             p = OfferRoute(parent=self.user_prefs.key,
             route = route.key,
             driver=self.user_prefs.key, sender=route.key.parent(), 
-            price=rates, pickup=pickup, dropoff=dropoff, 
+            rates=rates, pickup=pickup, dropoff=dropoff, 
             start=start, dest=dest,
             locstart=startstr, locend=deststr, deliverby=reqdate)
             new_res = True
@@ -244,7 +244,7 @@ class ReservationHandler(BaseHandler):
                 self.render('post/forms/filloffer.html', **self.params)
                 return
             if p and self.user_prefs and p.driver == self.user_prefs.key:  
-                p.price = rates
+                p.rates = rates
                 p.deliverby = reqdate
                 p.pickup = pickup
                 p.dropoff = dropoff
@@ -305,7 +305,7 @@ class ReservationHandler(BaseHandler):
                 new_res = True
                 p = OfferRequest(parent=self.user_prefs.key, 
                 sender=self.user_prefs.key, driver=route.key.parent(), 
-                route=route.key, details=items, price=rates, deliverby=reqdate, 
+                route=route.key, details=items, rates=rates, deliverby=reqdate, 
                 start=start, dest=dest,
                 pickup=pickup, dropoff=dropoff, locstart=startstr, locend = deststr)
             else:  #editing reservation
@@ -317,7 +317,7 @@ class ReservationHandler(BaseHandler):
                     self.render('post/forms/fillreserve.html', **self.params)
                     return
                 if p and self.user_prefs and p.sender == self.user_prefs.key:  
-                    p.price = rates
+                    p.rates = rates
                     p.details = items
                     p.deliverby = reqdate
                     p.pickup = pickup
