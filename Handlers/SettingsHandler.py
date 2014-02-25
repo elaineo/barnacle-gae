@@ -21,6 +21,7 @@ class SettingsHandler(BaseHandler):
     def __emailsett(self):        
         notify = self.request.get_all('notify')
         email = self.request.get('email')
+        tel = self.request.get('tel')
         if not notify:
             settings = UserSettings(notify = [])        
         else:
@@ -29,6 +30,8 @@ class SettingsHandler(BaseHandler):
             user_prefs = self.user_prefs
             if email:
                 user_prefs.email = email            
+            if tel:
+                user_prefs.tel = tel            
             user_prefs.settings = settings
             user_prefs.put()
         self.redirect("/")

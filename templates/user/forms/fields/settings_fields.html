@@ -18,11 +18,20 @@
       </label>      
     </div>
     <div class="control-group">
-        <label class="control-label" for="email">Email Address</label>
+        <label class="control-label" for="email">Email Address <i class="icon-info-sign" id='info_email' data-toggle="popover" data-content='This is where you will receive notifications.'></i></label>
         <div class="controls">
           <input type="email" name="email" value="{{email}}">
         </div>
-    </div>   
+        <label class="control-label" for="tel">Mobile 
+        <i class="icon-info-sign" id='info_phone' data-toggle="popover" data-content='This allows us to contact you regarding transactions. We will not call or message you without your permission.'></i>
+        </label>
+        <div class="controls">
+          <input type="tel" name="tel" value="{{tel}}">
+        </div>
+        <small>We will never share your contact information with other parties. Please read our <a href='/privacy'>privacy</a> policy to learn how we protect your information.</small>
+    </div>       
+    <div class="control-group">
+    </div>       
 <script>    
     $(document).ready(function(){
     //fill in some info
@@ -34,6 +43,8 @@
             $n.setAttribute('checked',true);
         }
     }
+    $('#info_email').popover({trigger: 'hover'});
+    $('#info_phone').popover({trigger: 'hover'});
     });
 </script>
     
