@@ -9,19 +9,20 @@ from Handlers.Post.Dump import DumpHandler
 from Handlers.Post.Reservation import ReservationHandler
 from Handlers.Post.Review import ReviewHandler
 
+from Handlers.User.Account import *
+from Handlers.User.Profile import *
+from Handlers.User.Settings import SettingsHandler
+from Handlers.User.Driver import DriverHandler
+
 from Handlers.BaseHandler import *
 from Handlers.MessageHandler import *
 from Handlers.ImageHandler import *
-from Handlers.AccountHandler import *
-from Handlers.ProfileHandler import *
 from Handlers.Launch.CLHandler import *
 from Handlers.SearchHandler import *
 from Handlers.Cron.ExpireHandler import *
 from Handlers.Cron.MatchHandler import *
 from Handlers.Cron.SummaryHandler import SummaryHandler
-from Handlers.SettingsHandler import *
 from Handlers.NewsHandler import *
-from Handlers.DriverHandler import *
 from Handlers.GerritHandler import *
 from Handlers.Tracker.TrackerHandler import *
 from Handlers.Money.Earnings import *
