@@ -94,6 +94,8 @@ class GerritHandler(BaseHandler):
             reqdump = []
             requests = Request.query()
             for r in requests:
+                if r.dead>0:
+                    continue
                 dump = r.to_dict()
                 dump['key'] = r.key.urlsafe()
                 if r.stats:

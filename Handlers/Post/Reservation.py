@@ -132,7 +132,6 @@ class ReservationHandler(BaseHandler):
                 self.abort(400) 
                 return                
     def __delete(self, key=None):
-        logging.error(key)
         if key:
             try:
                 r = ndb.Key(urlsafe=key).get()
