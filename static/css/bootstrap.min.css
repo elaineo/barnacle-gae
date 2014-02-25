@@ -356,8 +356,8 @@ legend+.control-group{margin-top:20px;-webkit-margin-top-collapse:separate;}
 .button.compl:hover, .button.compl:focus { background-color: #bde6ab; }
 .button.success { background-color: #5da423; border: 1px solid #396516; }
 .button.success:hover, .button.success:focus { background-color: #457a1a; }
-.button.alert { background-color: #c60f13; border: 1px solid #7f0a0c; }
-.button.alert:hover, .button.alert:focus { background-color: #970b0e; }
+.button.danger { background-color: #c60f13; border: 1px solid #7f0a0c; color: white}
+.button.danger:hover, .button.danger:focus { background-color: #970b0e; }
 .button.secondary { background-color: #EDEBEF; color: #1d1d1d; border: 1px solid #EDEBEF; }
 .button.secondary:hover, .button.secondary:focus { background-color: #d0d0d0; }
 .button.round { -webkit-border-radius: 1000px; -moz-border-radius: 1000px; -ms-border-radius: 1000px; -o-border-radius: 1000px; border-radius: 1000px; }
