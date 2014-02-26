@@ -5,7 +5,6 @@
 <link rel="stylesheet" href="/static/css/jquery-ui.css" />
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 <script src="/static/js/maps/mapsclientno.js"></script>
-<div class="row"><div class="span10 offset1">
  <form enctype="multipart/form-data" method="post" id='reserve_form' class="form-horizontal">
     {% if permission_err == True %}
     <span class="help-inline error">
@@ -29,8 +28,8 @@
 	<button type="submit" class="button secondary" id='reserve_btn' disabled='disabled'>Submit</button>
     </p>
 </form>
-</div></div>
 <hr>
+    <h4>{{first_name}}'s Route</h4>
     {% include "post/forms/stubspop/post_stub.html" %}
 
  <script>

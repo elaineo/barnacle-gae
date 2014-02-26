@@ -1,68 +1,78 @@
+<div class='row-fluid'><div class='span10 offset1'>
     <div class="control-group">
       <label class="control-label" for="dropoff">Origin:</label>
         <div class="controls" id="dropoffRadios">
-            <label class="radio inline">
+            <label class="radio">
               <input type="radio" name="dropoff" id="dropoffT" value="1" checked> I drop off item at departure location
             </label>
-            <label class="radio inline">
+            <label class="radio">
               <input type="radio" name="dropoff" id="dropoffF" value="0"> Driver picks up item from me
             </label>            
-        </div>
-       <div class="span6" id='dropoffTaddr'>
-           <span class="text-info">{{first_name}}'s Departure Location:&nbsp;&nbsp;&nbsp;
-           {{ locstart }}</span>
-       </div>
+            <div id='dropoffTaddr'>
+              <span class="text-info">{{ locstart }}</span>
+            </div>
+        </div>       
     </div>
     <div class="control-group" id='dropoffFaddr'>
         <label class="control-label" for="start">Pickup Address:</label>
         <div class="controls">
-          <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{res.locstart}}">
+          <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{res.locstart}}" style='width: 270px!important;'>
           <span class="help-inline error" id='map0Err'>{{error_route}}</span>
         </div>
     </div>
     <div class="control-group">
       <label class="control-label" for="pickup">Destination:</label>
         <div class="controls" id="pickupRadios">
-            <label class="radio inline">
+            <label class="radio">
               <input type="radio" name="pickup" id="pickupF" value="0" checked> Driver delivers item
             </label>
-            <label class="radio inline">
+            <label class="radio">
               <input type="radio" name="pickup" id="pickupT" value="1"> I pick up item at destination
             </label>            
+            <div id='pickupTaddr'>
+              <span class="text-info">{{ locend }}</span>
+            </div>
         </div>
-       <div class="span6" id='pickupTaddr'>
-           <span class="text-info">{{first_name}}'s Arrival Location:&nbsp;&nbsp;&nbsp;
-           {{ locend }}</span>
-       </div>
     </div>
     <div class="control-group" id='pickupFaddr'>
         <label class="control-label" for="dest">Delivery Address:</label>
         <div class="controls">
-          <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{res.locend}}">
+          <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{res.locend}}" style='width: 270px!important;'>
           <span class="help-inline error" id='map1Err'>{{error_route}}</span>
         </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" for="reqdate">Deliver By:</label>
-        <div class="controls">
-          <input type="text" name="reqdate" value="{{res.delivby}}" id="reqdate" autocomplete="off">
-        </div>
-    </div>    
+    </div>  
+
     <div class="control-group">
       <label class="control-label" for="rates">Offer Price:</label>
         <div class="controls">
         <span class="add-on">$</span>
           <input class="span2" type="number" name="rates" value="{{res.rates}}" onkeyup="enable_validate()" min="0" id='offer' required>
         </div>
-   </div>
-     <div class="control-group">
-        <label class="control-label" for="items">Description of item(s) to be delivered:</label>
+   </div>    
+    <div class='control-group'>
+        <label class="control-label"  for="items">Description of item(s) to be delivered:</label>
         <div class="controls">
-            <textarea class="span5" name="items" rows="2">{{res.details}}</textarea>
+          <textarea name="items" class="span10" rows="3" placeholder='Write a short description and please note any special handling instructions for your driver.'>{{res.details}}</textarea>
         </div>
-    </div>	
+    </div>
+    <div class='control-group'>
+        <label class="control-label" >Upload a Photo</label>    
+        <div id="img-prev" class='controls clicky'><img  src='/static/img/placeholder2.png' class='preview'></div>
+        <input type="hidden" name="id" value="{{id}}">
+        <input type="file" class="file" id="images" accept="image/png,image/jpeg,image/gif" name="file" style='display:None;'>
+    </div>  
+
+
+    <div class="control-group" >
+      <div class='controls'>
+      <label class="checkbox inline">
+        <input type='checkbox' name='repost' value='1' checked> Allow other drivers to make this delivery   <i class="icon-info-sign" id='info_repost' data-toggle="popover" data-content='This option allows other drivers to make your delivery if {{first_name}} is unavailable. You will be asked to approve any other drivers before the booking is finalized.'></i>.
+      </label>
+      </div>
+    </div>    
     <input type="hidden" id="hidepickup" value="{{res.pickup}}">    
     <input type="hidden" id="hidedropoff" value="{{res.dropoff}}">      
+</div></div>
 <script>
   $(function() {
     $( "#reqdate" ).datepicker({
@@ -73,6 +83,11 @@
   });
   
 $(document).ready(function(){
+  $('#info_repost').popover({trigger: 'hover'});
+  $('#img-prev').click(function() {
+    document.getElementById("images").click();
+  });
+
     //fill in some info
     var pickup = $('input#hidepickup').val();
     if (pickup != '') {
@@ -123,3 +138,4 @@ $(document).ready(function(){
 });    
 
 </script>
+<script type="text/javascript" src="/static/js/save_image.js"></script>

@@ -7,6 +7,7 @@ from Handlers.Tracker.TrackerHandler import create_from_res
 from Handlers.MessageHandler import create_message
 from Models.Post.OfferRequest import *
 from Models.Post.OfferRoute import *
+from Models.Post.Request import *
 from Models.User.Driver import *
 from Utils.RouteUtils import RouteUtils
 from Utils.ValidUtils import *
@@ -45,7 +46,7 @@ class ReservationHandler(BaseHandler):
             p = ndb.Key(urlsafe=key).get()                    
             self.params.update(p.to_dict(True))
             if p.__class__.__name__ == 'Route':    # trying to reserve existing route
-                self.params['res']={}
+                self.params['res']={'delivby':p.delivend.strftime('%m/%d/%Y')}
                 self.params['reserve_title'] = 'Make a Reservation'
                 self.render('post/forms/fillreserve.html', **self.params)
             else:           # offering to deliver
@@ -283,12 +284,10 @@ class ReservationHandler(BaseHandler):
         items = self.request.get('items')
         dropoff = bool(int(self.request.get('dropoff')))
         pickup = bool(int(self.request.get('pickup')))
-        reqdate = self.request.get('reqdate')
+        repost= bool(self.request.get('repost'))
+        img = self.request.get("file")       
         
-        if reqdate:
-            reqdate = parse_date(reqdate)
-        else:
-            reqdate = route.delivend
+        reqdate = route.delivend
         if dropoff:
             startstr = route.locstart
             start = route.start
@@ -304,9 +303,7 @@ class ReservationHandler(BaseHandler):
                 new_res = True
                 p = OfferRequest(parent=self.user_prefs.key, 
                 sender=self.user_prefs.key, driver=route.key.parent(), 
-                route=route.key, details=items, rates=rates, deliverby=reqdate, 
-                start=start, dest=dest,
-                pickup=pickup, dropoff=dropoff, locstart=startstr, locend = deststr)
+                route=route.key)
             else:  #editing reservation
                 new_res = False
                 p = ndb.Key(urlsafe=res).get()
@@ -315,16 +312,22 @@ class ReservationHandler(BaseHandler):
                     self.params.update(route.get().to_dict(True))
                     self.render('post/forms/fillreserve.html', **self.params)
                     return
-                if p and self.user_prefs and p.sender == self.user_prefs.key:  
-                    p.rates = rates
-                    p.details = items
-                    p.deliverby = reqdate
-                    p.pickup = pickup
-                    p.dropoff = dropoff                
-                    p.locstart = startstr
-                    p.locend = deststr
-                    p.start = start
-                    p.dest = dest
+            if p and self.user_prefs and p.sender == self.user_prefs.key:  
+                p.rates = rates
+                p.details = items
+                p.deliverby = reqdate
+                p.pickup = pickup
+                p.dropoff = dropoff                
+                p.locstart = startstr
+                p.locend = deststr
+                p.start = start
+                p.dest = dest
+                if img:
+                    imgstore = ImageStore.new(img)
+                    imgstore.put()
+                    p.img_id = imgstore.key.id()
+                if repost:
+                    p.repost = request_from_off(p)                    
         except:
             self.abort(403)
             return  
@@ -336,25 +339,24 @@ class ReservationHandler(BaseHandler):
             self.params['pickup'] = int(pickup)
             self.params['dropoff'] = int(dropoff)
             self.params['details'] = items
-            self.params['reqdate'] = reqdate
             self.params['offer'] = rates
             self.params['msg'] = msg
             self.params['reserve_title'] = 'Edit Reservation'
             self.params.update(route.get().to_dict(True))
             self.render('post/forms/fillreserve.html', **self.params)
 
+        # Do they have a credit card on file?
+        if not self.user_prefs.cc:
+            self.params.update(self.user_prefs.params_fill())
+            self.params['next_url'] = '/reserve/' + p.key.urlsafe()
+            self.params['get_info'] = True
+            self.render('money/forms/cc.html', **self.params)
+            return            
+            
         if new_res:
-            d = Driver.by_userkey(p.driver)
-            self.params['d'] = d.params_fill()
-            self.params['reskey'] = p.key.urlsafe()
-            self.params.update(p.to_dict())
-            self.params['checkout_action'] = '/checkout/hold/'+p.key.urlsafe()
-            logging.info('New Reservation: '+ p.key.urlsafe())
-            self.render('post/reservation.html', **self.params)
             route.offers.append(p.key)
-            route.put()            
-        else:
-            self.redirect('/reserve/' + p.key.urlsafe())  
+            route.put()         
+        self.redirect('/reserve/' + p.key.urlsafe())  
             
     def view_reserve_page(self,key):
         p = ndb.Key(urlsafe=key).get()
@@ -404,3 +406,35 @@ class ReservationHandler(BaseHandler):
         else:
             ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
         return ptg, ptstr       
+        
+def request_from_off(res):
+    if not res.repost:
+        if res.has_cc:
+            rs = ReqStats(status = RequestStatus.index('PURSUE'))
+        else:
+            rs = ReqStats(status = RequestStatus.index('NO_CC'))
+        r = Request(parent=res.key.parent(), stats=rs) 
+    else:
+        r = res.repost.get()
+    r.details=res.details
+    r.start=res.start
+    r.dest=res.dest
+    r.locstart=res.locstart
+    r.locend=res.locend
+    r.rates=res.rates
+    r.delivby=res.deliverby
+    r.img_id=res.img_id
+    return r.put()
+    
+def route_from_off(res):
+    if not res.repost:
+        r = Route(parent=res.key.parent()) 
+    else:
+        r = res.repost.get()    
+    r.start=res.start
+    r.dest=res.dest
+    r.locstart=res.locstart
+    r.locend=res.locend
+    r.delivend=res.deliverby
+    r.delivstart=res.deliverby
+    return r.put()    

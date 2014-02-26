@@ -25,6 +25,7 @@ class Offer(ndb.Model):
     locstart = ndb.StringProperty(required=True) #text descr of location
     locend = ndb.StringProperty(required=True) #text descr of location
     confirmed = ndb.BooleanProperty(default=False)
+    repost = ndb.KeyProperty()      #corresponding route or request
     dead = ndb.IntegerProperty(default=0)    # see PostStatus   
             
     def reserve_url(self):

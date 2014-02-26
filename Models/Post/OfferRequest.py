@@ -5,7 +5,12 @@ from Models.ImageModel import *
 class OfferRequest(Offer):
     """ Make a Reservation for existing route """
     details = ndb.TextProperty()    # description of goods
-    img_id = ndb.IntegerProperty()     
+    img_id = ndb.IntegerProperty() 
+
+    def has_cc(self):
+        # Does this sender have an associated cc#?
+        u = self.key.parent()
+        return u.cc
 
     def print_html(cls):
         rout = cls.driver_name() + '\'s route from ' + cls.locstart + ' to ' + cls.locend

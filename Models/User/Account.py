@@ -118,9 +118,12 @@ class UserPrefs(ndb.Model):
             params['email'] = self.email
         else:
             params['email'] = ''
+        if self.tel:
+            params['tel'] = self.tel
+        else:
+            params['tel'] = ''
         params['profile_full'] = self.profile_image_url()
         params['review_json'] = '/review/json/'+self.key.urlsafe()
-        params['email'] = self.email
         params['deliv_completed'] = Transaction.deliveries_completed(self.key)
         params['notify'] = {'notify' : self.get_notify() }
         return params

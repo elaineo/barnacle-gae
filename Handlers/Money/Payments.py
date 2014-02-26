@@ -51,6 +51,8 @@ class Payments(BaseHandler):
         next = self.request.get('next_url')
         first_name = self.request.get('first_name')
         last_name = self.request.get('last_name')
+        email = self.request.get('email')
+        tel = self.request.get('tel')
         
         balanced.configure(baccount)        
         customer = create_cust(self.user_prefs)
@@ -58,7 +60,11 @@ class Payments(BaseHandler):
         self.user_prefs.cc = last4 
         self.user_prefs.first_name = first_name
         self.user_prefs.last_name = last_name
+        self.user_prefs.email = email
+        self.user_prefs.tel = tel
         self.user_prefs.put()
+        
+        # Update status of requests
         
         self.redirect(next)
         return             

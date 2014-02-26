@@ -52,6 +52,9 @@ $(document).ready(function(){
         $('#cc_form').validate();             
        $('#cc-err').html('');
        $('#check-err').html('');
+        $('#request_btn').attr('disabled', 'disabled');  
+        $('#request_btn').addClass('wait');  
+        $('#check-err').html('Please wait...');      
        var $form = $('#cc_form');
        var creditCardData = {
             card_number: $form.find('.card-number').val(),
@@ -61,6 +64,11 @@ $(document).ready(function(){
         };
         if($('#cc_form').valid() == true)
           balanced.card.create(creditCardData, callbackHandler);
+        else {
+          $('#request_btn').removeAttr('disabled');
+          $('#request_btn').removeClass('wait');
+          $('#check-err').html('');
+        }
     };
    $('#request_btn').click(tokenizeInstrument);    
 function callbackHandler(response) {
@@ -84,9 +92,6 @@ function callbackHandler(response) {
             name: 'last4'
          }).appendTo($form);
          
-        $('#request_btn').attr('disabled', 'disabled');  
-        $('#check-err').html('Please wait...');
-        $('#cc_form').css('cursor', 'wait');
         $('#cc_form').submit();                 
          break;
      case 400:
@@ -109,4 +114,7 @@ function callbackHandler(response) {
          $('#check-err').html('Our card reader burped, please hit checkout again.');
          break;
    }
+   $('#request_btn').removeAttr('disabled');
+   $('#request_btn').removeClass('wait');
+   $('#check-err').html('');
 }   
