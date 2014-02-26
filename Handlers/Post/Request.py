@@ -69,7 +69,7 @@ class RequestHandler(PostHandler):
                 self.redirect('/request#signin-box')
                 return
             if p.key.parent() == self.user_prefs.key:
-                self.__create_request(key)
+                self.__edit_request(key)
                 return
             logging.error(p)
             self.abort(403)
@@ -80,7 +80,7 @@ class RequestHandler(PostHandler):
             self.__init_request()
 
 
-    def __create_request(self,key=None):
+    def __edit_request(self,key=None):
         capacity = self.request.get('vcap')
         capacity = parse_unit(capacity)
         rates = self.request.get('rates')
@@ -201,11 +201,20 @@ class RequestHandler(PostHandler):
                 p.img_id = imgstore.key.id()
             p.rates = rates
             p.details = items
-            # get a cc #
-            p.stats.status = RequestStatus.index('PURSUE')
-            p.put()
-            self.view_page(p.key.urlsafe())
+            # If user already has cc on file, this is important.
+            # else, collect a cc
             logging.info('Complete request')
+            if not self.user_prefs.cc:
+                p.stats.status = RequestStatus.index('NO_CC')
+                p.put()
+                self.params.update(self.user_prefs.params_fill())
+                self.params['next_url'] = '/request/' + p.key.urlsafe()
+                self.render('money/forms/cc.html', **self.params)
+                return
+                
+            p.stats.status = RequestStatus.index('PURSUE')
+            p.put()                                    
+            self.view_page(p.key.urlsafe())            
             taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
             create_request_doc(p.key.urlsafe(), p)
         else:

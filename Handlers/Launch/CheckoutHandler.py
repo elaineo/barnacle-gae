@@ -16,7 +16,6 @@ from Utils.data.paydefs import *
 from Utils.Defs import *
 from Utils.EmailUtils import send_info, create_note
 from Utils.DefsEmail import *
-from Utils.data.balanced import *
 
 class CheckoutHandler(BaseHandler):
     def get(self, action=None, key=None):

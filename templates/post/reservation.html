@@ -6,12 +6,9 @@
     <p>If the driver declines or does not respond, no charge is made. </p><br>
 {% endblock %}
 {% block content %}
+{% include "money/balancedjs.html" %}
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-<script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
-<script type="text/javascript">
-    //balanced.init('/v1/marketplaces/TEST-MP59PrHkpa0ko7BaYwp0CkH5');
-    balanced.init('/v1/marketplaces/MPzQH7Kg11jaH5eTYoFxMVg');
-</script>
+
 <script type="text/javascript">
 $(document).ready(function(){
     $(document).on('fbload', function(){
@@ -125,7 +122,6 @@ $(document).ready(function(){
   </div>
 </div>
 
-<script src="/static/js/jquery.validate.js"></script>
  <script>
   
 $(document).ready(function(){
@@ -145,5 +141,5 @@ $(document).ready(function(){
   </script>
   <script type="text/javascript" src="/static/js/validation.js"></script>
 <script type="text/javascript" src="/static/js/maps/mapoverlay.js"></script>
-<script type="text/javascript" src='/static/js/ccpay.js'></script>  
+<script type="text/javascript" src='/static/js/money/ccpay.js'></script>  
 {% endblock %}

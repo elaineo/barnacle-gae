@@ -27,6 +27,7 @@ class UserPrefs(ndb.Model):
     email = ndb.StringProperty() 
     tel = ndb.StringProperty() 
     cust_id = ndb.StringProperty() # customer payment ID
+    cc = ndb.StringProperty()
     first_name = ndb.StringProperty()
     last_name = ndb.StringProperty()
     location = ndb.StringProperty()

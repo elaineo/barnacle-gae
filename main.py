@@ -9,10 +9,16 @@ from Handlers.Post.Dump import DumpHandler
 from Handlers.Post.Reservation import ReservationHandler
 from Handlers.Post.Review import ReviewHandler
 
+# User Accounts
 from Handlers.User.Account import *
 from Handlers.User.Profile import *
 from Handlers.User.Settings import SettingsHandler
 from Handlers.User.Driver import DriverHandler
+
+#Payment Accounts
+from Handlers.Money.Earnings import Earnings
+from Handlers.Money.Payments import Payments
+from Handlers.Launch.CheckoutHandler import *
 
 from Handlers.BaseHandler import *
 from Handlers.MessageHandler import *
@@ -25,7 +31,7 @@ from Handlers.Cron.SummaryHandler import SummaryHandler
 from Handlers.NewsHandler import *
 from Handlers.GerritHandler import *
 from Handlers.Tracker.TrackerHandler import *
-from Handlers.Money.Earnings import *
+
 from Handlers.Launch.MobileHandler import *
 from Handlers.Launch.ExternalHandler import *
 from Handlers.Seo.SitemapHandler import SitemapHandler
@@ -39,7 +45,6 @@ from Utils.ErrorUtils import *
 ## Launch!
 from Handlers.Launch.ApplyHandler import *
 from Handlers.Launch.ReserveHandler import *
-from Handlers.Launch.CheckoutHandler import *
 
 from Pages.LandingPage import *
 from Pages.HomePage import *
@@ -92,6 +97,8 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/earn/<action>', handler=Earnings),
    webapp2.Route('/settings', handler=SettingsHandler),
    webapp2.Route('/settings/<action>', handler=SettingsHandler),
+# payment account
+   webapp2.Route('/pay/<action>', handler=Payments),
 # profile
     webapp2.Route('/drive', handler=DriverHandler),
     webapp2.Route('/profile/<key:[\w\-]{20,}>', handler=ProfileHandler),

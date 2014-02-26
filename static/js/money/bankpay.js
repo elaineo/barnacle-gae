@@ -38,7 +38,7 @@ function callbackHandler(response) {
         data = 'bankTokenURI='+bankTokenURI+'&bankAccountNum=' + response.data['account_number'] + '&bankName=' + response.data['bank_name'];
           $.ajax({
             type: "POST",
-            url: "/checkout/bank",
+            url: "/pay/bank",
             data: data,
             success: function(response) {
                 if (response.status == "ok") {

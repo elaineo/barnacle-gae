@@ -7,6 +7,8 @@
     <b>What Happens Next?</b><br>Drivers will submit offers for you to review. They will not be paid until you confirm successful delivery.
     </p>
   </div>
+    <div class="row-fluid hidden-phone" style='height:20px'></div>    
+    <div id="map-canvas" class="reqmap hidden-phone"></div>  
     <div class="row-fluid hidden-phone" style='height:20px'></div>
     <div class="row-fluid">
       <div class="span6"><p class="plabel">
@@ -44,14 +46,11 @@
         {% endif %}
        </div>
     </div>
-    <div class="row-fluid hidden-phone" style='height:20px'></div>
-    
-    <div id="map-canvas" class="reqmap hidden-phone"></div>
   </div>
 
 
   <div class="span6"> 
-  <form enctype="multipart/form-data" action='{{update_url}}' method="post" id='request_form' class='support'>
+  <form enctype="multipart/form-data" action='{{update_url}}' method="post" id='request_form' class='support' style='border: 1px solid #333'>
     <div class="control-group">
       <label class="control-label">Description of item(s) to be delivered:</label>
       <div class="controls">

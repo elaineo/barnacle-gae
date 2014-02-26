@@ -7,9 +7,11 @@ class SettingsHandler(BaseHandler):
     def get(self):
         if self.user_prefs: 
             self.params['email'] = self.user_prefs.email
+            self.params['tel'] = self.user_prefs.tel
             self.params['notify'] = {'notify' : self.user_prefs.get_notify() }
             d = Driver.by_userkey(self.user_prefs.key)
             if d:
+                self.params['driver'] = True
                 self.params.update(d.params_fill())
             self.render('user/forms/settings.html', **self.params)  
         else:

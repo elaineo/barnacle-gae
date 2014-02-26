@@ -6,7 +6,7 @@ from Utils.RouteUtils import roundPoint
 import logging
 
 #use this for status, PostStatus for dead
-RequestStatus = ['IGNORE', 'INCOMP', 'WATCH', 'PURSUE', 'PRIORITY']
+RequestStatus = ['INCOMP', 'IGNORE', 'NO_CC', 'WATCH', 'PURSUE', 'PRIORITY']
 
 class ReqStats(ndb.Model):
     """ Other stats we want: 

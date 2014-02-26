@@ -71,13 +71,19 @@ function callbackHandler(response) {
          console.log(response.data);
          var $form = $("#cc_form");
          var cardTokenURI = response.data['uri'];
+         var last4 = response.data['last_four'];
          // append the token as a hidden field to submit to the server
          $('<input>').attr({
             type: 'hidden',
             value: cardTokenURI,
             name: 'balancedCreditCardURI'
          }).appendTo($form);
-
+         $('<input>').attr({
+            type: 'hidden',
+            value: last4,
+            name: 'last4'
+         }).appendTo($form);
+         
         $('#request_btn').attr('disabled', 'disabled');  
         $('#check-err').html('Please wait...');
         $('#cc_form').css('cursor', 'wait');

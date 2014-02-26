@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Account Setup{% endblock %}
+{% block heading %}<h1>Add a Credit Card</h1>{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/checkout.css" />
+<div class="row-fluid">
+  <div class='span8 offset2 support'>
+  To protect our drivers, we require that requests be associated with a valid form of payment. <b>You will not be charged unless you confirm an offer.</b>
+  </div>
+</div>
+<div class="row-fluid" style='height:20px'></div>
+<div class="row-fluid">
+  <div class="span8 offset2">
+ <form enctype="multipart/form-data" method="post" id='cc_form' class="form-horizontal">
+    <div class="row-fluid"> 
+      <div class='span3'>Name:</div>
+      <div class='span9'><input type='text' name='first_name' value='{{first_name}}'>
+      <input type='text' name='last_name' value='{{last_name}}'>
+      </div>
+    </div>
+    <div class="row-fluid" style='height:20px'> </div>
+    <div class="row-fluid"> 
+      <div class='span9 offset3'>       <div
+                        class="cc_visa       cc cc_initial"></div><div
+                        class="cc_mastercard cc cc_initial"></div><div
+                        class="cc_amex       cc cc_initial"></div><div
+                        class="cc_discover   cc cc_initial"></div><div
+                        class="cc_diners     cc cc_initial"></div><div
+                        class="cc_jcb        cc cc_initial"></div>
+      </div>
+    </div>
+    <div class="row-fluid"> 
+      <div class='span3'>Card Number:</div>
+      <div class='span5'><input type='text' class='card-number span12' maxlength='16'></div>
+      <div class='span4'><span class="text-error" id='cc-err'></span></div>
+    </div>
+    <div class="row-fluid"> 
+      <div class='span3'>Expiration:</div>
+      <div class='span5'>
+      <select class='input-mini cc-em'>{% include 'month_opts.txt' %}</select> / 20<input type='number' class='input-mini cc-ey' min="13"></div>
+      <div class="span4 text-error" id='ccexp-err'></div>
+    </div>    
+    <div class="row-fluid"> 
+      <div class='span3'>Security Code:</div>
+      <div class='span1'><input type='text' class='input-mini cc-csc' maxlength="4"></div>
+      <div class='span4 hidden-phone' style='padding-left:20px'><div id='cvc_card' class='visa_back'></div></div>
+    </div> 
+    <div class="row-fluid" style='height:20px'> </div>    
+    <div class="row-fluid"> 
+      <div class='span2 offset3'>
+	<button type="submit" class="button info" id='request_btn'>Save</button>
+      </div>
+      <div class='span4 text-error' id='check-err'></div>
+    </div>
+    <input type='hidden' name='next_url' value='{{next_url}}'>
+</form>
+
+  </div>
+</div>
+{% include "money/balancedjs.html" %}
+<script type="text/javascript" src='/static/js/money/ccpay.js'></script>  
+{% endblock %}
+  
