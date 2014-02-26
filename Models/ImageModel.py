@@ -1,6 +1,6 @@
 from google.appengine.ext import ndb
 from google.appengine.api import images
-from Models.UserUtils import *
+from Utils.UserUtils import *
 
 class ImageStore(ndb.Model):
     """ Image datastore """

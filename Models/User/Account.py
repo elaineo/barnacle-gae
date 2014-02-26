@@ -1,5 +1,4 @@
 from google.appengine.ext import ndb
-from Models.UserUtils import *
 from Models.Post.Review import Review
 from Models.ImageModel import *
 from Models.Money.Transaction import *

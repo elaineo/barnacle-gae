@@ -3,7 +3,7 @@ import jinja2
 import os
 import logging
 from google.appengine.api import users
-from Models.UserUtils import *
+from Utils.UserUtils import *
 from Models.User.Account import *
 from Utils.PageUtils import *
 from Utils.Defs import signin_reg, blank_img

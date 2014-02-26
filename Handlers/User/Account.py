@@ -1,6 +1,6 @@
 from Handlers.BaseHandler import *
 from Models.User.Account import *
-from Models.UserUtils import *
+from Utils.UserUtils import *
 from Utils.Defs import CITY_DB_PATH, CITYV6_DB_PATH
 import hashlib
 import logging

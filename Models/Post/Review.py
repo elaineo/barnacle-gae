@@ -1,5 +1,4 @@
 from google.appengine.ext import ndb
-from Models.UserUtils import *
 import logging
 import uuid
 import json
