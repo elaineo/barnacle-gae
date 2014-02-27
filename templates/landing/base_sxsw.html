@@ -397,8 +397,10 @@ function calc_cost() {
     if (code.toLowerCase() == 'jtg12') {
         $('input#estcost').val('$750');
         $('input#estdup').val(750);
-    }
-    else if (code.length==5){
+    } else if (code.toLowerCase() == 'sxsw7') {
+        $('input#estcost').val('$100');
+        $('input#estdup').val(100);
+    } else if (code.length==5){
         $('input#estcost').val('$'+trunks*150);
         $('input#estdup').val(trunks*150);
     } else {

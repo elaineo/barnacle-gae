@@ -46,7 +46,7 @@ class ReservationHandler(BaseHandler):
             p = ndb.Key(urlsafe=key).get()                    
             self.params.update(p.to_dict(True))
             if p.__class__.__name__ == 'Route':    # trying to reserve existing route
-                self.params['res']={'delivby':p.delivend.strftime('%m/%d/%Y')}
+                self.params['res']={}
                 self.params['reserve_title'] = 'Make a Reservation'
                 self.render('post/forms/fillreserve.html', **self.params)
             else:           # offering to deliver
@@ -370,6 +370,10 @@ class ReservationHandler(BaseHandler):
             self.params['first_name'] = route.first_name()
             resoffer=(p.__class__.__name__ == 'OfferRequest')
             self.params['res'] = p.to_dict()
+            if resoffer:
+                self.params.update(p.sender.get().params_fill_sm())
+            else:
+                self.params.update(p.driver.get().params_fill_sm())
             self.params['edit_allow'] = False
             
             if self.user_prefs and self.user_prefs.key==p.key.parent():
