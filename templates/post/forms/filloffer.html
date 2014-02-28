@@ -79,7 +79,15 @@
         <div class="controls">
             <textarea class="span5" name="msg" rows="4">{{msg}}</textarea>
         </div>
-    </div>	
+    </div>
+    <div class="control-group" >
+      <div class='controls'>
+      <label class="checkbox inline">
+        <input type='checkbox' name='repost' value='1' checked> Post this as a route   <i class="icon-info-sign" id='info_repost' data-toggle="popover" data-content='This option allows other senders to reserve space in your vehicle.'></i>.
+      </label>
+      </div>
+    </div>    
+	
     <p align="center">
     <input type="hidden" id="hidedelivok" value="{{delivok}}">
     <input type="hidden" id="hidepickup" value="{{res.pickup}}">    
@@ -115,6 +123,8 @@
   });
   
 $(document).ready(function(){
+  $('#info_repost').popover({trigger: 'hover'});
+
     //fill in some info
     var delivok = $('input#hidedelivok').val();
     if (delivok != '') {

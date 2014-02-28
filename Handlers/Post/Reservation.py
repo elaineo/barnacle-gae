@@ -8,6 +8,7 @@ from Handlers.MessageHandler import create_message
 from Models.Post.OfferRequest import *
 from Models.Post.OfferRoute import *
 from Models.Post.Request import *
+from Models.Post.Route import *
 from Models.User.Driver import *
 from Utils.RouteUtils import RouteUtils
 from Utils.ValidUtils import *
@@ -209,6 +210,7 @@ class ReservationHandler(BaseHandler):
         dropoff = bool(int(self.request.get('dropoff')))
         pickup = bool(int(self.request.get('pickup')))
         delivok = bool(int(self.request.get('delivok')))        
+        repost= bool(self.request.get('repost'))
         
         if delivok:
             reqdate = self.request.get('reqdate')
@@ -252,6 +254,9 @@ class ReservationHandler(BaseHandler):
                 p.locend = deststr
                 p.start = start
                 p.dest = dest
+                
+        if repost:
+            p.repost = route_from_off(p)                                    
         # except:
             # self.abort(403)
             # return  
