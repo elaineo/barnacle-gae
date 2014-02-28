@@ -275,7 +275,7 @@ class ReservationHandler(BaseHandler):
             self.params['offer'] = rates
             self.params['msg'] = msg
             self.params['reserve_title'] = 'Edit Offer'
-            self.params.update(route.get().to_dict(True))
+            self.params['res']=route.to_dict(True)
             self.render('post/forms/filloffer.html', **self.params)                                 
     
     def __create_reserve(self, route, res=None):
@@ -389,8 +389,6 @@ class ReservationHandler(BaseHandler):
         else:
             #see if it's expired
             #TODO: create a receipt page
-            if p.dead>0:
-                logging.info('Expired offer')
             self.abort(409)
         if resoffer:
             self.render('post/reserve.html', **self.params)

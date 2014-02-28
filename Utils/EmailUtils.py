@@ -92,6 +92,7 @@ def create_note(self, receiver, subject, body):
     params['action'] = 'note'
     params['senderid'] = 'barnacle'
     params['receiverid'] = receiver.id()
+    logging.info(receiver.get())
     recv_email = receiver.get().email#str(receiver.id()) + email_domain
     html = self.render_str('email/createnote.html', **params)
     mail.send_mail(sender=noreply_email, 
