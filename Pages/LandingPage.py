@@ -104,7 +104,7 @@ class CouponPage(BaseHandler):
             c = Codes.by_name(name.upper())
             if not c:
                 c = Codes(name=name.upper(),category=int(cat))
-                c.code = name[0:3].upper() + str(random.randint(0,99)) + 'FEB'
+                c.code = name[0:3].upper() + str(random.randint(0,99)) + 'MAR'
                 c.put()
             self.params['last_biz'] = c.name
             self.params['last_code'] = c.code
@@ -118,7 +118,8 @@ class CouponPage(BaseHandler):
             start, startstr = self.__get_map_form('start')
             dest = ndb.GeoPt(30.266184,-97.742325)
             deststr = 'SXSW 2014'
-            r = Reservation(capacity=capacity, start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest)
+            delivby = datetime.now()+timedelta(weeks=1)
+            r = Reservation(capacity=capacity, start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest, delivby=delivby)
             r.put()
             self.params.update(r.to_dict())
             self.params['reskey'] = r.key.urlsafe()

@@ -60,8 +60,10 @@ class Payments(BaseHandler):
         self.user_prefs.cc = last4 
         self.user_prefs.first_name = first_name
         self.user_prefs.last_name = last_name
-        self.user_prefs.email = email
-        self.user_prefs.tel = tel
+        if email:
+            self.user_prefs.email = email
+        if tel:
+            self.user_prefs.tel = tel
         self.user_prefs.put()
         
         # Update status of requests

@@ -183,14 +183,12 @@ class RequestHandler(PostHandler):
         items = self.request.get('items')
         email = self.request.get('email')
         tel = self.request.get('tel')
+        u = self.user_prefs.key.get()
         if email and (email != self.user_prefs.email):
-            u = self.user_prefs.key.get()
             u.email = email
-            u.put()
         if tel and (tel != self.user_prefs.tel):
-            u = self.user_prefs.key.get()
             u.tel = tel
-            u.put()
+        u.put()
         p = ndb.Key(urlsafe=key).get()
         # image upload
         img = self.request.get("file")
