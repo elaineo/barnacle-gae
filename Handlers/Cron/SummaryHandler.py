@@ -34,16 +34,19 @@ class SummaryHandler(BaseHandler):
         return buf
 
     def number_of_new_routes(self):
-        return Route.query(Route.created > self.day_ago()).count()
+        return Route.query(Route.created > self.day_ago()).filter(Route.dead==0).count()
 
     def number_of_new_requests(self):
-        return Request.query(Request.created > self.day_ago()).count()
+        return Request.query(Request.created > self.day_ago()).filter(Request.dead==0)count()
 
+    def number_of_users(self):
+        return UserPrefs.query().count()                
+        
     def number_of_routes(self):
-        return Route.query().count()
+        return Route.query(Route.dead==0).count()
 
     def number_of_requests(self):
-        return Request.query().count()
+        return Request.query(Request.dead==0).count()
 
     def number_of_new_reservations(self):
         return OfferRequest.query(OfferRequest.created > self.day_ago()).count()
@@ -55,6 +58,7 @@ class SummaryHandler(BaseHandler):
         d = {}
         d['total_routes'] = self.number_of_routes()
         d['total_requests'] = self.number_of_requests()
+        d['total_users'] = self.number_of_users()
         buf = 'Total\n'
         buf += '\n'.join([k + ' : ' + str(d[k]) for k in d]) + '\n'
         return buf

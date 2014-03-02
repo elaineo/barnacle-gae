@@ -339,6 +339,7 @@ class ReservationHandler(BaseHandler):
                             
         try:
             p.put()             
+            taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
         except:
             self.params['error_route'] = 'Invalid Start or Destination'
             self.params['pickup'] = int(pickup)

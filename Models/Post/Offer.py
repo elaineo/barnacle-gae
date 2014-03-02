@@ -28,7 +28,7 @@ class Offer(ndb.Model):
     repost = ndb.KeyProperty()      #corresponding route or request
     dead = ndb.IntegerProperty(default=0)    # see PostStatus   
             
-    def reserve_url(self):
+    def post_url(self):
         """ url for public view of reservation """
         return '/reserve/' + self.key.urlsafe()
 
@@ -90,7 +90,7 @@ class Offer(ndb.Model):
             'delete_url' : cls.delete_url(),
             'decline_url' : cls.decline_url(),
             'reservekey' : cls.key.urlsafe(),
-            'reserve_url' : cls.reserve_url(),
+            'reserve_url' : cls.post_url(),
             'delivby' : cls.deliverby.strftime('%m/%d/%Y'),
             'sender' : cls.sender_name(),
             'driver' : cls.driver_name(),

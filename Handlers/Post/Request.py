@@ -214,6 +214,7 @@ class RequestHandler(PostHandler):
             p.put()                                    
             self.view_page(p.key.urlsafe())            
             taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
+            taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
             create_request_doc(p.key.urlsafe(), p)
         else:
             self.redirect('/request')
