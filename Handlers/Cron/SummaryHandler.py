@@ -37,7 +37,7 @@ class SummaryHandler(BaseHandler):
         return Route.query(Route.created > self.day_ago()).filter(Route.dead==0).count()
 
     def number_of_new_requests(self):
-        return Request.query(Request.created > self.day_ago()).filter(Request.dead==0)count()
+        return Request.query(Request.created > self.day_ago()).filter(Request.dead==0).count()
 
     def number_of_users(self):
         return UserPrefs.query().count()                
