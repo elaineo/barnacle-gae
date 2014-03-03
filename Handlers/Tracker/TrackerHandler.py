@@ -155,6 +155,8 @@ class TrackerHandler(BaseHandler):
             locstr = ''           
         try:
             msg = data['msg']
+            if msg[0:3].lower()=='http'[0:3]:
+                msg='<a href="'+msg+'"><img style="max-height:60px" src="'+msg+'"></a>'
         except:
             msg = ''
         if loc:

@@ -75,7 +75,7 @@
     <table class="table">
       <tr><th>Location</th><th>Time</th><th>Message</th></tr>
       {% for p in points %}
-      <tr><td>{{p.locstr}} <small>({{p.lat}},{{p.lon}})</small></td><td>{{p.time}}</td><td><small>{{p.msg}}</small></td></tr>
+      <tr><td>{{p.locstr}} <small>({{p.lat}},{{p.lon}})</small></td><td>{{p.time}}</td><td><small>{{p.msg | safe}}</small></td></tr>
       {% endfor %}
     </table>
     <p><small>Timestamps are displayed in the destination time zone</small></p>

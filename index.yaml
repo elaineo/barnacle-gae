@@ -53,3 +53,8 @@ indexes:
   properties:
   - name: last_active
     direction: desc
+
+- kind: TrackerModel
+  properties:
+  - name: driver
+  - name: status
