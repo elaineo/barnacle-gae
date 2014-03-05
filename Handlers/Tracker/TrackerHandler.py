@@ -67,7 +67,7 @@ class TrackerHandler(BaseHandler):
         elif action=='status':
             self.__status()
         elif action=='msg':
-            self.__sendmsg(key)            
+            self.__sendmsg()            
         elif action=='inactivate':
             self.__inactivate()
         elif action=='confirm':
@@ -303,9 +303,12 @@ class TrackerHandler(BaseHandler):
             return                  
         
         sender = self.user_prefs.key
-        create_message(self, r, None, receiver, self.user_prefs.key, msg) 
-               
-        response = {'status':'ok'}
+        if sender:
+            point = TrackPt(sender=sender, created=datetime.now(), msg=msg)
+            r.points.append(point)
+            r.put()
+            response = { 'status': 'ok'}        
+        
         self.write(json.dumps(response))           
         
     def __eta(self, key):

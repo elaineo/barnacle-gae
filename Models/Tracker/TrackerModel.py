@@ -1,5 +1,6 @@
 from google.appengine.ext import ndb
 from Handlers.BaseHandler import *
+from Models.User.Account import *
 import logging
 from datetime import *
 
@@ -9,6 +10,7 @@ class TrackPt(ndb.Model):
     created = ndb.DateTimeProperty()
     speed = ndb.FloatProperty()
     msg = ndb.StringProperty()
+    sender = ndb.KeyProperty()  #external msg from user
 
 class TrackerModel(ndb.Model):
     reservation = ndb.KeyProperty()   #attach this thing to a reservation 
@@ -23,6 +25,11 @@ class TrackerModel(ndb.Model):
     tzoffset = ndb.IntegerProperty()
     status = ndb.IntegerProperty(default=1)  #1 inactive, 0 active, 2 waiting, 99 done
 
+    def last_point(self):
+        for p in reversed(self.points):
+            if p.loc:
+                return p
+    
     def post_url(self):
         """ url for public view of post """
         return '/track/view/' + self.key.urlsafe()
@@ -43,15 +50,26 @@ class TrackerModel(ndb.Model):
         if abbrev:
             return route
         if cls.points:
-            route['last_seen'] = (cls.points[-1].created + cls.tzdelta()).strftime('%m/%d/%Y %H:%M')
+            route['last_seen'] = (cls.last_point().created + cls.tzdelta()).strftime('%m/%d/%Y %H:%M')
+            route['last_seen_loc'] = cls.last_point().locstr
             route['disppoints'] = True
             points = []
             for px in cls.points:
-                p = { 'lat': "%.2f" % px.loc.lat,
+                if px.msg=='':
+                    continue
+                if px.sender:
+                    p = { 'time' : (px.created + cls.tzdelta()).strftime('%m/%d/%Y %H:%M'),
+                      'msg' : px.msg,
+                      'isloc': False}
+                    u = px.sender.get()
+                    p.update(u.params_fill_sm())
+                else:
+                    p = { 'lat': "%.2f" % px.loc.lat,
                       'lon': "%.2f" % px.loc.lon,
                       'locstr' : px.locstr,
                       'time' : (px.created + cls.tzdelta()).strftime('%m/%d/%Y %H:%M'),
-                      'msg' : px.msg }
+                      'msg' : px.msg,
+                      'isloc': True }
                 points.insert(0,p)
             route['points'] = points
         else:
@@ -62,7 +80,8 @@ class TrackerModel(ndb.Model):
             route['status'] = 'Active'            
             if cls.points:
                 route['dispeta'] = True
-                route['lastpt'] = str(cls.points[-1].loc.lat) + ',' + str(cls.points[-1].loc.lon)
+                last = cls.last_point()
+                route['lastpt'] = str(last.loc.lat) + ',' + str(last.loc.lon)
                 route['destpt'] = str(cls.dest.lat) + ',' + str(cls.dest.lon)
         elif cls.status==2:
             route['status'] = 'Awaiting Confirmation'

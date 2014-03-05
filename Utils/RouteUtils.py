@@ -124,7 +124,7 @@ class RouteUtils:
             markers.append([q.lat,q.lon])
         route['markers'] = markers
         route['zoom'] = map_zoom_pts(pts)
-        points = [q.loc for q in r.points]
+        points = [q.loc for q in r.points if q.loc]
         pathpts = []
         for p in points:
             pathpts.append([p.lat,p.lon])

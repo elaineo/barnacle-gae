@@ -29,13 +29,13 @@ indexes:
 - kind: Request
   properties:
   - name: dead
-  - name: delivby
-  
+  - name: created
+    direction: desc
+
 - kind: Request
   properties:
   - name: dead
-  - name: created  
-    direction: desc      
+  - name: delivby
 
 - kind: Review
   properties:
@@ -46,14 +46,14 @@ indexes:
 - kind: Route
   properties:
   - name: dead
-  - name: delivend
+  - name: created
+    direction: desc
 
 - kind: Route
   properties:
   - name: dead
-  - name: created  
-    direction: desc    
-    
+  - name: delivend
+
 - kind: SearchEntry
   properties:
   - name: remoteip
