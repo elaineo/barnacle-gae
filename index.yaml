@@ -30,6 +30,12 @@ indexes:
   properties:
   - name: dead
   - name: delivby
+  
+- kind: Request
+  properties:
+  - name: dead
+  - name: created  
+    direction: desc      
 
 - kind: Review
   properties:
@@ -42,6 +48,12 @@ indexes:
   - name: dead
   - name: delivend
 
+- kind: Route
+  properties:
+  - name: dead
+  - name: created  
+    direction: desc    
+    
 - kind: SearchEntry
   properties:
   - name: remoteip

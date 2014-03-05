@@ -66,6 +66,8 @@ class TrackerHandler(BaseHandler):
             self.__create()
         elif action=='status':
             self.__status()
+        elif action=='msg':
+            self.__sendmsg(key)            
         elif action=='inactivate':
             self.__inactivate()
         elif action=='confirm':
@@ -264,10 +266,7 @@ class TrackerHandler(BaseHandler):
     def __share(self):
         data = json.loads(self.request.body)
         logging.info(data)        
-        try: 
-            fbshare = bool(data['fbshare'])
-        except:
-            fbshare=False
+        fbshare = bool(data.get('fbshare'))
         # try:
         key = data['routekey']
         r = ndb.Key(urlsafe=key).get()        
@@ -285,6 +284,30 @@ class TrackerHandler(BaseHandler):
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))   
 
+    def __sendmsg(self):
+        data = json.loads(self.request.body)
+        self.response.headers['Content-Type'] = "application/json"
+        logging.info(data)            
+        key = data.get('routekey')
+        msg = data.get('msg')
+        if not self.user_prefs:
+            response = {'status':'Not logged in.'}
+            self.write(json.dumps(response))
+            return
+        try:
+            r = ndb.Key(urlsafe=key).get()
+            receiver = r.driver
+        except:
+            response = {'status':'Invalid Route.'}
+            self.write(json.dumps(response))
+            return                  
+        
+        sender = self.user_prefs.key
+        create_message(self, r, None, receiver, self.user_prefs.key, msg) 
+               
+        response = {'status':'ok'}
+        self.write(json.dumps(response))           
+        
     def __eta(self, key):
         # this is probably the easiest way to do it. but i don't like it
         try:

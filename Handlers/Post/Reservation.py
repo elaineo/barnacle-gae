@@ -1,5 +1,6 @@
 from datetime import *
 from google.appengine.ext import ndb
+from google.appengine.api import taskqueue
 
 from Handlers.BaseHandler import *
 from Handlers.Launch.CheckoutHandler import *
@@ -341,12 +342,12 @@ class ReservationHandler(BaseHandler):
             p.put()             
             taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
         except:
+            logging.error(p)
             self.params['error_route'] = 'Invalid Start or Destination'
             self.params['pickup'] = int(pickup)
             self.params['dropoff'] = int(dropoff)
             self.params['details'] = items
             self.params['offer'] = rates
-            self.params['msg'] = msg
             self.params['reserve_title'] = 'Edit Reservation'
             self.params.update(route.get().to_dict(True))
             self.render('post/forms/fillreserve.html', **self.params)
