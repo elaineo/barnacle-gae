@@ -1,18 +1,25 @@
 from Handlers.BaseHandler import *
-from Models.User.DriverModel import *
-from Utils.ValidUtils import parse_date
+from Models.User.Account import *
+from Utils.ValidUtils import parse_date, get_search_json
 import logging
 import json
+from Utils.Defs import CITY_DB_PATH, CITYV6_DB_PATH
+import pygeoip
 
 from google.appengine.api import mail
 
 class ApplyHandler(BaseHandler):
-    def get(self):
-        self.render('launch/apply.html', **self.params)  
+    def get(self,action=None):
+        if action=='nofb':
+            self.render('user/nofb.html', **self.params)  
+        else:
+            self.render('user/apply.html', **self.params)  
                     
     def post(self,action=None):
         if action=='fb':
             self.__fb()
+        elif action=='nofb':
+            self.__nofb()
         # firstname = self.request.get('firstname')
         # lastname = self.request.get('lastname')
         # email = self.request.get('email')
@@ -70,12 +77,47 @@ class ApplyHandler(BaseHandler):
             response = {'status': 'err'}
         self.write(json.dumps(response))
         logging.info('Driver application submitted '+email) 
-        #self.send_message('new driver',email,first_name+last_name,remoteip) 
+
+    def __nofb(self):
+        d = json.loads(self.request.body)
+        remoteip = self.request.remote_addr
+        logging.info(d)   
+        self.response.headers['Content-Type'] = "application/json"
+        name = d.get('name')
+        email = d.get('email')
+        tel = d.get('tel')
         
-    def send_message(self,msg,email,name,remoteip):
-        if not name:
-            name = "Barnacle"
-        subject = "Feedback"
-        text = u'From: %s (%s)' % (name, email)
-        text += u'\n' + ('-' * len(text)) + '\n\n' + msg + '\n\n' + remoteip
-        mail.send_mail('elaine.ou@gmail.com','elaine.ou@gmail.com', subject=subject, body=text)        
+        try:
+            usertype = int(d.get('usertype'))
+        except:
+            usertype = 2
+        
+        start, startstr = get_search_json(d,'start')
+        
+        # lookup ip address
+        gi = pygeoip.GeoIP(CITY_DB_PATH)
+        geo = gi.record_by_addr(remoteip)    
+        if not geo: 
+            gi = pygeoip.GeoIP(CITYV6_DB_PATH)
+            geo = gi.record_by_addr(remoteip)                
+        if geo:
+            geocity = geo.get('city') #hehehe
+        else:
+            geocity = ''   
+        referral = self.read_secure_cookie('referral')
+        code = self.read_secure_cookie('code')
+        try:
+            stats = UserStats(referral=referral, code=code, ip_addr=[remoteip], locations=[geocity])
+        except:
+            logging.info(geocity)
+            stats = UserStats(referral=referral, code=code)            
+                    
+        try:
+            dr = UserAccount( name = name, email = email, tel = tel, 
+            locpt = start, location = startstr, stats = stats)
+            dr.put()
+            response = { 'status': 'new'}        
+        except:
+            response = {'status': 'err'}
+        self.write(json.dumps(response))
+        logging.info('Non-fb application submitted '+email)         

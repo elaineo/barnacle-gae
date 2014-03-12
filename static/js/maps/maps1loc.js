@@ -1,4 +1,22 @@
 function initialize() {
+  // Try HTML5 geolocation
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+    console.log(position);    
+    var geocoder = new google.maps.Geocoder();
+    var ll = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    geocoder.geocode({ "latLng": ll}, function (results, status) {
+                        console.log(results, status);
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            formAddr = results[0].formatted_address;
+                            $('input#map0Field').val(formAddr);
+                            $('input#startstr').val(formAddr);
+                        } });    
+    $('input#startlat').val(position.coords.latitude);
+    $('input#startlon').val(position.coords.longitude);
+    });
+  }
+
   var autoOptions = { componentRestrictions: {country: 'us'}  };
   
   var input0 = /** @type {HTMLInputElement} */(document.getElementById('map0Field'));

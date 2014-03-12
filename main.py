@@ -14,6 +14,7 @@ from Handlers.User.Account import *
 from Handlers.User.Profile import *
 from Handlers.User.Settings import SettingsHandler
 from Handlers.User.Driver import DriverHandler
+from Handlers.User.ApplyHandler import *
 
 #Payment Accounts
 from Handlers.Money.Earnings import Earnings
@@ -43,7 +44,6 @@ from Utils.CloseUtils import *
 from Utils.ErrorUtils import *
 
 ## Launch!
-from Handlers.Launch.ApplyHandler import *
 from Handlers.Launch.ReserveHandler import *
 
 from Pages.LandingPage import *

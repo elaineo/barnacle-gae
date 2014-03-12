@@ -19,6 +19,15 @@ class UserStats(ndb.Model):
 class UserSettings(ndb.Model):
     """ 0.Messages 1.Reservation updates 2.Review notify 3.Matching Delivery requests    4. Newsletter """ 
     notify = ndb.IntegerProperty(repeated=True) 
+
+class UserAccount(ndb.Model):
+    email = ndb.StringProperty() 
+    tel = ndb.StringProperty() 
+    name = ndb.StringProperty() 
+    location = ndb.StringProperty()
+    locpt = ndb.GeoPtProperty(default=ndb.GeoPt(37.4,-122))
+    usertype = ndb.IntegerProperty(default=2)
+    stats = ndb.StructuredProperty(UserStats) 
     
 class UserPrefs(ndb.Model):
     """ Individual User data fields """

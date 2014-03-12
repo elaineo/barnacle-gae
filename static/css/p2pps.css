@@ -368,7 +368,7 @@ position: absolute;
   max-width: 200px;
 }
 .back_img {
-    background: url('/static/img/back_idaho.jpg') no-repeat center center;
+    background: url('/static/img/back_ql.jpg') no-repeat center center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -377,7 +377,7 @@ position: absolute;
     min-width: 100%;
 }
 .splash_img {
-    background: url('/static/img/back_101.jpg') no-repeat center center;
+    background: url('/static/img/back_road.jpg') no-repeat center center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

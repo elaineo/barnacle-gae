@@ -1,41 +1,78 @@
 {% extends "base.html" %}
 {% block title %}Barnacle Spring Break{% endblock %}
-{% block heading %}<h1>Share Your Spring Break</h1>
+{% block heading %}<h1>Spring Break Road Trip Contest</h1>
 {% endblock %}
 {% block content %}
 
 <div class="row-fluid">
-  <div class="span8" style='padding-left:10px'>       
-    <h2>Leaderboard</h2>
-    <div class="row" style='height:10px'>
-        <div class="span6">
-            <h4>Drivers</h4>
-<!--
-        <table class="table table-hover table-condensed">
-        {% for nr in top_drivers %}
-        <tr class='clicky' onclick="document.location.href = '{{nr.post_url}}';">
-            <td><img src="{{nr.prof_img}}" width='64px'></td>
-            <td>Miles or some shit
-            </td>
-        </tr>
-        {% endfor %}
-        </table>
--->
-            
-        </div>
-        <div class="span6">
-            <h4>Groups</h4>
-        </div>
-    </div>
+  <div class="span8" style='padding-left:10px'>
+      
+      You like to drive.  You like to win.  Barnacle wants you to do both!  Our Spring Break Road Trip Contest is now live.  <b>To win, simply log the most miles</b> using our new <a href="/tracker" target="_blank">driver tracker app</a> by March 31.
+      <br/><br/>
+      <img src="/static/img/springbreak-roadtrip.jpg"><br/><br/>
+          <h4>Instructions:</h4>
+          <ol style="margin-left: 30px;">
+              <li><b>Download app</b>: It's free!  Works best on <a href="https://itunes.apple.com/us/app/barnacle-driver-tracker/id797355394?ls=1&mt=8">iPhone</a> but also works with <a href="https://play.google.com/store/apps/details?id=com.gobarnacle">Droids</a></li>
+              <li><b>Post a route</b>: This can be done <a href="/drive">on our site</a> or in app</li>
+              <li><b>Activate the route</b>: Within the app, visit the "Manage Routes" page and make sure your route is active.</li>
+              <li><b>Start Your Drive</b>: Within the app, click "Start Drive".</li>
+              <li><b>Repeat:</b> Keep doing steps 2 through 4 until you can't drive any more'
+          </ol>
+          <br/>
+          Bonus miles will be awarded for people who post great pictures, post their route on Facebook, and get comments from their friends.
+          
+          <br/>
+          <br/>
+    
     <div class="row"><div class="span8">
       <div id="map-canvas" class="routemap"></div>
     </div></div>
   </div>
   <div class="span4">
+
  
-    <h2>Rules and shit</h2>
-    <div class="fb-follow" data-href="https://www.facebook.com/GoBarnacle" data-width="250" data-show-faces="false" style='padding-top:10px;padding-left:10px;'></div>
-    
+      <h4>Current Leaderboard</h4>
+      
+      <table class="table table-hover table-condensed">
+          <tr class='clicky' onclick="document.location.href = 'http://www.gobarnacle.com/profile/agtzfnAycHBvc3RhbHIWCxIJVXNlclByZWZzGICAgID1wbQLDA';">
+              <td><b>1</b></td>
+              <td><img src="http://profile.ak.fbcdn.net/hprofile-ak-ash3/t1/c0.0.400.400/1978758_10152355175387425_2044853301_n.jpg" width='64px'></td>
+              <td>Zack: <a href="http://www.gobarnacle.com/track/view/agtzfnAycHBvc3RhbHIZCxIMVHJhY2tlck1vZGVsGICAgMCEh48IDA">350 Miles</a></td>
+          </tr>
+          
+          <tr class='clicky' onclick="document.location.href = 'http://www.gobarnacle.com/profile/agtzfnAycHBvc3RhbHIWCxIJVXNlclByZWZzGICAgID1wbQLDA';">
+              <td><b>2</b></td>
+              <td><img src="http://www.gobarnacle.com/img/5029526962700288?key=FqwPKsTlJb&mode=small" width='64px'></td>
+              <td>Eiaine: <a href="http://www.gobarnacle.com/track/view/agtzfnAycHBvc3RhbHIZCxIMVHJhY2tlck1vZGVsGICAgMCEh48IDA">333 Miles</a></td>
+          </tr>
+          
+          <tr class='clicky' onclick="document.location.href = 'http://www.gobarnacle.com/profile/agtzfnAycHBvc3RhbHIWCxIJVXNlclByZWZzGICAgID1wbQLDA';">
+              <td><b>3</b></td>
+              <td><img src="http://profile.ak.fbcdn.net/hprofile-ak-prn1/t1.0-1/c12.12.155.155/s100x100/58282_10151228730183161_191050857_a.jpg" width='64px'></td>
+              <td>Sefani(t): <a href="http://www.gobarnacle.com/track/view/agtzfnAycHBvc3RhbHIZCxIMVHJhY2tlck1vZGVsGICAgMCEh48IDA">315 Miles</a></td>
+          </tr>
+      </table>
+      
+      <hr>
+      <h4>FAQ</h4>
+
+      <i>What Do I Win?</i>
+      <br/>
+      The winner will receive one aluminum "gift bag" from our friends at Mumford Brewery.<br/>
+      <center><img src="/static/img/springbreak-aluminum.JPG" width="100"></center>
+      <br/><br/>
+      <i>Cool!  What's Inside the Gift Bag?</i>
+          
+          <br/>Our lawyers say we can't say what specifically is inside, so you'll have to use your imagination :)
+          <br/><br/>
+          
+          <i>That's Too Good to be True!  What's the Catch?</i>
+          <br/>
+          No catch.  We need some drivers to test out our new app for when we put it live.  We'll probably ask you for your feedback at some point.
+
+      
+      <div class="fb-follow" data-href="https://www.facebook.com/GoBarnacle" data-width="250" data-show-faces="false" style='padding-top:10px;padding-left:10px;'></div>
+      
   </div>
 </div>
 

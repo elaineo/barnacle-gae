@@ -1,0 +1,104 @@
+{% extends "baseblank.html" %}
+{% block title%}Sign up for Barnacle{% endblock %}
+{% block heading %}
+<h1 class='whiteh1 hidden-phone'>Ship outside the box with our nationwide network of commuters.</h1>
+<link rel="stylesheet" href="/static/landing/styles/transition.css">
+<div class="row-fluid">
+  <div class="span6 offset3">
+<div class="form-header">
+
+</div>
+<form action="/apply/nofb" method="post" class="custom form-search"  id='nofb_form'>
+    <div class="control-group">
+      <label class="control-label">I want to:</label>
+      <div class="controls">
+        <label class="radio inline">
+          <input type="radio" name="usertype" value="0" checked> Send Stuff
+        </label>
+        <label class="radio inline">
+          <input type="radio" name="usertype" value="1"> Drive
+        </label>  
+        <label class="radio inline">
+          <input type="radio" name="usertype" value="2"> Both 
+        </label>          
+      </div>
+    </div><!--end row-->
+    <div class="control-group">
+      <label class="control-label">Name:</label>
+      <div class="controls">
+        <input class="input input-xlarge" type="text" name="name">
+      </div>
+    </div><!--end row-->
+    <div class="control-group">
+      <label class="control-label">Email:</label>
+      <div class="controls">
+        <input class="input input-xlarge" type="email" name="email">
+      </div>
+    </div><!--end row-->
+    <div class="control-group">
+      <label class="control-label">Location:</label>
+      <div class="controls">
+          <input class="input input-xlarge" type="text" name="start" id='map0Field' style='width: 270px!important;'>
+      </div>
+    </div><!--end row-->    
+    <div class="control-group">
+      <label class="control-label">Phone:</label>
+      <div class="controls">
+        <input class="input input-xlarge" type="tel" name="tel">
+      </div>
+    </div><!--end row-->
+    <input type='hidden' name="startlat" id="startlat">
+    <input type='hidden' name="startlon" id="startlon">
+    <input type='hidden' name="startstr" id="startstr">
+
+    <div class="control-group">
+      <button id='apply_btn' class="button">GO</button>
+    </div>
+</form>
+
+</div></div>
+
+<script type="text/javascript" src="/static/landing/scripts/foundation.min.js"></script>
+<script type="text/javascript" src="/static/landing/scripts/transition.js"></script>
+
+ <script>
+
+$(document).ready(function(){
+    /* Give the heading a pretty picture */
+    hh = $('.heading').height()+20;
+    $('.wash').height(hh);
+    $('.hero_container').height(hh);
+});
+  </script>
+  <script type="text/javascript" src="/static/js/validation.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="/static/js/maps/maps1loc.js"></script>
+
+<script>
+$(function() {
+  initialize();
+    $('#apply_btn').click(function(event) {
+        event.preventDefault();
+        var dirData = $('#nofb_form').serializeObject();    
+      $.ajax({
+        type: "POST",
+        dataType: "json",  
+        contentType: "application/json; charset=utf-8",
+        url: '/apply/nofb',
+        data: JSON.stringify(dirData),
+        success: function(response) {
+          document.open();
+          document.write(response);
+          document.close();
+        }
+      });    
+        
+    });  
+});
+</script>
+{% endblock %}
+
+
+{% block content %}
+
+{% endblock %}
