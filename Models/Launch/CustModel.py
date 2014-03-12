@@ -19,3 +19,19 @@ class Codes(ndb.Model):
     @classmethod
     def by_name(cls,name):
         return cls.query().filter(cls.name==name).get()      
+        
+class SXSWCode(ndb.Model):
+    name = ndb.StringProperty()     # associated business name
+    code = ndb.StringProperty()  
+    price = ndb.IntegerProperty(default=0)
+    views = ndb.IntegerProperty(default=0)
+    last_view = ndb.DateTimeProperty(auto_now=True)
+    creation_date = ndb.DateTimeProperty(auto_now_add=True)                
+    
+    @classmethod
+    def by_code(cls,code):
+        return cls.query().filter(cls.code==code).get()  
+        
+    @classmethod
+    def by_name(cls,name):
+        return cls.query().filter(cls.name==name).get()              

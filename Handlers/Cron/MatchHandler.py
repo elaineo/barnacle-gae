@@ -22,7 +22,7 @@ class MatchHandler(BaseHandler):
         
     def get(self, action=None, key=None):
         if action=='routes':
-            routes = Route.query()
+            routes = Route.query(Route.dead==0)
             drivers =[]
             for r in routes:
                 self.__updateroute(r)
@@ -37,7 +37,7 @@ class MatchHandler(BaseHandler):
                 except:
                     continue
         elif action=='requests':
-            requests = Request.query()
+            requests = Request.query(Request.dead==0)
             senders = []       
             for r in requests:
                 self.__updatereq(r)

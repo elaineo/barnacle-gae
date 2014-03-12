@@ -49,6 +49,7 @@ from Handlers.Launch.ReserveHandler import *
 from Pages.LandingPage import *
 from Pages.HomePage import *
 from Pages.ContactPage import *
+from Pages.PromoPage import SpringBreak
 
 
 sys.path.append('/Pages')
@@ -58,6 +59,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
                   webapp2.Route('/img/<id:[0-9]+>', handler=ImagePage),
                                 ('/home', GuestPage),
                                 ('/splash', SplashPage),   
+                                ('/springbreak', SpringBreak),   
 # LAUNCH!
 # requests
     webapp2.Route('/res/<action>/<key>', handler=ReserveHandler),
@@ -89,6 +91,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/request/from/<origin>/to/<dest>', handler=SearchableRequestHandler),
    webapp2.Route('/welcome/<action>', handler=LandingPage),
    webapp2.Route('/c/<action>', handler=CouponPage),
+   webapp2.Route('/sxsw/<action>', handler=SXSWPage),
 # accounts
    webapp2.Route('/signup', handler=SignupPage),
    webapp2.Route('/signup/<action>', handler=SignupPage),

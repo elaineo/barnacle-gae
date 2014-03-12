@@ -1,0 +1,21 @@
+{% extends "mobile/base.html" %}
+
+{% block content %}
+<h2>Generate a price code.</h2>
+<h3>{{last_biz}}: {{last_code}}</h3>
+ <form enctype="multipart/form-data" method="post" class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" >Business name: </label>
+        <div class="controls">
+          <input type="text" name="name">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" >Price Quote: </label>
+        <div class="controls">
+          <input type="number" name="price">
+        </div>
+    </div>
+	<button type="submit" class="btn">submit</button>
+</form>
+{% endblock %}

@@ -78,8 +78,8 @@ $(document).ready(function(){
 </div>
 <div class="row-fluid">
     <a href='/how'><button id='how_btn' class="btn btn-inverse">How it Works</button></a>
-    <button id='request_btn' class="btn btn-primary">Find a Driver</button>
-    <button id='post_btn' class="btn btn-primary">Be a Driver</button>
+    <button id='request_btn' class="btn btn-primary">I'm Shipping</button>
+    <button id='post_btn' class="btn btn-primary">I'm Driving</button>
 </div>
 </div><!--main-->
 
@@ -124,7 +124,7 @@ $(document).ready(function(){
 {% include 'google_analytics.html' %}
 <script>
 $(document).ready(function(){
-    click_redirect('#request_btn','/search');
+    click_redirect('#request_btn','/request');
     click_redirect('#post_btn','/drive');
 });
 </script>

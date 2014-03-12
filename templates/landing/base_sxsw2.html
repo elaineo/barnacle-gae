@@ -12,14 +12,9 @@
 	<!--Site charset-->
   <meta charset="utf-8">
   <!--Site title-->
-    <title>Barnacle</title>
-    <meta property="og:image" content="http://www.gobarnacle.com/static/img/barnacle.png"/>
-    <meta property="og:title" content="Barnacle"/>
-    <meta property="og:url" content="http://www.gobarnacle.com"/>
-    <meta property="fb:app_id" content="540602052657989"/>
-    <meta property="og:site_name" content="Barnacle"/>
-    <meta property="og:description" content="Ship Outside the Box."/>
-    <meta property="description" content="The Barnacle P2P community ships your most treasured possessions through a trusted network of drivers already en route."/>
+  <title>{% block title %}{% endblock %}</title>
+  <!--Meta-->
+    {% block metadescr %}{% endblock %}
   <meta name="author"  content="Elaine Ou">
   <!--Set the viewport width to device width for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,6 +28,13 @@
   <link rel="stylesheet" href="/static/landing/styles/app.css">
   <link rel="stylesheet" href="/static/landing/styles/updates.css">
   <link rel="stylesheet" href="/static/landing/styles/custom.css">
+  <style type="text/css">
+    #header { padding-top: 20px; padding-bottom: 40px; background: url(/static/landing/images/profile-{{seodir}}/header_image_bg.jpg) top center no-repeat; max-width: 1170px; margin: 0 auto; 
+    box-shadow: inset 0 50px 50px -50px #171717;
+    -moz-box-shadow: inset 0 50px 50px -50px #171717;
+    -webkit-box-shadow: inset 0 50px 50px -50px #171717;
+     }
+  </style>
   <script src="/static/js/jquery-1.9.1.js"></script>
   
 	
@@ -58,15 +60,6 @@
   <!-- jQuery & Foundation Framework -->
   <script type="text/javascript" src="/static/landing/scripts/modernizr.foundation.js"></script> 
 </head>
-<script type="text/javascript">
-$(document).ready(function(){
-    $('#prof_thumb').error(function() { $(this).hide(); });       
-});
-function breakout_of_frame() {
-    if (top.location != location) 
-        top.location.href = document.location.href ;
-}    
-</script>
 <body>
 
 
@@ -79,50 +72,113 @@ function breakout_of_frame() {
 <!-- HEADER SECTION
 ================================================ -->
 <header>
-    
-	<div class="row fixed" id='navhead' >      
+<div>
+	<div class="row">
+      
     <!-- Logo -->
-    <div class="three pull-9 columns hide-for-small">
-      	<a href="/" id='logo' class='toplogo'></a>
+    <div class="three pull-9 columns">
+      	<a href="/"><img src="/static/img/barnaclelogo_sm.png"></a>
     </div>
     <!--end logo-->
     <div class="one columns">
     </div>         
     <!--Login buttons-->  
     <div class="five columns hide-for-small">
-    	<div class="space-b-30 hide-for-small">&nbsp;</div>	        
-        <div class="space-b-10 hide-for-small">&nbsp;</div>	        
-        <div class="space-b-10 hide-for-small">&nbsp;</div>	 
+
     </div>
-    <div class="three columns login-buttons hide-for-small" style='text-transform: uppercase;
+    <div class="three columns login-buttons" style='text-transform: uppercase;
 	font-size: 0.85em; line-height: 1.5em;' id='user_head'>
-       <table class='user_head'><tr><td rowspan='2' class='th'>
-         <img src="{{prof_thumb}}" id='prof_thumb'>
-       </td><td style='text-align:left'>
-       {{nickname | safe}}<br>
-       {{account_links | safe}} </td></tr></table>
+        <img src='/static/landing/images/profile-sxsw/sxsw_logo.png' style='position:absolute; margin-top:0;'>
     </div>
     <!--end login buttons-->
   </div>
+  
+<div id="header">
+	<div class="row">
+   		
+    <div class="twelve columns">
+      <div class="row">
+      
+      	<!--Form wrapper-->
+        <div class="six columns form-wrapper">
+          <div class="form-header">
+            <p class="lead text-resize">Get your stuff home with our nationwide network of commuters.</p>
+          </div>
+          <!--Search form-->
+          <form action="/c/sxsw" method="post" class="custom form-search" id='request_form'>
+            <div class="row">
+              <div class="five mobile-four columns">
+                <label class="right inline">Destination:</label>
+              </div>
+              <div class="seven mobile-four columns">
+                <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}">
+              </div>
+            </div><!--end row-->
 
-<div class='hero_bg row'>
-  <div class="hero_container">  
-    <div class="splash_img"></div>
-  </div>
-  <div class="wash"></div>
-</div>
-<div class='heading hero_fg'>
-  <div class="row">
-    <div class='twelve columns ' style='height:500px;text-align:center;'>
-        <h1 class='heroh1'>SHIP OUTSIDE THE BOX</h1>
-        <h4 class='whiteh1'>A TRUSTED NETWORK OF DRIVERS ALREADY EN ROUTE</h4>
-        <br>
-    <button class="request_btn button large">I'm Shipping &nbsp;<i class="icon-search"></i></button> &nbsp; &nbsp;
-    <button class="post_btn button large compl">I'm Driving &nbsp;<i class="icon-road"></i></button>
-    </div>
-  </div>
-</div>
- </header>
+            <div class="row">
+              <div class="five mobile-four columns">
+                <label class="right inline">Deliver By:</label>
+              </div>
+              <div class="seven mobile-four columns">
+                <input type="date" name="reqdate" min="{{today}}" value="{{delivby}}" id="reqdate" autocomplete="off">
+              </div>
+            </div><!--end row-->
+            <div class="row">
+              <div class="five mobile-four columns">
+                <label class="right inline">Quote:</label>
+              </div>
+              
+              <div class="seven mobile-four columns">
+                <input class="input input-xlarge" type="text" name="estcost" id="estcost" value="${{estcost}}" disabled>
+                <input class="input input-xlarge" type="hidden" name="estdup" id="estdup" value="{{estcost}}">
+                <input class="input input-xlarge" type="hidden" name="code" value="{{code}}">
+              </div>
+            </div><!--end row-->                           
+              
+            <input type='hidden' name="startlat" id="startlat">
+            <input type='hidden' name="startlon" id="startlon">
+            <input type='hidden' name="startstr" id="startstr">
+
+            <input type='hidden' name='distance' id='distance' value='0'>            
+            <div class="row">
+              <div class="seven offset-by-five columns"><button class="button" id='request_btn'><i class="icon-search"></i> &nbsp;BOOK IT</button></div>
+            </div>
+            <span class="notch"></span>
+          </form>
+         
+          <!--end search form-->
+          <!--Form footer-->
+          <div class="form-footer silver-bg">
+            <p><strong>Recent Deliveries</strong>
+              <span class="right hide-for-small">
+                <a href="#" id="profile-thumbs-prev"><i class="icon-circle-arrow-left icon-large"></i></a>&nbsp;
+                <a href="#" id="profile-thumbs-next"><i class="icon-circle-arrow-right icon-large"></i></a>
+              </span>
+            </p>
+            <div class="clearfix"></div>
+            
+            <div class="carousel-profiles responsive">
+              <ul id="profile-thumbs">
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_01.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_02.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_03.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_04.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_05.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_06.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_07.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_08.jpg" alt=""></li>
+                <li><img src="/static/landing/images/profile-{{seodir}}/thumb_09.jpg" alt=""></li>
+              </ul>
+            </div><!--end carousel-profiles-->
+          </div><!--end form-footer-->
+  
+        </div><!--end form-wrapper-->
+      </div><!--end row-->
+    </div><!--end twelve-->
+  </div><!--end row-->
+</div><!--end #header-->
+</div><!--end header-bg-->
+</header>
 <!--END HEADER SECTION-->
 
 
@@ -133,15 +189,29 @@ function breakout_of_frame() {
 ================================================ -->
 <section>
   <div id="call-to-actions" class="silver-bg">
-    <div class="row map-bg">    
+    <div class="row map-bg">
+    
       <div class="twelve columns">
-        <h1 class="section-title">WHY SHIP WITH <span class="blue-text">BARNACLE?</span></h1>
-        <p class="lead">
-        Barnacle is a community. Our drivers will work with you to arrange a delivery schedule and provide special care for your transportation needs. 
-        <strong>Give your most treasured possessions their own private seats in passenger vehicles!</strong></p>
-
+        <h1 class="section-title">Ship Outside the Box</h1>
+        <p class="lead">Barnacle matches your transportation needs with drivers who are commuting or traveling. Your deliveries are just along for the ride.
+        <strong>Give your {{seosub}} their own private seats in passenger vehicles!</strong></p>
+                
+        <!--Take action-->
+        <div class="take-action">
+          <ul class="button-group expand left">
+            <li><a class="search_btn button large expand">Find a Driver &nbsp;<i class="icon-search"></i></a></li>
+          </ul>
+          <span class="or-block hide-for-small">- or -</span>
+          <ul class="button-group expand right">
+          
+            
+            <li><a class="post_btn button compl large expand">Be a Driver &nbsp;<i class="icon-road"></i></a></li>
+          </ul>
+        </div>
+        <!--end take-action-->
       </div><!--end twelve-->
-  <div id="feature-text" class="text-center">
+
+   <div id="feature-text" class="text-center">
     <div class="row">
       
       <ul class="no-bullet">
@@ -177,15 +247,13 @@ function breakout_of_frame() {
               <img src="/static/landing/images/small_thumb_03.png" alt="">
             </a>
           </div>
-          <h4>Ship Outside the Box</h4>
+          <h4>No Boxes Needed</h4>
           <p>Your deliveries get their own private seats or trunk space. This means you don't have to worry about crating or packaging your shipments.</p>
         </li>
       </ul>
     </div><!--end row-->
   </div><!--end feature-text-->
-      
-    </div><!--end row map-bg-->
-  </div><!--end call-to-actions-->
+
 </section>
 <!--END CALL TO ACTION SECTION-->
 
@@ -195,19 +263,39 @@ function breakout_of_frame() {
 
 <!-- FEATURED TEXT SECTION
 ================================================ -->
+    {% block testimonials %}
+    {% endblock %}
+<!--END TESTIMONIALS SECTION-->
+
 <section>
-  <div id="feature-text" class="text-center">
+   <div id="feature-text" class="text-center">
     <div class="row">
-      <div class="twelve columns">
-        <h2><span class="no-bg">JOIN OUR GROWING NETWORK</span></span></h2>  
-        <p class="lead">
-        We have over 5000 drivers with routes between most major cities. It's fun to be a <span class="blue-text">Barnacle</span> driver!</p>        
-      </div><!--end twelve-->    
-      <div id="map-canvas" class="homemap"></div>
+        <div class="one column"></div>
+        <div class="two columns">
+          <img src="/static/landing/images/profile-{{seodir}}/educanon.jpeg" alt="">
+        </div>        
+        <div class="two pull-1 columns">
+          <img src="/static/landing/images/profile-{{seodir}}/missionstreet.png" alt="">
+        </div>        
+        <div class="three columns">
+          <p>
+          <img src="/static/landing/images/profile-{{seodir}}/ninjas_logo.png" alt=""></p>
+          <p>
+          <img src="/static/landing/images/profile-{{seodir}}/RezScore.png" alt=""></p>
+        </div>
+        <div class="three columns">
+          <p>
+          <img src="/static/landing/images/profile-{{seodir}}/spokeswap.png" alt=""></p>
+        </div>        
+        <div class="one column"></div>
     </div><!--end row-->
   </div><!--end feature-text-->
 </section>
 <!--END FEATURED TEXT SECTION-->
+  
+
+
+
 
 
 <!-- SUPPORT & NEWSLETTER SECTION
@@ -267,49 +355,30 @@ function breakout_of_frame() {
 <!--END SUPPORT & NEWSLETTER SECTION-->
 
 
+
+
+
 {% include "landing/footer.html" %}
 
 {% include "landing/modals.html" %}
+
+<!-- POP-UP MODAL FORMS-->
 
  
 <!-- JAVASCRIPTS
 ================================================ -->
 
- <script>
-  
-$(document).ready(function(){
-    /* Give the heading a pretty picture */
-    hh = $('.heading').height()+20;
-    $('.wash').height(hh);
-    $('.hero_container').height(hh);
-    preload([
-    '/static/img/barnaclelogo_sm.png',
-    '/static/img/barnaclelogo_sq.png']);
-});
-
-$(document).scroll( function() {
-    var value = $(this).scrollTop();
-    if ( value > 60 ) {
-        $("#logo").addClass("flatlogo");
-        $("#logo").removeClass("toplogo");
-    } else {
-        $("#logo").removeClass("flatlogo");
-        $("#logo").addClass("toplogo");
-    }
-});
-function preload(arrayOfImages) {
-    $(arrayOfImages).each(function(){
-        $('<img/>')[0].src = this;
-    });
-}
-  </script>  
     <!-- Barnacle crap -->    
     <script>
     $(document).ready(function(){
-        click_redirect('.request_btn','/search');
+        click_redirect('.search_btn','/search');
         click_redirect('.post_btn','/drive');
-        var mapURL = '/route/json';
-        initialize_home(mapURL);
+        if(window.location.hash) {
+          var popup = window.location.hash;
+          var bizname = popup.split('?')[1]
+          $('#bizname').html(bizname);
+          $( '#coupon_panel' ).reveal( $( this ).data() );
+        }			         
     });
     </script>
     <script type="text/javascript" src="/static/js/signinup.js"></script>
@@ -319,10 +388,8 @@ function preload(arrayOfImages) {
 
   
     <!-- maps and other stuff for the form -->
-
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places"></script>
-<script type="text/javascript" src="/static/js/maps/mapstyles.js"></script>
-<script type="text/javascript" src="/static/js/maps/mapsplash.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="/static/js/maps/mapsxswcost.js"></script>
   
   <!-- 3rd Plugins -->
 	<!-- jQuery & Foundation Framework -->
