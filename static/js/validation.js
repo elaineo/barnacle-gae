@@ -96,11 +96,19 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver,steps) {
     };
     directionsService.route(request, function(response, status) {
     if (status == google.maps.DirectionsStatus.OK) {
-      console.log(response.routes[0]);
       // separate distance and route
       dirData = { distance: response.routes[0].legs[0].distance.value };
-      if (steps)
-        dirData.legs = response.routes[0].legs[0].steps; 
+      if (steps) {        
+        var polyline = response.routes[0].legs[0].steps; 
+        var legs = [];
+        for (p in polyline) {
+          var segment = polyDecode(polyline[p].polyline.points, -1);
+          legs.push.apply(legs,segment.filter(sparse100));
+        }
+        dirData.legs = legs;
+        /* this is a lot of data to upload */
+        console.log(dirData.legs);
+      }
       formData = $(form).serializeObject();
       $.extend(dirData, formData);      
     } else //else what? submit as is
@@ -217,3 +225,53 @@ $.fn.serializeObject = function() {
     });
     return o;
 };
+
+function polyDecode(encoded, prec) {
+  // array that holds the points
+
+  var points=[ ]
+  var index = 0, len = encoded.length;
+  var lat = 0, lng = 0;
+  while (index < len) {
+    var b, shift = 0, result = 0;
+    do {
+      b = encoded.charAt(index++).charCodeAt(0) - 63;  //finds ascii 
+                                                    //and substract it by 63
+      result |= (b & 0x1f) << shift;
+      shift += 5;
+    } while (b >= 0x20);
+    
+    var dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+    lat += dlat;
+    shift = 0;
+    result = 0;
+    do {
+      b = encoded.charAt(index++).charCodeAt(0) - 63;
+      result |= (b & 0x1f) << shift;
+      shift += 5;
+    } while (b >= 0x20);
+    var dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+    lng += dlng;
+ 
+    /* round to 6 digits ensures that floats are same as when encoded */
+    latrnd = lat / 1E5;
+    lngrnd = lng / 1E5;
+    if (prec >= 0) {
+      latrnd = latrnd.toFixed(prec);
+      lngrnd = lngrnd.toFixed(prec);
+    } 
+    
+    points.push([latrnd,lngrnd])  
+  }
+  if (prec >= 0)
+    return points.filter( onlyUnique );
+  else
+    return points;
+}
+
+function onlyUnique(value, index, self) { 
+  return self.indexOf(value) === index;
+}
+function sparse100(value, index, self) { 
+  return index % 100 === 0;
+}

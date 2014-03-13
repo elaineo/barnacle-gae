@@ -159,13 +159,15 @@ class RouteHandler(PostHandler):
             p.repeatr = None
         path = data.get('legs')
         distance = data.get('distance')
-        try:
-            p.pathpts = RouteUtils.pathPrec(start, path, distance)
-        except:
-            #Somehow, the front end did not return this data. must be invalid route
-            response = {'status':'invalid'}
-            self.write(json.dumps(response))
-            return
+        p.pathpts = [ndb.GeoPt(lat=q[0],lon=q[1]) for q in path]
+        p.pathpts.prepend(start)
+        p.pathpts.append(dest)
+        # try:
+            # p.pathpts = RouteUtils.pathPrec(start, path, distance)
+        # except:
+            # response = {'status':'invalid'}
+            # self.write(json.dumps(response))
+            # return
         p.put()
         taskqueue.add(url='/match/updateroute/'+p.key.urlsafe(), method='get')
         create_route_doc(p.key.urlsafe(), p)
