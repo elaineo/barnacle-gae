@@ -53,8 +53,12 @@
 $(document).ready(function(){
     var v = [[0],[0]];
     click_ajax('#request_btn',['map0','map1'],['start','dest'],v,'#request_form',true, false);
+    $( "#reqdate" ).datepicker({
+      minDate: 0,
+      maxDate: "+1Y",
+      changeMonth: true
+    });    
 });
-$('#reqdate').datepicker();
   </script>
  <script>
 
