@@ -8,6 +8,13 @@
   </div>
 </div>
 <div class="row visible-phone" style='height:10px;'></div>
+{% if cc == False %}
+<div class="row">
+  <div class="span10">
+    <p><span class='text-error'>You have not linked a valid credit card to your account. Please do so <a href='/pay/cc'>here</a> so that drivers can take your requests.</span></p>
+  </div>
+</div>
+{% endif %}
 <div class="row">
   <div class="span10 offset1">
   <button type="submit" class="button info" id="editprof_btn">Edit Profile</button>

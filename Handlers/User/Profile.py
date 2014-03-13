@@ -134,7 +134,7 @@ class AccountPage(ProfileHandler):
     """ User account page """
     def get(self):
         if not self.user_prefs:
-            self.redirect('/#signin-box')
+            self.redirect('/')
             return         
         if self.user_prefs: # check to see if user preferences exists
             self.params.update(self.user_prefs.params_fill())

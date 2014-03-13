@@ -9,6 +9,10 @@ class SettingsHandler(BaseHandler):
             self.params['email'] = self.user_prefs.email
             self.params['tel'] = self.user_prefs.tel
             self.params['notify'] = {'notify' : self.user_prefs.get_notify() }
+            if self.user_prefs.cc:
+                self.params['cc_num'] = 'XXXXXXXXXXXX'+self.user_prefs.cc
+            else:
+                self.params['cc_num'] = 'MISSING'
             d = Driver.by_userkey(self.user_prefs.key)
             if d:
                 self.params['driver'] = True
@@ -36,4 +40,4 @@ class SettingsHandler(BaseHandler):
                 user_prefs.tel = tel            
             user_prefs.settings = settings
             user_prefs.put()
-        self.redirect("/")
+        self.redirect("/account")

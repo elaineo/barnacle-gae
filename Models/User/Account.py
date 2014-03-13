@@ -107,6 +107,10 @@ class UserPrefs(ndb.Model):
             params['avg_rating'] = 5        
         params['fbid'] = self.userid
         params['userkey'] = self.key.urlsafe()
+        if self.cc:
+            params['cc']=True
+        else:
+            params['cc']=False
         return params
     
     def params_fill(self):
@@ -131,6 +135,10 @@ class UserPrefs(ndb.Model):
             params['tel'] = self.tel
         else:
             params['tel'] = ''
+        if self.cc:
+            params['cc']=True
+        else:
+            params['cc']=False            
         params['profile_full'] = self.profile_image_url()
         params['review_json'] = '/review/json/'+self.key.urlsafe()
         params['deliv_completed'] = Transaction.deliveries_completed(self.key)

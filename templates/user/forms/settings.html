@@ -4,6 +4,13 @@
 {% block content %}
 <div class="row-fluid">
   <div class="span8 offset2">
+    <h3>Payment Account</h3>
+    {{cc_num}}<br>
+    <a href='/pay/cc'><button class="button small compl">Update</button></a>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="span8 offset2">
 
  <form enctype="multipart/form-data" method="post" id="settings_form" class="form-horizontal">
     {% include "user/forms/fields/settings_fields.html" %}
