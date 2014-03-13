@@ -160,7 +160,7 @@ class RouteHandler(PostHandler):
         path = data.get('legs')
         distance = data.get('distance')
         p.pathpts = [ndb.GeoPt(lat=q[0],lon=q[1]) for q in path]
-        p.pathpts.prepend(start)
+        p.pathpts.insert(0,start)
         p.pathpts.append(dest)
         # try:
             # p.pathpts = RouteUtils.pathPrec(start, path, distance)

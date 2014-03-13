@@ -105,7 +105,9 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver,steps) {
           var segment = polyDecode(polyline[p].polyline.points, -1);
           legs.push.apply(legs,segment.filter(sparse100));
         }
-        dirData.legs = legs;
+        dirData.legs = legs;        
+        var tempdist = dirData.distance/1609 * 100;
+        dirData.precision = Math.round(6-2*Math.log(tempdist)/Math.log(100))
         /* this is a lot of data to upload */
         console.log(dirData.legs);
       }
