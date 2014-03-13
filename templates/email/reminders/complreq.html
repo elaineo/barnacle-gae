@@ -1,0 +1,10 @@
+{% extends "email/ebase.html" %}
+{% block content %}
+<p>
+Dear {{first_name}},</p>
+<p>
+You recently started a request to ship through Barnacle.  We would like to advertise this to our fleet of drivers, but we need you to complete your request.  You can finish where you left off <a href="http://www.gobarnacle.com{{req_url}}">here</a>.</p>
+<p>
+Every day, we are proud to help people like you ship goods affordably with our friendly network of drivers.  If you have any questions about best practices in shipping through Barnacle, please don't hesitate to reply directly to this email.
+</p>
+{% endblock %}        

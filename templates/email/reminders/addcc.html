@@ -1,0 +1,10 @@
+{% extends "email/ebase.html" %}
+{% block content %}
+<p>
+Dear {{first_name}},</p>
+<p>
+You recently posted a request to ship through Barnacle.  We will advertise this to our fleet of drivers as soon as you add a valid credit card to your account.  You can do so <a href="https://www.gobarnacle.com/account">here</a>.
+</p><p>
+As a reminder, you will not be charged until a driver accepts your request, and the payment will not be released to the driver until you confirm delivery. If you have any questions, please reply directly to this email.
+</p>
+{% endblock %}        
