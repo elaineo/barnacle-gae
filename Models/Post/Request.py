@@ -53,6 +53,10 @@ class Request(Post):
         route['edit_url'] = cls.edit_url()
         route['delete_url'] = cls.delete_url()
         route['post_url'] = cls.post_url()
+        if cls.stats.status > RequestStatus.index('NO_CC'):
+            route['valid'] = True
+        else:
+            route['valid'] = False
         return route
         
     def to_search(cls):

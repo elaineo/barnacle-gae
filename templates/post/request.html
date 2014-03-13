@@ -53,7 +53,11 @@
 </div>
     {% if edit_allow == False %} 
 <div class="span5">
+    {% if valid == True %}
   <button type="submit" class="button primary" id="reserve_btn">Offer to Deliver</button>  
+    {% else %}
+    <h4 class='text-error'>MISSING PAYMENT ACCOUNT</h4>
+    {% endif %}
   <button type="submit" class="button secondary" id="message_btn">Ask a Question</button>   
 </div>
     {% endif %}
