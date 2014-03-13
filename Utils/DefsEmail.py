@@ -58,6 +58,19 @@ welcome_txt = """
         help@gobarnacle.com and we will respond within a day!
 """
 
+welcome_user = """
+        Welcome to the Barnacle Community!  \n\n
+        Thank you for signing up for Barnacle. Our community makes it easy to ship your treasured possessions through a trusted network of drivers who are already driving between cities. <br>Here are things you can do to get started.\n\n
+        Ship Something\n
+        Do you have a box of stuff sitting in an attic in Albuquerque?  Need to send your bike to Bellingham?  A Barnacle driver will get it there in style.\n
+        Post something here: http://www.gobarnacle.com/request \n\n
+        Drive for Barnacle\n
+        Taking a road trip?  Bring a fellow Barnacle members' package with you and get rewarded for your ride.\n
+        Sign up here: http://www.gobarnacle.com/drive\n\n
+        If you ever have any questions, feel free to contact us at 
+        help@gobarnacle.com.
+"""
+
 requestnote_txt = """
         Barnacle users have requested deliveries along your route! You can make a delivery offer on their request page.\n\n
         %(posts)s\n\n

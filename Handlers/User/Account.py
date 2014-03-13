@@ -2,6 +2,9 @@ from Handlers.BaseHandler import *
 from Models.User.Account import *
 from Utils.UserUtils import *
 from Utils.Defs import CITY_DB_PATH, CITYV6_DB_PATH
+from Utils.DefsEmail import welcome_user
+from Utils.Defs import welcome_user_sub
+from Utils.EmailUtils import send_info
 import hashlib
 import logging
 import json
@@ -114,6 +117,7 @@ class SignupPage(BaseHandler):
                 self.current_user_key = up.key
                 response = { 'status': 'new'}
                 logging.info('New account')
+                self.send_user_info(email)
             else:
                 response = { 'status': 'existing'}
                 logging.info('Existing account login from ' + (geocity if geocity else ''))
@@ -168,7 +172,13 @@ class SignupPage(BaseHandler):
             mm['status'] = 'success'
             self.write(json.dumps(mm))
             return
-
+            
+    def send_user_info(self, email):
+        htmlbody =  self.render_str('email/welcome_user.html', **self.params)
+        textbody = welcome_user 
+        send_info(email, welcome_user_sub, textbody, htmlbody)        
+            
+            
 class SigninPage(BaseHandler):
     """ User Sign In Page """
     def get(self):

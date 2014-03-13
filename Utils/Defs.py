@@ -51,7 +51,8 @@ decline_do_msg = ' has declined your delivery offer. \n\nDetails of your offer:\
 
 decline_do_sub = 'Delivery Offer Declined'
 
-welcome_sub = 'Welcome to Barnacle!'
+welcome_sub = 'Start Driving for Barnacle!'
+welcome_user_sub = 'Welcome to the Barnacle Community!'
 
 request_note_sub = 'Delivery Request Matches'
 

@@ -90,8 +90,8 @@ class ProfileHandler(BaseHandler):
             d.put()
             #new driver, send email
             logging.info('New driver :' + email)
-            self.send_driver_info(email)
             self.render('user/drivestart.html',**self.params)
+            self.send_driver_info(email)
         else:            
             self.redirect('/route')
         
@@ -126,9 +126,10 @@ class ProfileHandler(BaseHandler):
         self.params['action'] = 'driverinfo'
         self.params['senderid'] = 'barnacle'
         self.params['receiverid'] = self.user_prefs.key.id()    
-        htmlbody =  self.render_str('email/welcome.html', **self.params)
+        htmlbody =  self.render_str('email/welcome_driver.html', **self.params)
         textbody = welcome_txt 
         send_info(email, welcome_sub, textbody, htmlbody)
+        
         
 class AccountPage(ProfileHandler):
     """ User account page """

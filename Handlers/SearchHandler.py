@@ -79,6 +79,7 @@ class SearchHandler(BaseHandler):
         else:
             path = None
             distance = None
+            precision = 6
             
         posts = search_requests(start,dest,dist,path,startdate,enddate,precision)
         self.params['posts'] = posts
@@ -221,7 +222,7 @@ class SearchHandler(BaseHandler):
             ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
         return ptg, ptstr    
         
-def search_requests(start,dest=None, dist=None, path=None, startdate=None,enddate=None, precision=-1):
+def search_requests(start,dest=None, dist=None, path=None, startdate=None,enddate=None, precision=6):
     if not dist:
         dist = 100
     dist = int(dist)
