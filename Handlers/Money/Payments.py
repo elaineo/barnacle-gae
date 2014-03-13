@@ -1,7 +1,9 @@
 import balanced
 import simplejson
+import logging
 
 from google.appengine.ext import ndb
+from google.appengine.api import taskqueue
 
 from Handlers.BaseHandler import *
 from Models.User.Account import *
@@ -40,6 +42,7 @@ class Payments(BaseHandler):
         balanced.configure(baccount)        
         customer = create_cust(self.user_prefs)
         customer.add_bank_account(d.bank_uri)
+        logging.info('Bank account recorded')
         
         response = { 'status': 'ok' }
         self.write(json.dumps(response))     
@@ -65,7 +68,8 @@ class Payments(BaseHandler):
         if tel:
             self.user_prefs.tel = tel
         self.user_prefs.put()
-        
+        logging.info('Credit card recorded')
+        taskqueue.add(url='/summary/selfpay/'+self.user_prefs.key.urlsafe(), method='get')
         # Update status of requests
         
         self.redirect(next)

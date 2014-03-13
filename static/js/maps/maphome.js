@@ -134,5 +134,5 @@ function initialize_home(mapURL) {
                             formAddr = results[0].formatted_address;
                             $('input#map1Field').val(formAddr);
                         } });
-  });         
+  });            
 }

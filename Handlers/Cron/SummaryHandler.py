@@ -94,3 +94,9 @@ class SummaryHandler(BaseHandler):
             buf += '\n http://www.gobarnacle.com' + r.post_url()
             subject = 'New Barnacle request'
             self.email_report('help@gobarnacle.com', subject, buf)
+        elif action=='selfpay' and key:
+            r = ndb.Key(urlsafe=key).get()
+            buf = r.fullname() + ' tried to give us a cc' 
+            buf += '\n http://www.gobarnacle.com' + r.profile_url()
+            subject = 'New Barnacle payment account'
+            self.email_report('help@gobarnacle.com', subject, buf)            

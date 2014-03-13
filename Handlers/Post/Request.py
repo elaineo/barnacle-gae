@@ -202,6 +202,9 @@ class RequestHandler(PostHandler):
             # If user already has cc on file, this is important.
             # else, collect a cc
             logging.info('Complete request')
+            taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
+            taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
+            create_request_doc(p.key.urlsafe(), p)                        
             if not self.user_prefs.cc:
                 p.stats.status = RequestStatus.index('NO_CC')
                 p.put()
@@ -211,11 +214,8 @@ class RequestHandler(PostHandler):
                 return
                 
             p.stats.status = RequestStatus.index('PURSUE')
-            p.put()                                    
+            p.put()                                                
             self.view_page(p.key.urlsafe())            
-            taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
-            taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
-            create_request_doc(p.key.urlsafe(), p)
         else:
             self.redirect('/request')
 

@@ -6,7 +6,26 @@
 <div class="row-fluid">
   <div class="span6 offset3">
 <div class="form-header">
-
+<div id='applty' class='hide' style='min-height:300px;'>
+  <br>
+  <div class='row-fluid'>
+    <div class='span4 offset4'><a href='/'><img width="100px" src="/static/img/barnacle.png"></a></div>
+  </div>
+  <br>
+  <p class="lead text-resize">
+  Thank you for your interest in Barnacle! We will be in touch shortly. <br><br>
+  In the meantime, please help us build the community by sharing this page with your friends. <br> </p>
+<div class='row-fluid'>
+    <div  style='cursor:pointer; height:25px'>
+    <img src='/static/img/icons/tweet.jpg' width='72px' id='tweet'>
+    <img src='/static/img/icons/fb_share.jpg' width='72px' id='fb_share'>
+    <img src='/static/img/icons/li_share.jpg' width='72px' id='li_share'>
+    <img src='/static/img/icons/reddit.jpg' width='72px' id='reddit'>
+    <img src='/static/img/icons/plusone.png' style='height:25px' id='plusone'>
+    </div>
+</div>  
+<div class='row-fluid' style='height:20px'></div>
+</div>
 </div>
 <form action="/apply/nofb" method="post" class="custom form-search"  id='nofb_form'>
     <div class="control-group">
@@ -87,13 +106,43 @@ $(function() {
         url: '/apply/nofb',
         data: JSON.stringify(dirData),
         success: function(response) {
-          document.open();
-          document.write(response);
-          document.close();
+            $('#nofb_form').addClass('hide');
+            $('#applty').removeClass('hide');   
+            window.location.hash="top";
+            hh = $('.heading').height()+20;
+            $('.wash').height(hh);
+            $('.hero_container').height(hh);            
         }
       });    
         
     });  
+});
+
+
+$(document).ready(function() {  
+    blogTitle = 'I just joined @GoBarnacle!';
+    blogLink = 'http://www.GoBarnacle.com';
+    $('#tweet').click(function() {
+        var twitURL = 'http://twitter.com/share?text='+blogTitle+'&url='+blogLink;
+        console.log(twitURL);
+        window.open(twitURL,'','width=500,height=300','');
+    });
+    $('#fb_share').click(function() {
+        var fbURL='https://www.facebook.com/dialog/feed?app_id=540602052657989&link='+blogLink+'&picture=http://www.gobarnacle.com/static/img/barnacle.png&name='+blogTitle+'&redirect_uri=http://www.gobarnacle.com/suicide'        
+        window.open(fbURL,'','width=500,height=300','');
+    });
+    $('#li_share').click(function(){
+        var liURL  = 'http://www.linkedin.com/shareArticle?mini=true&url=' + blogLink + '&title=' + blogTitle + '&source=Barnacle';
+        window.open(liURL,'','width=500,height=300',''); 
+    });
+    $('#reddit').click(function(){
+        var redditURL  = 'http://www.reddit.com/submit?url=' + blogLink;
+        window.open(redditURL,'','width=500,height=300',''); 
+    });
+    $('#plusone').click(function(){
+        var plusURL  = 'https://plus.google.com/share?url=' + blogLink;
+        window.open(plusURL,'','width=500,height=300',''); 
+    });
 });
 </script>
 {% endblock %}

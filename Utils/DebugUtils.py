@@ -42,7 +42,7 @@ class DebugUtils(BaseHandler):
             clean_index(REQUEST_INDEX)
             clean_index(ROUTE_INDEX)
         elif action=='qtask':
-            taskqueue.add(url='/debug/clearall')
+            taskqueue.add(url='/debug/clearexp')
         elif action=='cities':
             delete_all_in_index(CITY_INDEX)
             for c in cities:
