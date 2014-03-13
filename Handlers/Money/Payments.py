@@ -71,7 +71,7 @@ class Payments(BaseHandler):
         logging.info('Credit card recorded')
         taskqueue.add(url='/summary/selfpay/'+self.user_prefs.key.urlsafe(), method='get')
         # Update status of requests
-        
+        taskqueue.add(url='/request/updatecc/'+self.user_prefs.key.urlsafe(), method='get')
         self.redirect(next)
         return             
         

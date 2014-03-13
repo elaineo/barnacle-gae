@@ -44,6 +44,12 @@ class RequestHandler(PostHandler):
             logging.error(p)
             self.abort(403)
             return
+        elif action=='updatecc' and key:
+            reqs = Request.by_userkey(ndb.Key(urlsafe=key))
+            for p in reqs:
+                p.stats.status = RequestStatus.index('PURSUE')
+                p.put()
+            return
         elif not key:
             remoteip = self.request.remote_addr
             savsearch = SearchEntry.by_ip(remoteip)
