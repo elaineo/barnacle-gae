@@ -2,7 +2,7 @@ h2 {    font: 2.4em/1.0em 'Sacramento','Open Sans', sans-serif;}
 h4 {    font: 1.5em/1.6em 'Open Sans', sans-serif;}
 
 .splash_html {
-background: url('/static/img/splash_back.png') no-repeat center center fixed;
+background: url('/static/img/back_ql.jpg') no-repeat center center fixed;
 
 -webkit-background-size: cover;
 -moz-background-size: cover;
