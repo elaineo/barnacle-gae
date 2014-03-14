@@ -140,7 +140,7 @@ class SearchableRequestHandler(BaseHandler):
         self.response.headers['Content-Type'] = "application/json"
         start,startstr = self.__get_search_form('start')
         if not start:
-            r = Request.query()
+            r = Request.query(Request.dead==0)
             rdump = RouteUtils.dumpreqs(r)
             self.write(json.dumps(rdump))
             return

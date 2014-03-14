@@ -92,7 +92,7 @@ class MatchHandler(BaseHandler):
                 m.matches.remove(ndb.Key(urlsafe=key))
                 m.put()     
         elif action=='cleanmatches':
-            requests = Request.query() 
+            requests = Request.query(Request.dead==0) 
             for r in requests:
                 r.matches=[]
                 r.put()

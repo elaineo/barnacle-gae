@@ -36,7 +36,7 @@ class RouteHandler(PostHandler):
                 self.write(jsonall_result)
                 return
             else:
-                routes = Route.query()
+                routes = Route.query(Route.dead==0)
                 rdump = RouteUtils.dumpall(routes)
                 jsonall_result = special_json_format(rdump)
                 memcache.add(key="jsonall", value=jsonall_result, time=3600)
