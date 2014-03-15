@@ -95,19 +95,19 @@ def create_note(self, receiver, subject, body):
     logging.info(receiver.get())
     recv_email = receiver.get().email#str(receiver.id()) + email_domain
     html = self.render_str('email/createnote.html', **params)
-    # mail.send_mail(sender=noreply_email, 
-              # to=recv_email,
-              # subject=subject,
-              # body=body, html=html)
+    mail.send_mail(sender=noreply_email, 
+              to=recv_email,
+              subject=subject,
+              body=body, html=html)
     logging.info("Note sent to: " + recv_email + " Re: " + subject)    
 
 def send_info(to_email, subject, body, html=None):
-    # if html:
-        # mail.send_mail(to=to_email,
-            # sender=noreply_email, subject=subject,
-            # body=body, html=html)
-    # else:
-        # mail.send_mail(to=to_email,
-            # sender=noreply_email, subject=subject,
-            # body=body)
+    if html:
+        mail.send_mail(to=to_email,
+            sender=noreply_email, subject=subject,
+            body=body, html=html)
+    else:
+        mail.send_mail(to=to_email,
+            sender=noreply_email, subject=subject,
+            body=body)
     logging.info("Note sent to: " + to_email + " Re: " + subject)
