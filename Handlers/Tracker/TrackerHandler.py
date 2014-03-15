@@ -40,7 +40,8 @@ class TrackerImageUploadHandler(blobstore_handlers.BlobstoreUploadHandler):
 class TrackerImageUploadSuccess(BaseHandler):
     def get(self, blob_key):
         self.response.headers['Content-Type'] = "application/json"
-        url = images.get_serving_url(blobstore.BlobKey(blob_key))
+        #url = images.get_serving_url(blobstore.BlobKey(blob_key))
+        url = '%s/tracker/img/%s' % (www_home, blob_key)
         self.write(json.dumps({'url' : url}))
 
 
