@@ -125,6 +125,24 @@ class CouponPage(BaseHandler):
             self.params['reskey'] = r.key.urlsafe()
             self.params['checkout_action'] = '/checkout/res/' + r.key.urlsafe()
             self.render('launch/fillcheckout_abbrev.html', **self.params)     
+        elif action=='event':
+            rates = self.request.get('estdup')
+            rates = int(rates)
+            code = self.request.get('code')
+            deststr = 'SF Bay Area'
+            dest = ndb.GeoPt(37.4,-122)
+            start, startstr = self.__get_map_form('start')
+            reqdate = self.request.get('reqdate')
+            if reqdate:
+                delivby = parse_date(reqdate)
+            else:
+                delivby = datetime(2014,05,15)
+            r = Reservation(start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest, delivby=delivby, details=code)
+            r.put()
+            self.params.update(r.to_dict())
+            self.params['reskey'] = r.key.urlsafe()
+            self.params['checkout_action'] = '/checkout/res/' + r.key.urlsafe()
+            self.render('launch/fillcheckout_abbrev.html', **self.params)              
         elif action=='vegas':
             rates = self.request.get('estdup')
             rates = int(rates)
@@ -159,7 +177,42 @@ class CouponPage(BaseHandler):
         else:
             ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
         return ptg, ptstr            
-        
+
+class EventPage(BaseHandler):
+    def get(self, action=None):
+        if action=='gen':
+            self.render('landing/sxswgen.html', **self.params)          
+        else: 
+            c = SXSWCode.by_code(action.upper())
+            if not c:
+                self.redirect('/')
+            self.params['bizname'] = c.name
+            self.params['estcost'] = c.price
+            self.params['code'] = c.code
+            c.views = c.views+1
+            c.put()
+            # set cookie so we know where they came from
+            self.set_secure_cookie('code', action.upper())
+            referer = self.request.referer
+            self.set_secure_cookie('referral', referer)
+            self.params['seodir'] = 'event'
+            self.params['seosub'] = 'shipments'
+            self.params['items'] = 'stuff'
+            self.render('landing/event_ba.html', **self.params)     
+
+    def post(self, action=None):
+        if action=='gen':
+            name = self.request.get('name')
+            price = self.request.get('price')
+            # Look up code
+            c = SXSWCode.by_name(name.upper())
+            if not c:
+                c = SXSWCode(name=name.upper(),price=int(price))
+                c.code = name[0:3].upper() + str(random.randint(0,99))
+                c.put()
+            self.params['last_biz'] = c.name
+            self.params['last_code'] = c.code
+            self.render('landing/sxswgen.html', **self.params)            
         
 class SXSWPage(BaseHandler):
     def get(self, action=None):

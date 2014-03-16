@@ -95,6 +95,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/request/from/<origin>/to/<dest>', handler=SearchableRequestHandler),
    webapp2.Route('/welcome/<action>', handler=LandingPage),
    webapp2.Route('/c/<action>', handler=CouponPage),
+   webapp2.Route('/d/<action>', handler=EventPage),
    webapp2.Route('/sxsw/<action>', handler=SXSWPage),
 # accounts
    webapp2.Route('/signup', handler=SignupPage),

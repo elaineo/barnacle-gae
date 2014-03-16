@@ -43,6 +43,11 @@ class DebugUtils(BaseHandler):
             clean_index(ROUTE_INDEX)
         elif action=='qtask':
             taskqueue.add(url='/debug/clearexp')
+        elif action=='elaine':
+           res = ndb.Key(urlsafe='agtzfnAycHBvc3RhbHIvCxIJVXNlclByZWZzGICAgICAzJYJDAsSDE9mZmVyUmVxdWVzdBiAgICAoJKfCgw')
+           r = res.get()
+           z = TrackerModel(reservation=res, sender=r.sender, driver=r.driver,start=r.start, dest=r.dest, delivend=r.deliverby, locstart=r.locstart, locend=r.locend,status=0, tzoffset=-27000) 
+           z.put()
         elif action=='cities':
             delete_all_in_index(CITY_INDEX)
             for c in cities:

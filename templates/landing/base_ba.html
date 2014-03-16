@@ -102,13 +102,13 @@
       	<!--Form wrapper-->
         <div class="six columns form-wrapper">
           <div class="form-header">
-            <p class="lead text-resize">Rent out your trunk space on your drive home from SXSW.</p>
+            <p class="lead text-resize">Get your stuff delivered with our nationwide network of commuters.</p>
           </div>
           <!--Search form-->
-          <form action="/c/sxsw" method="post" class="custom form-search" id='request_form'>
+          <form action="/c/event" method="post" class="custom form-search" id='request_form'>
             <div class="row">
               <div class="five mobile-four columns">
-                <label class="right inline">Destination:</label>
+                <label class="right inline">Origin:</label>
               </div>
               <div class="seven mobile-four columns">
                 <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}">
@@ -117,7 +117,7 @@
 
             <div class="row">
               <div class="five mobile-four columns">
-                <label class="right inline">Departure Date:</label>
+                <label class="right inline">Deliver By:</label>
               </div>
               <div class="seven mobile-four columns">
                 <input type="date" name="reqdate" min="{{today}}" value="{{delivby}}" id="reqdate" autocomplete="off">
@@ -125,11 +125,13 @@
             </div><!--end row-->
             <div class="row">
               <div class="five mobile-four columns">
-                <label class="right inline">Email:</label>
+                <label class="right inline">Quote:</label>
               </div>
               
               <div class="seven mobile-four columns">
-                <input class="input input-xlarge" type="email" name="email">
+                <input class="input input-xlarge" type="text" name="estcost" id="estcost" value="${{estcost}}" disabled>
+                <input class="input input-xlarge" type="hidden" name="estdup" id="estdup" value="{{estcost}}">
+                <input class="input input-xlarge" type="hidden" name="code" value="{{code}}">
               </div>
             </div><!--end row-->                           
               
