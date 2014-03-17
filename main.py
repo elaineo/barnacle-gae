@@ -35,7 +35,7 @@ from Handlers.Tracker.TrackerHandler import *
 
 from Handlers.Launch.MobileHandler import *
 from Handlers.Launch.ExternalHandler import *
-from Handlers.Seo.SitemapHandler import SitemapHandler
+from Handlers.Seo.SitemapHandler import SitemapHandler, SitemapXmlHandler
 from Handlers.Seo.SearchableRouteHandler import SearchableRouteHandler
 from Handlers.Seo.SearchableRequestHandler import SearchableRequestHandler
 from Utils.DebugUtils import *
@@ -133,7 +133,8 @@ app = webapp2.WSGIApplication([('/', HomePage),
 # reviews
    webapp2.Route('/review/<action>/<key:[\w\-]{20,}>', handler=ReviewHandler),
    webapp2.Route('/review/<key:[\w\-]{20,}>', handler=ReviewHandler),
-   ('/sitemap.xml', SitemapHandler),
+   ('/sitemap.xml', SitemapXmlHandler),
+   ('/sitemap', SitemapHandler),
 # Utils
    ('/navhead',NavHelper),
    ('/suicide',CloseHelper),
