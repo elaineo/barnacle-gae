@@ -149,6 +149,7 @@ def test_post_route():
 
 
 if __name__ == "__main__":
-    # test_login_api()
-    # test_post_request()
+    urllib.urlopen(HOST + '/debug/cities')
+    test_login_api()
+    test_post_request()
     test_post_route()
