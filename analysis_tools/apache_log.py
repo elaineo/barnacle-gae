@@ -6,8 +6,7 @@ from datetime import datetime, timedelta
 
 # GET /favicon.ico HTTP/1.1
 
-# appcfg.py request_logs ./ 20131220.txt -n 0
-# appcfg.py request_logs ./ 'date +"%Y%m%d".txt' -n 0
+# appcfg.py request_logs ./ barnacle-`date +%s`.log -n 0
 # appcfg.py request_logs ./ --severity=0 -n 0 20140120-level0.txt
 # appcfg.py --append --num_days=0 --include_all request_logs /path/to/your/app/ /var/log/gae/yourapp.log
 
