@@ -7,6 +7,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import re
+import urllib
 
 
 PORT = '8080'
@@ -150,6 +151,6 @@ def test_post_route():
 
 if __name__ == "__main__":
     urllib.urlopen(HOST + '/debug/cities')
-    test_login_api()
+    #test_login_api()
     test_post_request()
     test_post_route()
