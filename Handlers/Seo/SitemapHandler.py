@@ -40,11 +40,12 @@ class SitemapGenerationHandler(BaseHandler):
     def get_route_urls(self):
         urls = []
         for route in Route.query():
-            start_nearest_city = closest_city(route.pathpts[0])['city']
-            end_nearest_city = closest_city(route.pathpts[-1])['city']
-            urls.append('http://' + urllib.quote('www.gobarnacle.com/route/from/' + start_nearest_city + '/to/' + end_nearest_city))
-            urls.append('http://' + urllib.quote('www.gobarnacle.com/route/from/' + start_nearest_city))
-            urls.append('http://' + urllib.quote('www.gobarnacle.com/route/to/' + end_nearest_city))
+            if route.pathpts and len(route.pathpts) > 1:
+                start_nearest_city = closest_city(route.pathpts[0])['city']
+                end_nearest_city = closest_city(route.pathpts[-1])['city']
+                urls.append('http://' + urllib.quote('www.gobarnacle.com/route/from/' + start_nearest_city + '/to/' + end_nearest_city))
+                urls.append('http://' + urllib.quote('www.gobarnacle.com/route/from/' + start_nearest_city))
+                urls.append('http://' + urllib.quote('www.gobarnacle.com/route/to/' + end_nearest_city))
         return set(urls)
 
     def get_request_urls(self):
