@@ -7,6 +7,7 @@ from Utils.SearchUtils import search_pathpts, search_todict, search_intersect, f
 import logging
 import urllib
 from Utils.data.citylist import cities
+from google.appengine.api import memcache
 
 
 city_dict = {}
@@ -29,47 +30,54 @@ class SearchableRouteHandler(BaseHandler):
         if origin == None:
             try:
                 posts, center = self.__get_routes_to(dest)
-                posts = dump_results(posts) 
+                posts = dump_results(posts)
                 self.params['center'] = center
                 if len(posts) > 0:
                     self.params['posts'] = [p.to_search() for p in posts]
                     rdump = RouteUtils.dumpall(posts)
                     self.params['center'] = rdump['center']
-                    self.params['paths'] = rdump['paths']              
+                    self.params['paths'] = rdump['paths']
             except:
                 pass
             self.render('search/seo_route_to.html', **self.params)
         elif origin.upper() == 'USA':
             #return everything
-            posts = Route.query(Route.dead==0)
-            self.params['posts'] = [p.to_search() for p in posts]
-            rdump = RouteUtils.dumpall(posts)
-            self.params['center'] = rdump['center']
-            self.params['paths'] = rdump['paths']
-            self.render('search/seo_route_all.html', **self.params)        
+            ROUTE_USA_KEY = 'route_from_usa'
+            routes_usa = memcache.get(ROUTE_USA_KEY)
+            if routes_usa:
+                return self.write(routes_usa)
+            else:
+                posts = Route.query(Route.dead==0)
+                self.params['posts'] = [p.to_search() for p in posts]
+                rdump = RouteUtils.dumpall(posts)
+                self.params['center'] = rdump['center']
+                self.params['paths'] = rdump['paths']
+                routes_usa = self.render_str('search/seo_route_all.html', **self.params)
+                memcache.add(key=ROUTE_USA_KEY, value=routes_usa, time=3600)
+                self.write(routes_usa)
         elif dest == None:
             try:
                 posts, center = self.__get_routes_from(origin)
-                posts = dump_results(posts) 
+                posts = dump_results(posts)
                 self.params['center'] = center
                 if len(posts) > 0:
                     self.params['posts'] = [p.to_search() for p in posts]
                     rdump = RouteUtils.dumpall(posts)
                     self.params['center'] = rdump['center']
-                    self.params['paths'] = rdump['paths']  
+                    self.params['paths'] = rdump['paths']
             except:
                 pass
             self.render('search/seo_route_from.html', **self.params)
         else:
             try:
                 posts, center = self.__get_routes(origin, dest)
-                posts = dump_results(posts) 
+                posts = dump_results(posts)
                 self.params['center'] = center
                 if len(posts) > 0:
                     self.params['posts'] = [p.to_search() for p in posts]
                     rdump = RouteUtils.dumpall(posts)
                     self.params['center'] = rdump['center']
-                    self.params['paths'] = rdump['paths']  
+                    self.params['paths'] = rdump['paths']
             except:
                 pass
             self.render('search/seo_route.html', **self.params)
@@ -139,11 +147,11 @@ class SearchableRouteHandler(BaseHandler):
             if dist0 < dist1:
                 keepers.append(c)
         center = findCenter([start,dest])
-        return keepers, center     
-        
+        return keepers, center
+
 def dump_results(results):
     posts = []
     for doc in results:
         d = search_todict(doc)
-        posts.append(d)        
-    return [ndb.Key(urlsafe=p['routekey']).get() for p in posts]        
+        posts.append(d)
+    return [ndb.Key(urlsafe=p['routekey']).get() for p in posts]
