@@ -7,7 +7,6 @@ from Utils.RouteUtils import *
 import logging
 import urllib
 from Utils.data.citylist import cities
-from google.appengine.api import memcache
 
 
 city_dict = {}
@@ -24,8 +23,8 @@ class SearchableRequestHandler(BaseHandler):
         self.params['today'] = datetime.now().strftime('%Y-%m-%d')
         if origin == None:
             try:
-                posts, center = self.__get_reqs_to(dest)
-                posts = dump_results(posts)
+                posts, center = self.__get_reqs_to(dest)            
+                posts = dump_results(posts) 
                 self.params['posts'] = [p.to_search() for p in posts]
                 rdump = RouteUtils.dumpreqs(posts, dest=True)
                 self.params['markers'] = rdump['markers']
@@ -35,23 +34,16 @@ class SearchableRequestHandler(BaseHandler):
             self.render('search/seo_requests_to.html', **self.params)
         elif origin.upper() == 'USA':
             #return everything
-            ROUTE_USA_KEY = 'route_from_usa'
-            routes_usa = memcache.get(ROUTE_USA_KEY)
-            if routes_usa:
-                return self.write(routes_usa)
-            else:
-                posts = Request.query(Request.dead==0)
-                self.params['posts'] = [p.to_search() for p in posts]
-                rdump = RouteUtils.dumpreqs(posts)
-                self.params['markers'] = rdump['markers']
-                self.params['center'] = [40,-99]
-                routes_usa = self.render_str('search/seo_requests_all.html', **self.params)
-                memcache.add(key=ROUTE_USA_KEY, value=routes_usa, time=3600)
-                self.write(routes_usa)
+            posts = Request.query(Request.dead==0)
+            self.params['posts'] = [p.to_search() for p in posts]
+            rdump = RouteUtils.dumpreqs(posts)
+            self.params['markers'] = rdump['markers']
+            self.params['center'] = [40,-99]
+            self.render('search/seo_requests_all.html', **self.params)            
         elif dest == None:
             try:
-                posts, center = self.__get_reqs_from(origin)
-                posts = dump_results(posts)
+                posts, center = self.__get_reqs_from(origin)            
+                posts = dump_results(posts) 
                 self.params['posts'] = [p.to_search() for p in posts]
                 rdump = RouteUtils.dumpreqs(posts, dest=False)
                 self.params['markers'] = rdump['markers']
@@ -69,16 +61,16 @@ class SearchableRequestHandler(BaseHandler):
             except:
                 pass
             self.render('search/seo_requests.html', **self.params)
-
+    
     def post(self,origin=None):
         if origin=='citylut':
             self.__city_lookup()
         elif origin=='reqseo':
             self.__search_requests_seo()
-
+    
     def __get_reqs(self, origin, dest):
         if (origin not in city_dict) or (dest not in city_dict):
-            return None, None
+            return None, None   
         startstr = origin
         deststr = dest
 
@@ -93,10 +85,10 @@ class SearchableRequestHandler(BaseHandler):
         results = Request.search_route(pathpts, delivstart, delivend, precision)
         center = findCenter([start,dest])
         return results, center
-
+        
     def __get_reqs_to(self, dest):
         if dest not in city_dict:
-            return []
+            return []    
         deststr = dest
 
         dest = city_dict[dest]
@@ -111,7 +103,7 @@ class SearchableRequestHandler(BaseHandler):
 
     def __get_reqs_from(self, start):
         if start not in city_dict:
-            return []
+            return []    
         startstr = start
 
         start = city_dict[start]
@@ -125,11 +117,11 @@ class SearchableRequestHandler(BaseHandler):
         return results, [start.lat,start.lon]
 
     ''' crap for later '''
-    def __city_lookup(self):
+    def __city_lookup(self):            
         self.response.headers['Content-Type'] = "application/json"
         start,startstr = self.__get_search_form('start')
         # destination is optional. Make two calls if you want.
-        dest,deststr = self.__get_search_form('dest')
+        dest,deststr = self.__get_search_form('dest')   
         ## find nearest major cities
         startc = search_points(start, 'loc', CITY_INDEX)
         destc = search_points(dest, 'loc', CITY_INDEX)
@@ -143,7 +135,7 @@ class SearchableRequestHandler(BaseHandler):
             d['loc'] = [d['loc'].latitude, d['loc'].longitude]
             response['dest'] = d
         self.write(json.dumps(response))
-
+        
     def __search_requests_seo(self):
         self.response.headers['Content-Type'] = "application/json"
         start,startstr = self.__get_search_form('start')
@@ -153,14 +145,14 @@ class SearchableRequestHandler(BaseHandler):
             self.write(json.dumps(rdump))
             return
         # this is optional
-        dest,deststr = self.__get_search_form('dest')
+        dest,deststr = self.__get_search_form('dest')     
 
         dist=100
         delivstart = datetime.now()
         delivend = delivstart + timedelta(days=365)
 
         posts = []
-        if dest:
+        if dest:            
             ### Get a set of low-res pathpts
             pathpts, precision = RouteUtils.estPath(start, dest,dist)
             pp = []
@@ -177,11 +169,11 @@ class SearchableRequestHandler(BaseHandler):
                 r.append(ndb.Key(urlsafe=doc.doc_id).get())
             rdump = RouteUtils.dumpreqs(r)
         self.write(json.dumps(rdump))
-
-
+        
+        
 def dump_results(results):
     posts = []
     for doc in results.results:
         d = search_todict(doc)
-        posts.append(d)
+        posts.append(d)        
     return [ndb.Key(urlsafe=p['routekey']).get() for p in posts]
