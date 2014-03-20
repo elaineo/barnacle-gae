@@ -1,7 +1,17 @@
-<style> .bloglist li { font-size:15px; }</style>
+{% extends "blog/base.html" %}
+
+{% block title %}    
+SXSW
+{% endblock %}
+
+{% block meta %}
+ Every year, tens of thousands of people descend on Austin, TX for the South by Southwest Film, Music and Interactive festival, generating over $200 million for the local economy.  This year, a team from Barnacle was thrilled to join the festivities.
+{% endblock %}
+
+{% block content %}    
 <div class='post_wrap'>
     <div class='post_title' id='post_title'>
-    South by Southwest
+    SXSW
     </div>
     <div class='post_author'>
         <span>March 16, 2014</span><br>
@@ -51,3 +61,4 @@
         </p>
     </div>
 </div>
+{% endblock %}

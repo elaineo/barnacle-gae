@@ -1,4 +1,14 @@
-<style> .bloglist li { font-size:15px; }</style>
+{% extends "blog/base.html" %}
+
+{% block title %}    
+Spring Break!
+{% endblock %}
+
+{% block meta %}
+The classic spring break experience is the college road trip.  This year, Barnacle is excited to support road trippers with an awesome contest. We have prizes for whoever drives the most miles, whoever posts the best photos, and whoever gets the most likes.  
+{% endblock %}
+
+{% block content %}    
 <div class='post_wrap'>
     <div class='post_title' id='post_title'>
     Spring Break!  Woo!
@@ -19,3 +29,4 @@
  
     </div>
 </div>
+{% endblock %}

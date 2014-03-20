@@ -77,7 +77,7 @@ class BlogPage(BaseHandler):
         if not post:
             post = 'None'
         self.params['blog_post'] = post
-        self.render('blog.html', **self.params)
+        self.render('/blog/'+post+'.html', **self.params)
 
 class NavHelper(BaseHandler):
     """ Generating the header """

@@ -1,7 +1,11 @@
 <!-- Are you tired of seeing this error? Yeah, me too. -->
+{% extends "blog/base.html" %}
+
+{% block content %}  
 <script>
 $(document).ready(function() {  
     var newest = $('#newest').attr('href');    
     window.location.replace(newest);
 });
 </script>
+{% endblock %}
