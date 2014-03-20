@@ -30,6 +30,11 @@ indexes:
   properties:
   - name: dead
   - name: created
+
+- kind: Request
+  properties:
+  - name: dead
+  - name: created
     direction: desc
 
 - kind: Request
@@ -42,6 +47,11 @@ indexes:
   - name: receiver
   - name: created
     direction: desc
+
+- kind: Route
+  properties:
+  - name: dead
+  - name: created
 
 - kind: Route
   properties:
