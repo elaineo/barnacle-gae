@@ -1,14 +1,16 @@
 from Handlers.BaseHandler import *
 from Models.Post.Route import Route
 from Models.Post.Request import Request
+from Models.Seo.Sitemap import *
 from google.appengine.ext import ndb
 from Utils.SearchUtils import search_points
 from Utils.SearchDocUtils import closest_city
 import urllib
 import logging
 
-# Generate sitemap.xml
-
+"""
+For serving /sitemap.xml
+"""
 
 def list_to_url_xml(urls, priority = None):
     """ turns a list of urls into url xml with priority
@@ -20,9 +22,9 @@ def list_to_url_xml(urls, priority = None):
     return '\n'.join(['<url><loc>%s</loc>%s</url>' % (url, priority) for url in urls])
 
 
-class SitemapHandler(BaseHandler):
+class SitemapGenerationHandler(BaseHandler):
     """
-    Sitemap for google to crawl urls for SEO
+    Generate sitemap because it takes too long to generate on the fly
     """
     def get(self,action=None,key=None):
         buf = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
@@ -30,8 +32,7 @@ class SitemapHandler(BaseHandler):
         buf += list_to_url_xml(self.get_route_urls())
         buf += list_to_url_xml(self.get_request_urls())
         buf += '</urlset>'
-        self.response.headers['Content-Type'] = 'application/xml'
-        self.write(buf)
+        Sitemap.update_contents(buf)
 
     def get_home_urls(self):
         return ['http://www.gobarnalce.com/about', 'http://www.gobarnalce.com/how', 'http://www.gobarnalce.com/blog']
@@ -55,3 +56,14 @@ class SitemapHandler(BaseHandler):
             urls.append('http://' + urllib.quote('www.gobarnacle.com/request/from/' + start_nearest_city))
             urls.append('http://' + urllib.quote('www.gobarnacle.com/request/to/' + end_nearest_city))
         return set(urls)
+
+
+
+class SitemapHandler(BaseHandler):
+    """
+    Sitemap for google to crawl urls for SEO
+    """
+    def get(self):
+        self.response.headers['Content-Type'] = 'application/xml'
+        self.write(Sitemap.retrieve_contents())
+

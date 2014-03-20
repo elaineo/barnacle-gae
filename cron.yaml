@@ -5,6 +5,9 @@ cron:
 - description: daily expiration job
   url: /expire
   schedule: every day 06:59
+- description: daily sitemap.xml generation
+  url: /generate/sitemap
+  schedule: every day 08:00
 - description: daily notifications to senders
   url: /match/requests
   schedule: every day 23:20
@@ -14,4 +17,4 @@ cron:
 - description: Weekly backup
   url: /_ah/datastore_admin/backup.create?name=BAK&kind=DeliveryOffer&kind=Driver&kind=DriverModel&kind=ExpiredOffer&kind=ExpiredRequest&kind=ExpiredReservation&kind=ExpiredRoute&kind=HoldAccount&kind=Request&kind=Reservation&kind=Review&kind=Route&kind=TrackerModel&kind=UserPrefs&filesystem=gs&gs_bucket_name=barnaclebak
   schedule: every sunday 06:59
-  target: ah-builtin-python-bundle  
+  target: ah-builtin-python-bundle
