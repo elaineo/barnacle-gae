@@ -74,7 +74,7 @@ class Request(Post):
             'fbid' : u.userid
         }
         if cls.details:
-            route['desc'] = cls.details[:200]
+            route['desc'] = cls.details[:200] + '...'
         return route        
 
     def image_url(self, mode = 'original'):

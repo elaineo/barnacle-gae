@@ -69,7 +69,7 @@ class Route(Post):
             'roundtrip' : int(cls.roundtrip)
         }
         if cls.details:
-            route['details'] = cls.details[:200]
+            route['details'] = cls.details[:200] + '...'
         if u:
             route['thumb_url'] = u.profile_image_url('small')
             route['first_name'] = u.first_name
