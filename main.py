@@ -30,7 +30,8 @@ from Handlers.Cron.ExpireHandler import *
 from Handlers.Cron.MatchHandler import *
 from Handlers.Cron.SummaryHandler import SummaryHandler
 from Handlers.NewsHandler import *
-from Handlers.GerritHandler import *
+from Handlers.Admin.Gerrit import GerritHandler
+from Handlers.Admin.RRDash import RRDashHandler
 from Handlers.Tracker.TrackerHandler import *
 
 from Handlers.Launch.MobileHandler import *
@@ -62,9 +63,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
                                 ('/springbreak', SpringBreak),
 # LAUNCH!
 # requests
-    webapp2.Route('/res/<action>/<key>', handler=ReserveHandler),
-    webapp2.Route('/res/<action>', handler=ReserveHandler),
-    webapp2.Route('/res', handler=ReserveHandler),
+    webapp2.Route('/res', handler=RequestHandler),
    webapp2.Route('/apply', handler=ApplyHandler),
    webapp2.Route('/apply/<action>', handler=ApplyHandler),
    webapp2.Route('/checkout/<key:[\w\-]{20,}>', handler=CheckoutHandler),
@@ -156,6 +155,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
     webapp2.Route('/summary/<action>/<key:[\w\-]{20,}>', handler=SummaryHandler),
    webapp2.Route('/summary', handler=SummaryHandler),
    webapp2.Route('/external/<action>', ExternalHandler),
+   webapp2.Route('/admin/<action>', RRDashHandler),
    webapp2.Route('/gerrit/<action>', GerritHandler),
    webapp2.Route('/gerrit/<action>/<loc>', GerritHandler),
    ('/expire', ExpireHandler), EmailHandler.mapping()],

@@ -256,7 +256,7 @@ class ReservationHandler(BaseHandler):
                 p.start = start
                 p.dest = dest
                 
-        if repost:
+        if new_res and repost:
             p.repost = route_from_off(p)                                    
         # except:
             # self.abort(403)
@@ -332,7 +332,7 @@ class ReservationHandler(BaseHandler):
                     imgstore = ImageStore.new(img)
                     imgstore.put()
                     p.img_id = imgstore.key.id()
-                if repost:
+                if new_res and repost:
                     p.repost = request_from_off(p)                    
         except:
             self.abort(403)

@@ -90,31 +90,6 @@ class GerritHandler(BaseHandler):
                 else:
                     users.append(r.key.parent())
             self.write(rcount)
-        elif action=='matchdump':            
-            reqdump = []
-            requests = Request.query()
-            for r in requests:
-                if r.dead>0:
-                    continue
-                dump = r.to_dict()
-                dump['key'] = r.key.urlsafe()
-                if r.stats:
-                    if r.stats.status > 10:
-                        continue
-                    dump['notes'] = r.stats.notes
-                    dump['status'] = RequestStatus[r.stats.status]
-                matches = []
-                for q in r.matches:
-                    try:
-                        qq = q.get()
-                        if qq.dead==0:
-                            matches.append(qq.to_dict())
-                    except:
-                        continue
-                dump['matches'] = matches
-                reqdump.append(dump)  
-            self.params['reqdump'] = reqdump
-            self.render('search/reqs_matches.html', **self.params)
 
     
     def post(self, action=None):
