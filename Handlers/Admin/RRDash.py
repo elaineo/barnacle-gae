@@ -7,16 +7,12 @@ from Models.Post.Route import *
 from Models.Post.Post import *
 from Utils.SearchUtils import search_pathpts, search_todict, search_intersect, field_byname
 from Utils.RouteUtils import *
-from Utils.data.citylist import cities
 
 
 import json
 import logging
 import urllib
 
-city_dict = {}
-for c in cities:
-    city_dict[c['city']] = ndb.GeoPt(c['lat'], c['lon'])
         
 class RRDashHandler(BaseHandler):
     def get(self, action=None, loc=None):
