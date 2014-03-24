@@ -28,6 +28,8 @@ class ExpireHandler(BaseHandler):
             route_index.delete(r.key.urlsafe())
             if r.roundtrip:
                 route_index.delete(r.key.urlsafe()+'_RT')
+            # clean matches
+            taskqueue.add(url='/match/cleanmatch/'+r.key.urlsafe(), method='get')
 
         deadreqs = Request.query(Request.delivby<now,Request.dead==0)
         req_index = search.Index(name=REQUEST_INDEX)
@@ -35,6 +37,8 @@ class ExpireHandler(BaseHandler):
             r.dead = PostStatus.index('EXPIRED')
             r.put()
             route_index.delete(r.key.urlsafe())
+            # clean matches
+            taskqueue.add(url='/match/cleanmatch/'+r.key.urlsafe(), method='get')
         # Orphan reservations
         deadres = OfferRequest.query(OfferRequest.deliverby<now,OfferRequest.dead==0) 
         for q in deadres:

@@ -94,13 +94,13 @@ class Request(Post):
         results = []
         qall = cls.query(cls.delivby >= delivstart, cls.dead==0)
         for q in qall:                    
-            start = roundPoint(q.start, precision)
-            dest = roundPoint(q.dest, precision)
-            if start in pathpts and dest in pathpts:
-                # Make sure it's going the right way
-                if pathpts.index(start) <= pathpts.index(dest):
-                    # Make sure it's not garbage
-                    if q.stats.status > RequestStatus.index('INCOMP'):
+            # Make sure it's not garbage
+            if q.stats.status > RequestStatus.index('IGNORE'):
+                start = roundPoint(q.start, precision)
+                dest = roundPoint(q.dest, precision)
+                if start in pathpts and dest in pathpts:
+                    # Make sure it's going the right way
+                    if pathpts.index(start) <= pathpts.index(dest):
                         results.append(q)
         return results
        

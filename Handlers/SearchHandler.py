@@ -246,10 +246,18 @@ def search_requests(start,dest=None, dist=None, path=None, startdate=None,enddat
             posts.append(r.to_search())
     else:
         results = search_points_start(dist,'REQUEST_INDEX',delivend.strftime('%Y-%m-%d'),delivstart.strftime('%Y-%m-%d'),'delivby','start',start)
-        logging.info(results)
 
         for doc in results.results:
-            d = search_todict(doc)
+            # check status of request
+            d = search_todict(doc)            
+            try:
+                req = ndb.Key(urlsafe=d.get('routekey')).get()
+                if req.stats.status < RequestStatus.index('NO_CC'):
+                    continue
+            except:
+                logging.error('Could not find request')
+                logging.error(d)
+                continue
             p = {  'first_name': d['first_name'],
                     'thumb_url': d['thumb_url'],
                     'start': d['locstart'],
