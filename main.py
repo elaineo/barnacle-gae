@@ -158,7 +158,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/admin/<action>', RRDashHandler),
    webapp2.Route('/gerrit/<action>', GerritHandler),
    webapp2.Route('/gerrit/<action>/<loc>', GerritHandler),
-   ('/expire', ExpireHandler), EmailHandler.mapping()],
+   webapp2.Route('/expire/<action>', ExpireHandler), EmailHandler.mapping()],
   debug=True)
 
 app.error_handlers[400] = ErrorHandler400

@@ -3,6 +3,7 @@ from google.appengine.ext import ndb
 from google.appengine.api import search
 
 from Handlers.BaseHandler import *
+from Handlers.SearchHandler import search_requests
 from Models.Post.Route import *
 from Models.Post.Request import *
 from Utils.SearchUtils import *
@@ -136,10 +137,10 @@ class MatchHandler(BaseHandler):
             dist = 100
             path = data.get('legs')
             distance = data.get('distance')
-            pathpts, precision = RouteUtils.pathEst(r.start, r.dest,path, distance)
-            now = datetime.now()
-            later = (datetime.now() + timedelta(365))
-            results = Request.search_route(pathpts, now, later, precision)
+            pathpts = data.get('legs')    
+            precision = data.get('precision')
+            
+            results = search_requests(r.start,r.dest,None,pathpts,None,None,precision)
             for r in results:
                 posts.append(r.to_search())
             rdump['posts'] = posts

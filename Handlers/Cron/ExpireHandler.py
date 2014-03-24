@@ -16,7 +16,28 @@ import json
 import logging
 
 class ExpireHandler(BaseHandler):
-    def get(self):
+    def get(self, action=None):
+        if action=='post':
+            self.__dead()
+        elif action=='incomp':
+            self.__incomp()
+        elif action=='users':
+            self.__users()            
+
+    #def __incomp(self):
+        # housekeeping to clean out dup users due to android shit
+
+    def __incomp(self):
+        # clean out incomplete requests
+        weekago = datetime.now() + timedelta(weeks=1)
+        deadreqs = Request.query(Request.dead==0,Request.created<weekago)
+        for r in deadreqs:
+            if r.stats.status < RequestStatus.index('NO_CC'):
+                logging.info(r)
+                r.key.delete()
+                        
+    def __dead(self):
+        # clean out expired stuff
         deaddump={}
         now = date.today()
         expire_pathpts(PATHPT_INDEX, now.strftime('%Y-%m-%d'), "delivend")

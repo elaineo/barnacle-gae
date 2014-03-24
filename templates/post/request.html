@@ -97,6 +97,7 @@ $(document).ready(function(){
 </table>
 <br>
 </div></div>
+<script type="text/javascript" src="/static/js/validation.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){    
     $('#simreqs').hide();
@@ -116,7 +117,16 @@ function getRequestDump() {
   directionsService.route(request, function(response, status) {
     if (status == google.maps.DirectionsStatus.OK) {
       data.distance = response.routes[0].legs[0].distance.value;
-      data.legs = response.routes[0].legs[0].steps; 
+      
+      var polyline = response.routes[0].legs[0].steps; 
+      var legs = [];
+      for (p in polyline) {
+        var segment = polyDecode(polyline[p].polyline.points, -1);
+        legs.push.apply(legs,segment.filter(sparse100));
+      }            
+      data.legs = legs;
+      var tempdist = data.distance/1609 * 100;
+      data.precision = Math.round(6-2*Math.log(tempdist)/Math.log(100))      
       $.ajax({
         type: "POST",
         dataType: "json",
