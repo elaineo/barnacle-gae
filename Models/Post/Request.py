@@ -90,7 +90,7 @@ class Request(Post):
                         
     ### Search utils ::...........................::::::::::::::::::::::
     @classmethod
-    def search_route(cls, pathpts, delivstart, delivend, precision):
+    def search_route(cls, path, delivstart, delivend, precision):
         results = []
         qall = cls.query(cls.delivby >= delivstart, cls.dead==0)
         for q in qall:                    
@@ -98,6 +98,7 @@ class Request(Post):
             if q.stats.status > RequestStatus.index('IGNORE'):
                 start = roundPoint(q.start, precision)
                 dest = roundPoint(q.dest, precision)
+                pathpts = [roundPoint(pp, precision) for pp in path]   
                 if start in pathpts and dest in pathpts:
                     # Make sure it's going the right way
                     if pathpts.index(start) <= pathpts.index(dest):

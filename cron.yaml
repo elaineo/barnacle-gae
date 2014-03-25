@@ -5,9 +5,9 @@ cron:
 - description: daily expiration job
   url: /expire/dead
   schedule: every day 06:59
-- description: weekly clean out incomplete requests
+- description: daily clean out incomplete requests
   url: /expire/incomp
-  schedule: every saturday 06:59  
+  schedule: every day 07:59  
 - description: daily sitemap.xml generation
   url: /generate/sitemap
   schedule: every day 08:00

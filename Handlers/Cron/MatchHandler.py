@@ -139,10 +139,11 @@ class MatchHandler(BaseHandler):
             distance = data.get('distance')
             pathpts = data.get('legs')    
             precision = data.get('precision')
-            
+            logging.info(precision) 
             results = search_requests(r.start,r.dest,None,pathpts,None,None,precision)
             for r in results:
-                posts.append(r.to_search())
+                posts.append(r)
+            logging.info(results)
             rdump['posts'] = posts
             rdump['count'] = len(posts)
             # except:

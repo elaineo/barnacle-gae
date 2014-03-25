@@ -37,7 +37,6 @@ def search_points_start(dist, index_name, enddate, startdate, fieldd,field,cente
     #query = '(distance('+field+', geopoint('+str(center.lat)+', '+str(center.lon)+')) < '+str(meters) + ')'
     query = '(('+fieldd+' >= ' + startdate + ') AND ('+fieldd+' <= ' + enddate + '))'
     loc_expr = 'distance('+field+', geopoint('+str(center.lat)+', '+str(center.lon)+'))'
-    logging.info(loc_expr)
 
     sortexpr = search.SortExpression( expression=loc_expr,
       direction=search.SortExpression.ASCENDING, default_value=meters)
@@ -53,7 +52,6 @@ def expire_pathpts(index_name, date, datefield):
     query = datefield+ ' < ' + date
     search_query = search.Query( query_string=query )
     results = index.search(search_query)
-    logging.info(results)
     for r in results.results:
         index.delete(r.doc_id)
     return
