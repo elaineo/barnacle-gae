@@ -122,13 +122,14 @@ class SignupPage(BaseHandler):
                 response = { 'status': 'existing'}
                 logging.info('Existing account login from ' + (geocity if geocity else ''))
                 try:
-                    if not up.stats and remoteip:
-                        up.stats = UserStats(ip_addr=[remoteip], locations=[geocity])
-                    elif remoteip not in up.stats.ip_addr:
-                        up.stats.ip_addr.append(remoteip)
-                    if geocity not in up.stats.locations:
-                        up.stats.locations.append(geocity)
-                    up.put()
+                    if geocity:
+                        if not up.stats and remoteip:
+                            up.stats = UserStats(ip_addr=[remoteip], locations=[geocity])
+                        elif remoteip not in up.stats.ip_addr:
+                            up.stats.ip_addr.append(remoteip)
+                        if geocity not in up.stats.locations:
+                            up.stats.locations.append(geocity)
+                        up.put()
                 except:
                     logging.info(geocity)
                     logging.info(remoteip)
