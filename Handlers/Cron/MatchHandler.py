@@ -104,7 +104,6 @@ class MatchHandler(BaseHandler):
                 return
             # retrieve user's real location
             data = json.loads(self.request.body)
-            logging.info(data)
             try:
                 lat = data['startlat']
                 lon = data['startlon']
@@ -117,6 +116,7 @@ class MatchHandler(BaseHandler):
             later = (datetime.now() + timedelta(365)).strftime('%Y-%m-%d')
             results = search_points_start(dist,'REQUEST_INDEX',later,now,'delivby','start',here)
             rdump = {'status':'ok'}
+            logging.info(results)
             rdump['count'] = len(results.results)
             rdump['link'] = '/search/reqhome?startlat='+str(here.lat)+'&startlon='+str(here.lon)
             # except:
@@ -134,16 +134,14 @@ class MatchHandler(BaseHandler):
             else:
                 return
             rdump = {'status':'ok'}
-            dist = 100
             path = data.get('legs')
-            distance = data.get('distance')
             pathpts = data.get('legs')    
             precision = data.get('precision')
-            logging.info(precision) 
+            if not pathpts or not precision:
+                return
             results = search_requests(r.start,r.dest,None,pathpts,None,None,precision)
             for r in results:
                 posts.append(r)
-            logging.info(results)
             rdump['posts'] = posts
             rdump['count'] = len(posts)
             # except:

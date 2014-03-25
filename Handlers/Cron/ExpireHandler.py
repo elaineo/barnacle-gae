@@ -21,11 +21,7 @@ class ExpireHandler(BaseHandler):
             self.__dead()
         elif action=='incomp':
             self.__incomp()
-        elif action=='users':
-            self.__users()            
-
-    #def __incomp(self):
-        # housekeeping to clean out dup users due to android shit
+        
 
     def __incomp(self):
         # clean out incomplete requests

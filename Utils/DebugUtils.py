@@ -42,12 +42,7 @@ class DebugUtils(BaseHandler):
             clean_index(REQUEST_INDEX)
             clean_index(ROUTE_INDEX)
         elif action=='qtask':
-            taskqueue.add(url='/debug/clearexp')
-        elif action=='elaine':
-           res = ndb.Key(urlsafe='agtzfnAycHBvc3RhbHIvCxIJVXNlclByZWZzGICAgICAzJYJDAsSDE9mZmVyUmVxdWVzdBiAgICAoJKfCgw')
-           r = res.get()
-           z = TrackerModel(reservation=res, sender=r.sender, driver=r.driver,start=r.start, dest=r.dest, delivend=r.deliverby, locstart=r.locstart, locend=r.locend,status=0, tzoffset=-27000) 
-           z.put()
+            taskqueue.add(url='/debug/clearusers')
         elif action=='cities':
             delete_all_in_index(CITY_INDEX)
             for c in cities:
@@ -55,19 +50,11 @@ class DebugUtils(BaseHandler):
                 create_city_doc(c['city'],point)
             self.write('cities created')
         elif action=='clearusers':
-            data = ImageStore.query()
-            for d in data:
-                d.key.delete()
-            data = Review.query()
-            for d in data:
-                d.key.delete()
-            data = UserAccounts.query()
-            for d in data:
-                d.key.delete()
             data = UserPrefs.query()
-            for d in data:
-                d.key.delete()                
-            self.write('users gone.')
+            for u in data:
+                dups = UserPrefs.query(UserPrefs.email==u.email).fetch()
+                if len(dups)>1:
+                    dups[-1].key.delete()                
         elif action=='clearcl':
             data = CLModel.query()
             for d in data:

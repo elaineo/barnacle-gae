@@ -233,7 +233,7 @@ def search_requests(start,dest=None, dist=None, path=None, startdate=None,enddat
     if enddate:
         delivend = parse_date(enddate)
     else:
-        delivend = delivstart + timedelta(days=90)                
+        delivend = delivstart + timedelta(days=365)                
 
     posts = []
     ## Change this to a query

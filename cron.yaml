@@ -17,6 +17,9 @@ cron:
 - description: daily notifications to drivers
   url: /match/routes
   schedule: every day 23:20
+- description: Weekly remove dups until elaine fixes this
+  url: /debug/qtask
+  schedule: every sunday 07:29
 - description: Weekly backup
   url: /_ah/datastore_admin/backup.create?name=BAK&kind=DeliveryOffer&kind=Driver&kind=DriverModel&kind=ExpiredOffer&kind=ExpiredRequest&kind=ExpiredReservation&kind=ExpiredRoute&kind=HoldAccount&kind=Request&kind=Reservation&kind=Review&kind=Route&kind=TrackerModel&kind=UserPrefs&filesystem=gs&gs_bucket_name=barnaclebak
   schedule: every sunday 06:59
