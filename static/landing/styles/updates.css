@@ -140,16 +140,6 @@ ul.pagination li.current a:hover, ul.pagination li.current a:focus { background:
 	.circular-item input { background: transparent; top: 30px; left: 0; color: #0296c0; font-weight: bold; }
 }
 
-/*** Profile Slider ***/
-#profile-slider { background: url(/static/landing/images/loading.gif) center center no-repeat; /*height: 416px;*/ }
-#profile-slider img { display: none; border: none; }
-#profile-slider.orbit { background: none; }
-#profile-slider.orbit img { display: block; }
-#profile-slider.orbit .big-profile-image {border: 10px solid #fff; }
-.profile-slider-wrapp { background: url(/static/landing/images/hearts_bg.png) 45px 30px no-repeat; padding-top: 30px; }
-.profile-slider-wrapp ul.orbit-bullets { position: absolute; z-index: 30; list-style: none; bottom: -20px; left: 50%; margin-left: -50px; padding: 0; }
-.profile-slider-wrapp ul.orbit-bullets li.has-thumb { width: 60px; height: 60px; margin: 0 10px; -webkit-border-radius: 50%; -moz-border-radius: 50%; -ms-border-radius: 50%; -o-border-radius: 50%; border-radius: 50%; }
-.profile-slider-wrapp ul.orbit-bullets li.active.has-thumb { border: 2px solid #fff; }
 .big-profile-image { -webkit-border-radius: 50%; -moz-border-radius: 50%; -ms-border-radius: 50%; -o-border-radius: 50%; border-radius: 50%; position: relative; }
 .big-profile-image img { -webkit-border-radius: 50%; -moz-border-radius: 50%; -ms-border-radius: 50%; -o-border-radius: 50%; border-radius: 50%; position: relative; z-index:1; display: block; }
 
@@ -401,7 +391,3 @@ only screen and (     -o-min-device-pixel-ratio: 2/1),
 only screen and (        min-device-pixel-ratio: 2),
 only screen and (                min-resolution: 192dpi),
 only screen and (                min-resolution: 2dppx) {
-	
-	.profile-slider-wrapp { background-image: url('/static/landing/images/hearts_bg@2x.png'); }
-} 
- 
