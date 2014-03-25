@@ -76,6 +76,8 @@ class BlogPage(BaseHandler):
     def get(self, post=None):
         if not post:
             post = 'None'
+        elif post[-4:]=='html':
+            post = post[:-5]
         self.params['blog_post'] = post
         self.render('/blog/'+post+'.html', **self.params)
 
