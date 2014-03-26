@@ -21,14 +21,17 @@ from Handlers.Money.Earnings import Earnings
 from Handlers.Money.Payments import Payments
 from Handlers.Launch.CheckoutHandler import *
 
+# Cron jobs
+from Handlers.Cron.ExpireHandler import *
+from Handlers.Cron.Reminder import *
+from Handlers.Cron.MatchHandler import *
+from Handlers.Cron.SummaryHandler import SummaryHandler
+
 from Handlers.BaseHandler import *
 from Handlers.MessageHandler import *
 from Handlers.ImageHandler import *
 from Handlers.Launch.CLHandler import *
 from Handlers.SearchHandler import *
-from Handlers.Cron.ExpireHandler import *
-from Handlers.Cron.MatchHandler import *
-from Handlers.Cron.SummaryHandler import SummaryHandler
 from Handlers.NewsHandler import *
 from Handlers.Admin.Gerrit import GerritHandler
 from Handlers.Admin.RRDash import RRDashHandler
@@ -158,6 +161,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/admin/<action>', RRDashHandler),
    webapp2.Route('/gerrit/<action>', GerritHandler),
    webapp2.Route('/gerrit/<action>/<loc>', GerritHandler),
+   webapp2.Route('/remind/<action>', Reminder),
    webapp2.Route('/expire/<action>', ExpireHandler), EmailHandler.mapping()],
   debug=True)
 
