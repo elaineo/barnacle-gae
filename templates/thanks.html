@@ -1,10 +1,10 @@
-{% extends "base.html" %}
-{% block title %}Thank You{% endblock %}
-{% block heading %}<h1>Thank You</h1>{% endblock %}
+{% extends "baseblank.html" %}
+{% block title%}Thank You{% endblock %}
+{% block heading %}<h1 class='whiteh1'>Thank You</h1>{% endblock %}
 {% block content %}
 
-<div style="text-align:center">
-<p>Your message was sent! Thank you for your input. We try to answer questions within 24 hours.</p>
-</div>
+      <div class="row-fluid" style='min-height:300px'> <div class="span10 offset1">
+        <p>Your message was sent! Thank you for your input. We try to answer questions within 24 hours.</p>
+        <p>Go Home: <a href='/'><img width="50px" src="/static/img/barnacle.png"></a></p>
+      </div></div>
 {% endblock %}
-  

@@ -1,9 +1,9 @@
-{% extends "launch/baseblank.html" %}
+{% extends "baseblank.html" %}
 {% block title%}Thank You For Your Reservation{% endblock %}
-{% block content %}
+{% block heading %}<h1 class='whiteh1'>Thank You For Your Reservation</h1>
 
       <div class="row-fluid"> <div class="span10 offset1">
-      <h2><br>Thank You</h2><br>
+      <div class="signup greyback"  style='padding:10px'>
         <p>Thank you for your reservation. You will receive an email confirmation shortly. </p>
         <p>The driver will be given your contact information and will be in touch to work out the details of scheduled pickup/dropoff times.</p>
         {% if display_driver == True %}
@@ -54,8 +54,10 @@
       <div class='span6'><b>${{ rates }} </b></span>
       </div>
     </div>       
-        </small></p>
-        
-        <p>Go Home: <a href='/home'><img width="100px" src="/static/img/barnacle.png"></a></p>
-      </div></div>
+        </small></p>       
+    </div>
+    </div></div>
+{% endblock %}
+{% block content %}
+<p>Go Home: <a href='/home'><img width="50px" src="/static/img/barnacle.png"></a></p>
 {% endblock %}

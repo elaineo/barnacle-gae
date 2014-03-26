@@ -16,7 +16,7 @@ class ContactPage(BaseHandler):
         name = self.request.get('name')
         remoteip = self.request.remote_addr
         self.send_message(msg,subject,email,name,remoteip)
-        self.render('launch/thanksblank.html')
+        self.render('thanks.html')
 
     def send_message(self,msg,subject,email,name,remoteip):
         if not name:
