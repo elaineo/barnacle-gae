@@ -352,6 +352,9 @@ class ReservationHandler(BaseHandler):
             self.params.update(route.get().to_dict(True))
             self.render('post/forms/fillreserve.html', **self.params)
 
+        if new_res:
+            route.offers.append(p.key)
+            route.put()                    
         # Do they have a credit card on file?
         if not self.user_prefs.cc:
             self.params.update(self.user_prefs.params_fill())
@@ -359,10 +362,7 @@ class ReservationHandler(BaseHandler):
             self.params['get_info'] = True
             self.render('money/forms/cc.html', **self.params)
             return            
-            
-        if new_res:
-            route.offers.append(p.key)
-            route.put()         
+             
         self.redirect('/reserve/' + p.key.urlsafe())  
             
     def view_reserve_page(self,key):

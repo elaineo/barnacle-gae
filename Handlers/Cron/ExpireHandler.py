@@ -25,12 +25,14 @@ class ExpireHandler(BaseHandler):
 
     def __incomp(self):
         # clean out incomplete requests
-        old = datetime.now() + timedelta(days=1)
+        old = datetime.now() + timedelta(days=6)
         deadreqs = Request.query(Request.dead==0,Request.created<old)
+        deleted = []
         for r in deadreqs:
             if r.stats.status < RequestStatus.index('NO_CC'):
-                logging.info(r)
+                deleted.append(r.to_dict())
                 r.key.delete()
+        logging.info(deleted)
                         
     def __dead(self):
         # clean out expired stuff
