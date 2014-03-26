@@ -1,9 +1,8 @@
 from Handlers.BaseHandler import *
 from Models.User.Account import *
 from Utils.UserUtils import *
-from Utils.Defs import CITY_DB_PATH, CITYV6_DB_PATH
-from Utils.DefsEmail import welcome_user
-from Utils.Defs import welcome_user_sub
+from Utils.data.Defs import CITY_DB_PATH, CITYV6_DB_PATH
+from Utils.Email.User import *
 from Utils.EmailUtils import send_info
 import hashlib
 import logging

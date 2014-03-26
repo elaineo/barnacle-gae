@@ -6,7 +6,7 @@ from google.appengine.api import users
 from Utils.UserUtils import *
 from Models.User.Account import *
 from Utils.PageUtils import *
-from Utils.Defs import signin_reg, blank_img
+from Utils.data.Defs import signin_reg, blank_img
 
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader('templates'), autoescape = True)
 

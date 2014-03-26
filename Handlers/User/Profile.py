@@ -8,8 +8,7 @@ from Models.User.Driver import *
 from Handlers.ImageHandler import *
 from google.appengine.api import images
 from google.appengine.api import users
-from Utils.DefsEmail import welcome_txt
-from Utils.Defs import welcome_sub
+from Utils.Email.User import *
 from Utils.EmailUtils import send_info
 from Models.Post.Review import *
 import logging

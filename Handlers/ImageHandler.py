@@ -1,7 +1,7 @@
 from Handlers.BaseHandler import *
 from Models.ImageModel import *
 from google.appengine.api import images
-from Utils.Defs import blank_id, blank_key
+from Utils.data.Defs import blank_id, blank_key
 import os
 import logging
 

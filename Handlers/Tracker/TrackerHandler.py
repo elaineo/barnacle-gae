@@ -11,8 +11,8 @@ from Models.Money.Transaction import *
 from Utils.ValidUtils import parse_date
 from Utils.ConfirmUtils import *
 from Utils.EmailUtils import send_info
-from Utils.DefsEmail import sharetrack_txt
-from Utils.Defs import www_home
+from Utils.Email.Track import sharetrack_txt
+from Utils.data.EmailAddr import www_home
 from Utils.RouteUtils import RouteUtils
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers

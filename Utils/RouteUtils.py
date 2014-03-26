@@ -7,7 +7,7 @@ import time
 from google.appengine.api import search
 from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
-from Utils.Defs import geocode_url, directions_url, tz_url
+from Utils.data.Defs import geocode_url, directions_url, tz_url
 from Utils.PolylineCode import poly_decode
 
 miles2m = 1609

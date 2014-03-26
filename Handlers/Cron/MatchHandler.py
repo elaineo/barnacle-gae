@@ -7,10 +7,9 @@ from Handlers.SearchHandler import search_requests
 from Models.Post.Route import *
 from Models.Post.Request import *
 from Utils.SearchUtils import *
-from Utils.Defs import www_home
-from Utils.Defs import request_note_sub
+from Utils.data.EmailAddr import www_home
 from Utils.EmailUtils import send_info
-from Utils.DefsEmail import *
+from Utils.Email.Match import *
 from Utils.RouteUtils import *
 
 import json

@@ -7,7 +7,7 @@ from Handlers.SearchHandler import *
 from Models.User.Driver import *
 from Utils.RouteUtils import RouteUtils, HaversinDist
 from Utils.ValidUtils import *
-from Utils.Defs import MV_geolat, MV_geolon, SG_geolat, SG_geolon, MV_string, SG_string
+from Utils.data.Defs import MV_geolat, MV_geolon, SG_geolat, SG_geolon, MV_string, SG_string
 
 class ReserveHandler(BaseHandler):
     def get(self, action=None,key=None):

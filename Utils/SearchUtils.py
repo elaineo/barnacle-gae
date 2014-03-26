@@ -1,5 +1,5 @@
 from google.appengine.api import search
-from Utils.Defs import miles2m
+from Utils.data.Defs import miles2m
 import re
 import logging
 

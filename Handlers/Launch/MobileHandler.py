@@ -1,6 +1,6 @@
 from Handlers.BaseHandler import *
 from Utils.EmailUtils import send_info
-from Utils.MobileDefs import *
+from Utils.data.MobileDefs import *
 
 class MobileHandler(BaseHandler):
     def get(self, action=None, key=None):

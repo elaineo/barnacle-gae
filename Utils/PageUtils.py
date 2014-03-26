@@ -1,4 +1,4 @@
-from Utils.Defs import signin_reg
+from Utils.data.Defs import signin_reg
 from google.appengine.api import users
 
                 

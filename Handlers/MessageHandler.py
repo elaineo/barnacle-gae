@@ -1,8 +1,7 @@
 from Handlers.BaseHandler import *
 from Models.Message import *
 from Utils.EmailUtils import send_info
-from Utils.Defs import post_msg_end
-from Utils.DefsEmail import msgwall_txt
+from Utils.Email.Message import msgwall_txt, post_msg_end
 import json
 import logging
 

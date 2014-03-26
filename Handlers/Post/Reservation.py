@@ -14,7 +14,7 @@ from Models.User.Driver import *
 from Utils.RouteUtils import RouteUtils
 from Utils.ValidUtils import *
 from Utils.EmailUtils import create_note
-from Utils.Defs import *
+from Utils.Email.Reservation import *
 import logging
 
 class ReservationHandler(BaseHandler):

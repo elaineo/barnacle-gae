@@ -13,9 +13,10 @@ from Models.User.Account import *
 
 from Utils.ValidUtils import parse_rate
 from Utils.data.paydefs import *
-from Utils.Defs import *
 from Utils.EmailUtils import send_info, create_note
-from Utils.DefsEmail import *
+from Utils.data.EmailAddr import www_home
+from Utils.Email.Reservation import *
+from Utils.Email.Transact import *
 
 class CheckoutHandler(BaseHandler):
     def get(self, action=None, key=None):

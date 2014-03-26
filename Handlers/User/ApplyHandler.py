@@ -3,7 +3,7 @@ from Models.User.Account import *
 from Utils.ValidUtils import parse_date, get_search_json
 import logging
 import json
-from Utils.Defs import CITY_DB_PATH, CITYV6_DB_PATH
+from Utils.data.Defs import CITY_DB_PATH, CITYV6_DB_PATH
 import pygeoip
 
 from google.appengine.api import mail

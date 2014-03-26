@@ -1,7 +1,7 @@
 from Handlers.BaseHandler import *
 from Models.Post.Review import *
 from Utils.EmailUtils import create_note
-from Utils.Defs import review_msg, review_sub
+from Utils.Email.Transact import review_msg, review_sub
 import json
 import logging
 

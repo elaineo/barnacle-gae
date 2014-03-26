@@ -4,8 +4,7 @@ import logging
 import re
 from Handlers.BaseHandler import *
 from Models.User.Account import *
-from Utils.Defs import noreply_email, email_domain, msg_start
-from Utils.Defs import confirm_res_sub, info_email, bcc_email, noreply_email, help_email
+from Utils.data.EmailAddr import *
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 
 class EmailHandler(InboundMailHandler):

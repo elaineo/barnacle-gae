@@ -5,7 +5,7 @@ from Models.Post.Route import Route
 from Models.Post.Request import Request
 from Models.Post.OfferRequest import OfferRequest
 from Models.Message import Message
-from Utils.DefsEmail import *
+from Utils.Email.Reminder import *
 from Utils.EmailUtils import *
 from datetime import datetime, timedelta
 from google.appengine.ext import ndb

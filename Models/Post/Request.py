@@ -1,7 +1,7 @@
 from google.appengine.ext import ndb
 from Models.Post.Post import Post
 from Models.ImageModel import *
-from Utils.Defs import miles2m
+from Utils.data.Defs import miles2m
 from Utils.RouteUtils import roundPoint
 import logging
 

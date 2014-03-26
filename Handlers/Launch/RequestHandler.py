@@ -6,7 +6,7 @@ from google.appengine.api import mail
 from Handlers.BaseHandler import *
 from Utils.RouteUtils import RouteUtils
 from Utils.ValidUtils import *
-from Utils.Defs import MV_geolat, MV_geolon, SG_geolat, SG_geolon, MV_string, SG_string, ins_str
+from Utils.data.Defs import MV_geolat, MV_geolon, SG_geolat, SG_geolon, MV_string, SG_string, ins_str
 
 class RequestHandler(BaseHandler):
     def get(self, action=None,key=None):

@@ -1,7 +1,7 @@
 from google.appengine.ext import ndb
 import logging
 import json
-from Utils.Defs import ins_str, ins_str_email, bank_str
+from Utils.data.Defs import ins_str, ins_str_email, bank_str
 from Models.Post.Review import Review
 
 class Driver(ndb.Model):
