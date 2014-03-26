@@ -11,5 +11,7 @@ thanksroute_txt = """
     Thank you again for using Barnacle!
 """
 
+#thanksreq_txt 
+
 thanksroute_sub = "Thank you for your post!"
 thanksreq_sub = "Thank you for your request!"

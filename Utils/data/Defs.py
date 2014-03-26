@@ -1,6 +1,6 @@
 import os.path as path
 
-DATA_DIR = path.join(path.dirname(path.realpath(__file__)), 'data')
+DATA_DIR = path.dirname(path.realpath(__file__))
 CITY_DB_PATH = path.join(DATA_DIR, 'GeoCityIP.dat')
 CITYV6_DB_PATH = path.join(DATA_DIR, 'GeoCityv6.dat')
 

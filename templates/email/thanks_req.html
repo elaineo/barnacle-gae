@@ -1,0 +1,15 @@
+{% extends "email/ebase.html" %}
+{% block content %}
+<h4><font color='#666'>Thank you for your request!</font></h4>
+<p>
+Dear {{first_name}},</p>
+<p>
+Thank you for posting your route on Barnacle. We will send this to our best drivers, and you will be alerted when one accepts your package for delivery. 
+</p>
+<p>
+You can view and edit your listing <a href="http://www.gobarnacle.com{{post_url}}">here</a>.</p>
+<p>If you want to speed up the search process, share your listing on <a href="http://facebook.com/gobarnacle">Facebook</a> or <a href="http://twitter.com/gobarnacle">Twitter</a>.  A quarter of Barnacle users are actually able to source a driver through their existing social network.  It's a great way to catch up with old friends!
+        </p>
+<p>Questions? Please <a href='mailto:help@gobarnacle.com'>contact us</a> directly.</p>
+<p>Thank you again for using Barnacle!</p>
+{% endblock %}        
