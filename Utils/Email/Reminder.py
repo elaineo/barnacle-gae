@@ -15,3 +15,6 @@ addcc_txt = """
         As a reminder, you will not be charged until a driver accepts your request, and the payment will not be released to the driver until you confirm delivery. If you have any questions, please reply directly to this email.\n\n
         Thanks for using Barnacle!\n\n
 """
+
+addcc_sub = "Reminder: Add a payment account"
+complreq_sub = "Reminder: Complete your delivery request"

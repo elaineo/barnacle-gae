@@ -129,6 +129,7 @@ class RouteHandler(PostHandler):
         logging.info('New Route: '+startstr+' to '+deststr)
 
         if key: # if editing post
+            new_r = False
             p = ndb.Key(urlsafe=key).get()
             if p and self.user_prefs and p.key.parent() == self.user_prefs.key:
                 p.details = details
@@ -149,6 +150,7 @@ class RouteHandler(PostHandler):
                 self.write(json.dumps(response))
                 return
         else: # new post
+            new_r = True
             p = Route(parent=self.user_prefs.key, stats=RouteStats(),
                 locstart=startstr, locend=deststr,
                 start=start, dest=dest, capacity=capacity, details=details,
@@ -162,22 +164,19 @@ class RouteHandler(PostHandler):
         p.pathpts = [ndb.GeoPt(lat=q[0],lon=q[1]) for q in path]
         p.pathpts.insert(0,start)
         p.pathpts.append(dest)
-        # try:
-            # p.pathpts = RouteUtils.pathPrec(start, path, distance)
-        # except:
-            # response = {'status':'invalid'}
-            # self.write(json.dumps(response))
-            # return
+
         p.put()
         taskqueue.add(url='/match/updateroute/'+p.key.urlsafe(), method='get')
         create_route_doc(p.key.urlsafe(), p)
+        if new_r:
+            taskqueue.add(url='/notify/thanks/'+p.key.urlsafe(), method='get')
+        # TODO: !!!! Remove old rt, remove old route_doc
         if rtr:
             add_roundtrip(p)
         fbshare = bool(data.get('fbshare'))
-        #self.params['share_onload'] = fbshare
         share_onload=''
-        if fbshare:
-            share_onload='?fb'
+        if fbshare and new_r:
+            share_onload='?fb'        
         response['next'] = '/route/'+p.key.urlsafe()+share_onload
         self.write(json.dumps(response))
 

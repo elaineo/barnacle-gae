@@ -4,6 +4,7 @@ from Models.Post.Request import *
 from Models.Post.OfferRequest import OfferRequest
 from Models.Message import Message
 from Utils.Email.Reminder import *
+from Utils.Email.Post import *
 from Utils.EmailUtils import send_info
 from datetime import datetime, timedelta
 from google.appengine.ext import ndb
@@ -22,7 +23,7 @@ class Reminder(BaseHandler):
                     params = {'first_name': u.first_name, 'req_url': r.post_url()}
                     htmlbody =  self.render_str('email/reminders/complreq.html', **params)
                     textbody = complreq_txt % params 
-                    sub = 'Reminder: Complete your delivery request'
+                    sub = complreq_sub
                     send_info(u.email, sub, textbody, htmlbody)                    
                 elif r.stats.status==RequestStatus.index('NO_CC'):
                     u = r.key.parent().get()
@@ -36,8 +37,26 @@ class Reminder(BaseHandler):
             for r in res:
                 u = r.key.parent().get()
                 if not u.cc:
-                params = {'first_name': u.first_name}
-                htmlbody =  self.render_str('email/reminders/addcc.html', **params)
-                textbody = addcc_txt % params 
-                sub = 'Reminder: Add a payment account'
-                send_info(u.email, sub, textbody, htmlbody)
+                    params = {'first_name': u.first_name}
+                    htmlbody =  self.render_str('email/reminders/addcc.html', **params)
+                    textbody = addcc_txt % params 
+                    sub = addcc_sub 
+                    send_info(u.email, sub, textbody, htmlbody)
+                
+class Notify(BaseHandler):
+    def get(self, action=None, key=None):
+        if action=='thanks':
+            r = ndb.Key(urlsafe=key).get()
+            u = r.key.parent().get()
+            if r.__class__.__name__ == 'Route':
+                params = {'first_name': u.first_name, 'post_url': r.post_url()}
+                htmlbody =  self.render_str('email/thanks_route.html', **params)
+                textbody = thanksroute_txt % params 
+                sub = thanksroute_sub 
+                send_info(u.email, sub, textbody, htmlbody)                    
+            else: 
+                params = {'first_name': u.first_name, 'post_url': r.post_url()}
+                htmlbody =  self.render_str('email/thanks_req.html', **params)
+                textbody = thanksreq_txt % params 
+                sub = thanksreq_sub
+                send_info(u.email, sub, textbody, htmlbody)                    

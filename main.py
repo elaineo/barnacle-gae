@@ -162,6 +162,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/gerrit/<action>', GerritHandler),
    webapp2.Route('/gerrit/<action>/<loc>', GerritHandler),
    webapp2.Route('/remind/<action>', Reminder),
+   webapp2.Route('/notify/<action>/<key>', Notify),
    webapp2.Route('/expire/<action>', ExpireHandler), EmailHandler.mapping()],
   debug=True)
 
