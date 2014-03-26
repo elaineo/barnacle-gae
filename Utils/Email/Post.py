@@ -11,7 +11,15 @@ thanksroute_txt = """
     Thank you again for using Barnacle!
 """
 
-#thanksreq_txt 
+thanksreq_txt = """
+    Dear %(first_name)s,\n\n
+    Thank you for posting your request on Barnacle. We will send this to our best drivers, and you will be alerted when one accepts your package for delivery. \n\n
+    
+    You can view and edit your listing here: http://www.gobarnacle.com%(post_url)s \n\n
+    If you want to speed up the search process, share your listing on Facebook or Twitter with the hashtag #GoBarnacle to reach the greater Barnacle community.\n\n
+    Questions? Please contact us directly at help@gobarnacle.com \n\n
+    Thank you again for using Barnacle!
+"""
 
 thanksroute_sub = "Thank you for your post!"
 thanksreq_sub = "Thank you for your request!"

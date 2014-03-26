@@ -210,6 +210,7 @@ class RequestHandler(PostHandler):
             logging.info('Complete request')
             taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
             taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
+            taskqueue.add(url='/notify/thanks/'+p.key.urlsafe(), method='get')
             create_request_doc(p.key.urlsafe(), p)                        
             if not self.user_prefs.cc:
                 p.stats.status = RequestStatus.index('NO_CC')
