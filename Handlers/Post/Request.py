@@ -3,6 +3,7 @@ from google.appengine.ext import ndb
 from google.appengine.api import taskqueue
 from Handlers.Post.Post import PostHandler
 
+from Models.Post.Post import PostStatus
 from Models.Post.Request import *
 
 from Utils.RouteUtils import RouteUtils
@@ -27,23 +28,33 @@ class RequestHandler(PostHandler):
             rdump = RouteUtils.dumppts([route.start,route.dest])
             self.response.headers['Content-Type'] = "application/json"
             self.write(rdump)
+            return
+        if not self.user_prefs:
+            self.redirect('/request#signin-box')
+            return            
+        elif action=='repost' and key:
+            try:
+                p = ndb.Key(urlsafe=key).get()
+            except:
+                self.abort(400)
+                return
+            if p.key.parent() == self.user_prefs.key and p.dead>0:
+                self.params.update(p.to_dict(True))
+                self.params['route_title'] = 'Repost Delivery Request'
+                self.params['delivby'] = ''
+                self.render('post/forms/editrequest.html', **self.params)
+                return
         elif action=='edit' and key:
             try:
                 p = ndb.Key(urlsafe=key).get()
             except:
                 self.abort(400)
                 return
-            if not self.user_prefs:
-                self.redirect('/request#signin-box')
-                return
             if p.key.parent() == self.user_prefs.key:
                 self.params.update(p.to_dict(True))
                 self.params['route_title'] = 'Edit Delivery Request'
                 self.render('post/forms/editrequest.html', **self.params)
                 return
-            logging.error(p)
-            self.abort(403)
-            return
         elif action=='updatecc' and key:
             reqs = Request.by_userkey(ndb.Key(urlsafe=key))
             for p in reqs:
@@ -57,14 +68,14 @@ class RequestHandler(PostHandler):
             # create new request post
             if savsearch and bool(pop):
                 self.params.update(savsearch.params_fill())
-            self.params['route_title'] = 'Post a Delivery Request'
-            self.params['today'] = datetime.now().strftime('%Y-%m-%d')
-            self.render('post/forms/fillrequest.html', **self.params)
+        self.params['route_title'] = 'Post a Delivery Request'
+        self.params['today'] = datetime.now().strftime('%Y-%m-%d')
+        self.render('post/forms/fillrequest.html', **self.params)
 
     def post(self, action=None,key=None):
         if action=='update' and key:
             self.__update_request(key)
-        elif action=='edit' and key:
+        elif (action=='edit' or action=='repost') and key:
             try:
                 p = ndb.Key(urlsafe=key).get()
             except:
@@ -113,6 +124,10 @@ class RequestHandler(PostHandler):
             p.start = start
             p.dest = dest
             p.capacity=capacity
+            # repost?
+            if p.dead>0:
+                logging.info('Request coming back from ' + PostStatus[p.dead])
+                p.dead=0
             if img:
                 if p.img_id: # existing image
                     imgstore = ImageStore.get_by_id(p.img_id)

@@ -37,6 +37,10 @@ class Request(Post):
     def delete_url(self):
         """ url for deleting post"""
         return '/request/delete/' + self.key.urlsafe()    
+
+    def repost_url(self):
+        """ url for reposting """
+        return '/request/repost/' + self.key.urlsafe()        
     
     def increment_views(self):
         if self.stats:

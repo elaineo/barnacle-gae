@@ -1,0 +1,19 @@
+{% extends "email/ebase.html" %}
+{% block content %}
+<p>
+Dear {{first_name}},</p>
+<p>
+Thank you for posting your request on Barnacle. Unfortunately, we could not find a driver to deliver your request.  There are several possible reasons for this:
+</p><ul>
+  <li>There were not enough details listed in your description.</li>
+  <li>The delivery deadline was too soon.</li>
+  <li>Your offer was too low.</li>
+  <li>There are not a lon of drivers on this route.</li>
+</ul>
+<p>
+We encourage you to modify your request and try reposting it. You can do so <a href='http://www.gobarnacle.com/request{{repost_url}}'>here</a>.
+</p>
+<p>
+If you'd like, we would be happy to review your request with you and offer our advice on making a successful posting -- just reply to this email and we will do our best to help you out.
+</p>
+{% endblock %}        
