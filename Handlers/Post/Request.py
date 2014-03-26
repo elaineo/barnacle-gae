@@ -128,6 +128,7 @@ class RequestHandler(PostHandler):
             if p.dead>0:
                 logging.info('Request coming back from ' + PostStatus[p.dead])
                 p.dead=0
+                create_request_doc(p.key.urlsafe(), p) 
             if img:
                 if p.img_id: # existing image
                     imgstore = ImageStore.get_by_id(p.img_id)

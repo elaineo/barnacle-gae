@@ -59,4 +59,12 @@ class Notify(BaseHandler):
                 htmlbody =  self.render_str('email/thanks_req.html', **params)
                 textbody = thanksreq_txt % params 
                 sub = thanksreq_sub
-                send_info(u.email, sub, textbody, htmlbody)                    
+                send_info(u.email, sub, textbody, htmlbody)           
+        elif action=='expire':
+            r = ndb.Key(urlsafe=key).get()
+            u = r.key.parent().get()
+            params = {'first_name': u.first_name, 'repost_url': r.repost_url()}
+            htmlbody =  self.render_str('email/expire_req.html', **params)
+            textbody = expirereq_txt % params 
+            sub = expirereq_sub
+            send_info(u.email, sub, textbody, htmlbody)           

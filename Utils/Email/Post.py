@@ -1,3 +1,17 @@
+expirereq_txt = """
+    Dear %(first_name)s,\n\n
+
+    Thank you for posting your request on Barnacle. Unfortunately, we could not find a driver to deliver your request.  There are several possible reasons for this:\n\n
+  \tThere were not enough details listed in your description.\n
+  \tThe delivery deadline was too soon.\n
+  \tYour offer was too low.\n
+  \tThere are not a lon of drivers on this route.\n\n
+    
+    We encourage you to modify your request and try reposting it. You can do so here: http://www.gobarnacle.com/request%(repost_url)s \n\n
+    
+    We would be happy to review your request with you and offer our advice on making a successful posting -- just reply to this email and we will do our best to help you out.
+"""
+
 thanksroute_txt = """       
     Dear %(first_name)s,\n\n
 
@@ -23,3 +37,4 @@ thanksreq_txt = """
 
 thanksroute_sub = "Thank you for your post!"
 thanksreq_sub = "Thank you for your request!"
+expirereq_sub = "Your Barnacle Request Has Expired"
