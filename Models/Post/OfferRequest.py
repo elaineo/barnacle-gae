@@ -9,7 +9,7 @@ class OfferRequest(Offer):
 
     def has_cc(self):
         # Does this sender have an associated cc#?
-        u = self.key.parent()
+        u = self.key.parent().get()
         return u.cc
 
     def print_html(cls):
@@ -35,4 +35,8 @@ class OfferRequest(Offer):
         offer['details'] = self.details
         offer['img_url'] = self.image_url()
         offer['img_thumb'] = self.image_url('small')
+        if self.has_cc():
+            offer['valid'] = True
+        else:
+            offer['valid'] = False        
         return offer

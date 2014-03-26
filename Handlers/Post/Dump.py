@@ -7,7 +7,6 @@ from Models.Post.OfferRoute import *
 from Models.Post.OfferRequest import *
 
 import json
-import logging
 
 class DumpHandler(BaseHandler):
     def get(self, key=None):

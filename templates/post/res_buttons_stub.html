@@ -22,10 +22,13 @@
   
   <button type="submit" class="button info" id="viewroute_btn">View {{res.driver}}'s Route</button>
   
-  {% if confirm_allow %}
+  {% if confirm_allow and res.valid %}
   <button type="submit" class="button primary confirm" id="confirmres_btn">Confirm</button>
   <button type="submit" class="button secondary decline" id="decline_btn">Decline</button>
   {% endif %}
+  {% if not res.valid %}
+  <h4 class='text-error'>MISSING PAYMENT ACCOUNT</h4>
+  {% endif %}  
   </div>
 </div>
   
