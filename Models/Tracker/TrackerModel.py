@@ -23,6 +23,7 @@ class TrackerModel(ndb.Model):
     locstart = ndb.StringProperty() #text descr of location
     locend = ndb.StringProperty() #text descr of location
     tzoffset = ndb.IntegerProperty()
+    last_active = ndb.DateTimeProperty(auto_now=True)    
     status = ndb.IntegerProperty(default=1)  #1 inactive, 0 active, 2 waiting, 99 done
 
     def last_point(self):

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8">
+	<title>Home</title>
+	<!-- Run in full-screen mode. -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<!-- Make the status bar black with white text. -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<!-- Customize home screen title. -->
+	<meta name="apple-mobile-web-app-title" content="Barnacle">
+	<!-- Disable phone number detection. -->
+	<meta name="format-detection" content="telephone=no">
+	<meta name="viewport" content="initial-scale=1">
+	 <!-- Icons -->
+
+	<!-- iOS 7 iPad (retina) -->
+	<link href="/static/apple-touch-icon-152x152.png"
+		  sizes="152x152"
+		  rel="apple-touch-icon">
+
+	<!-- iOS 6 iPad (retina) -->
+	<link href="/static/apple-touch-icon-144x144.png"
+		  sizes="144x144"
+		  rel="apple-touch-icon">
+
+	<!-- iOS 7 iPhone (retina) -->
+	<link href="/static/apple-touch-icon-120x120.png"
+		  sizes="120x120"
+		  rel="apple-touch-icon">
+
+	<!-- iOS 6 iPhone (retina) -->
+	<link href="/static/apple-touch-icon-114x114.png"
+		  sizes="114x114"
+		  rel="apple-touch-icon">
+
+	<!-- iOS 7 iPad -->
+	<link href="/static/apple-touch-icon-76x76.png"
+		  sizes="76x76"
+		  rel="apple-touch-icon">
+
+	<!-- iOS 6 iPad -->
+	<link href="/static/apple-touch-icon-72x72.png"
+		  sizes="72x72"
+		  rel="apple-touch-icon">
+
+	<!-- iOS 6 iPhone -->
+	<link href="/static/apple-touch-icon-57x57.png"
+		  sizes="57x57"
+		  rel="apple-touch-icon">
+
+	<!-- Startup images -->
+
+	<!-- iOS 6 & 7 iPad (retina, portrait) -->
+	<link href="/static/apple-touch-startup-image-1536x2008.png"
+		  media="(device-width: 768px) and (device-height: 1024px)
+			 and (orientation: portrait)
+			 and (-webkit-device-pixel-ratio: 2)"
+		  rel="apple-touch-startup-image">
+
+	<!-- iOS 6 & 7 iPad (retina, landscape) -->
+	<link href="/static/apple-touch-startup-image-1496x2048.png"
+		  media="(device-width: 768px) and (device-height: 1024px)
+			 and (orientation: landscape)
+			 and (-webkit-device-pixel-ratio: 2)"
+		  rel="apple-touch-startup-image">
+
+	<!-- iOS 6 iPad (portrait) -->
+	<link href="/static/apple-touch-startup-image-768x1004.png"
+		  media="(device-width: 768px) and (device-height: 1024px)
+			 and (orientation: portrait)
+			 and (-webkit-device-pixel-ratio: 1)"
+		  rel="apple-touch-startup-image">
+
+	<!-- iOS 6 iPad (landscape) -->
+	<link href="/static/apple-touch-startup-image-748x1024.png"
+		  media="(device-width: 768px) and (device-height: 1024px)
+			 and (orientation: landscape)
+			 and (-webkit-device-pixel-ratio: 1)"
+		  rel="apple-touch-startup-image">
+
+	<!-- iOS 6 & 7 iPhone 5 -->
+	<link href="/static/apple-touch-startup-image-640x1096.png"
+		  media="(device-width: 320px) and (device-height: 568px)
+			 and (-webkit-device-pixel-ratio: 2)"
+		  rel="apple-touch-startup-image">
+
+	<!-- iOS 6 & 7 iPhone (retina) -->
+	<link href="/static/apple-touch-startup-image-640x920.png"
+		  media="(device-width: 320px) and (device-height: 480px)
+			 and (-webkit-device-pixel-ratio: 2)"
+		  rel="apple-touch-startup-image">
+
+	<!-- iOS 6 iPhone -->
+	<link href="/static/apple-touch-startup-image-320x460.png"
+		  media="(device-width: 320px) and (device-height: 480px)
+			 and (-webkit-device-pixel-ratio: 1)"
+		  rel="apple-touch-startup-image">
+	<link rel="stylesheet" href="/static/css/jquery.mobile-1.4.1.min.css" />
+	<link rel="stylesheet" href="/static/css/mobile/style.css" />
+	<link rel="stylesheet" href="/static/css/mobile/owl.carousel.css">
+	<link rel="stylesheet" href="/static/css/mobile/owl.theme.css">
+	<link rel="stylesheet" href="/static/css/mobile/photoswipe.css">
+	<link rel="stylesheet" href="/static/css/mobile/add2home.css">
+	<script type="text/javascript" src="/static/js/klass.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="/static/js/mobile/jquery.mobile-1.4.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/mobile/jstorage.js"></script>
+	<script type="text/javascript" src="/static/js/mobile/retina-1.1.0.js"></script>
+	<script type="text/javascript" src="/static/js/mobile/owl.carousel.min.js"></script>
+	<script type="text/javascript" src="/static/js/mobile/code.photoswipe.jquery-3.0.5.min.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.validate.min.js"></script>
+	<script src="/static/js/mobile/custom.js"></script>
+	<script type="application/javascript" src="/static/js/mobile/add2home.js"></script>
+</head>
+<body>
+ <div data-role="page" id="home">
+	<div data-role="panel" data-position="left" data-theme="b" data-display="push" id="left_panel">
+		<ul data-role="listview" data-inset="false" data-theme="b">
+			<li><div style="text-align: center;"><img src="assets/img/logo.png" alt="Logo"></div></li>
+			<li><a data-transition="slide" href="index.html"><img src="assets/img/menu-icons/home.png" alt="Home" class="ui-li-icon">Home</a></li>
+			<li data-role="collapsible" data-inset="false" data-theme="b" data-content-theme="a" data-iconpos="right">
+				<h4>Admin</h4>
+				<ul data-role="listview" data-inset="false" data-theme="a">
+					<li data-theme="a"><a data-transition="slide" href="login/index.html"><img src="assets/img/menu-icons/key-c.png" alt="Admin" class="ui-li-icon">Login Page</a></li>
+					<li data-theme="a"><a data-transition="slide" href="login/settings.html"><img src="assets/img/menu-icons/key-c.png" alt="Admin" class="ui-li-icon">Settings Page</a></li>
+				</ul>
+			</li>
+			<li id="menu_news" class="countable"><a data-transition="slide" data-count="3" href="news.html"><img src="assets/img/menu-icons/news.png" alt="News" class="ui-li-icon">News<span class="ui-li-count hidden accent-color"></span></a></li>
+			<li id="menu_recipes" class="countable"><a data-transition="slide" data-count="2" href="recipes.html"><img src="assets/img/menu-icons/star.png" alt="Recipes" class="ui-li-icon">Recipes<span class="ui-li-count hidden accent-color"></span></a></li>
+			<li id="menu_blog" class="countable"><a data-transition="slide" data-count="3" href="blog.html"><img src="assets/img/menu-icons/blog.png" alt="Blog" class="ui-li-icon">Blog<span class="ui-li-count hidden accent-color"></span></a></li>
+			<li id="menu_gallery" class="countable"><a data-transition="slide" data-count="0" href="gallery.html"><img src="assets/img/menu-icons/gallery.png" alt="Gallery" class="ui-li-icon">Gallery<span class="ui-li-count hidden accent-color"></span></a></li>
+			<li id="menu_video" class="countable"><a data-transition="slide" data-count="2" href="video.html"><img src="assets/img/menu-icons/video.png" alt="Video" class="ui-li-icon">Video<span class="ui-li-count hidden accent-color"></span></a></li>
+			<li><a data-transition="slide" href="information.html"><img src="assets/img/menu-icons/information.png" alt="Information" class="ui-li-icon">Information</a></li>
+			<li><a data-transition="slide" href="typography.html"><img src="assets/img/menu-icons/typography.png" alt="Typorgaphy" class="ui-li-icon">Typography</a></li>
+			<li><a data-transition="slide" href="form-elements.html"><img src="assets/img/menu-icons/typography.png" alt="Form Elements" class="ui-li-icon">Form Elements</a></li>
+		</ul>
+		<div style="position: relative; top: 15px;">
+			<p>Socialize</p>
+			<a href="#"><img src="assets/img/panel/skype.png" alt="Skype"></a>
+			<a href="#"><img src="assets/img/panel/twitter.png" alt="Twitter"></a>
+			<a href="#"><img src="assets/img/panel/vimeo.png" alt="Vimeo"></a>
+			<a href="#"><img src="assets/img/panel/facebook.png" alt="Facebook"></a>
+			<a href="#"><img src="assets/img/panel/google.png" alt="Google+"></a>
+			<a href="#"><img src="assets/img/panel/youtube.png" alt="YouTube"></a>
+		</div>
+	</div>
+	<div data-role="panel" data-theme="b" data-position="right" data-display="push" id="right_panel">
+		<div style="text-align: center;">
+			<h4 style="margin-top: 0px;">Share this page on:</h4>
+			<div class="panel-social-wrap">
+				<a class="facebook_share_link" title="Share link on Facebook" target="_blank" href="#" rel="nofollow">
+					<div class="panel-social panel-social-twitter accent-color">
+						<img src="assets/img/facebook.png" alt="Facebook">
+					</div>
+				</a>
+				<div class="panel-social-counter facebook_number"></div>
+			</div>
+			<div class="panel-social-wrap">
+				<a class="twitter_share_link" title="Share link on Twitter" target="_blank" href="#" rel="nofollow">
+					<div class="panel-social panel-social-facebook accent-color">
+						<img src="assets/img/twitter.png" alt="Twitter">
+					</div>
+				</a>
+				<div class="panel-social-counter twitter_number"></div>
+			</div>
+			<div class="panel-social-wrap">
+				<a class="google_share_link" title="Share link on Google+" target="_blank" href="#" rel="nofollow">
+					<div class="panel-social panel-social-google accent-color">
+						<img src="assets/img/google.png" alt="Google+">
+					</div>
+				</a>
+				<div class="panel-social-counter google_number"></div>
+			</div>
+		</div>
+	</div>
+	<div id="header" data-role="header" data-position="fixed" data-theme="c">
+		<div class="header_wrapper">
+			<a style="border-left: none;" class="header_button" href="#left_panel" data-inline="true" data-role="button" data-corners="false" data-theme="c">
+				<img class="header-btn-image" style="width: 100%; height: 100%;" src="assets/img/menu.png" alt="Menu">
+				<span class="menu-btn-background"></span>
+				<span class="counter-header hidden accent-color" style="color: #ffffff;"></span>
+			</a>
+			<span class="page_title">Home</span>
+			<a style="float: right; border: none;" class="header_button" href="#" data-inline="true" data-rel="back" data-role="button" data-corners="false" data-theme="c">
+				<img style="width: 100%; height: 100%;" src="assets/img/back.png" alt="Back">
+				<span class="btn-background"></span>
+			</a>
+			<a style="float: right;" class="header_button" href="#right_panel" data-inline="true" data-role="button" data-corners="false" data-theme="c">
+				<img style="width: 100%; height: 100%;" src="assets/img/share.png" alt="Share">
+				<span class="btn-background share-btn-background"></span>
+			</a>
+			<div style="clear: both"></div>
+		</div>
+	</div><!-- /header -->
+	<div id="homepage_content" data-role="content">
+		<div class="page-tagline accent-color">
+			<img src="assets/img/logo.png" alt="Logo">
+		</div>
+		<div id="news_slider" class="owl-carousel owl-active homepage-slider">
+				<div class="item">
+					<a href="blog-single-4.html">
+						<img src="assets/img/content-images/1.jpg" alt="News 1">
+					</a>
+				</div>
+				<div class="item">
+					<a href="recipes.html">
+						<img src="assets/img/content-images/2.jpg" alt="News 2">
+					</a>
+				</div>
+				<div class="item">
+					<a href="blog-single-5.html">
+						<img src="assets/img/content-images/3.jpg" alt="News 3">
+					</a>
+				</div>
+				<div class="item">
+					<a href="blog-single-4.html">
+						<img src="assets/img/content-images/1.jpg" alt="News 1">
+					</a>
+				</div>
+				<div class="item">
+					<a href="recipes.html">
+						<img src="assets/img/content-images/2.jpg" alt="News 2">
+					</a>
+				</div>
+				<div class="item">
+					<a href="blog-single-5.html">
+						<img src="assets/img/content-images/3.jpg" alt="News 3">
+					</a>
+				</div>
+		</div>
+		<hr style="background: #bebebe;">
+		<div class="container">
+			<h3>HELLO DEAR FRIEND!</h3>
+			<p>	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<div class="advertisement-468-60">
+				<img src="assets/img/adv-468-60.jpg" alt="Advertisement">
+			</div>
+			<div class="feature_wrap">
+				<hr style="background: #bebebe; margin: 15px 0px;">
+				<div class="feature accent-color">
+					<img src="assets/img/feature-1.png" alt="Feature 1">
+				</div>
+				<div class="feature_description">
+					<h3>VERY WELL OPTIMIZED</h3>
+					<p>Making sure it works on Androids, BlackBerry, iOS's and Windows Phones alike!</p>
+				</div>
+				<hr style="background: #bebebe; margin: 15px 0px;">
+			</div>
+			<div class="feature_wrap">
+				<div class="feature accent-color">
+					<img src="assets/img/feature-2.png" alt="Feature 1">
+				</div>
+				<div class="feature_description">
+					<h3>CLEAN AND FLEXIBLE</h3>
+					<p>Fast, clean, solid and created for most devices out there!</p>
+				</div>
+				<hr style="background: #bebebe; margin: 15px 0px;">
+			</div>
+			<div class="feature_wrap">
+				<div class="feature accent-color">
+					<img src="assets/img/feature-3.png" alt="Feature 1">
+				</div>
+				<div class="feature_description">
+					<h3>WELL DOCUMENTED</h3>
+					<p>EASY, SIMPLE & FUN TO USE!</p>
+				</div>
+				<hr style="background: #bebebe; margin: 15px 0px;">
+			</div>
+		</div>
+				<div>
+					<h6 class="footer-text">Copyright 2013. All rights reserved</h6>
+				</div>
+			</div><!-- /content -->
+		</div><!-- /page -->
+	</body>
+</html>
