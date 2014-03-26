@@ -8,8 +8,11 @@ ROUTE_INDEX = 'ROUTE_INDEX'
 REQUEST_INDEX = 'REQUEST_INDEX'
 CITY_INDEX = 'CITY_INDEX'
 
-def create_route_doc(keysafe, route):
+def create_route_doc(keysafe, route, new_r=True):        
     index = search.Index(name=ROUTE_INDEX)
+    if not new_r:
+        # delete the old one first
+        index.delete(keysafe)    
     u = route.key.parent().get()
     startpoint = search.GeoPoint(route.start.lat,route.start.lon)
     destpoint = search.GeoPoint(route.dest.lat,route.dest.lon)

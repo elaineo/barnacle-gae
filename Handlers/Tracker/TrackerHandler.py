@@ -314,7 +314,7 @@ class TrackerHandler(BaseHandler):
     def __share(self):
         data = json.loads(self.request.body)
         logging.info(data)
-        fbshare = bool(data.get('fbshare'))
+        fbshare = bool(int(data.get('fbshare')))
         # try:
         key = data['routekey']
         r = ndb.Key(urlsafe=key).get()

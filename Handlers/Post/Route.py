@@ -27,6 +27,7 @@ class RouteHandler(PostHandler):
                 self.render('user/forms/filldriver.html', **self.params)
                 return
             self.params['route_title'] = 'Drive a New Route'
+            self.params['route_action'] = '/route'
             self.render('post/forms/fillpost.html', **self.params)    
         if action=='json' and not key:
             # dump route map
@@ -64,6 +65,7 @@ class RouteHandler(PostHandler):
             if p.key.parent() == self.user_prefs.key:
                 self.params.update(p.to_dict(True))
                 self.params['route_title'] = 'Edit Route'
+                self.params['route_action'] = '/route/'+key
                 self.render('post/forms/fillpost.html', **self.params)
                 return
             logging.error(p)
@@ -92,12 +94,12 @@ class RouteHandler(PostHandler):
 
 
     def __create_route(self,key=None):
-        self.response.headers['Content-Type'] = "application/json"
+        self.response.headers['Content-Type'] = "application/json"        
         response = {'status':'ok'}
         data = json.loads(unicode(self.request.body, errors='replace'))
         capacity = data.get('vcap')
         repeatr = int(data.get('repeatr'))
-        rtr = bool(data.get('rtr'))
+        rtr = bool(int(data.get('rtr')))
         capacity = parse_unit(capacity)
         if (repeatr<2):
             weekr = data.get('weekr')
@@ -126,7 +128,6 @@ class RouteHandler(PostHandler):
 
         start, startstr = get_search_json(data,'start')
         dest, deststr = get_search_json(data,'dest')
-        logging.info('New Route: '+startstr+' to '+deststr)
 
         if key: # if editing post
             new_r = False
@@ -141,7 +142,7 @@ class RouteHandler(PostHandler):
                 p.dest = dest
                 p.start = start
                 if not p.roundtrip and rtr: #added a return trip
-                    add_roundtrip(p)
+                    add_roundtrip(p, True)
                 if p.roundtrip and not rtr: #deleted return trip
                     delete_doc(p.key.urlsafe()+'_RT',p.__class__.__name__)
                 p.roundtrip = rtr
@@ -155,6 +156,7 @@ class RouteHandler(PostHandler):
                 locstart=startstr, locend=deststr,
                 start=start, dest=dest, capacity=capacity, details=details,
                 delivstart=delivstart, delivend=delivend, roundtrip=rtr)
+            logging.info('New Route: '+startstr+' to '+deststr)
         if (repeatr<2):
             p.repeatr = rr
         else:
@@ -167,13 +169,12 @@ class RouteHandler(PostHandler):
 
         p.put()
         taskqueue.add(url='/match/updateroute/'+p.key.urlsafe(), method='get')
-        create_route_doc(p.key.urlsafe(), p)
+        create_route_doc(p.key.urlsafe(), p, new_r)
         if new_r:
             taskqueue.add(url='/notify/thanks/'+p.key.urlsafe(), method='get')
-        # TODO: !!!! Remove old rt, remove old route_doc
         if rtr:
-            add_roundtrip(p)
-        fbshare = bool(data.get('fbshare'))
+            add_roundtrip(p, new_r)
+        fbshare = bool(int(data.get('fbshare')))
         share_onload=''
         if fbshare and new_r:
             share_onload='?fb'        
@@ -181,15 +182,15 @@ class RouteHandler(PostHandler):
         self.write(json.dumps(response))
 
 
-def add_roundtrip(route):
+def add_roundtrip(route, new_r):
     p2 = Route(parent=route.key.parent(),
-                locstart=route.locend, locend=route.locstart,
-                start=route.dest, dest=route.start,
-                capacity=route.capacity, details=route.details,
-                delivstart=route.delivend, delivend=route.delivend,
-                roundtrip=route.roundtrip,repeatr=route.repeatr,
-                pathpts=route.pathpts)
-    create_route_doc(route.key.urlsafe()+'_RT', p2)
+            locstart=route.locend, locend=route.locstart,
+            start=route.dest, dest=route.start,
+            capacity=route.capacity, details=route.details,
+            delivstart=route.delivend, delivend=route.delivend,
+            roundtrip=route.roundtrip,repeatr=route.repeatr,
+            pathpts=route.pathpts)
+    create_route_doc(route.key.urlsafe()+'_RT', p2, new_r)
 
 
     
