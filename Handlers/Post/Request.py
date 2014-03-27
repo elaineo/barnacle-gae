@@ -30,6 +30,12 @@ class RequestHandler(PostHandler):
             self.response.headers['Content-Type'] = "application/json"
             self.write(rdump)
             return
+        elif action=='updatecc' and key:
+            reqs = Request.by_userkey(ndb.Key(urlsafe=key))
+            for p in reqs:
+                p.stats.status = RequestStatus.index('PURSUE')
+                p.put()
+            return            
         if not self.user_prefs:
             self.redirect('/request#signin-box')
             return            
@@ -56,12 +62,6 @@ class RequestHandler(PostHandler):
                 self.params['route_title'] = 'Edit Delivery Request'
                 self.render('post/forms/editrequest.html', **self.params)
                 return
-        elif action=='updatecc' and key:
-            reqs = Request.by_userkey(ndb.Key(urlsafe=key))
-            for p in reqs:
-                p.stats.status = RequestStatus.index('PURSUE')
-                p.put()
-            return
         elif not key:
             remoteip = self.request.remote_addr
             savsearch = SearchEntry.by_ip(remoteip)
