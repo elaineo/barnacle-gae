@@ -18,6 +18,7 @@ class RequestHandler(PostHandler):
     def get(self, action=None,key=None):
         if not action and key: 
             self.view_page(key)
+            return
         if action=='json' and key:
             # dump route map
             try:
