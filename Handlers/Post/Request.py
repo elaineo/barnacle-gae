@@ -36,7 +36,7 @@ class RequestHandler(PostHandler):
                 p.stats.status = RequestStatus.index('PURSUE')
                 p.put()
             return            
-        if not self.user_prefs:
+        if action and not self.user_prefs:
             self.redirect('/request#signin-box')
             return            
         elif action=='repost' and key:
