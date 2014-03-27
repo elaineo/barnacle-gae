@@ -25,11 +25,6 @@ class Request(Post):
     delivby = ndb.DateProperty(required=True)
     stats = ndb.StructuredProperty(ReqStats)
     img_id = ndb.IntegerProperty()     
-    
-    def has_cc(self):
-        # Does this sender have an associated cc#?
-        u = self.key.parent().get()
-        return u.cc    
 
     def post_url(self):
         """ url for public view of post """
@@ -62,10 +57,10 @@ class Request(Post):
         route['edit_url'] = cls.edit_url()
         route['delete_url'] = cls.delete_url()
         route['post_url'] = cls.post_url()
-        if cls.has_cc():
+        if cls.stats.status > RequestStatus.index('NO_CC'):
             route['valid'] = True
         else:
-            route['valid'] = False 
+            route['valid'] = False
         return route
         
     def to_search(cls):
