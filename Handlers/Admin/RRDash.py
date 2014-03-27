@@ -18,7 +18,7 @@ class RRDashHandler(BaseHandler):
     def get(self, action=None, loc=None):
         if action=='matchdump':            
             reqdump = []
-            requests = Request.query()
+            requests = Request.query().order(-Request.created)
             for r in requests:
                 if r.dead>0:
                     continue
