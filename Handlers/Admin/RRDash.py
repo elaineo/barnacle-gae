@@ -22,7 +22,7 @@ class RRDashHandler(BaseHandler):
             for r in requests:
                 if r.dead>0:
                     continue
-                dump = r.to_dict()
+                dump = r.to_dict(True)
                 dump['key'] = r.key.urlsafe()
                 if r.stats:
                     if r.stats.status > 10:
