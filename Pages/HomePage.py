@@ -78,6 +78,7 @@ class BlogPage(BaseHandler):
             post = 'None'
         elif post[-4:]=='html':
             post = post[:-5]
+        # cuz googlebot was appending .html to the urls
         self.params['blog_post'] = post
         self.render('/blog/'+post+'.html', **self.params)
 

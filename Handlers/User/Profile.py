@@ -3,7 +3,6 @@ from Models.ImageModel import *
 from Models.User.Account import *
 from Models.Post.Route import *
 from Models.Post.Request import *
-from Models.Message import *
 from Models.User.Driver import *
 from Handlers.ImageHandler import *
 from google.appengine.api import images
@@ -129,21 +128,7 @@ class ProfileHandler(BaseHandler):
         textbody = welcome_txt 
         send_info(email, welcome_sub, textbody, htmlbody)
         
-        
-class AccountPage(ProfileHandler):
-    """ User account page """
-    def get(self):
-        if not self.user_prefs:
-            self.redirect('/')
-            return         
-        if self.user_prefs: # check to see if user preferences exists
-            self.params.update(self.user_prefs.params_fill())
-        key = self.user_prefs.key
-        self.params.update(fill_prof_stub_params(self.user_prefs.key))
-        q = Message.by_receiver(key)
-        self.params['newcnt'] = sum(int(m.unread) for m in q)
-        self.render('user/account.html',**self.params)
-        
+                
 def fill_prof_stub_params(key):
     posts = []
     for r in Route.by_userkey(key):

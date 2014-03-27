@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title%}{{first_name}}'s Dashboard{% endblock %}
+{% block heading %}<h1>{{first_name}}'s Dashboard</h1>
+<div class="row">
+  <div class="span10 offset1">
+  <button type="submit" class="button info" id="editprof_btn">Edit Profile</button>
+  <button type="submit" class="button info" id='routes_btn'>Routes and Reservations</button>  
+    {% if bank == True %}
+      <button type="submit" class="button info" id='earn_btn'>Earnings</button>
+    {% endif %}      
+  <button type="submit" class="button info" id='sett_btn'>Settings</button>
+  </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="row visible-phone">
+  <div class="span4 offset1">
+  <a href='/signout'><button class="btn btn-mini">Logout</button></a>
+  </div>
+</div>
+<div class="row visible-phone" style='height:10px;'></div>
+{% if cc == False %}
+<div class="row">
+  <div class="span10">
+    <p><span class='text-error'>You have not linked a valid credit card to your account. Please do so <a href='/pay/cc'>here</a> so that drivers can take your requests.</span></p>
+  </div>
+</div>
+{% endif %}
+
+<div class="row" style='height:20px'></div>
+<div class="row-fluid">
+  <div class='span8'>  
+  {% include "user/dash/route_subscribe.html" %}
+  </div>
+  <div class='span4'>  
+  </div>
+</div>
+  <script>
+  $(function() {
+    $('.navicoaccount').addClass('onbutton');
+    });
+    
+$(document).ready(function(){
+    click_redirect('#editprof_btn','/profile');
+    click_redirect('#routes_btn','/routes');
+    click_redirect('#sett_btn','/settings');
+    click_redirect('#earn_btn','/earn/summary');
+});
+</script>
+{% endblock %}

@@ -12,6 +12,7 @@ from Handlers.Post.Review import ReviewHandler
 # User Accounts
 from Handlers.User.Account import *
 from Handlers.User.Profile import *
+from Handlers.User.Dashboard import *
 from Handlers.User.Settings import SettingsHandler
 from Handlers.User.Driver import DriverHandler
 from Handlers.User.ApplyHandler import *
