@@ -29,6 +29,7 @@ class RRDashHandler(BaseHandler):
                         continue
                     dump['notes'] = r.stats.notes
                     dump['status'] = RequestStatus[r.stats.status]
+                    dump['status_integer'] = r.stats.status
                 matches = []
                 for q in r.matches:
                     try:
