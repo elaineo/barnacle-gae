@@ -10,6 +10,7 @@ class Driver(ndb.Model):
     bank_acctnum = ndb.StringProperty()
     bank_name = ndb.StringProperty()
     bank_uri = ndb.StringProperty()
+    makemodel = ndb.StringProperty()
     fb = ndb.JsonProperty()
     fbnetworks = ndb.StringProperty(repeated=True)   
     creation_date = ndb.DateTimeProperty(auto_now_add=True)    
@@ -18,6 +19,7 @@ class Driver(ndb.Model):
         params = {}
         params['bank'] = self.bank
         params['ins'] = self.ins
+        params['driver'] = True
         if self.ins:
             params['insured'] = ins_str
             params['ins_email'] = ins_str_email
@@ -32,6 +34,8 @@ class Driver(ndb.Model):
             params['networks'] = self.fbnetworks
         else:
             params['networks'] = []
+        if self.makemodel:
+            params['makemodel'] = self.makemodel
         
         params.update(self.key.parent().get().params_fill())
         return params

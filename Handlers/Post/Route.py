@@ -10,6 +10,7 @@ from Models.User.Driver import *
 from Utils.RouteUtils import RouteUtils
 from Utils.SearchDocUtils import create_route_doc
 from Utils.ValidUtils import *
+
 import logging
 import json
 import time
@@ -75,7 +76,10 @@ class RouteHandler(PostHandler):
 
     def post(self, action=None,key=None):
         if not self.user_prefs:
-            self.redirect('/#signin-box')            
+            self.redirect('/#signin-box')      
+        if action=='subscribe':
+            self.__subscribe()
+            return
         if action=='edit' and key:
             try:
                 p = ndb.Key(urlsafe=key).get()
@@ -92,14 +96,30 @@ class RouteHandler(PostHandler):
         else:
             self.__create_route(key)
 
-
+    def __subscribe(self):
+        self.response.headers['Content-Type'] = "application/json"  
+        response = {'status':'ok'}
+        data = json.loads(unicode(self.request.body, errors='replace'))
+        userkey = data.get('userkey')
+        cities = data.get('city')
+        cities = [int(c) for c in cities]
+        # get all previous subscriptions
+        subs = Route.by_subscriber(self.userprefs.key)
+        subcities = [s.subscribe for s in subs]
+        newc = [c for c in cities if c not in subcities]
+        deadc = [c for c in subcities if c not in cities]
+        #create new routes for the new subs
+        #for c in newc:
+        #remove the old subs
+        
     def __create_route(self,key=None):
         self.response.headers['Content-Type'] = "application/json"        
         response = {'status':'ok'}
         data = json.loads(unicode(self.request.body, errors='replace'))
         capacity = data.get('vcap')
         repeatr = int(data.get('repeatr'))
-        rtr = bool(int(data.get('rtr')))
+        rtr = data.get('rtr')
+        rtr = parse_bool(rtr)
         capacity = parse_unit(capacity)
         if (repeatr<2):
             weekr = data.get('weekr')
@@ -174,7 +194,8 @@ class RouteHandler(PostHandler):
             taskqueue.add(url='/notify/thanks/'+p.key.urlsafe(), method='get')
         if rtr:
             add_roundtrip(p, new_r)
-        fbshare = bool(int(data.get('fbshare')))
+        fbshare = data.get('fbshare')
+        fbshare = parse_bool(fbshare)
         share_onload=''
         if fbshare and new_r:
             share_onload='?fb'        

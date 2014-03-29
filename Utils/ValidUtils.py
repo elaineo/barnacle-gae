@@ -26,6 +26,13 @@ def parse_unit(unit):
     else:
         u = 0
     return u    
+
+def parse_bool(unit):
+    if unit:
+        u = bool(int(unit))
+    else:
+        u = False
+    return u    
     
 def get_search_json(data,pt):
     ptlat = data.get(pt+'lat')

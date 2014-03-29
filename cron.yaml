@@ -4,7 +4,7 @@ cron:
   schedule: every day 00:00
 - description: daily reminder to complete requests
   url: /remind/incomp
-  schedule: every day 21:00  
+  schedule: every mon,thu 21:00  
 - description: daily expiration job
   url: /expire/dead
   schedule: every day 06:59

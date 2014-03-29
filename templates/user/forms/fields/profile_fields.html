@@ -13,10 +13,18 @@
     <div class="control-group">
         <label class="control-label" for="loc">Location</label>
         <div class="controls">
-          <input class="input span8" type="text" name="loc" id='map0Field' value="{{location}}">
+          <input class="input span8" type="text" name="loc" id='map0Field' value="{{location}}"  style='width: 300px !important;'>
           <span class="help-inline error" id='map0Err'>{{error_route}}</span>
         </div>
     </div>
+    {% if driver %}
+     <div class="control-group">
+        <label class="control-label" for="make_model">Vehicle Year/Make/Model</label>
+        <div class="controls">
+          <input type="text" name="make_model" value="{{makemodel}}" style='width: 300px !important;'>
+        </div>
+    </div>    
+    {% endif %}
     <div class="control-group">
         <label class="control-label" for="about">About</label>
         <div class="controls">

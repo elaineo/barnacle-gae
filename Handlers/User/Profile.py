@@ -33,6 +33,9 @@ class ProfileHandler(BaseHandler):
             self.fill_header()
         else:
             self.params.update(self.user_prefs.params_fill())
+            d = Driver.by_userkey(self.user_prefs.key)
+            if d:
+                self.params.update(d.params_fill())            
             self.params['createorupdate'] = 'Update Profile'
         self.render('user/forms/fillprofile.html', **self.params)
     
@@ -99,6 +102,11 @@ class ProfileHandler(BaseHandler):
         user_prefs.first_name = self.request.get("first_name").capitalize()
         user_prefs.last_name = self.request.get("last_name")
         user_prefs.about = self.request.get("about").replace('\n','')
+        d = Driver.by_userkey(self.user_prefs.key)
+        if d:
+            mm = self.request.get("make_model")
+            d.makemodel = mm
+            d.put()
 
         # validate
         location = self.request.get("loc")

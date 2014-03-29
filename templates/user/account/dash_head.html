@@ -1,0 +1,19 @@
+<a href='/account' style='color:#000'><h1>{{first_name}}'s Dashboard</h1></a>
+<div class="row-fluid">
+  <div class="span12">
+  <button type="submit" class="button secondary" id="editprof_btn">Edit Profile</button>
+  <button type="submit" class="button secondary" id='routes_btn'>Routes and Reservations</button>  
+    {% if bank == True %}
+      <button type="submit" class="button secondary" id='earn_btn'>Earnings</button>
+    {% endif %}      
+  <button type="submit" class="button secondary" id='sett_btn'>Settings</button>
+  </div>
+</div>
+<script>
+$(document).ready(function(){
+    click_redirect('#editprof_btn','/profile');
+    click_redirect('#routes_btn','/routes');
+    click_redirect('#sett_btn','/settings');
+    click_redirect('#earn_btn','/earn/summary');
+  });  
+</script>

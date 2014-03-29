@@ -1,0 +1,41 @@
+<div class="row-fluid support" style='border: 1px solid #333'>    
+    <div class="span10 offset1">
+    <div class="row-fluid">
+      <p><img class="img-polaroid profpic" src="{{profile_full}}"></p>
+    </div>
+    <div class="row-fluid">
+      <div class="span9"><p class="plabel">Deliveries Completed:</p></div>
+      <div class="span3">{{deliv_completed}}</div>
+    </div>  
+    
+    <div class="row-fluid">
+      <div class="span4"><p class="plabel">Rating:</p></div>
+      <div class="span8">
+        <div id="avgrating">
+        <span class="rating-starsOff" style="width:95px;">
+        <span class="rating-starsOn" style="width:19px">{{avg_rating}}</span>
+        </span>
+        </div>
+       </div>
+    </div>
+    <div class="row-fluid insured">
+    {% if ins == True %}
+       <img src="/static/barnacle64.png"> &nbsp;Insured up to $500
+       <br>
+    {% endif %}
+    {% if bank == True %}
+      <img src="/static/img/icons/bankver.png"> Bank Account Verified
+    {% endif %}
+    </div>
+    <a href='{{profile_url}}'>
+    <button type="submit" class="button tiny info" id="viewprof_btn">View Profile</button></a> 
+  </div>
+
+           
+</div>
+<script>
+$(document).ready(function(){
+    user_rating();   
+});
+</script>
+<script src="/static/js/profile.js"></script>

@@ -15,7 +15,6 @@ class SettingsHandler(BaseHandler):
                 self.params['cc_num'] = 'MISSING'
             d = Driver.by_userkey(self.user_prefs.key)
             if d:
-                self.params['driver'] = True
                 self.params.update(d.params_fill())
             self.render('user/forms/settings.html', **self.params)  
         else:

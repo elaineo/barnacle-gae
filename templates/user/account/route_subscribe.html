@@ -1,0 +1,80 @@
+<div class="row-fluid hidden-phone" style='height:20px'></div>    
+<div class="row-fluid">
+  <div class="span10 offset1" >
+  <p>
+  <img src='/static/img/placeholder2.png' style='max-width:300px'>
+  </p>
+    <div class="row-fluid">
+      <div class="span12">
+       <p class="plabel"> {{ makemodel }} </p><br>
+       <p class="plabel"> {{ location }} </p>
+       </div>
+    </div>
+    <div class="row hidden-phone" style='height:20px'></div>
+    <div class="row-fluid support" style='border: 1px solid #333'>
+      <div class="span12">
+       <h4>Subscribed Destinations</h4>
+       <p>You will be alerted when there are requests between your location and any of these Barnacle cities.</p>
+      </div>
+      <div class="span8 offset2">     
+        <form enctype="multipart/form-data" method="post" id='subscribe_form' class="form-horizontal" action='/route/subscribe'>      
+        <div class="subchecks control-group">
+          <label class="checkbox">
+            <input type="checkbox" name="city" value="0"> Seattle
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" name="city" value="1"> Portland
+          </label>      
+          <label class="checkbox">
+            <input type="checkbox" name="city" value="2"> San Francisco
+          </label>      
+          <label class="checkbox">
+            <input type="checkbox" name="city" value="3"> Sacramento
+          </label>      
+          <label class="checkbox">
+            <input type="checkbox" name="city" value="4"> San Jose
+          </label>                
+          <label class="checkbox">
+            <input type="checkbox" name="city" value="5"> Los Angeles
+          </label>                
+          <label class="checkbox">
+            <input type="checkbox" name="city" value="6"> San Diego
+          </label>                          
+        </div>
+        </form>
+        <button id='subscribe' class='button' disabled>Update</button>
+      </div>
+    </div>  
+  </div>
+</div>  
+<script>    
+$(document).ready(function(){
+  $('.subchecks').change(function() {
+    $('#subscribe').removeAttr('disabled');
+  });
+  $('#subscribe').click(function(event) {
+    event.preventDefault();
+    data = { 'userkey': '{{ userkey }}'};
+    data.cities = $("input[name=cities]:checked").val();
+      $.ajax({
+        type: "POST",
+        dataType: "json",  
+        contentType: "json", 
+        url: "/route/subscribe",
+        data: JSON.stringify(data),
+        success: function(response) {
+            console.log(response);
+        }
+    });    
+  });
+    //fill in some info
+    var sdict = [{{city|safe}}];
+    if (sdict.length > 0) {
+        sdict = sdict[0];
+        for (i=sdict['city'].length-1; i>=0; i--) {
+            $n = $('input[name=city]').get(sdict['city'][i]-1);
+            $n.setAttribute('checked',true);
+        }
+    }
+});
+</script>

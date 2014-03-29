@@ -19,6 +19,11 @@ indexes:
 - kind: OfferRequest
   properties:
   - name: dead
+  - name: created
+
+- kind: OfferRequest
+  properties:
+  - name: dead
   - name: deliverby
 
 - kind: OfferRoute
