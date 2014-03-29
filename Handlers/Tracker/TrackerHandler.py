@@ -8,7 +8,7 @@ import google.appengine.api.images
 from Handlers.BaseHandler import *
 from Models.Tracker.TrackerModel import *
 from Models.Money.Transaction import *
-from Utils.ValidUtils import parse_date
+from Utils.ValidUtils import parse_date, parse_bool
 from Utils.ConfirmUtils import *
 from Utils.EmailUtils import send_info
 from Utils.Email.Track import sharetrack_txt
@@ -314,7 +314,7 @@ class TrackerHandler(BaseHandler):
     def __share(self):
         data = json.loads(self.request.body)
         logging.info(data)
-        fbshare = bool(int(data.get('fbshare')))
+        fbshare = parse_bool(data.get('fbshare'))
         # try:
         key = data['routekey']
         r = ndb.Key(urlsafe=key).get()

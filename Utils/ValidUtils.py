@@ -29,7 +29,10 @@ def parse_unit(unit):
 
 def parse_bool(unit):
     if unit:
-        u = bool(int(unit))
+        try:
+            u = bool(int(unit))
+        except:
+            u = False
     else:
         u = False
     return u    

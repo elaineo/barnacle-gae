@@ -208,10 +208,10 @@ class ReservationHandler(BaseHandler):
         rates = self.request.get('rates')
         rates = parse_rate(rates)
         msg = self.request.get('msg')
-        dropoff = bool(int(self.request.get('dropoff')))
-        pickup = bool(int(self.request.get('pickup')))
-        delivok = bool(int(self.request.get('delivok')))        
-        repost= bool(self.request.get('repost'))
+        dropoff = parse_bool(self.request.get('dropoff'))
+        pickup = parse_bool(self.request.get('pickup'))
+        delivok = parse_bool(self.request.get('delivok'))
+        repost= parse_bool(self.request.get('repost'))
         
         if delivok:
             reqdate = self.request.get('reqdate')
@@ -288,9 +288,9 @@ class ReservationHandler(BaseHandler):
         rates = self.request.get('rates')
         rates = parse_rate(rates)
         items = self.request.get('items')
-        dropoff = bool(int(self.request.get('dropoff')))
-        pickup = bool(int(self.request.get('pickup')))
-        repost= bool(self.request.get('repost'))
+        dropoff = parse_bool(self.request.get('dropoff'))
+        pickup = parse_bool(self.request.get('pickup'))
+        repost= parse_bool(self.request.get('repost'))
         img = self.request.get("file")       
         
         reqdate = route.delivend
