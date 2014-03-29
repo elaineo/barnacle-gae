@@ -99,7 +99,11 @@ class UserPrefs(ndb.Model):
         if self.first_name:
             params['first_name'] = self.first_name
         else:
-            params['first_name'] = 'Barnacle'  
+            params['first_name'] = 'Barnacle'
+        if self.last_name:
+            params['last_name'] = self.last_name
+        else:
+            paramsp['last_name'] = ''
         params['profile_thumb'] = self.profile_image_url(mode='small')   
         params['profile_url'] = self.profile_url()
         params['avg_rating'] = Review.avg_rating(self.key)

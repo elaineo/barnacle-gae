@@ -47,17 +47,17 @@ class Request(Post):
             self.stats.views = self.stats.views+1
             self.put()
         
-    def to_dict(cls,incl_user=False):
-        route = cls.base_dict(incl_user)
-        route['delivby'] = cls.delivby.strftime('%m/%d/%Y')
-        route['rates'] = cls.rates
-        route['category'] = cls.category
-        route['img_url'] = cls.image_url()
-        route['img_thumb'] = cls.image_url('small')
-        route['edit_url'] = cls.edit_url()
-        route['delete_url'] = cls.delete_url()
-        route['post_url'] = cls.post_url()
-        if cls.stats.status > RequestStatus.index('NO_CC'):
+    def to_dict(self,incl_user=False):
+        route = self.base_dict(incl_user)
+        route['delivby'] = self.delivby.strftime('%m/%d/%Y')
+        route['rates'] = self.rates
+        route['category'] = self.category
+        route['img_url'] = self.image_url()
+        route['img_thumb'] = self.image_url('small')
+        route['edit_url'] = self.edit_url()
+        route['delete_url'] = self.delete_url()
+        route['post_url'] = self.post_url()
+        if self.stats.status > RequestStatus.index('NO_CC'):
             route['valid'] = True
         else:
             route['valid'] = False

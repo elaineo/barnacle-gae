@@ -101,11 +101,18 @@ class GerritHandler(BaseHandler):
             if key:
                 r=ndb.Key(urlsafe=key).get()
             status = data.get('status')
+            updatedNotes = data.get('notes')
+
             if r.stats:
                 r.stats.status = int(status)
+                r.stats.notes = updatedNotes
             else:
-                r.stats = ReqStats(status = int(status))
+                r.stats = ReqStats(status = int(status), notes = updatedNotes)
             r.put()
+
+            jsonResponse = {}
+            jsonResponse['success'] = True
+            self.write(json.dumps(jsonResponse))
             
     def __get_routes_from(self, origin):
         if origin not in city_dict:

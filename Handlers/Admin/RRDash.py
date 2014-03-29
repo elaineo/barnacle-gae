@@ -18,17 +18,18 @@ class RRDashHandler(BaseHandler):
     def get(self, action=None, loc=None):
         if action=='matchdump':            
             reqdump = []
-            requests = Request.query()
+            requests = Request.query().order(-Request.created)
             for r in requests:
                 if r.dead>0:
                     continue
-                dump = r.to_dict()
+                dump = r.to_dict(True)
                 dump['key'] = r.key.urlsafe()
                 if r.stats:
                     if r.stats.status > 10:
                         continue
                     dump['notes'] = r.stats.notes
                     dump['status'] = RequestStatus[r.stats.status]
+                    dump['status_integer'] = r.stats.status
                 matches = []
                 for q in r.matches:
                     try:

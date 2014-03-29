@@ -35,7 +35,7 @@ class SitemapGenerationHandler(BaseHandler):
         Sitemap.update_contents(buf)
 
     def get_home_urls(self):
-        return ['http://www.gobarnalce.com/about', 'http://www.gobarnalce.com/how', 'http://www.gobarnalce.com/blog']
+        return ['http://www.gobarnacle.com/about', 'http://www.gobarnacle.com/how', 'http://www.gobarnacle.com/blog']
 
     def get_route_urls(self):
         urls = []

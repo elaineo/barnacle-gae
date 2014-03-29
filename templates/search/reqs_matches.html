@@ -17,6 +17,7 @@
     <table class="table table-striped table-hover">
     <thead><tr>
         <th>Origin/Destination</th>
+        <th>Name</th>
         <th>Created</th>
         <th>Deliver By</th>
         <th>Offer</th>
@@ -28,6 +29,7 @@
     <tr>
         <td class='clicky' onclick="document.location.href = '{{req.post_url}}';">{{req.locstart}} to {{req.locend}}      
         </td>
+        <td>{{req.first_name}} {{req.last_name}}</td>
         <td>{{req.created}}</td>
         <td>{{req.delivby}}</td>
         <td>{{req.rates}}</td>
@@ -36,10 +38,12 @@
         {% else %}
         <td style='text-align:center'>{{req.num_matches}}</td>
         {% endif %}
-        <td>{% if req.notes is defined %}{{req.notes}}{% endif %}</td>
         <td>
-          <select data-key='{{req.key}}' class="status input-small">
-            <option selected="selected">{{req.status}}</option>
+            <textarea class="updatable">{% if req.notes is defined %}{{req.notes}}{% endif %}</textarea>
+        </td>
+        <td>
+          <select data-key='{{req.key}}' class="updatable input-small">
+            <option value="{{req.status_integer}}" selected="selected">{{req.status}}</option>
             <option value="99">HIDE</option>
             <option value="5">PRIORITY</option>
             <option value="4">PURSUE</option>
@@ -49,7 +53,7 @@
             <option value="0">INCOMP</option>
           </select>
         </td>
-        <td><button class='btn-mini status_btn' disabled='disabled'>Update</button></td>
+        <td><button class='btn-mini update_btn' disabled='disabled'>Update</button></td>
     </tr>
     {% if req.num_matches!=0 %}
     <tr class='hide'><td colspan='4'>
@@ -82,13 +86,19 @@ $(document).ready(function(){
     $('.showoff').click(function() {
         var row = $(this).closest('tr').next();
         row.toggleClass('hide');
-    });    
-    $('.status_btn').click(function() {
-        var sel = $(this).closest('tr').find('select');
+    });
+
+    $('.update_btn').click(function() {
+        var thisRow = $(this).closest('tr')
+        var sel = thisRow.find('select');
         var status = sel.val();
         var key = sel.attr('data-key');
+        var noteTag = thisRow.find('textarea')
+        var updatedNotes = noteTag.val();
         $(this).attr('disabled','disabled');
-        response = {'key': key, 'status': status};
+
+
+        response = {'key': key, 'status': status, 'notes' : updatedNotes};
           $.ajax({
             type: "POST",
             dataType: "json",
@@ -97,13 +107,16 @@ $(document).ready(function(){
             data: JSON.stringify(response),
             success: function(response) {
                 alert('Status updated');
+                console.log('Updated a Request');
             }
-          });        
+          });
     });
-    $('.status').change(function() {
+    $('.updatable').change(function() {
         var row = $(this).closest('tr');
-        row.find('.status_btn').removeAttr('disabled');
+        row.find('.update_btn').removeAttr('disabled');
     });
+    $('textarea').keyup(function() { $(this).closest('tr').find('.update_btn').removeAttr('disabled'); } );
+
 });
 </script>
 {% endblock %}
