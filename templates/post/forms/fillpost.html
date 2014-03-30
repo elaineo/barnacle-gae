@@ -1,112 +1,97 @@
 {% extends "base.html" %}
 {% block title%}{{route_title}}{% endblock %}
-{% block heading%}<h1>{{route_title}}</h1>{% endblock %}
+{% block heading%}<h1>{{route_title}}</h1>
+<div class="row-fluid">
+  <div class="span6 offset5" style='text-align:right'>
+    <p>Sending something? Post a <button class="button primary tiny" id='postreq_btn'>Delivery Request</button></p> 
+  </div><div class='span1 visible-desktop'></div> 
+</div>    
+{% endblock %}
 {% block content %}
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 <script src="/static/js/maps/mapsclientno.js"></script>
 <link rel="stylesheet" href="/static/css/jquery-ui.css" />
-<div class="row-fluid">
-  <div class="span6 offset5" style='text-align:right'>
-    <p>Sending something? <br>Post a <button class="button primary tiny" id='postreq_btn'>Delivery Request</button></p> 
-  </div><div class='span1 visible-desktop'></div> 
-</div>    
+<link rel="stylesheet" href="/static/landing/styles/transition.css">
 <div class="row">
     <div class="span10 offset1">
+      
  <form enctype="multipart/form-data" method="post" id='route_form' class="form-horizontal" action="{{route_action}}">
 
-     <div class="control-group">
-        <div class="controls" id="rtRadios">
-            <label class="radio inline">
-              <input type="radio" name="rtr" id="repeatNo" value="0" checked> One-Way
-            </label>
-            <label class="radio inline">
-              <input type="radio" name="rtr" id="repeatWeek" value="1"> Round Trip
-            </label>
-        </div>     <br>
-     
-        <label class="control-label" for="repeat">Repeat?</label>
-        <div class="controls" id="repeatRadios">
-            <label class="radio inline">
-              <input type="radio" name="repeatr" id="repeatNo" value="2" checked> No
-            </label>
-            <label class="radio inline">
-              <input type="radio" name="repeatr" id="repeatWeek" value="0"> Weekly
-            </label>
-            <label class="radio inline">
-              <input type="radio" name="repeatr" id="repeatMonth" value="1"> Monthly
-            </label>
+   <div class="tabbable">
+    <ul class="nav nav-pills">
+      <li id='tab0' class="active"><a href="#tab-sub" data-toggle="tab"><h6>Subscribe to Destinations</h6></a></li>
+      <li id='tab1'><a href="#tab-post" data-toggle="tab"><h6>Post a New Route</h6></a></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active" id="tab-sub">  
+        <div class="row-fluid">
+         <div class="row-fluid support">    
+            <b>How Does This Work?</b><br>
+            We are currently serving deliveries between Seattle, Portland, the Bay Area, and Greater Los Angeles.  By subscribing to a city, you will be notified of any requests between your location and that destination.  <br>
+            If you have travel plans beyond the cities listed below, you are still welcome to post your route. However, be aware that you may not get many delivery requests.
+          </div>  
+          <div class="row-fluid" style='height:20px'></div>
+          <div class="control-group">
+            <label class="control-label" for="loc">Your Location:</label>
+            <div class="controls">
+              {{location}}
+            </div>
+          </div>          
+          <label class="control-label">Subscription Destinations:</label>
+          <div class="controls">
+          {% include "post/forms/subcities.html" %}
+          </div>
         </div>
-        <div class="controls span8" id="weekMonthOpts">
-            <label class="checkbox inline">
-              <input type="checkbox" name="monthr" value="0"> 1st week
-            </label>
-            <label class="checkbox inline">
-              <input type="checkbox" name="monthr" value="1"> 2nd week
-            </label>
-            <label class="checkbox inline">
-              <input type="checkbox" name="monthr" value="2"> 3rd week
-            </label>
-            <label class="checkbox inline">
-              <input type="checkbox" name="monthr" value="3"> 4th week
-            </label>            
+      </div>
+      <div class="tab-pane fade" id="tab-post">
+        <div class="control-group">
+            <div class="controls" id="rtRadios">
+                <label class="radio inline">
+                  <input type="radio" name="rtr" id="repeatNo" value="0" checked> One-Way
+                </label>
+                <label class="radio inline">
+                  <input type="radio" name="rtr" id="repeatWeek" value="1"> Round Trip
+                </label>
+            </div>    
+        </div> 
+        <div class="control-group">
+            <label class="control-label" for="start">Start Address:</label>
+            <div class="controls">
+              <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}"  style='width: 270px!important;'>
+              <span class="help-inline error" id='map0Err'>{{error_route}}</span>
+            </div>
         </div>
-        <div class="controls span8" id="dayWeekOpts">
-            <label class="checkbox inline">
-              <input type="checkbox" name="weekr" value="0"> Sun
-            </label>
-            <label class="checkbox inline">
-              <input type="checkbox" name="weekr" value="1"> Mon
-            </label>
-            <label class="checkbox inline">
-              <input type="checkbox" name="weekr" value="2"> Tue
-            </label>
-            <label class="checkbox inline">
-              <input type="checkbox" name="weekr" value="3"> Wed
-            </label>
-            <label class="checkbox inline">
-              <input type="checkbox" name="weekr" value="4"> Thu
-            </label>
-            <label class="checkbox inline">
-              <input type="checkbox" name="weekr" value="5"> Fri
-            </label>
-            <label class="checkbox inline">
-              <input type="checkbox" name="weekr" value="6"> Sat
-            </label>
+        <div class="control-group">
+            <label class="control-label" id='startlbl'>Departure Date:</label>
+            <div class="controls">
+              <input type="text" name="delivstart" value="{{delivstart}}" id="startdate" autocomplete="off">
+            </div>
         </div>
-    </div>       
+        <div class="control-group">
+            <label class="control-label" for="dest">Destination:</label>
+            <div class="controls">
+              <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{locend}}"  style='width: 270px!important;'>
+              <span class="help-inline error" id='map1Err'>{{error_route}}</span>
+            </div>
+        </div>
+      </div>      
+
+    </div>
+   </div>
  
-    <div class="control-group">
-        <label class="control-label" for="start">Start Address:</label>
-        <div class="controls">
-          <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}"  style='width: 270px!important;'>
-          <span class="help-inline error" id='map0Err'>{{error_route}}</span>
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" id='startlbl'>Departure Date:</label>
-        <div class="controls">
-          <input type="text" name="delivstart" value="{{delivstart}}" id="startdate" autocomplete="off">
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" for="dest">Destination:</label>
-        <div class="controls">
-          <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{locend}}"  style='width: 270px!important;'>
-          <span class="help-inline error" id='map1Err'>{{error_route}}</span>
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" id='endlbl'>Arrival Date:</label>
-        <div class="controls">
-          <input type="text" name="delivend" value="{{delivend}}" id="enddate" autocomplete="off">
-        </div>
-    </div>    
+    
     <!--
     <div class="control-group" id='waypts-group'>
         <div class="controls">
           <button class="btn btn-mini" id='adddest_btn'>Add destination</button>
         </div>
     </div>-->
+    <div class="control-group">
+        <label class="control-label" id='endlbl'>Watch Until:</label>
+        <div class="controls">
+          <input type="text" name="delivend" value="{{delivend}}" id="enddate" autocomplete="off">
+        </div>
+    </div>    
     <div class="control-group">
         <label class="control-label" for="capacity">Vehicle Capacity:</label>
         <div class="controls" id="repeatRadios">
@@ -139,7 +124,7 @@
         </div>
     </div>	
     <input type="hidden" id="hidert" value="{{rt}}">
-    <input type="hidden" id="hiderepeat" value="{{repeat}}">
+    <input type="hidden" id="hidepost" value="{{newpost}}">
     <input type="hidden" id="hidecap" value="{{capacity}}">
     <input type='hidden' name="startlat" id="startlat">
     <input type='hidden' name="startlon" id="startlon">
@@ -198,24 +183,6 @@ $(document).ready(function(){
   
 $(document).ready(function(){
     //fill in some info
-    var repeat = $('input#hiderepeat').val();
-    if (repeat === 'True') {
-        $('input[name=repeatr]').attr('checked',false);        
-        var rdict = [{{repeatr|safe}}];
-        rdict = rdict[0];
-        $period = $('input[name=repeatr]').get(rdict['period']+1);
-        $period.setAttribute('checked',true);
-        for (i=rdict['dayweek'].length-1; i>=0; i--) {
-            $day = $('input[name=weekr]').get(rdict['dayweek'][i]);
-            $day.setAttribute('checked',true);
-        }
-        if (rdict['period'] == 1) {
-            for (i=rdict['weekmonth'].length-1; i>=0; i--) {
-                $week = $('input[name=monthr]').get(rdict['weekmonth'][i]);
-                $week.setAttribute('checked',true);
-            }
-        }
-    }
 
     var capacity = $('input#hidecap').val();
     if (capacity != '') {
@@ -227,47 +194,39 @@ $(document).ready(function(){
         $('input[name=rtr]').attr('checked',false);     
         $('input[name=rtr]').get(parseInt(rt)).setAttribute('checked',true);
     }    
-
+    var postsub = $('input#hidepost').val();    
+    if (postsub == '1') {
+        /* display post new route */
+        $('#tab-post').removeClass('fade').addClass('active');
+        returnLabel();
+    }    
+    
     //add some validation
-    //click_submit('#route_btn','#route_form');
     var v = [[0],[0]];
     click_ajax('#route_btn',['map0','map1'],['start','dest'],v,'#route_form',true, true);
     click_redirect('#postreq_btn','/request');
-    $("#dayWeekOpts").css("display","none");
-    $("#weekMonthOpts").css("display","none");
-    $("#repeatRadios").click(function(){
-        rr = $("input[name=repeatr]:checked").val();
-        if ( rr== "1" ) {
-            $("#weekMonthOpts").slideDown("fast"); //Slide Down Effect
-        } else {
-            $("#weekMonthOpts").slideUp("fast");  //Slide Up Effect
-        }
-        if (rr == "0" | rr== "1" ) {
-            $("#dayWeekOpts").slideDown("fast"); //Slide Down Effect
-            $('label#startlbl').html('Repeat From:');
-            $('label#endlbl').html('Repeat Until:');
-        } else {
-            $("#dayWeekOpts").slideUp("fast");  //Slide Up Effect
-        }
-        if (rr == "2" ) {
-            $('label#startlbl').html('Departure Date:');
-            returnLabel();
-        }
-     });   
-    $("#rtRadios").click(function() {
+    $("#tab0").click(function(){
+      $("#hidepost").val(0);
+      returnLabel(); 
+    });   
+    $("#tab1").click(function(){
+      $("#hidepost").val(1);
+      returnLabel(); 
+    });       
+    /* $("#rtRadios").click(function() {
         rr = $("input[name=repeatr]:checked").val();
         if (rr == "2" ) {
             returnLabel(); 
         }
-    });      
+    });*/      
 });
 
 function returnLabel() {
-    rtr = $("input[name=rtr]:checked").val();
-    if (rtr == "1") 
-        $('label#endlbl').html('Return Date:');
+    sp = $("#hidepost").val();
+    if (sp == "1") 
+        $('label#endlbl').html('Arrival Date:');
     else 
-        $('label#endlbl').html('Arrival Date:');        
+        $('label#endlbl').html('Watch Until:');        
 }
   </script>
   <script type="text/javascript" src="/static/js/validation.js"></script>

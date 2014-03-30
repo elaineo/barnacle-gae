@@ -27,6 +27,7 @@ class RouteHandler(PostHandler):
                 self.params.update(self.user_prefs.params_fill())
                 self.render('user/forms/filldriver.html', **self.params)
                 return
+            self.params['location'] = self.user_prefs.location
             self.params['route_title'] = 'Drive a New Route'
             self.params['route_action'] = '/route'
             self.render('post/forms/fillpost.html', **self.params)    
@@ -117,23 +118,10 @@ class RouteHandler(PostHandler):
         response = {'status':'ok'}
         data = json.loads(unicode(self.request.body, errors='replace'))
         capacity = data.get('vcap')
-        repeatr = int(data.get('repeatr'))
         rtr = data.get('rtr')
         rtr = parse_bool(rtr)
         capacity = parse_unit(capacity)
-        if (repeatr<2):
-            weekr = data.get('weekr')
-            try:
-                dayweek = [int(w) for w in weekr]
-                rr = RepeatRoute(period=repeatr, dayweek=dayweek,weekmonth=[])
-            except:
-                repeatr=2
-        if (repeatr==1):
-            monthr = data.get('monthr')
-            try:
-                rr.weekmonth = [int(m) for m in monthr]
-            except:
-                repeatr=0
+
         details = data.get('details')
         startdate = data.get('delivstart')
         enddate = data.get('delivend')
@@ -177,10 +165,7 @@ class RouteHandler(PostHandler):
                 start=start, dest=dest, capacity=capacity, details=details,
                 delivstart=delivstart, delivend=delivend, roundtrip=rtr)
             logging.info('New Route: '+startstr+' to '+deststr)
-        if (repeatr<2):
-            p.repeatr = rr
-        else:
-            p.repeatr = None
+
         path = data.get('legs')
         distance = data.get('distance')
         p.pathpts = [ndb.GeoPt(lat=q[0],lon=q[1]) for q in path]

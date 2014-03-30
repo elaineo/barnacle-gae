@@ -6,7 +6,7 @@ from Models.User.Driver import *
 
 SUBCITIES = ['SEATTLE', 'PORTLAND', 'SAN FRANCISCO', 'SAN JOSE', 'SACRAMENTO', 'LOS ANGELES', 'SAN DIEGO', 'LAS VEGAS']
 
-class RepeatRoute(ndb.Model):
+class RepeatRoute(ndb.Model):  ##Deprecated
     period = ndb.IntegerProperty() # weekly (0), or monthly (1)
     dayweek = ndb.IntegerProperty(repeated=True) # day of week, Sunday(0) to Sat(6) 
     weekmonth = ndb.IntegerProperty(repeated=True) # week of month1-4
@@ -16,7 +16,7 @@ class RouteStats(ndb.Model):
     
 class Route(Post):
     roundtrip = ndb.BooleanProperty(default=False)
-    repeatr = ndb.StructuredProperty(RepeatRoute)
+    repeatr = ndb.StructuredProperty(RepeatRoute)   ##Deprecated
     delivstart = ndb.DateProperty(required=True)
     delivend = ndb.DateProperty(required=True)
     pathpts = ndb.GeoPtProperty(repeated=True)     

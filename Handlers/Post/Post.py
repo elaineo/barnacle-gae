@@ -61,7 +61,7 @@ class PostHandler(BaseHandler):
             if self.user_prefs and self.user_prefs.account_type == 'fb':
                 self.params['fb_share'] = True
             self.params.update(p.to_dict(True))
-            if p.__class__.__name__ == 'Route':
+            if p.__class__.__name__ == 'Route':                
                 self.render('post/post.html', **self.params)
             else:
                 self.render('post/request.html', **self.params)
