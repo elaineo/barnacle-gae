@@ -69,7 +69,6 @@ def login(driver):
 
 
 def test_post_request():
-
     driver = webdriver.Firefox()
     driver = login(driver)
     driver.get(HOST)
@@ -94,7 +93,8 @@ def test_post_request():
 
     # do verification
     time.sleep(1)
-    assert driver.current_url == u'%s/post/request#' % HOST
+    print driver.current_url
+    assert driver.current_url == u'%s/request#' % HOST
     page_source = driver.page_source
     assert len(re.findall('San Francisco', page_source)) > 0
     assert len(re.findall('Los Angeles', page_source)) > 0
@@ -102,14 +102,25 @@ def test_post_request():
     elem.clear()
     elem.send_keys('mushrooms')
     elem = driver.find_element_by_name('rates')
-
+    # agree to TOS
+    elem = driver.find_element_by_id('tos')
+    elem.click()
     # click to next screen
+    elem = driver.find_element_by_id('request_btn')
+    elem.click()
+    # add credit card
+    elem = driver.find_element_by_class_name('card-number')
+    elem.send_keys('4242424242424242')
+    elem = driver.find_element_by_class_name('cc-ey')
+    elem.send_keys('14')
+    elem = driver.find_element_by_class_name('cc-csc')
+    elem.send_keys('123')
     elem = driver.find_element_by_id('request_btn')
     elem.click()
 
     # do verification or url
     time.sleep(1)
-    target_pattern = u'%s/post/update/' % HOST
+    target_pattern = u'%s/request/update/' % HOST
     assert len(re.findall(target_pattern, driver.current_url)) > 0
 
     driver.close()
@@ -122,6 +133,18 @@ def test_post_route():
 
     # navigate to post
     elem = driver.find_element_by_class_name('navicoroutes')
+    elem.click()
+
+    if driver.current_url == u'%s/drive' % HOST:
+        elem = driver.find_element_by_tag_name('h1')
+        if "Barnacle Profile" == elem.text:
+            # need to fill out profile
+            elem = driver.find_element_by_id('fillprof_btn')
+            elem.click()
+
+    # switch tabs to post route
+    elem = driver.find_element_by_id('tab1')
+    elem = elem.find_element_by_tag_name('a')
     elem.click()
 
     elem = driver.find_element_by_name('start')
@@ -139,7 +162,7 @@ def test_post_route():
 
     # do verification or url
     time.sleep(1)
-    target_pattern = u'%s/post/[a-z]+' % HOST
+    target_pattern = u'%s/route/[a-z]+' % HOST
     assert len(re.findall(target_pattern, driver.current_url)) > 0
 
     page_source = driver.page_source

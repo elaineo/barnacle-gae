@@ -19,7 +19,7 @@ dist = 100 #Arbitrary distance
 class MatchHandler(BaseHandler):
     def day_ago(self):
         return datetime.now() - timedelta(1)
-        
+
     def get(self, action=None, key=None):
         if action=='routes':
             routes = Route.query(Route.dead==0)
@@ -38,10 +38,10 @@ class MatchHandler(BaseHandler):
                     continue
         elif action=='requests':
             requests = Request.query(Request.dead==0)
-            senders = []       
+            senders = []
             for r in requests:
                 self.__updatereq(r)
-                # check for deleted matches 
+                # check for deleted matches
                 try:
                     if (True in [m.get().created > self.day_ago() for m in r.matches]):
                         senders.append(r.key.parent())
@@ -79,24 +79,24 @@ class MatchHandler(BaseHandler):
             self.__updatereq(r)
         elif action=='updateroute' and key:
             r = ndb.Key(urlsafe=key).get()
-            self.__updateroute(r)        
+            self.__updateroute(r)
         elif action=='cleanmatch' and key:
-            # delete the key in matches 
+            # delete the key in matches
             r = ndb.Key(urlsafe=key).get()
             type = r.__class__.__name__
             if type=='Route':
-                matches = Request.by_match(ndb.Key(urlsafe=key))   
+                matches = Request.by_match(ndb.Key(urlsafe=key))
             else:
-                matches = Route.by_match(ndb.Key(urlsafe=key))                
+                matches = Route.by_match(ndb.Key(urlsafe=key))
             for m in matches:
                 m.matches.remove(ndb.Key(urlsafe=key))
-                m.put()     
+                m.put()
         elif action=='cleanmatches':
-            requests = Request.query(Request.dead==0) 
+            requests = Request.query(Request.dead==0)
             for r in requests:
                 r.matches=[]
                 r.put()
-                    
+
     def post(self, action=None):
         if action=='dumprequests':
             if not self.user_prefs:
@@ -120,8 +120,8 @@ class MatchHandler(BaseHandler):
             rdump['link'] = '/search/reqhome?startlat='+str(here.lat)+'&startlon='+str(here.lon)
             # except:
                 # rdump = {'status':'fail'}
-            self.response.headers['Content-Type'] = "application/json"                
-            self.write(json.dumps(rdump))            
+            self.response.headers['Content-Type'] = "application/json"
+            self.write(json.dumps(rdump))
         elif action=='dumpreqsdest':
             data = json.loads(self.request.body)
             self.response.headers['Content-Type'] = "application/json"
@@ -134,7 +134,7 @@ class MatchHandler(BaseHandler):
                 return
             rdump = {'status':'ok'}
             path = data.get('legs')
-            pathpts = data.get('legs')    
+            pathpts = data.get('legs')
             precision = data.get('precision')
             if not pathpts or not precision:
                 return
@@ -145,7 +145,7 @@ class MatchHandler(BaseHandler):
             rdump['count'] = len(posts)
             # except:
                 # rdump = {'status': 'fail'}
-            self.write(json.dumps(rdump))  
+            self.write(json.dumps(rdump))
         elif action=='dumproutesdest':
             data = json.loads(self.request.body)
             self.response.headers['Content-Type'] = "application/json"
@@ -163,8 +163,8 @@ class MatchHandler(BaseHandler):
             rdump['count'] = len(posts)
             # except:
                 # rdump = {'status': 'fail'}
-            self.write(json.dumps(rdump))  
-            
+            self.write(json.dumps(rdump))
+
     def __send_match2d(self, driver):
         routes = Route.by_userkey(driver)
         matches = []
@@ -175,14 +175,14 @@ class MatchHandler(BaseHandler):
         for m in matches:
             p = m.get().to_search()
             if p['thumb_url'][0]=='/':
-                p['thumb_url'] = www_home + p['thumb_url']                
+                p['thumb_url'] = www_home + p['thumb_url']
             posts.append(p)
             unroll=unroll + "\n" + p['start'] + "\t" + p['dest'] + "\t" + p['delivby'] + "\t" + www_home + p['post_url']
         params = {'posts': posts}
         unrollparams = {'posts': unroll}
         self.params['action'] = 'match2driver'
         self.params['senderid'] = 'barnacle'
-        self.params['receiverid'] = driver.id() 
+        self.params['receiverid'] = driver.id()
         self.send_match2d(driver.get().email, params, unrollparams)
 
     def __send_match2s(self,sender):
@@ -196,7 +196,7 @@ class MatchHandler(BaseHandler):
             # check if it's a RT
             p = m.get().to_search()
             if p['thumb_url'][0]=='/':
-                p['thumb_url'] = www_home + p['thumb_url']                
+                p['thumb_url'] = www_home + p['thumb_url']
             posts.append(p)
             unroll=unroll + "\n" + p['start'] + "\t" + p['dest'] + "\t"
             if p['roundtrip'] == 1:
@@ -206,40 +206,42 @@ class MatchHandler(BaseHandler):
         unrollparams = {'posts': unroll}
         self.params['action'] = 'match2sender'
         self.params['senderid'] = 'barnacle'
-        self.params['receiverid'] = sender.id() 
+        self.params['receiverid'] = sender.id()
         self.send_match2s(sender.get().email, params, unrollparams)
-        
+
     def send_match2d(self, email, params, unrollparams):
+        """Send match to driver"""
         htmlbody =  self.render_str('email/requestnote.html', **params)
         textbody = requestnote_txt % unrollparams
-        send_info(to_email=email, subject=request_note_sub, 
+        send_info(to_email=email, subject=request_note_sub,
             body=textbody, html=htmlbody)
-            
+
     def send_match2s(self, email, params, unrollparams):
+        """Send match to sender"""
         htmlbody =  self.render_str('email/routenote.html', **params)
         textbody = routenote_txt % unrollparams
-        send_info(to_email=email, subject=request_note_sub, 
-            body=textbody, html=htmlbody)          
-        
+        send_info(to_email=email, subject=request_note_sub,
+            body=textbody, html=htmlbody)
+
     def __updatereq(self,r):
         r.matches =  find_routematch(r)
         r.put()
     def __updateroute(self,r):
         r.matches =  find_reqmatch(r)
         r.put()
-    
+
 def find_reqmatch(route):
     # for a given route, get all matching requests
-    # Use stored pathpts, generate Haversin Dist    
+    # Use stored pathpts, generate Haversin Dist
     dist = HaversinDist(route.start.lat, route.start.lon, route.dest.lat, route.dest.lon)
     # increase fudge because we only stored [0::100]
     precision = precisionDist(dist)-3
-    pathpts = [roundPoint(pp, precision) for pp in route.pathpts]    
+    pathpts = [roundPoint(pp, precision) for pp in route.pathpts]
     results = Request.search_route(pathpts, route.delivstart, route.delivend, precision)
     if route.roundtrip:
         results = results + Request.search_route(list(reversed(pathpts)), route.delivend, route.delivend, precision)
     return [m.key for m in results]
-    
+
 def find_routematch(req):
     # for a given request, get all matching routes
     start = req.start
@@ -250,7 +252,7 @@ def find_routematch(req):
     keepers = []
     for c in results:
         startpt = field_byname(c, "start")
-        dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude) 
+        dist0 = HaversinDist(start.lat,start.lon, startpt.latitude, startpt.longitude)
         dist1 = HaversinDist(dest.lat,dest.lon, startpt.latitude, startpt.longitude)
         if dist0 < dist1:
             keepers.append(c)
