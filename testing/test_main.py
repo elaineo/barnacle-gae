@@ -69,7 +69,6 @@ def login(driver):
 
 
 def test_post_request():
-
     driver = webdriver.Firefox()
     driver = login(driver)
     driver.get(HOST)
@@ -94,7 +93,8 @@ def test_post_request():
 
     # do verification
     time.sleep(1)
-    assert driver.current_url == u'%s/post/request#' % HOST
+    print driver.current_url
+    assert driver.current_url == u'%s/request#' % HOST
     page_source = driver.page_source
     assert len(re.findall('San Francisco', page_source)) > 0
     assert len(re.findall('Los Angeles', page_source)) > 0
@@ -102,14 +102,25 @@ def test_post_request():
     elem.clear()
     elem.send_keys('mushrooms')
     elem = driver.find_element_by_name('rates')
-
+    # agree to TOS
+    elem = driver.find_element_by_id('tos')
+    elem.click()
     # click to next screen
+    elem = driver.find_element_by_id('request_btn')
+    elem.click()
+    # add credit card
+    elem = driver.find_element_by_class_name('card-number')
+    elem.send_keys('4242424242424242')
+    elem = driver.find_element_by_class_name('cc-ey')
+    elem.send_keys('14')
+    elem = driver.find_element_by_class_name('cc-csc')
+    elem.send_keys('123')
     elem = driver.find_element_by_id('request_btn')
     elem.click()
 
     # do verification or url
     time.sleep(1)
-    target_pattern = u'%s/post/update/' % HOST
+    target_pattern = u'%s/request/update/' % HOST
     assert len(re.findall(target_pattern, driver.current_url)) > 0
 
     driver.close()
