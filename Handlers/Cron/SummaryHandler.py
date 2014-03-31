@@ -43,6 +43,9 @@ class SummaryHandler(BaseHandler):
     def number_of_users(self):
         return UserPrefs.query().count()
 
+    def number_of_users_last_active(self):
+        return UserPrefs.query(UserPrefs.last_active > self.day_ago()).count()
+
     def number_of_routes(self):
         return Route.query(Route.dead==0).count()
 
@@ -66,6 +69,7 @@ class SummaryHandler(BaseHandler):
 
     def generate_report(self):
         d = {}
+        d['active_users'] = self.number_of_users_last_active()
         d['new_users'] = self.number_of_new_users()
         d['new_routes'] = self.number_of_new_routes()
         d['new_requests'] = self.number_of_new_requests()
