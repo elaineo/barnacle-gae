@@ -10,7 +10,6 @@
       </p></div>
     </div>      
     {% endif %}
-    {{ subscribe }}
     {% if subscribe %}
     <div class="row-fluid">
       <div class="span6"><p class="plabel">
@@ -41,6 +40,7 @@
           </div>
         </div>
     {% else %}
+    {% if not subscribe %}
     <div class="row-fluid">
       <div class="span6"><p class="plabel">
         <br>
@@ -59,6 +59,7 @@
         {{ delivend }} 
        </div>
     </div>
+    {% endif %}
     {% endif %}
     <div class="row-fluid">
       <div class="span4"><p class="plabel">

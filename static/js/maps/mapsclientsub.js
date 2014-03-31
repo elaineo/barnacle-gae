@@ -43,6 +43,11 @@ function initializeSub() {
   if (checkinput=='') {
     $('input#substartlat').val(mpoint.lat());
     $('input#substartlon').val(mpoint.lng());  
+  }  else {
+    inlat = $('input#substartlat').val();
+    inlon = $('input#substartlon').val();  
+    mpoint = new google.maps.LatLng(inlat,inlon);
+    marker0.setPosition(mpoint);
   }
   var marker1 = new google.maps.Marker({
     position: defaultPt,
@@ -56,7 +61,12 @@ function initializeSub() {
   if (checkinput=='') {
     $('input#subdestlat').val(mpoint.lat());
     $('input#subdestlon').val(mpoint.lng());  
-  }  
+  }  else {
+    inlat = $('input#subdestlat').val();
+    inlon = $('input#subdestlon').val();  
+    mpoint = new google.maps.LatLng(inlat,inlon);
+    marker1.setPosition(mpoint);
+  }
 
   google.maps.event.addListener(marker0, 'dragend', function() {
     var geocoder = new google.maps.Geocoder();

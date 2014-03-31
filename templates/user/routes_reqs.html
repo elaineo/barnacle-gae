@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title%}Routes and Reservations{% endblock %}
-{% block heading%}<h1>Routes and Reservations</h1>{% endblock %}
+{% block heading%}{% include "user/account/dash_head.html" %}{% endblock %}
 {% block content %}
 
 <div class="row-fluid">
@@ -198,6 +198,8 @@ $(document).ready(function(){
         var row = $(this).closest('tr').next();
         row.toggleClass('hide');
     });    
+    $('#routes_btn').removeClass('secondary');
+    $('#routes_btn').attr('disabled', 'disabled');
 });
 </script>
 {% endblock %}

@@ -58,6 +58,14 @@ class RouteHandler(PostHandler):
             rdump = RouteUtils.dumproute(route)
             self.response.headers['Content-Type'] = "application/json"
             self.write(rdump)
+        elif action=='subs':
+            if self.user_prefs:
+                routes = Route.by_subscriber(self.user_prefs.key)
+                rdump = RouteUtils.dumpall(routes)
+                rdump['center'] = [40, -122]
+                rdump['zoom'] = 4
+                self.response.headers['Content-Type'] = "application/json"
+                self.write(json.dumps(rdump))
         elif action=='edit' and key:
             try:
                 p = ndb.Key(urlsafe=key).get()
@@ -67,10 +75,17 @@ class RouteHandler(PostHandler):
             if not self.user_prefs:
                 self.redirect('/#signin-box')
                 return
-            if p.key.parent() == self.user_prefs.key:
-                self.params.update(p.to_dict(True))
-                self.params['route_title'] = 'Edit Route'
-                self.params['route_action'] = '/route/'+key
+            if p.key.parent() == self.user_prefs.key:                
+                if p.subscribe is None:
+                    self.params.update(p.to_dict(True))
+                    self.params['route_title'] = 'Edit Route'
+                    self.params['route_action'] = '/route/'+key  
+                    self.params['newpost'] = 1
+                else:
+                    self.params.update(p.to_sub())
+                    self.params['route_title'] = 'Edit Subscription'
+                    self.params['route_action'] = '/route'
+                    self.params['newpost'] = 0
                 self.render('post/forms/fillpost.html', **self.params)
                 return
             logging.error(p)
@@ -113,11 +128,12 @@ class RouteHandler(PostHandler):
         subroute = parse_unit(data.get('hidesub'))
         # see if this user has any existing subs
         subs = Route.by_subscriber(self.user_prefs.key)
-        if subroute in subs:
-            new_r = False
-            s = subs.filter(Route.subscribe==subroute).get()
-        else:
-            new_r = True
+        new_r = True
+        for q in subs:
+            if q.subscribe==subroute:
+                s = q
+                new_r = False            
+        if new_r:            
             delivstart = datetime.now()
             delivend = datetime.now()+timedelta(days=365)
             s = Route(parent=self.user_prefs.key, stats=RouteStats(),

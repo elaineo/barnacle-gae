@@ -53,15 +53,29 @@ class Route(Post):
                     'post_url' : cls.post_url()
                     })
         route.update(cls.gen_repeat())
-        if cls.subscribe:
+        if cls.subscribe is not None:
             route['subscribe'] = True
-        else:
-            route['rt'] = int(cls.roundtrip)
+        route['rt'] = int(cls.roundtrip)
         d = Driver.by_userkey(cls.key.parent())
         if d:
             route.update(d.params_fill())        
         return route
-    
+
+    def to_sub(cls):
+        route = {
+            'routekey' : cls.key.urlsafe(),
+            'capacity' : cls.capacity,
+            'substart' : cls.locstart,
+            'subdest' : cls.locend,
+            'details' : cls.details,
+            'substartlat' : cls.start.lat,
+            'substartlon' : cls.start.lon,
+            'subdestlat' : cls.dest.lat,
+            'subdestlon' : cls.dest.lon,
+            'sub' : cls.subscribe
+        }
+        return route
+        
     def to_search(cls):
         u = cls.key.parent().get()
         route = {

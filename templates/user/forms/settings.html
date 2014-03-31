@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Account Settings{% endblock %}
-{% block heading %}<h1>Account Settings</h1>{% endblock %}
+{% block heading %}{% include "user/account/dash_head.html" %}{% endblock %}
 {% block content %}
+
 <div class="row-fluid">
   <div class="span8 offset2">
     <h3>Payment Account</h3>
@@ -9,6 +10,9 @@
     <a href='/pay/cc'><button class="button small compl">Update</button></a>
   </div>
 </div>
+
+
+
 <div class="row-fluid">
   <div class="span8 offset2">
 
@@ -21,6 +25,7 @@
 </form>
   </div>
 </div>
+
 {% if driver == True %}
 <div class="row-fluid">
   <div class="span8 offset2">
@@ -42,7 +47,6 @@
   </div>
 </div>
 {% endif %}
-
 <script>
 $(document).ready(function(){
     click_submit('#settings_btn','#settings_form');
@@ -50,6 +54,8 @@ $(document).ready(function(){
     $('#bank_btn').click(function() {
       $('#bank_stuff').slideToggle();
     });
+    $('#sett_btn').removeClass('secondary');
+    $('#sett_btn').attr('disabled', 'disabled');    
 });
 </script>
 {% endblock %}

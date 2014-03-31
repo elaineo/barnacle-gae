@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title%}{{first_name}}'s Dashboard{% endblock %}
-{% block heading %}<h1>{{first_name}}'s Dashboard</h1>{% endblock %}
+{% block heading %}{% include "user/account/dash_head.html" %}
+{% endblock %}
 {% block content %}
 <div class="row visible-phone">
   <div class="span4 offset1">
@@ -15,16 +16,6 @@
   </div>
 </div>
 {% endif %}
-<div class="row">
-  <div class="span10 offset1">
-  <button type="submit" class="button info" id="editprof_btn">Edit Profile</button>
-  <button type="submit" class="button info" id='sett_btn'>Settings</button>
-    {% if bank == True %}
-      <button type="submit" class="button info" id='earn_btn'>Earnings</button>
-    {% endif %}    
-  <button type="submit" class="button info" id='routes_btn'>Routes and Reservations</button>
-  </div>
-</div>
 <div class="row" style='height:20px'></div>
 {% include "user/profile_stub.html" %}
   <script>
