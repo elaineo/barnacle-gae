@@ -190,7 +190,7 @@ class TrackerHandler(BaseHandler):
     def __updateloc(self):
         #trackermodel
         data = json.loads(self.request.body)
-        logging.info(data)
+        #logging.info(data)
         try:
             lat = float(data['lat'])
             lon = float(data['lon'])

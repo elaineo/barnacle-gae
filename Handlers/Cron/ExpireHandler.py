@@ -24,6 +24,7 @@ class ExpireHandler(BaseHandler):
         
 
     def __incomp(self):
+        req_index = search.Index(name=REQUEST_INDEX)
         # clean out incomplete requests
         old = datetime.now() + timedelta(days=6)
         deadreqs = Request.query(Request.created<old)
@@ -31,7 +32,9 @@ class ExpireHandler(BaseHandler):
         for r in deadreqs:
             if r.stats.status < RequestStatus.index('NO_CC'):
                 deleted.append(r.to_dict())
-                r.key.delete()
+                # could be in the index if they have a valid cc
+                req_index.delete(r.key.urlsafe())
+                r.key.delete()                
         logging.info(deleted)
                         
     def __dead(self):
@@ -54,7 +57,7 @@ class ExpireHandler(BaseHandler):
         for r in deadreqs:
             r.dead = PostStatus.index('EXPIRED')
             r.put()
-            route_index.delete(r.key.urlsafe())
+            req_index.delete(r.key.urlsafe())
             # clean matches
             taskqueue.add(url='/match/cleanmatch/'+r.key.urlsafe(), method='get')
             # send expiration email
