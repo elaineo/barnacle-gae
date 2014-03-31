@@ -90,8 +90,8 @@
 
 #map-canvas img{max-width: inherit;}
 .homemap {
-  height: 400px;
-  width: 100%;  
+  min-height: 400px;
+  width: 100%;    
 }
 .routemap {
   min-height: 300px;

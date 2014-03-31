@@ -225,7 +225,21 @@ class RouteUtils:
             pathpts = pathpts + pathsegment
         return pathpts
 
-
+    @staticmethod
+    def pathSub(start,dest,routepts):
+        """ Routepts has a list of all the points along a route
+        Using start and dest, pull a subset of routepts """
+        if start.lat > dest.lat:
+            pathpts = [start]
+            d = dest
+        else:
+            pathpts = [dest]
+            d = start
+        for p in routepts:
+            if p[0] < pathpts[0].lat and p[0] > d.lat:
+                pathpts.append(ndb.GeoPt(lat=p[0],lon=p[1]))
+        pathpts.append(d)
+        return pathpts
 
 
 def map_zoom_pts(pts):

@@ -152,6 +152,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
     webapp2.Route('/blog/<post>', handler=BlogPage),
    ('/contact', ContactPage),
 # Admin
+    webapp2.Route('/test', handler=TestUtils),
     webapp2.Route('/debug/<action>', handler=DebugUtils),
     webapp2.Route('/match/<action>', handler=MatchHandler),
     webapp2.Route('/match/<action>/<key:[\w\-]{20,}>', handler=MatchHandler),

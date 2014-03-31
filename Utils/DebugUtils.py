@@ -29,7 +29,7 @@ import logging
 
 class TestUtils(BaseHandler):
     def get(self):
-        self.render('launch/receipt_req.html', **self.params)
+        self.render('post/submap.html', **self.params)
         
 class DebugUtils(BaseHandler):
     def get(self, action=None):

@@ -1,0 +1,112 @@
+<html>
+Hi this is Elaine's crappy hack for generating a hash table of route points.<br>
+Just set the origin and destination and it'll dump everything.
+<div id='dump'></div>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false&amp;libraries=places"></script>
+<script>
+$(document).ready(function(){
+     var directionsService = new google.maps.DirectionsService();
+  $('#dump').html('hi');
+    var request = {
+      origin:'97103',
+      destination:'98326',
+      provideRouteAlternatives: true,
+      travelMode: google.maps.TravelMode.DRIVING
+    };
+    directionsService.route(request, function(response, status) {
+        $('#dump').append(status);
+    if (status == google.maps.DirectionsStatus.OK) {
+      console.log(response);
+      // separate distance and route
+      var dirData = { distance: response.routes[0].legs[0].distance.value };
+      if (true) {        
+        var polyline = response.routes[0].legs[0].steps; 
+        var legs = [];
+        for (p in polyline) {
+          var segment = latlngDecode(polyline[p].lat_lngs, 2);
+          legs.push.apply(legs,segment);
+        }
+        // turn to dict
+        data = {};
+        for (l in legs) {
+          data[legs[l][0]] = parseFloat(legs[l][1]); 
+        }
+        console.log(data);
+        $('#dump').html(JSON.stringify(data));
+      }
+  
+    } });
+    
+});
+
+function latlngDecode(encoded, prec) {
+  var points=[ ];
+  for (i in encoded) {
+    //console.log(encoded[i].A);
+    lngrnd = encoded[i].A.toFixed(prec);
+    latrnd = encoded[i].k.toFixed(prec);    
+    //console.log(latrnd);
+    if (points.length < 1) 
+      points.push([latrnd,lngrnd])        
+    else if (points[points.length-1][0] != latrnd) {
+      points.push([latrnd,lngrnd]);
+      }
+  }
+  return points.filter( onlyUnique );
+}
+
+function polyDecode(encoded, prec) {
+  // array that holds the points
+
+  var points=[ ]
+  var index = 0, len = encoded.length;
+  var lat = 0, lng = 0;
+  while (index < len) {
+    var b, shift = 0, result = 0;
+    do {
+      b = encoded.charAt(index++).charCodeAt(0) - 63;  //finds ascii 
+                                                    //and substract it by 63
+      result |= (b & 0x1f) << shift;
+      shift += 5;
+    } while (b >= 0x20);
+    
+    var dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+    lat += dlat;
+    shift = 0;
+    result = 0;
+    do {
+      b = encoded.charAt(index++).charCodeAt(0) - 63;
+      result |= (b & 0x1f) << shift;
+      shift += 5;
+    } while (b >= 0x20);
+    var dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+    lng += dlng;
+ 
+    /* round to 6 digits ensures that floats are same as when encoded */
+    latrnd = lat / 1E5;
+    lngrnd = lng / 1E5;
+    if (prec >= 0) {
+      latrnd = latrnd.toFixed(prec);
+      lngrnd = lngrnd.toFixed(prec);
+    } 
+    if (points.length > 1 && points[points.length-1][0] != latrnd)
+      points.push([latrnd,lngrnd])  
+    else if (points.length < 1)
+      points.push([latrnd,lngrnd])  
+  }
+  if (prec >= 0)
+    return points.filter( onlyUnique );
+  else
+    return points;
+}
+
+function onlyUnique(value, index, self) { 
+  return self.indexOf(value) === index;
+}
+function sparse100(value, index, self) { 
+  return index % 100 === 0;
+}
+
+</script>
+</html>

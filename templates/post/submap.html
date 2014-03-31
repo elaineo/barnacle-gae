@@ -1,0 +1,23 @@
+<script src="/static/js/data/routesub.js"></script>
+<script src="/static/js/maps/mapsclientsub.js"></script>
+<div class="row-fluid">
+  <div class="span5">   
+    <div id="map-canvas" class="homemap"></div>
+  </div>
+  <div class="span7">
+    <div class="control-group">
+      <label for="start">Start:</label>
+      <input class="input input-xlarge" type="text" name="substart" id='sub0Field' value="{{substart}}" disabled>
+    </div>
+    <div class="control-group">
+      <label for="dest">End:</label>
+      <input class="input input-xlarge" type="text" name="subdest" id='sub1Field' value="{{subdest}}" disabled>
+    </div>
+    <input type='hidden' name="substart" id="substartstr" value="{{substart}}">
+    <input type='hidden' name="substartlat" id="substartlat" value="{{substartlat}}">
+    <input type='hidden' name="substartlon" id="substartlon" value="{{substartlon}}">
+    <input type='hidden' name="subdest" id="subdeststr" value="{{subdest}}">
+    <input type='hidden' name="subdestlat" id="subdestlat" value="{{subdestlat}}">
+    <input type='hidden' name="subdestlon" id="subdestlon" value="{{subdestlon}}">
+  </div>  
+</div>

@@ -4,7 +4,7 @@ from Models.User.Account import *
 from Models.Tracker.TrackerModel import *
 from Models.User.Driver import *
 
-SUBCITIES = ['SEATTLE', 'PORTLAND', 'SAN FRANCISCO', 'SAN JOSE', 'SACRAMENTO', 'LOS ANGELES', 'SAN DIEGO', 'LAS VEGAS']
+SUBROUTES = ['I5','US101']
 
 class RepeatRoute(ndb.Model):  ##Deprecated
     period = ndb.IntegerProperty() # weekly (0), or monthly (1)
@@ -21,7 +21,7 @@ class Route(Post):
     delivend = ndb.DateProperty(required=True)
     pathpts = ndb.GeoPtProperty(repeated=True)     
     stats = ndb.StructuredProperty(RouteStats)
-    subscribe = ndb.IntegerProperty()  # One of the SUBCITIES
+    subscribe = ndb.IntegerProperty()  # One of the SUBROUTES
 
     def post_url(self):
         """ url for public view of post """
@@ -106,7 +106,8 @@ class Route(Post):
         if self.stats:
             self.stats.views = self.stats.views+1
             self.put()
-            
-    def by_subscriber(self, userkey, dead=0):
+
+    @classmethod            
+    def by_subscriber(cls, userkey, dead=0):
         q = cls.query(cls.dead==dead, ancestor=userkey)
         return [qs for qs in q if qs.subscribe is not None]

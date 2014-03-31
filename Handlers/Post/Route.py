@@ -10,6 +10,7 @@ from Models.User.Driver import *
 from Utils.RouteUtils import RouteUtils
 from Utils.SearchDocUtils import create_route_doc
 from Utils.ValidUtils import *
+from Utils.data.routesub import ROUTE_I5
 
 import logging
 import json
@@ -29,6 +30,8 @@ class RouteHandler(PostHandler):
                 return
             self.params['location'] = self.user_prefs.location
             self.params['route_title'] = 'Drive a New Route'
+            self.params['substart'] = 'Seattle, WA'
+            self.params['subdest'] = 'San Diego, CA'
             self.params['route_action'] = '/route'
             self.render('post/forms/fillpost.html', **self.params)    
         if action=='json' and not key:
@@ -97,22 +100,45 @@ class RouteHandler(PostHandler):
         else:
             self.__create_route(key)
 
-    def __subscribe(self):
-        self.response.headers['Content-Type'] = "application/json"  
-        response = {'status':'ok'}
-        data = json.loads(unicode(self.request.body, errors='replace'))
-        userkey = data.get('userkey')
-        cities = data.get('city')
-        cities = [int(c) for c in cities]
-        # get all previous subscriptions
-        subs = Route.by_subscriber(self.userprefs.key)
-        subcities = [s.subscribe for s in subs]
-        newc = [c for c in cities if c not in subcities]
-        deadc = [c for c in subcities if c not in cities]
-        #create new routes for the new subs
-        #for c in newc:
-        #remove the old subs
         
+    def __subscribe(self):
+        self.response.headers['Content-Type'] = "application/json"        
+        data = json.loads(unicode(self.request.body, errors='replace'))    
+        response = {'status':'ok'}
+        start, startstr = get_search_json(data,'substart')
+        dest, deststr = get_search_json(data,'subdest')    
+        capacity = data.get('vcap')
+        capacity = parse_unit(capacity)
+        details = data.get('details')        
+        subroute = parse_unit(data.get('hidesub'))
+        # see if this user has any existing subs
+        subs = Route.by_subscriber(self.user_prefs.key)
+        if subroute in subs:
+            new_r = False
+            s = subs.filter(Route.subscribe==subroute).get()
+        else:
+            new_r = True
+            delivstart = datetime.now()
+            delivend = datetime.now()+timedelta(days=365)
+            s = Route(parent=self.user_prefs.key, stats=RouteStats(),
+                delivstart=delivstart, delivend=delivend, roundtrip=True)
+        s.locstart=startstr
+        s.locend=deststr
+        s.start=start
+        s.dest=dest
+        s.capacity=capacity
+        s.details=details
+        s.pathpts = RouteUtils.pathSub(start,dest,ROUTE_I5)
+        s.put()
+        logging.info('New Route Subscription: '+startstr+' to '+deststr)
+        taskqueue.add(url='/match/updateroute/'+s.key.urlsafe(), method='get')
+        create_route_doc(s.key.urlsafe(), s, new_r)
+        if new_r:
+            taskqueue.add(url='/notify/thanks/'+s.key.urlsafe(), method='get')
+        add_roundtrip(s, new_r)
+        response['next'] = '/account'
+        self.write(json.dumps(response))
+    
     def __create_route(self,key=None):
         self.response.headers['Content-Type'] = "application/json"        
         response = {'status':'ok'}
@@ -132,7 +158,7 @@ class RouteHandler(PostHandler):
         if enddate:
             delivend = parse_date(enddate)
         else:
-            delivend = datetime.now()+timedelta(weeks=1)
+            delivend = datetime.now()+timedelta(days=30)
 
         start, startstr = get_search_json(data,'start')
         dest, deststr = get_search_json(data,'dest')
