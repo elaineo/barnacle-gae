@@ -45,7 +45,7 @@ class Route(Post):
         
     def to_dict(cls,incl_user=False):
         route = cls.base_dict(incl_user)
-        route.update({ 'rt' : int(cls.roundtrip),
+        route.update({ 
                     'delivstart' : cls.delivstart.strftime('%m/%d/%Y'),
                     'delivend' : cls.delivend.strftime('%m/%d/%Y'),
                     'edit_url' : cls.edit_url(),
@@ -53,6 +53,10 @@ class Route(Post):
                     'post_url' : cls.post_url()
                     })
         route.update(cls.gen_repeat())
+        if cls.subscribe:
+            route['subscribe'] = True
+        else:
+            route['rt'] = int(cls.roundtrip)
         d = Driver.by_userkey(cls.key.parent())
         if d:
             route.update(d.params_fill())        

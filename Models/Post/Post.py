@@ -92,6 +92,4 @@ class Post(ndb.Model):
     @classmethod
     def by_match(cls,key, dead=0):
         return cls.query(cls.matches==key, cls.dead==dead)
-    
-    def __eq__(self, other):
-        return self.userid==other.userid and self.created==other.created        
+     

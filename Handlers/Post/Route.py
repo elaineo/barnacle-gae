@@ -121,6 +121,7 @@ class RouteHandler(PostHandler):
             delivstart = datetime.now()
             delivend = datetime.now()+timedelta(days=365)
             s = Route(parent=self.user_prefs.key, stats=RouteStats(),
+                subscribe = SUBROUTES.index('I5'), 
                 delivstart=delivstart, delivend=delivend, roundtrip=True)
         s.locstart=startstr
         s.locend=deststr

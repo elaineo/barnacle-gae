@@ -87,6 +87,8 @@ class RouteUtils:
             pathpts.append([p.lat,p.lon])
         route['waypts'] = pathpts
         route['zoom'] = zoom_max(abs(r.start.lat-r.dest.lat),abs(r.start.lon-r.dest.lon))
+        markers = [[r.start.lat,r.start.lon],[r.dest.lat,r.dest.lon]]
+        route['markers'] = markers
         return json.dumps(route)
 
     @staticmethod
@@ -182,7 +184,7 @@ class RouteUtils:
             markers.append(m)
         route['markers'] = markers
         return route
-        
+
     @staticmethod
     def priceEst(req, distance):
         # Estimate an offer price for a given request
@@ -197,7 +199,7 @@ class RouteUtils:
         price = 50 + seats + int(gas) + seed
         #TODO: take dist from fwy into account
         return price, seed
-        
+
     @staticmethod
     def pathEst(start, dest, steps=None, dist=0, fudge=100):
         """ Precision of path determined by total dist.
@@ -229,14 +231,14 @@ class RouteUtils:
     def pathSub(start,dest,routepts):
         """ Routepts has a list of all the points along a route
         Using start and dest, pull a subset of routepts """
-        if start.lat > dest.lat:
+        if start.lat < dest.lat:
             pathpts = [start]
             d = dest
         else:
             pathpts = [dest]
             d = start
         for p in routepts:
-            if p[0] < pathpts[0].lat and p[0] > d.lat:
+            if p[0] > pathpts[0].lat and p[0] < d.lat:
                 pathpts.append(ndb.GeoPt(lat=p[0],lon=p[1]))
         pathpts.append(d)
         return pathpts
@@ -341,4 +343,4 @@ def getPath(start,dest):
         lon = s['end_location']['lng']
         pathsegment.append(ndb.GeoPt(lat=lat,lon=lon))
         pathpts = pathpts + pathsegment
-    return pathpts, distance        
+    return pathpts, distance
