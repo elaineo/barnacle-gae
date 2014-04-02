@@ -88,9 +88,10 @@ class CheckoutHandler(BaseHandler):
             self.abort(400)    
         email = self.request.get('email')
         tel = self.request.get('tel')
+        name = self.request.get('name')
         uri = self.request.get('balancedCreditCardURI')        
         
-        customer = self.__create_anon(email,tel)
+        customer = self.__create_anon(email,tel,name)
         customer.add_card(uri)        
         charge = res.rates*100
         if charge > 0:    
@@ -247,10 +248,10 @@ class CheckoutHandler(BaseHandler):
             customer = balanced.Customer.find('/v1/customers/' + self.user_prefs.cust_id)
         return customer
         
-    def __create_anon(self,email=None,tel=None):
+    def __create_anon(self,email=None,tel=None, name=None):
         #create anonymous customer
         balanced.configure(baccount)
-        customer = balanced.Customer(email=email, phone=tel).save()
+        customer = balanced.Customer(email=email, phone=tel, name=name).save()
         return customer        
         
     def __test(self):

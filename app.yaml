@@ -29,6 +29,7 @@ handlers:
   
 - url: /.*
   script: main.app
+  secure: always
   
 - url: /_ah/mail/.+
   script: Utils.EmailUtils.app

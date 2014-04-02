@@ -94,7 +94,7 @@ class SignupPage(BaseHandler):
             geocity = geo.get('city') #hehehe
         else:
             geocity = ''   
-        # I guess we can assume there won't be an error for now
+
         if not fbid:
             response = { 'status': 'fail'}
         else:
@@ -116,7 +116,7 @@ class SignupPage(BaseHandler):
                 self.current_user_key = up.key
                 response = { 'status': 'new'}
                 logging.info('New account')
-                self.send_user_info(email)
+                self.send_user_info(email) ##this should go to taskq
             else:
                 response = { 'status': 'existing'}
                 logging.info('Existing account login from ' + (geocity if geocity else ''))
@@ -136,6 +136,27 @@ class SignupPage(BaseHandler):
             self.login(fbid, 'fb')
             self.set_current_user()
             self.fill_header()
+            
+            # check user agent to see if it's an app login
+            # agent = self.request.headers['User-Agent']        
+            # driver = 0
+            # try:
+                # if agent:
+                    # if (agent[:6].lower() == AGENT_IOS[:6].lower()):
+                        # driver = 1
+                    # elif (agent[:6].lower() == AGENT_ANDROID[:6].lower()):
+                        # driver = 2
+                    # else:
+                        # logging.info(agent)
+            # except:
+                # logging.error(agent)            
+            # if driver > 0:
+                # d = Driver.by_userkey(up.key)
+                # if not d:
+                    # d = Driver(parent=self.user_prefs.key)
+                # if not d.app_client:
+                # d.app_client = driver    
+                # d.put()
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))
 

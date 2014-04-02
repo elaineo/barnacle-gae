@@ -7,6 +7,7 @@ from Models.Post.Review import Review
 class Driver(ndb.Model):
     ins = ndb.BooleanProperty(default=False)
     bank = ndb.BooleanProperty(default=False)
+    app_client = ndb.IntegerProperty()
     bank_acctnum = ndb.StringProperty()
     bank_name = ndb.StringProperty()
     bank_uri = ndb.StringProperty()

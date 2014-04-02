@@ -164,6 +164,25 @@ class CouponPage(BaseHandler):
             self.params['reskey'] = r.key.urlsafe()
             self.params['checkout_action'] = '/checkout/res/' + r.key.urlsafe()
             self.render('launch/fillcheckout_abbrev.html', **self.params)
+            
+        elif action=='peers':
+            rates = self.request.get('estdup')
+            rates = int(rates)
+            code = self.request.get('code')
+            startstr = 'SF Bay Area'
+            start = ndb.GeoPt(37.4,-122)
+            dest, deststr = self.__get_map_form('start')
+            reqdate = self.request.get('reqdate')
+            if reqdate:
+                delivby = parse_date(reqdate)
+            else:
+                delivby = datetime(2014,05,15)
+            r = Reservation(start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest, delivby=delivby, details=code)
+            r.put()
+            self.params.update(r.to_dict())
+            self.params['reskey'] = r.key.urlsafe()
+            self.params['checkout_action'] = '/checkout/res/' + r.key.urlsafe()
+            self.render('launch/fillcheckout_abbrev.html', **self.params)            
     def __get_map_form(self,pt):
         ptlat = self.request.get(pt+'lat')
         ptlon = self.request.get(pt+'lon')
@@ -183,6 +202,7 @@ class EventPage(BaseHandler):
         if action=='gen':
             self.render('landing/sxswgen.html', **self.params)          
         else: 
+            ### ELAINE TO DO: Set up a better freaking way of doing this
             c = SXSWCode.by_code(action.upper())
             if not c:
                 self.redirect('/')
@@ -195,10 +215,11 @@ class EventPage(BaseHandler):
             self.set_secure_cookie('code', action.upper())
             referer = self.request.referer
             self.set_secure_cookie('referral', referer)
-            self.params['seodir'] = 'event'
+            #self.params['seodir'] = 'event'
+            self.params['seodir'] = 'peers'
             self.params['seosub'] = 'shipments'
             self.params['items'] = 'stuff'
-            self.render('landing/event_ba.html', **self.params)     
+            self.render('landing/event_peers.html', **self.params)     
 
     def post(self, action=None):
         if action=='gen':

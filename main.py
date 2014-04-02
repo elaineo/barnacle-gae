@@ -67,7 +67,8 @@ app = webapp2.WSGIApplication([('/', HomePage),
                                 ('/springbreak', SpringBreak),
 # LAUNCH!
 # requests
-    webapp2.Route('/res', handler=RequestHandler),
+    webapp2.Route('/res', handler=RequestHandler),  #get rid of this
+    webapp2.Route('/res/<action>/<key>', handler=ReserveHandler),
    webapp2.Route('/apply', handler=ApplyHandler),
    webapp2.Route('/apply/<action>', handler=ApplyHandler),
    webapp2.Route('/checkout/<key:[\w\-]{20,}>', handler=CheckoutHandler),

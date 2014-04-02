@@ -13,6 +13,10 @@ EM_RE = re.compile(r"^[\S]+@[\S]+\.[\S]+$")
 # hashing
 SECRET = 'poop'      
 
+#User Agents
+AGENT_IOS = str('Barnacle/1.0 CFNetwork/')
+AGENT_ANDROID = str('android-async-http')
+
 # validation
 def valid_username(username):
     return USER_RE.match(username)
