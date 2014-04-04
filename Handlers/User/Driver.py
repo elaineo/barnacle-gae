@@ -21,6 +21,7 @@ class DriverHandler(BaseHandler):
         """ User profile information page """
         self.params['createorupdate'] = 'Ready to Drive'
         d = Driver.by_userkey(self.user_prefs.key)
+        self.params['driver'] = True
         if d: #existing driver
             self.redirect('/route')
             return

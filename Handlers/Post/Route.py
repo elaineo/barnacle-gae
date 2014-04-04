@@ -91,6 +91,8 @@ class RouteHandler(PostHandler):
             logging.error(p)
             self.abort(403)
             return
+        else:
+            self.redirect('/#signin-box')
 
 
     def post(self, action=None,key=None):

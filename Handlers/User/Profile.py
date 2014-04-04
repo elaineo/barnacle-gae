@@ -19,8 +19,6 @@ class ProfileHandler(BaseHandler):
         elif action=='drivestart':
             self.render('user/drivestart.html',**self.params)
             return
-        elif action=='drive':
-            self.__index()
         else:
             self.__public(key)
           
@@ -37,6 +35,8 @@ class ProfileHandler(BaseHandler):
             if d:
                 self.params.update(d.params_fill())            
             self.params['createorupdate'] = 'Update Profile'
+        if drive:
+            self.params['driver'] = True
         self.render('user/forms/fillprofile.html', **self.params)
     
     def __public(self,key):
@@ -77,6 +77,7 @@ class ProfileHandler(BaseHandler):
     def __driverprofile(self):
         notify = self.request.get_all('notify')
         email = self.request.get('email')
+        makemodel = self.request.get('make_model')
         self.user_prefs = self.__profile()
         if not notify:
             self.user_prefs.settings = UserSettings(notify = [])        
@@ -87,7 +88,7 @@ class ProfileHandler(BaseHandler):
         self.user_prefs.put()
         d = Driver.by_userkey(self.user_prefs.key)
         if not d:
-            d = Driver(parent=self.user_prefs.key)
+            d = Driver(parent=self.user_prefs.key, makemodel=makemodel)
             d.put()
             #new driver, send email
             logging.info('New driver :' + email)

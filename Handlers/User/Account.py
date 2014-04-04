@@ -1,5 +1,6 @@
 from Handlers.BaseHandler import *
 from Models.User.Account import *
+from Models.User.Driver import *
 from Utils.UserUtils import *
 from Utils.data.Defs import CITY_DB_PATH, CITYV6_DB_PATH
 from Utils.Email.User import *
