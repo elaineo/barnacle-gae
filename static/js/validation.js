@@ -107,7 +107,7 @@ function click_ajax(btn_id, fields,inputs,vtest,form,clickver,steps) {
         }
         dirData.legs = legs;        
         var tempdist = dirData.distance/1609 * 100;
-        dirData.precision = Math.round(6-2*Math.log(tempdist)/Math.log(100))
+        dirData.precision = Math.round(5-2*Math.log(tempdist)/Math.log(100))
         /* this is a lot of data to upload */
         console.log(dirData.legs);
       }

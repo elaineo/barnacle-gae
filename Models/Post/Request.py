@@ -96,7 +96,7 @@ class Request(Post):
     @classmethod
     def search_route(cls, path, delivstart, delivend, precision):
         results = []
-        qall = cls.query(cls.delivby >= delivstart, cls.dead==0)
+        qall = cls.query(cls.delivby >= delivstart, cls.dead==0)        
         for q in qall:                    
             # Make sure it's not garbage
             if q.stats.status > RequestStatus.index('IGNORE'):
