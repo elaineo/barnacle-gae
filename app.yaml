@@ -27,9 +27,21 @@ handlers:
   static_files: static/robots.txt  
   upload: static/robots\.txt  
   
-- url: /.*
+- url: /pay/.*
   script: main.app
   secure: always
+  
+- url: /checkout/.*
+  script: main.app
+  secure: always  
+
+- url: /res/.*
+  script: main.app
+  secure: always  
+
+- url: /.*
+  script: main.app
+
   
 - url: /_ah/mail/.+
   script: Utils.EmailUtils.app

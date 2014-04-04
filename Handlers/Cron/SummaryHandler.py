@@ -92,8 +92,7 @@ class SummaryHandler(BaseHandler):
             body = self.generate_report()
             timestamp = datetime.now().strftime('%Y/%m/%d')
             subject = 'Daily Summary for %s' % timestamp
-            self.email_report('warren.mar@gmail.com', subject, body)
-            self.email_report('help@gobarnacle.com', subject, body)
+            self.email_report('biz@gobarnacle.com', subject, body)
         elif action=='selfnote' and key:
             r = ndb.Key(urlsafe=key).get()
             if r.details:
