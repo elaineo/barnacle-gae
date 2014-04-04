@@ -138,25 +138,25 @@ class SignupPage(BaseHandler):
             self.fill_header()
             
             # check user agent to see if it's an app login
-            # agent = self.request.headers['User-Agent']        
-            # driver = 0
-            # try:
-                # if agent:
-                    # if (agent[:6].lower() == AGENT_IOS[:6].lower()):
-                        # driver = 1
-                    # elif (agent[:6].lower() == AGENT_ANDROID[:6].lower()):
-                        # driver = 2
-                    # else:
-                        # logging.info(agent)
-            # except:
-                # logging.error(agent)            
-            # if driver > 0:
-                # d = Driver.by_userkey(up.key)
-                # if not d:
-                    # d = Driver(parent=self.user_prefs.key)
-                # if not d.app_client:
-                # d.app_client = driver    
-                # d.put()
+            agent = self.request.headers['User-Agent']        
+            driver = 0
+            try:
+                if agent:
+                    if (agent[:6].lower() == AGENT_IOS[:6].lower()):
+                        driver = 1
+                    elif (agent[:6].lower() == AGENT_ANDROID[:6].lower()):
+                        driver = 2
+                    else:
+                        logging.info(agent)
+            except:
+                logging.error(agent)            
+            if driver > 0:
+                d = Driver.by_userkey(up.key)
+                if not d:
+                    d = Driver(parent=self.user_prefs.key)
+                if not d.app_client:
+                    d.app_client = driver    
+                    d.put()
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))
 
