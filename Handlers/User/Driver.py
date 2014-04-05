@@ -39,8 +39,20 @@ class DriverHandler(BaseHandler):
             self.__updateimg()
             
     def __updateimg(self):
-        data = json.loads(unicode(self.request.body, errors='replace'))
-        logging.info(data)
+        img = self.request.get("file")
+        if img: 
+            d = Driver.by_userkey(self.user_prefs.key)
+            if d.img_id: # existing image
+                imgstore = ImageStore.get_by_id(d.img_id)
+                imgstore.update(img)
+            else: # new image
+                imgstore = ImageStore.new(img)
+            imgstore.put()
+            d.img_id = imgstore.key.id()
+            d.put()
+        self.response.headers['Content-Type'] = "application/json"
+        response = {'status':'ok', 'img_url': d.vehicle_image_url()}
+        self.write(json.dumps(response))
             
     def __profile(self):
         user_prefs = self.user_prefs

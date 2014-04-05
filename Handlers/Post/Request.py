@@ -158,9 +158,7 @@ class RequestHandler(PostHandler):
             self.params['today'] = datetime.now().strftime('%Y-%m-%d')
             self.render('post/forms/fillrequest.html', **self.params)
 
-    def __init_request(self,key=None):
-        self.response.headers['Content-Type'] = "application/json"
-        response = {'status':'ok'}
+    def __init_request(self,key=None):        
         data = json.loads(unicode(self.request.body, errors='replace'))
         capacity = data.get('vcap')
         capacity = parse_unit(capacity)

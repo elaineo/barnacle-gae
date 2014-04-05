@@ -3,15 +3,16 @@
   <div class="span10 offset1">
     <div class="row-fluid">
       <div class="span8" >
-        <p><img src='/static/img/placeholder_car.jpg' style='max-width:300px'></p>
+        <p><img src='{{vehicle_img}}' id='vehicle_img' style='max-width:300px'></p>
       </div><div class="span4" >
         <form enctype="multipart/form-data" id='photo_car'>
           <span class="span6 fileUpload button small">
-          <span>Upload</span><input name="file" type="file" class="upload" /></span>
+          <span>Upload</span><input type="file" class="upload" accept="image/png,image/jpeg,image/gif" id="images" name="file"></span>
           <span class="span5">
-          <input type="button" class="button small info" value="Save" id='save_btn'>
+          <input type="button" class="button small info" value="Save" id='save_btn' disabled>
           </span>
         </form>
+        <div id="img-prev"></div>
       </div>
     </div>
     <div class="row-fluid">
@@ -33,32 +34,45 @@
   </div>
 </div>  
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script type="text/javascript" src="/static/js/save_image.js"></script>
 <script type="text/javascript" src="/static/js/maps/mapoverlay.js"></script>
 <script>    
 $(document).ready(function(){
     //fill in some info
     var mapURL = '/route/subs';
-    //initialize_map(mapURL);
-    $('#save_btn').click(function(){
-      console.log('save btn');
+    initialize_map(mapURL);
+    $('#save_btn').click(function(event){
+      event.preventDefault();
+      $('#save_btn').attr('disabled', 'disabled');
+      $('#save_btn').addClass('wait');
       var formData = new FormData($('form#photo_car')[0]);
       $.ajax({
         url: '/drive/photo',  //Server script to process data
         type: 'POST',
-        xhr: function() {  // Custom XMLHttpRequest
-            var myXhr = $.ajaxSettings.xhr();
-            if(myXhr.upload){ // Check if upload property exists
-                myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
-            }
-            return myXhr;
-        },
         // Form data
         data: formData,
         //Options to tell jQuery not to process data or worry about content-type.
         cache: false,
         contentType: false,
-        processData: false
+        processData: false,
+        success: function(response) {
+            $('#save_btn').attr('disabled','disabled');
+            $('#save_btn').addClass('wait');  
+            // refresh img
+            $("#vehicle_img").attr("src", response.img_url);
+            $('#img-prev').html('');
+        },
+        failure: function(response) {
+            console.log(response);
+            $('#save_btn').removeAttr('disabled');
+            $('#save_btn').removeClass('wait');  
+        }
       });
+    });
+	var input = document.getElementById("images"), 
+		formdata = false;    
+    input.addEventListener("change", function (e) {
+      $('#save_btn').removeAttr('disabled');
     });    
 });
 

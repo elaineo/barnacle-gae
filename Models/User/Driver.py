@@ -2,7 +2,7 @@ from google.appengine.ext import ndb
 import logging
 import json
 from Utils.data.Defs import ins_str, ins_str_email, bank_str
-from Models.Post.Review import Review
+from Models.ImageModel import *
 
 class Driver(ndb.Model):
     ins = ndb.BooleanProperty(default=False)
@@ -33,6 +33,7 @@ class Driver(ndb.Model):
         params['bank'] = self.bank
         params['ins'] = self.ins
         params['driver'] = True
+        params['vehicle_img'] = self.vehicle_image_url()
         if self.ins:
             params['insured'] = ins_str
             params['ins_email'] = ins_str_email
