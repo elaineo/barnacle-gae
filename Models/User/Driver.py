@@ -3,6 +3,7 @@ import logging
 import json
 from Utils.data.Defs import ins_str, ins_str_email, bank_str
 from Models.ImageModel import *
+from Models.Post.Route import *
 
 class Driver(ndb.Model):
     ins = ndb.BooleanProperty(default=False)
@@ -15,7 +16,7 @@ class Driver(ndb.Model):
     fb = ndb.JsonProperty()
     fbnetworks = ndb.StringProperty(repeated=True)   
     creation_date = ndb.DateTimeProperty(auto_now_add=True)    
-    img_id = ndb.IntegerProperty()   
+    img_id = ndb.IntegerProperty()      
 
     def vehicle_image_url(self, mode = None):
         """ Retrieve link to profile thumbnail or default """

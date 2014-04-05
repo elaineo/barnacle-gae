@@ -1,6 +1,7 @@
 from Handlers.BaseHandler import *
 from Models.User.Account import *
 from Models.User.Driver import *
+from Models.Post.Route import *
 import logging
 
         
@@ -15,6 +16,8 @@ class AccountPage(BaseHandler):
         d = Driver.by_userkey(self.user_prefs.key)
         if d:
             self.params.update(d.params_fill())
+            routes = Route.by_subscriber(self.user_prefs.key)
+            self.params['subscribed'] = (len(routes) > 0)
             self.render('user/account/driver.html',**self.params)
         else:
             self.params.update(self.user_prefs.params_fill())        

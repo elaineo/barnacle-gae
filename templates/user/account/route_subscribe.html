@@ -25,7 +25,11 @@
     <div class="row-fluid support" style='border: 1px solid #333'>
       <div class="span12">
        <h4>Subscribed Routes</h4>
+       {% if subscribed %}
        <p>You will be alerted when there are requests along your subscribed routes.</p>
+       {% else %}
+       <p>You are not subscribed to any routes. <a href='/route'>Subscribe now</a>.</p>
+       {% endif %}
       </div>
       <div class="span8 offset2">     
         <div id="map-canvas" class="homemap"></div>

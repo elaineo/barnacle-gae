@@ -61,7 +61,10 @@ class RouteHandler(PostHandler):
         elif action=='subs':
             if self.user_prefs:
                 routes = Route.by_subscriber(self.user_prefs.key)
-                rdump = RouteUtils.dumpall(routes)
+                if routes:
+                    rdump = RouteUtils.dumpall(routes)
+                else:
+                    rdump = {}
                 rdump['center'] = [40, -122]
                 rdump['zoom'] = 4
                 self.response.headers['Content-Type'] = "application/json"
