@@ -35,8 +35,6 @@ class ProfileHandler(BaseHandler):
             if d:
                 self.params.update(d.params_fill())            
             self.params['createorupdate'] = 'Update Profile'
-        if drive:
-            self.params['driver'] = True
         self.render('user/forms/fillprofile.html', **self.params)
     
     def __public(self,key):

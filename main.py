@@ -113,6 +113,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/pay/<action>', handler=Payments),
 # profile
     webapp2.Route('/drive', handler=DriverHandler),
+    webapp2.Route('/drive/<action>', handler=DriverHandler),
     webapp2.Route('/profile/<key:[\w\-]{20,}>', handler=ProfileHandler),
     webapp2.Route('/profile/<action>', handler=ProfileHandler),
     webapp2.Route('/profile', handler=ProfileHandler),

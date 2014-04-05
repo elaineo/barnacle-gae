@@ -15,6 +15,18 @@ class Driver(ndb.Model):
     fb = ndb.JsonProperty()
     fbnetworks = ndb.StringProperty(repeated=True)   
     creation_date = ndb.DateTimeProperty(auto_now_add=True)    
+    img_id = ndb.IntegerProperty()   
+
+    def vehicle_image_url(self, mode = None):
+        """ Retrieve link to profile thumbnail or default """
+        if self.img_id:
+            profile_image = ImageStore.get_by_id(self.img_id)
+            if profile_image:
+                buf = '/img/' + str(self.img_id) + '?key=' + profile_image.fakehash
+                if mode:
+                    buf += '&mode=' + mode
+                return buf
+        return '/static/img/placeholder_car.jpg'    
     
     def params_fill(self):
         params = {}

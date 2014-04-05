@@ -140,6 +140,8 @@ function click_submit(btn_id,form) {
       event.preventDefault();
       loggedIn = checkLoginStatus();
       if (loggedIn) {
+        $(btn_id).attr('disabled', 'disabled');
+        $(btn_id).addClass('wait');
         $(form).validate();
         $(form).submit();
       } else {
