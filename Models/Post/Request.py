@@ -57,6 +57,7 @@ class Request(Post):
         route['edit_url'] = self.edit_url()
         route['delete_url'] = self.delete_url()
         route['post_url'] = self.post_url()
+        route['stats'] = self.stats.status
         if self.stats.status > RequestStatus.index('NO_CC'):
             route['valid'] = True
         else:
