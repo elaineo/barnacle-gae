@@ -17,8 +17,17 @@ $(document).ready(function(){
  	input.addEventListener("change", function (evt) {
  		var i = 0, len = this.files.length, img, reader, file;
 	
+     
+
+     
 		for ( ; i < len; i++ ) {
 			file = this.files[i];
+            var iSize = (file.size / 1024); 
+             if (iSize > 2.48) 
+            { 
+              display_modal_msg('Please upload a smaller file.');
+              return
+            }    
 	
 			if (!!file.type.match(/image.*/)) {
 				if ( window.FileReader ) {

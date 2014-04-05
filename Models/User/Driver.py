@@ -34,6 +34,8 @@ class Driver(ndb.Model):
         params['ins'] = self.ins
         params['driver'] = True
         params['vehicle_img'] = self.vehicle_image_url()
+        if self.img_id:
+            params['vehicle_img_ok'] = True
         if self.ins:
             params['insured'] = ins_str
             params['ins_email'] = ins_str_email
