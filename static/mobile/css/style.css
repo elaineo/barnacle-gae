@@ -29,23 +29,23 @@ body a:visited  {
 	outline: 0;
 }
 .accent-color, .owl-theme .owl-controls .owl-page span, .ui-btn-active {
-	background: #ff6446!important;
+	background: #2699ae!important;
 }
 .ui-page-theme-a .ui-btn.ui-btn-active, html .ui-bar-a .ui-btn.ui-btn-active, html .ui-body-a .ui-btn.ui-btn-active, html body .ui-group-theme-a .ui-btn.ui-btn-active, html head+body .ui-btn.ui-btn-a.ui-btn-active, .ui-page-theme-a .ui-checkbox-on:after, html .ui-bar-a .ui-checkbox-on:after, html .ui-body-a .ui-checkbox-on:after, html body .ui-group-theme-a .ui-checkbox-on:after, .ui-btn.ui-checkbox-on.ui-btn-a:after, .ui-page-theme-a .ui-flipswitch-active, html .ui-bar-a .ui-flipswitch-active, html .ui-body-a .ui-flipswitch-active, html body .ui-group-theme-a .ui-flipswitch-active, html body .ui-flipswitch.ui-bar-a.ui-flipswitch-active, .ui-page-theme-a .ui-slider-track .ui-btn-active, html .ui-bar-a .ui-slider-track .ui-btn-active, html .ui-body-a .ui-slider-track .ui-btn-active, html body .ui-group-theme-a .ui-slider-track .ui-btn-active, html body div.ui-slider-track.ui-body-a .ui-btn-active {
-	background-color: #ff6446!important;
+	background-color: #2699ae!important;
 }
 .ui-page-theme-a .ui-radio-on:after, html .ui-bar-a .ui-radio-on:after, html .ui-body-a .ui-radio-on:after, html body .ui-group-theme-a .ui-radio-on:after, .ui-btn.ui-radio-on.ui-btn-a:after {
-	border-color: #ff6446;
+	border-color: #2699ae;
 }
 .svg-accent {
-	fill: #ff6446!important;
+	fill: #2699ae!important;
 }
 .ui-btn-active {
-	box-shadow: inset 0px 0px 3px #ff6446, 0px 0px 9px #ff6446!important;
+	box-shadow: inset 0px 0px 3px #2699ae, 0px 0px 9px #2699ae!important;
 	border: none!important;
 }
 .ui-focus, .ui-btn:focus { 
-	box-shadow: inset 0px 0px 3px #ff6446, 0px 0px 9px #ff6446!important;
+	box-shadow: inset 0px 0px 3px #2699ae, 0px 0px 9px #2699ae!important;
 }
 /* PANELS */
 .ui-li-static.ui-collapsible > .ui-collapsible-heading {
