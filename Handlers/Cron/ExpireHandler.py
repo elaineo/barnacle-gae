@@ -27,6 +27,7 @@ class ExpireHandler(BaseHandler):
         req_index = search.Index(name=REQUEST_INDEX)
         # clean out incomplete requests
         old = datetime.now() - timedelta(days=6)
+        logging.info(old)
         deadreqs = Request.query(Request.created<old)
         deleted = []
         for r in deadreqs:

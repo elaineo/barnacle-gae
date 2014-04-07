@@ -97,8 +97,6 @@
 		  rel="apple-touch-startup-image">
 	<link rel="stylesheet" href="/static/css/jquery.mobile-1.4.2.min.css" />
 	<link rel="stylesheet" href="/static/mobile/css/style.css" />
-	<link rel="stylesheet" href="/static/mobile/css/owl.carousel.css">
-	<link rel="stylesheet" href="/static/mobile/css/owl.theme.css">
 	<link rel="stylesheet" href="/static/mobile/css/photoswipe.css">
 	<link rel="stylesheet" href="/static/mobile/css/add2home.css">
     <link rel="stylesheet" href="/static/landing/styles/font-awesome.min.css">
@@ -107,21 +105,19 @@
 	<script type="text/javascript" src="/static/js/jquery.mobile-1.4.2.min.js"></script>
 	<script type="text/javascript" src="/static/mobile/js/jstorage.js"></script>
 	<script type="text/javascript" src="/static/mobile/js/retina-1.1.0.js"></script>
-	<script type="text/javascript" src="/static/mobile/js/owl.carousel.min.js"></script>
 	<script type="text/javascript" src="/static/mobile/js/code.photoswipe.jquery-3.0.5.min.js"></script>
 	<script type="text/javascript" src="/static/js/jquery.validate.min.js"></script>
 	<script src="/static/mobile/js/custom.js"></script>
-	<script type="application/javascript" src="/static/mobile/js/add2home.js"></script>
 </head>
 <body>
  <div data-role="page" id="home">
 	<div data-role="panel" data-position="left" data-theme="b" data-display="push" id="left_panel">
 		<ul data-role="listview" data-inset="false" data-theme="b">
 			<li><div style="text-align: center;"><img src="/static/mobile/img/logo.png" alt="Logo"></div></li>
-			<li><a data-transition="slide" href="index.html"><i class="icon-home"></i> &nbsp; Home</a></li>
-            <li><a data-transition="slide" href="index.html"><i class="icon-credit-card"></i> &nbsp; Payment</a></li>
-            <li><a data-transition="slide" href="index.html"><i class="icon-user"></i> &nbsp; Profile</a></li>
-			<li><a data-transition="slide" href="about.html"><i class="icon-question"></i> &nbsp; Support</a></li>
+			<li><a data-transition="slide" href="home.html"><i class="icon-home"></i> &nbsp; Home</a></li>
+            <li><a data-transition="slide" href="payment.html"><i class="icon-credit-card"></i> &nbsp; Payment</a></li>
+            <li><a data-transition="slide" href="profile.html"><i class="icon-user"></i> &nbsp; Profile</a></li>
+			<li><a data-transition="slide" href="support.html"><i class="icon-question"></i> &nbsp; Support</a></li>
             <li><a data-transition="slide" href="about.html"><i class="icon-info"></i> &nbsp; About</a></li>
 		</ul>
 		<div style="position: relative; top: 15px;">
@@ -177,82 +173,10 @@
 			<div style="clear: both"></div>
 		</div>
 	</div><!-- /header -->
-	<div id="homepage_content" data-role="content">
-		<div id="news_slider" class="owl-carousel owl-active homepage-slider">
-				<div class="item">
-					<a href="blog-single-4.html">
-						<img src="/static/mobile/img/content-images/1.jpg" alt="News 1">
-					</a>
-				</div>
-				<div class="item">
-					<a href="recipes.html">
-						<img src="/static/mobile/img/content-images/2.jpg" alt="News 2">
-					</a>
-				</div>
-				<div class="item">
-					<a href="blog-single-5.html">
-						<img src="/static/mobile/img/content-images/3.jpg" alt="News 3">
-					</a>
-				</div>
-				<div class="item">
-					<a href="blog-single-4.html">
-						<img src="/static/mobile/img/content-images/1.jpg" alt="News 1">
-					</a>
-				</div>
-				<div class="item">
-					<a href="recipes.html">
-						<img src="/static/mobile/img/content-images/2.jpg" alt="News 2">
-					</a>
-				</div>
-				<div class="item">
-					<a href="blog-single-5.html">
-						<img src="/static/mobile/img/content-images/3.jpg" alt="News 3">
-					</a>
-				</div>
-		</div>
-		<hr style="background: #bebebe;">
-		<div class="container">
-			<h3>SHIP OUTSIDE THE BOX</h3>
-			<p>	Barnacle is a community. Our drivers will work with you to arrange a delivery schedule and provide special care for your transportation needs. Give your most treasured possessions their own private seats in passenger vehicles!</p>
-			<div class="advertisement-468-60">
-				<img src="/static/mobile/img/adv-468-60.jpg" alt="Advertisement">
-			</div>
-			<div class="feature_wrap">
-				<hr style="background: #bebebe; margin: 15px 0px;">
-				<div class="feature accent-color">
-					<img src="/static/mobile/img/feature-1.png" alt="Feature 1">
-				</div>
-				<div class="feature_description">
-					<h3>SHIP WITH BARNACLE</h3>
-					<p>You don't have to worry about crating or packaging your shipments.</p>
-				</div>
-				<hr style="background: #bebebe; margin: 15px 0px;">
-			</div>
-			<div class="feature_wrap">
-				<div class="feature accent-color">
-					<img src="/static/mobile/img/feature-2.png" alt="Feature 1">
-				</div>
-				<div class="feature_description">
-					<h3>JOIN OUR GROWING NETWORK</h3>
-					<p>We have over 5000 drivers with routes between most major cities. It's fun to be a Barnacle driver!</p>
-				</div>
-				<hr style="background: #bebebe; margin: 15px 0px;">
-			</div>
-			<div class="feature_wrap">
-				<div class="feature accent-color">
-					<img src="/static/mobile/img/feature-3.png" alt="Feature 1">
-				</div>
-				<div class="feature_description">
-					<h3>REAL-TIME TRACKING</h3>
-					<p>We provide real-time tracking and look out for our drivers to help them provide you with the best possible service.</p>
-				</div>
-				<hr style="background: #bebebe; margin: 15px 0px;">
-			</div>
-		</div>
-				<div>
-					<h6 class="footer-text">Copyright 2014 Barnacle. All rights reserved</h6>
-				</div>
-			</div><!-- /content -->
-		</div><!-- /page -->
-	</body>
+    <!-- content -->
+    
+      <div id='mainContent'></div>
+
+    </div><!-- /page -->
+  </body>
 </html>

@@ -83,57 +83,8 @@ jQuery(document).ready(function () {
 			autoPlay: 3000
 		});
 		// Touch Slider END
-		
-		// Validation START
-		jQuery("#admin_page form").validate({
-			rules: {
-				storage_ttl: {
-					minlength: 0
-				}
-			}
-		});
-		// Validation END
-		
-		// Video START
-		jQuery( 'body' ).on('popupbeforeposition', '.ui-page-active .video-popup', function(){
-			var size = scale( 640, 480, 15, 1 ),
-				w = size.width,
-				h = size.height;
-			jQuery(this).find('iframe').attr( "width", w ).attr( "height", h );
-		});
-		jQuery( 'body' ).on('popupafterclose', '.ui-page-active .video-popup', function(){
-			var videoSrc = jQuery(this).find('iframe').attr('src');
-			jQuery(this).find('iframe').attr('src', videoSrc);
-		});
-		jQuery('.ui-content').on('click', '.alert', function(){
-			jQuery(this).fadeOut();
-		});
-		function scale( width, height, padding, border ) {
-			var scrWidth = jQuery( window ).width() - 30,
-				scrHeight = jQuery( window ).height() - 30,
-				ifrPadding = 2 * padding,
-				ifrBorder = 2 * border,
-				ifrWidth = width + ifrPadding + ifrBorder,
-				ifrHeight = height + ifrPadding + ifrBorder,
-				h, w;
 
-			if ( ifrWidth < scrWidth && ifrHeight < scrHeight ) {
-				w = ifrWidth;
-				h = ifrHeight;
-			} else if ( ( ifrWidth / scrWidth ) > ( ifrHeight / scrHeight ) ) {
-				w = scrWidth;
-				h = ( scrWidth / ifrWidth ) * ifrHeight;
-			} else {
-				h = scrHeight;
-				w = ( scrHeight / ifrHeight ) * ifrWidth;
-			}
-
-			return {
-				'width': w - ( ifrPadding + ifrBorder ),
-				'height': h - ( ifrPadding + ifrBorder )
-			};
-		};
-		// Video END
+	
 		
 		// Touch Gallery START
 		if ( jQuery('.gallery').hasClass('gallery-active') ) {
@@ -150,27 +101,8 @@ jQuery(document).ready(function () {
 			jQuery('.ui-content').on('click', '.alert', function(){
 				jQuery(this).fadeOut();
 			});
-			// Validation START
-			jQuery("#admin_page form").validate({
-				rules: {
-					storage_ttl: {
-						minlength: 0
-					}
-				}
-			});
-			// Validation END
+
 			
-			// Share Counter START
-			var current_url = document.location.href;
-			jQuery(".ui-page-active .facebook_share_link").attr('href', 'http://www.facebook.com/sharer/sharer.php?u='+current_url+'');
-			jQuery(".ui-page-active .twitter_share_link").attr('href', 'http://twitter.com/intent/tweet?text=Check out&url='+current_url+'');
-			jQuery(".ui-page-active .google_share_link").attr('href', 'https://plus.google.com/share?url='+current_url+'');
-			jQuery.sharedCount(location.href, function(data){
-				jQuery(".ui-page-active .twitter_number").text(data.Twitter);
-				jQuery(".ui-page-active .facebook_number").text(data.Facebook.like_count);
-				jQuery(".ui-page-active .google_number").text(data.GooglePlusOne);
-			});
-			// Share Counter END
 			
 			// New Items Counter START
 			headerCount = 0;
@@ -238,9 +170,9 @@ jQuery(document).ready(function () {
 		jQuery( 'body' ).on( "panelclose", "#right_panel",  function( event, ui ) {
 			jQuery('.share-btn-background').removeClass('accent-color');
 		});
-		var disqus_shortname = 'lemonado'; // Required - Replace example with your forum shortname
-		var disqus_identifier = jQuery('.ui-page-active .page_title').html().replace(/ /g,'-');
-		var disqus_title = jQuery('.ui-page-active .page_title').html();
+		var disqus_shortname = 'elaine'; // Required - Replace example with your forum shortname
+		var disqus_identifier = jQuery('.ui-page-active').html().replace(/ /g,'-');
+		var disqus_title = jQuery('.ui-page-active').html();
 		var disqus_url = document.location.href;
 });
 // Colour Picker Plugin

@@ -1,0 +1,49 @@
+.splash {
+    background: rgba(0,0,0,0) url('/static/mobile/img/backroad.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    position: relative;
+    margin: 0;
+}
+#login{
+    background-color: rgba(0,0,0,0.5);
+    content: ' ';
+    position: absolute;
+    text-align:center;
+    left:0;    top:0;    right:0;    bottom:0;
+}
+
+/* CONTENT */
+#news_slider {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;  
+  }
+ #news_slider .item {
+	text-align: center;
+}
+.owl-carousel {
+	width: 100%;
+}
+#news_slider .owl-item .item img, .blog-post-slider .item img {
+	height: 100%;
+	width: 100%;
+    overflow: hidden;
+}
+
+#news_slider .owl-item .item {
+  height: 100%;
+  width:100%;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  
+}
