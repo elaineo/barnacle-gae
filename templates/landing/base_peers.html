@@ -24,41 +24,41 @@
   <link rel="stylesheet" href="/static/landing/styles/font-awesome.min.css">
   <link rel="stylesheet" href="/static/landing/styles/prettyPhoto.css">
   <link rel="stylesheet" href="/static/css/p2pps.css">
-  
+
   <link rel="stylesheet" href="/static/landing/styles/app.css">
   <link rel="stylesheet" href="/static/landing/styles/updates.css">
   <link rel="stylesheet" href="/static/landing/styles/custom.css">
   <style type="text/css">
-    #header { padding-top: 20px; padding-bottom: 40px; background: url(/static/landing/images/profile-{{seodir}}/header_image_bg.jpg) top center no-repeat; max-width: 1170px; margin: 0 auto; 
+    #header { padding-top: 20px; padding-bottom: 40px; background: url(/static/landing/images/profile-{{seodir}}/header_image_bg.jpg) top center no-repeat; max-width: 1170px; margin: 0 auto;
     box-shadow: inset 0 50px 50px -50px #171717;
     -moz-box-shadow: inset 0 50px 50px -50px #171717;
     -webkit-box-shadow: inset 0 50px 50px -50px #171717;
      }
   </style>
-  <script src="/static/js/jquery-1.9.1.js"></script>
-  
-	
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+
   <!--Google Fonts-->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,700,700italic' rel='stylesheet' type='text/css'>
-  
+
   <!--[if IE 7]>
   <link rel="stylesheet" href="/static/landing/styles/font-awesome-ie7.min.css">
   <script src="/static/landing/scripts/ie6/warning.js"></script>
   <script>window.onload=function(){e("/static/landing/scripts/ie6/")}</script>
   <![endif]-->
 
-  
+
 	<!--Favicons-->
   <link rel="shortcut icon" href="/static/favicon.ico">
   <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
   <link rel="apple-touch-icon" sizes="57x57" href="/static/apple-touch-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="72x72" href="/static/apple-touch-icon-72x72.png">
   <link rel="apple-touch-icon" sizes="114x114" href="/static/apple-touch-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="/static/apple-touch-icon-144x144.png"> 
-  
-  
+  <link rel="apple-touch-icon" sizes="144x144" href="/static/apple-touch-icon-144x144.png">
+
+
   <!-- jQuery & Foundation Framework -->
-  <script type="text/javascript" src="/static/landing/scripts/modernizr.foundation.js"></script> 
+  <script type="text/javascript" src="/static/landing/scripts/modernizr.foundation.js"></script>
 </head>
 <body>
 
@@ -74,15 +74,15 @@
 <header>
 <div>
 	<div class="row">
-      
+
     <!-- Logo -->
     <div class="three pull-9 columns">
       	<a href="/"><img src="/static/img/barnaclelogo_sm.png"></a>
     </div>
     <!--end logo-->
     <div class="one columns">
-    </div>         
-    <!--Login buttons-->  
+    </div>
+    <!--Login buttons-->
     <div class="six columns hide-for-small">
 
     </div>
@@ -92,13 +92,13 @@
     </div>
     <!--end login buttons-->
   </div>
-  
+
 <div id="header">
 	<div class="row">
-   		
+
     <div class="twelve columns">
       <div class="row">
-      
+
       	<!--Form wrapper-->
         <div class="six columns form-wrapper">
           <div class="form-header">
@@ -127,25 +127,25 @@
               <div class="five mobile-four columns">
                 <label class="right inline">Quote:</label>
               </div>
-              
+
               <div class="seven mobile-four columns">
                 <input class="input input-xlarge" type="text" name="estcost" id="estcost" value="${{estcost}}" disabled>
                 <input class="input input-xlarge" type="hidden" name="estdup" id="estdup" value="{{estcost}}">
                 <input class="input input-xlarge" type="hidden" name="code" value="{{code}}">
               </div>
-            </div><!--end row-->                           
-              
+            </div><!--end row-->
+
             <input type='hidden' name="startlat" id="startlat">
             <input type='hidden' name="startlon" id="startlon">
             <input type='hidden' name="startstr" id="startstr">
 
-            <input type='hidden' name='distance' id='distance' value='0'>            
+            <input type='hidden' name='distance' id='distance' value='0'>
             <div class="row">
               <div class="seven offset-by-five columns"><button class="button" id='request_btn'><i class="icon-search"></i> &nbsp;BOOK IT</button></div>
             </div>
             <span class="notch"></span>
           </form>
-         
+
           <!--end search form-->
           <!--Form footer-->
           <div class="form-footer silver-bg">
@@ -156,7 +156,7 @@
               </span>
             </p>
             <div class="clearfix"></div>
-            
+
             <div class="carousel-profiles responsive">
               <ul id="profile-thumbs">
                 <li><img src="/static/landing/images/profile-{{seodir}}/thumb_01.jpg" alt=""></li>
@@ -171,7 +171,7 @@
               </ul>
             </div><!--end carousel-profiles-->
           </div><!--end form-footer-->
-  
+
         </div><!--end form-wrapper-->
       </div><!--end row-->
     </div><!--end twelve-->
@@ -190,12 +190,12 @@
 <section>
   <div id="call-to-actions" class="silver-bg">
     <div class="row map-bg">
-    
+
       <div class="twelve columns">
         <h1 class="section-title">Ship Outside the Box</h1>
         <p class="lead">Barnacle matches your transportation needs with drivers who are commuting or traveling. Your deliveries are just along for the ride.
         <strong>Give your {{seosub}} their own private seats in passenger vehicles!</strong></p>
-                
+
         <!--Take action-->
         <div class="take-action">
           <ul class="button-group expand left">
@@ -203,8 +203,8 @@
           </ul>
           <span class="or-block hide-for-small">- or -</span>
           <ul class="button-group expand right">
-          
-            
+
+
             <li><a class="post_btn button compl large expand">Be a Driver &nbsp;<i class="icon-road"></i></a></li>
           </ul>
         </div>
@@ -213,7 +213,7 @@
 
    <div id="feature-text" class="text-center">
     <div class="row">
-      
+
       <ul class="no-bullet">
         <li class="four columns">
           <div class="circle">
@@ -226,7 +226,7 @@
           <h4>Lower Cost</h4>
           <p>Save on commercial shipping and freight prices.</p>
         </li>
-        
+
         <li class="four columns">
           <div class="circle">
             <a class="imagelink">
@@ -238,7 +238,7 @@
           <h4>Real-time Tracking</h4>
           <p>We provide real-time tracking and look out for our drivers to help them provide you with the best possible service.</p>
         </li>
-        
+
         <li class="four columns">
           <div class="circle">
             <a class="imagelink">
@@ -273,10 +273,10 @@
         <div class="one column"></div>
         <div class="two columns">
           <img src="/static/landing/images/profile-{{seodir}}/phonecom.png" alt="">
-        </div>        
+        </div>
         <div class="two pull-1 columns">
           <img src="/static/landing/images/profile-{{seodir}}/digitalocean.png" alt="">
-        </div>        
+        </div>
         <div class="three columns">
           <p>
           <img src="/static/landing/images/profile-{{seodir}}/officeninjas.png" alt=""></p>
@@ -286,13 +286,13 @@
         <div class="three columns">
           <p>
           <img src="/static/landing/images/profile-{{seodir}}/visually.png" alt=""></p>
-        </div>        
+        </div>
         <div class="one column"></div>
     </div><!--end row-->
   </div><!--end feature-text-->
 </section>
 <!--END FEATURED TEXT SECTION-->
-  
+
 
 
 
@@ -303,7 +303,7 @@
 <section>
   <div id="support">
     <div class="row">
-      
+
       <div class="four columns">
       	<div class="panel">
       		<h4><i class="icon-question-sign"></i> Concerns or questions?</h4>
@@ -311,12 +311,12 @@
           <a href="/how" class="small button secondary" target="_blank"><i class="icon-angle-right"></i> HOW IT WORKS</a>
     		</div><!--end panel-->
       </div>
-      
+
       <div class="eight columns">
       	<div class="panel">
       		<h4><i class="icon-smile"></i> NEWSLETTER SIGNUP</h4>
         	<p>By subscribing to our mailing list you will always be updated with the latest news from us.</p>
-          
+
           <!--Newsletter form-->
           <form action="http://gobarnacle.us7.list-manage1.com/subscribe/post?u=63e7c0e246c3f363c1ce9c125&amp;id=bab2de2f7f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="row">
             <div class="four columns">
@@ -342,13 +342,13 @@
             <div class="three columns">
             	<p><button type="submit" id="mc-embedded-subscribe"  name="newsletter-submit" class="small button expand">JOIN US</button></p>
             </div>
-						<div class="twelve column">              
-            	<small><i class="icon-lock"></i> <strong>Your <a href="/privacy">privacy</a> is important to us and we will never share your information.</strong></small>            	
+						<div class="twelve column">
+            	<small><i class="icon-lock"></i> <strong>Your <a href="/privacy">privacy</a> is important to us and we will never share your information.</strong></small>
             </div>
           </form><!--end newsletter-form-->
     		</div><!--end panel-->
       </div>
-      
+
     </div><!--end row-->
   </div><!--end support-->
 </section>
@@ -364,11 +364,11 @@
 
 <!-- POP-UP MODAL FORMS-->
 
- 
+
 <!-- JAVASCRIPTS
 ================================================ -->
 
-    <!-- Barnacle crap -->    
+    <!-- Barnacle crap -->
     <script>
     $(document).ready(function(){
         click_redirect('.search_btn','/search');
@@ -378,25 +378,25 @@
           var bizname = popup.split('?')[1]
           $('#bizname').html(bizname);
           $( '#coupon_panel' ).reveal( $( this ).data() );
-        }			         
+        }
     });
     </script>
     <script type="text/javascript" src="/static/js/signinup.js"></script>
-    <script type="text/javascript" src="/static/js/fb.js"></script> 
-    <script type="text/javascript" src="/static/js/cookie.js"></script>    
-    <script type="text/javascript" src="/static/js/validation.js"></script>    
+    <script type="text/javascript" src="/static/js/fb.js"></script>
+    <script type="text/javascript" src="/static/js/cookie.js"></script>
+    <script type="text/javascript" src="/static/js/validation.js"></script>
 
-  
+
     <!-- maps and other stuff for the form -->
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 <script src="/static/js/maps/mapsxswcost.js"></script>
-  
+
   <!-- 3rd Plugins -->
 	<!-- jQuery & Foundation Framework -->
   <script type="text/javascript" src="/static/landing/scripts/jquery.js"></script>
-  <script type="text/javascript" src="/static/landing/scripts/foundation.min.js"></script>   
-  <script type="text/javascript" src="/static/landing/scripts/modal-foundation.js"></script>     
-  
+  <script type="text/javascript" src="/static/landing/scripts/foundation.min.js"></script>
+  <script type="text/javascript" src="/static/landing/scripts/modal-foundation.js"></script>
+
 	<!-- include carouFredSel plugin -->
   <script type="text/javascript" src="/static/landing/scripts/plugins/carouFredSel/jquery.carouFredSel-6.2.0-packed.js"></script>
   <!-- optionally include helper for carouFredSel plugins -->
@@ -410,12 +410,12 @@
   <script type="text/javascript" src="/static/landing/scripts/plugins/quovolver/jquery.quovolver.js"></script><!--Quote rotator-->
   <script type="text/javascript" src="/static/landing/scripts/plugins/backgroundSize/jquery.backgroundSize.js"></script><!--BackgroundSize for IE8-->
   <script type="text/javascript" src="/static/landing/scripts/plugins/prettyPhoto/jquery.prettyPhoto.js"></script>
-  
+
   <!-- Custom JS effects, tweaks and inits -->
   <script type="text/javascript" src="/static/landing/scripts/app.js"></script>
-  
-  
+
+
 {% include 'google_analytics.html' %}
-  
+
 </body>
 </html>

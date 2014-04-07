@@ -28,41 +28,37 @@
   <!--Plugins-->
   <link rel="stylesheet" href="/static/css/p2pps.css">
     <link rel="stylesheet" href="/static/landing/styles/font-awesome.min.css">
-    <script src="/static/js/jquery-1.9.1.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="/static/js/jquery-ui-1.10.2.custom.min.js"></script>
-    <script src="/static/js/modernizr.custom.js"></script>  
-  
-  <script src="/static/js/jquery-1.9.1.js"></script>
-  
-	
+    <script src="/static/js/modernizr.custom.js"></script>
   <!--Google Fonts-->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,700,700italic' rel='stylesheet' type='text/css'>
-  
+
   <!--[if IE 7]>
   <link rel="stylesheet" href="/static/landing/styles/font-awesome-ie7.min.css">
   <script src="/static/landing/scripts/ie6/warning.js"></script>
   <script>window.onload=function(){e("/static/landing/scripts/ie6/")}</script>
   <![endif]-->
 
-  
+
 	<!--Favicons-->
   <link rel="shortcut icon" href="/static/favicon.ico">
   <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
   <link rel="apple-touch-icon" sizes="57x57" href="/static/apple-touch-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="72x72" href="/static/apple-touch-icon-72x72.png">
   <link rel="apple-touch-icon" sizes="114x114" href="/static/apple-touch-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="/static/apple-touch-icon-144x144.png"> 
-  
-  
+  <link rel="apple-touch-icon" sizes="144x144" href="/static/apple-touch-icon-144x144.png">
+
+
   <!-- jQuery & Foundation Framework -->
-  <script type="text/javascript" src="/static/landing/scripts/modernizr.foundation.js"></script> 
+  <script type="text/javascript" src="/static/landing/scripts/modernizr.foundation.js"></script>
 </head>
 <script type="text/javascript">
 
 function breakout_of_frame() {
-    if (top.location != location) 
+    if (top.location != location)
         top.location.href = document.location.href ;
-}    
+}
 </script>
   <body onload="breakout_of_frame()">
 
@@ -76,19 +72,19 @@ function breakout_of_frame() {
 <!-- HEADER SECTION
 ================================================ -->
 <header>
-    
-	<div class="row fixed" id='navhead' >      
+
+	<div class="row fixed" id='navhead' >
     <!-- Logo -->
   <div class="span3 hidden-phone" style='padding:10px;'>
     <a href="/"><img src="/static/img/barnaclelogo.png"></a>
   </div>
     <!--end logo-->
     <div class="one columns">
-    </div>         
-    <!--Login buttons-->  
+    </div>
+    <!--Login buttons-->
     <div class="five columns hide-for-small">
-    	<div class="space-b-10 hide-for-small">&nbsp;</div>	        
-        <div class="space-b-10 hide-for-small">&nbsp;</div>	 
+    	<div class="space-b-10 hide-for-small">&nbsp;</div>
+        <div class="space-b-10 hide-for-small">&nbsp;</div>
     </div>
     <div class="three columns login-buttons hide-for-small" style='text-transform: uppercase;
 	font-size: 0.85em; line-height: 1.5em;' id='user_head'>
@@ -97,7 +93,7 @@ function breakout_of_frame() {
   </div>
 
 <div class='hero_bg row-fluid'>
-  <div class="hero_container">  
+  <div class="hero_container">
     <div class="back_img"></div>
   </div>
   <div class="wash"></div>
@@ -122,12 +118,12 @@ function breakout_of_frame() {
 {% include "landing/footer.html" %}
 
 
- 
+
 <!-- JAVASCRIPTS
 ================================================ -->
 
  <script>
-  
+
 $(document).ready(function(){
     /* Give the heading a pretty picture */
     hh = $('.heading').height()+20;
@@ -140,21 +136,21 @@ function preload(arrayOfImages) {
         $('<img/>')[0].src = this;
     });
 }
-  </script>  
-    <!-- Barnacle crap -->    
+  </script>
+    <!-- Barnacle crap -->
     <script>
     $(document).ready(function(){
         click_redirect('.request_btn','/request');
         click_redirect('.post_btn','/drive');
     });
     </script>
-  
+
 {% include 'google_analytics.html' %}
 <script type="text/javascript" src="/static/js/fb.js"></script>
 <script type="text/javascript" src="/static/js/modal-window.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/static/js/cookie.js"></script>
 <script type="text/javascript" src="/static/js/signinup.js"></script>
-  
+
 </body>
 </html>

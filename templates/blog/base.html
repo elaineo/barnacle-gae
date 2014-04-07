@@ -15,7 +15,7 @@
     <link href='http://fonts.googleapis.com/css?family=Sacramento|Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
     <link href="/static/css/p2pps.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" href="/static/landing/styles/font-awesome.min.css">
-    <script src="/static/js/jquery-1.9.1.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="/static/js/jquery-ui-1.10.2.custom.min.js"></script>
     <script src="/static/js/modernizr.custom.js"></script>
     <script>
@@ -31,7 +31,7 @@
 <span id='hidegoog' style='display:none'>{{hidegoog}}</span>
 {% include "nav.html" %}
 <div class='hero_bg row-fluid'>
-  <div class="hero_container">  
+  <div class="hero_container">
     <div class="back_img"></div>
   </div>
   <div class="wash"></div>
@@ -72,19 +72,19 @@
     <li>
     <a href="/blog/spring-break" class="archives">Spring Break!</a></li>
     <li>
-    <a href="/blog/barnacle-driver-stories" class="archives">Barnacle Driver Stories</a></li>        
+    <a href="/blog/barnacle-driver-stories" class="archives">Barnacle Driver Stories</a></li>
     <li>
-    <a href="/blog/polar-vortex" class="archives">Driving Through a Polar Vortex</a></li>        
+    <a href="/blog/polar-vortex" class="archives">Driving Through a Polar Vortex</a></li>
     <li>
-    <a href="/blog/crowdsourced-delivery-solves-the-traveling-salesman-problem" class="archives">Crowdsourced Delivery Solves the Traveling Salesman Problem</a></li>    
+    <a href="/blog/crowdsourced-delivery-solves-the-traveling-salesman-problem" class="archives">Crowdsourced Delivery Solves the Traveling Salesman Problem</a></li>
     <li>
     <a href="/blog/10-road-trip-hacks" class="archives">10 Road Trip Hacks</a></li>
     <li>
     <a href="/blog/barnacle-goes-mobile" class="archives">Barnacle Goes Mobile</a></li>
     <li>
-    <a href="/blog/mumford-brewing-loves-barnacle" class="archives">Mumford Brewing Loves Barnacle</a></li>    
+    <a href="/blog/mumford-brewing-loves-barnacle" class="archives">Mumford Brewing Loves Barnacle</a></li>
     <li>
-    <a href="/blog/what-its-like-to-drive-for-barnacle" class="archives">What it's Like to Drive for Barnacle</a></li>    
+    <a href="/blog/what-its-like-to-drive-for-barnacle" class="archives">What it's Like to Drive for Barnacle</a></li>
     <li>
     <a href="/blog/money-doesnt-buy-you-trust" class="archives">Money Doesn't Buy You Trust</a></li>
     <li>
@@ -128,27 +128,27 @@
 <script>
 var BlogFile = '/blog/{{blog_post}}.html';
 
-$(document).ready(function() {  
-    var newest = $('#newest').attr('href');    
-    if (BlogFile === '/blog/None.html') 
+$(document).ready(function() {
+    var newest = $('#newest').attr('href');
+    if (BlogFile === '/blog/None.html')
         window.location.replace(newest);
     var blogCur = $('a[href$="/blog/{{blog_post}}"]');
     var blogI = $('.archives').index(blogCur);
     console.log(blogI);
     var blogLen = $('.archives').length;
     if (blogI==0) $('#next').addClass('hide');
-    else { 
+    else {
       $('#next').removeClass('hide');
       $('#next>a').attr('href', $('.archives')[blogI-1].getAttribute('href'));
     }
     if (blogI==blogLen-1) $('#previous').addClass('hide');
-    else { 
+    else {
       $('#previous').removeClass('hide');
       $('#previous>a').attr('href', $('.archives')[blogI+1].getAttribute('href'));
     }
-    
+
     var blogTitle = window.document.title;
-    
+
     var blogLink = window.location;
     $('#tweet').click(function() {
         var twitURL = 'http://twitter.com/share?text="'+blogTitle+'"&url='+blogLink;
@@ -156,20 +156,20 @@ $(document).ready(function() {
         window.open(twitURL,'','width=500,height=300','');
     });
     $('#fb_share').click(function() {
-        var fbURL='https://www.facebook.com/dialog/feed?app_id=540602052657989&link='+blogLink+'&picture=http://www.gobarnacle.com/static/img/barnacle.png&name='+blogTitle+'&redirect_uri=http://www.gobarnacle.com/suicide'        
+        var fbURL='https://www.facebook.com/dialog/feed?app_id=540602052657989&link='+blogLink+'&picture=http://www.gobarnacle.com/static/img/barnacle.png&name='+blogTitle+'&redirect_uri=http://www.gobarnacle.com/suicide'
         window.open(fbURL,'','width=500,height=300','');
     });
     $('#li_share').click(function(){
         var liURL  = 'http://www.linkedin.com/shareArticle?mini=true&url=' + blogLink + '&title=' + blogTitle + '&source=Barnacle';
-        window.open(liURL,'','width=500,height=300',''); 
+        window.open(liURL,'','width=500,height=300','');
     });
     $('#reddit').click(function(){
         var redditURL  = 'http://www.reddit.com/submit?url=' + blogLink;
-        window.open(redditURL,'','width=500,height=300',''); 
+        window.open(redditURL,'','width=500,height=300','');
     });
     $('#plusone').click(function(){
         var plusURL  = 'https://plus.google.com/share?url=' + blogLink;
-        window.open(plusURL,'','width=500,height=300',''); 
+        window.open(plusURL,'','width=500,height=300','');
     });
 });
 </script>
