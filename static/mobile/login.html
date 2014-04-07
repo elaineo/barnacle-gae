@@ -95,11 +95,10 @@
 		  media="(device-width: 320px) and (device-height: 480px)
 			 and (-webkit-device-pixel-ratio: 1)"
 		  rel="apple-touch-startup-image">
-
+    <link rel="stylesheet" href="/static/landing/styles/font-awesome.min.css">
 	<link rel="stylesheet" href="/static/mobile/css/splash.css" />
-	<script type="text/javascript" src="/static/js/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="/static/js/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="/static/js/jquery.mobile-1.4.2.min.js"></script>
-
 	<script type="text/javascript" src="/static/mobile/js/retina-1.1.0.js"></script>
 	<script type="text/javascript" src="/static/js/jquery.validate.min.js"></script>
 </head>
@@ -107,10 +106,25 @@
     
     <div id='login'>
       <p>
-      <img src='/static/mobile/img/logo.png' style='margin-top:30%'>
+      <img src='/static/mobile/img/logo_lg.png' style='margin-top:30%; width:60%'>
       </p>
-      
+      <br>
+      <form enctype="multipart/form-data" method="post" id="login_form" class="form-horizontal">
+        <input type="email" class='input-round' name="email" placeholder="Email Address">
+        <input type="password" class='input-round' name="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;">
+        <button class='button-round'>Log In</button>
+        <button class='button-round primary' id='btn_fb'><i class='icon-facebook-sign'></i> &nbsp; Log In with Facebook</button>
+      </form>
     </div><!-- /content -->
-
+    <div id='login-footer'>
+      Password &nbsp; | &nbsp; Register
+    </div>
+<script>
+jQuery(document).ready(function () {
+  $('#btn_fb').click(function(e) {
+     $(location).attr('href',"home.html");
+   });
+});
+</script>    
   </body>
 </html>            

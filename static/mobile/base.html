@@ -101,7 +101,7 @@
 	<link rel="stylesheet" href="/static/mobile/css/add2home.css">
     <link rel="stylesheet" href="/static/landing/styles/font-awesome.min.css">
 	<script type="text/javascript" src="/static/mobile/js/klass.min.js"></script>
-	<script type="text/javascript" src="/static/js/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="/static/js/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="/static/js/jquery.mobile-1.4.2.min.js"></script>
 	<script type="text/javascript" src="/static/mobile/js/jstorage.js"></script>
 	<script type="text/javascript" src="/static/mobile/js/retina-1.1.0.js"></script>
@@ -128,31 +128,11 @@
 	</div>
 	<div data-role="panel" data-theme="b" data-position="right" data-display="push" id="right_panel">
 		<div style="text-align: center;">
-			<h4 style="margin-top: 0px;">Share this page on:</h4>
-			<div class="panel-social-wrap">
-				<a class="facebook_share_link" title="Share link on Facebook" target="_blank" href="#" rel="nofollow">
-					<div class="panel-social panel-social-twitter accent-color">
-						<img src="/static/mobile/img/facebook.png" alt="Facebook">
-					</div>
-				</a>
-				<div class="panel-social-counter facebook_number"></div>
-			</div>
-			<div class="panel-social-wrap">
-				<a class="twitter_share_link" title="Share link on Twitter" target="_blank" href="#" rel="nofollow">
-					<div class="panel-social panel-social-facebook accent-color">
-						<img src="/static/mobile/img/twitter.png" alt="Twitter">
-					</div>
-				</a>
-				<div class="panel-social-counter twitter_number"></div>
-			</div>
-			<div class="panel-social-wrap">
-				<a class="google_share_link" title="Share link on Google+" target="_blank" href="#" rel="nofollow">
-					<div class="panel-social panel-social-google accent-color">
-						<img src="/static/mobile/img/google.png" alt="Google+">
-					</div>
-				</a>
-				<div class="panel-social-counter google_number"></div>
-			</div>
+			<h4 style="margin-top: 0px;">Driver Mode:</h4>
+            <select name="flip-2" id="flip-2" data-role="slider">
+                <option value="off">Off</option>
+                <option value="on">On</option>
+            </select>            
 		</div>
 	</div>
 	<div id="header" data-role="header" data-position="fixed" data-theme="c">
@@ -162,10 +142,6 @@
 				<span class="menu-btn-background"></span>
 			</a>
 			<span class="page-tagline"><img src="/static/mobile/img/logo.png" alt="Logo"></span>
-			<a style="float: right; border: none;" class="header_button" href="#" data-inline="true" data-rel="back" data-role="button" data-corners="false" data-theme="c">
-				<img style="width: 100%; height: 100%;" src="/static/mobile/img/back.png" alt="Back">
-				<span class="btn-background"></span>
-			</a>
 			<a style="float: right;" class="header_button" href="#right_panel" data-inline="true" data-role="button" data-corners="false" data-theme="c">
 				<img style="width: 100%; height: 100%;" src="/static/mobile/img/share.png" alt="Share">
 				<span class="btn-background share-btn-background"></span>
