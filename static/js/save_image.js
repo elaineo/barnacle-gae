@@ -23,7 +23,7 @@ $(document).ready(function(){
 		for ( ; i < len; i++ ) {
 			file = this.files[i];
             var iSize = (file.size / 1024); 
-             if (iSize > 2.48) 
+             if (iSize / 1024 > 2.48) 
             { 
               display_modal_msg('Please upload a smaller file.');
               return

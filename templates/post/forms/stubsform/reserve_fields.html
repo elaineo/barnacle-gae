@@ -55,13 +55,16 @@
           <textarea name="items" class="span10" rows="3" placeholder='Write a short description and please note any special handling instructions for your driver.'>{{res.details}}</textarea>
         </div>
     </div>
-    <div class='control-group'>
-        <label class="control-label" >Upload a Photo</label>    
-        <div id="img-prev" class='controls clicky'><img  src='/static/img/placeholder_car.jpg' class='preview'></div>
-        <input type="hidden" name="id" value="{{id}}">
-        <input type="file" class="file" id="images" accept="image/png,image/jpeg,image/gif" name="file" style='display:None;'>
-    </div>  
-
+    <div class="control-group">
+        <label class="control-label" for="file">
+            <span class="fileUpload button small" style='max-width:180px;'>
+            <span>Upload a Photo</span><input type="file" class="file upload" accept="image/png,image/jpeg,image/gif" id="images" name="file"></span>
+        </label>
+        <div class="controls">
+            <div id="img-prev" class='controls clicky'><img  src='/static/img/placeholder_car.jpg' class='preview'></div>
+            <input type="hidden" name="id" value="{{id}}">
+        </div>
+    </div>
 
     <div class="control-group" >
       <div class='controls'>
