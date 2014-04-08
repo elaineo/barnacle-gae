@@ -108,10 +108,18 @@
           <form action="/c/peers" method="post" class="custom form-search" id='request_form'>
             <div class="row">
               <div class="five mobile-four columns">
+                <label class="right inline">Origin:</label>
+              </div>
+              <div class="seven mobile-four columns">
+                <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}">
+              </div>
+            </div><!--end row-->
+          <div class="row">
+              <div class="five mobile-four columns">
                 <label class="right inline">Destination:</label>
               </div>
               <div class="seven mobile-four columns">
-                <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locend}}">
+                <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{locend}}">
               </div>
             </div><!--end row-->
 
@@ -389,7 +397,7 @@
 
     <!-- maps and other stuff for the form -->
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
-<script src="/static/js/maps/mapsxswcost.js"></script>
+<script src="/static/js/maps/mapsclientno.js"></script>
 
   <!-- 3rd Plugins -->
 	<!-- jQuery & Foundation Framework -->

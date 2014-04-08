@@ -169,14 +169,13 @@ class CouponPage(BaseHandler):
             rates = self.request.get('estdup')
             rates = int(rates)
             code = self.request.get('code')
-            startstr = 'SF Bay Area'
-            start = ndb.GeoPt(37.4,-122)
-            dest, deststr = self.__get_map_form('start')
+            start, startstr = self.__get_map_form('start')
+            dest, deststr = self.__get_map_form('dest')
             reqdate = self.request.get('reqdate')
             if reqdate:
                 delivby = parse_date(reqdate)
             else:
-                delivby = datetime(2014,05,15)
+                delivby = datetime(2014,05,30)
             r = Reservation(start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest, delivby=delivby, details=code)
             r.put()
             self.params.update(r.to_dict())
