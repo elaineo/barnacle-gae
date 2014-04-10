@@ -105,6 +105,8 @@ class SummaryHandler(BaseHandler):
         elif action=='selfpay' and key:
             r = ndb.Key(urlsafe=key).get()
             buf = r.fullname() + ' tried to give us a cc'
+            if r.tel:
+                buf += '\n Phone #: ' + r.tel
             buf += '\n http://www.gobarnacle.com' + r.profile_url()
             subject = 'New Barnacle payment account'
             self.email_report('help@gobarnacle.com', subject, buf)

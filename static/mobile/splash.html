@@ -132,6 +132,9 @@ jQuery(document).ready(function () {
   $('#splash_final').click(function(e) {
      $(location).attr('href',"login.html");
    });
+  $('#splash_final').on("swipe", function(e) {
+     $(location).attr('href',"login.html");
+   });   
 });
 </script>
 </body>

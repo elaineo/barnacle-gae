@@ -26,6 +26,14 @@ handlers:
 - url: /robots\.txt
   static_files: static/robots.txt  
   upload: static/robots\.txt  
+
+- url: /c/.*
+  script: main.app
+  secure: always
+  
+- url: /d/.*
+  script: main.app
+  secure: always  
   
 - url: /pay/.*
   script: main.app
