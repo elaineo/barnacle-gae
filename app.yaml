@@ -27,10 +27,12 @@ handlers:
   static_files: static/robots.txt
   upload: static/robots\.txt
 
+# coupon code
 - url: /c/.*
   script: main.app
   secure: always
 
+# coupon code
 - url: /d/.*
   script: main.app
   secure: always
