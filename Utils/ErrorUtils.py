@@ -4,44 +4,27 @@ import os
 
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader('templates/err'), autoescape = True)
 
+def generate_error_handler(error_code, template_file):
+    def error_handler(request, response, exception):
+        t = jinja_env.get_template(template_file)
+        response.write(t.render())
+        response.set_status(error_code)
+    return error_handler
+
 # Bad Request
-def ErrorHandler400(request, response, exception):
-    logging.exception(exception)
-    t = jinja_env.get_template("err400.html")
-    response.write(t.render())
-    response.set_status(400)
+ErrorHandler400 = generate_error_handler(400, "err400.html")
 
-# Forbidden    
-def ErrorHandler403(request, response, exception):
-    logging.exception(exception)
-    t = jinja_env.get_template("err403.html")
-    response.write(t.render())
-    response.set_status(403)
-    
-# Not Found    
-def ErrorHandler404(request, response, exception):
-    logging.exception(exception)
-    t = jinja_env.get_template("err404.html")
-    response.write(t.render())
-    response.set_status(404)
+# Forbidden
+ErrorHandler403 = generate_error_handler(403, "err403.html")
 
-# Whatever I want 
-def ErrorHandler409(request, response, exception):
-    logging.exception(exception)
-    t = jinja_env.get_template("err494.html")
-    response.write(t.render())
-    response.set_status(404)
-    
-# Request Timeout    
-def ErrorHandler408(request, response, exception):
-    logging.exception(exception)
-    t = jinja_env.get_template("err408.html")
-    response.write(t.render())
-    response.set_status(408)    
-    
-# Internal Server Error    
-def ErrorHandler500(request, response, exception):
-    logging.exception(exception)
-    t = jinja_env.get_template("err500.html")
-    response.write(t.render())
-    response.set_status(500)    
+# Not Found
+ErrorHandler404 = generate_error_handler(404, "err404.html")
+
+# Whatever I want
+ErrorHandler409 = generate_error_handler(404, "err494.html")
+
+# Request Timeout
+ErrorHandler408 = generate_error_handler(408, "err408.html")
+
+# Internal Server Error
+ErrorHandler500 = generate_error_handler(500, "err500.html")
