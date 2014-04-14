@@ -10,6 +10,7 @@ from Handlers.Post.Reservation import ReservationHandler
 from Handlers.Post.Review import ReviewHandler
 
 # User Accounts
+from Handlers.User.FBLoginHandler import FBLoginPage
 from Handlers.User.Account import *
 from Handlers.User.Profile import *
 from Handlers.User.Dashboard import *
@@ -102,6 +103,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/d/<action>', handler=EventPage),
    webapp2.Route('/sxsw/<action>', handler=SXSWPage),
 # accounts
+  webapp2.Route('/fblogin', handler=FBLoginPage),
    webapp2.Route('/signup', handler=SignupPage),
    webapp2.Route('/signup/<action>', handler=SignupPage),
    ('/signout', SignoutPage),
