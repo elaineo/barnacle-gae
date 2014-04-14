@@ -1,5 +1,6 @@
 from Handlers.BaseHandler import *
 from Models.Mobile.Sender import *
+import logging
 
 class SenderMobile(BaseHandler):
     def get(self, action=None):
@@ -12,8 +13,7 @@ class SenderMobile(BaseHandler):
             self.__create_addr()
         else:
             return
-            
-            
+        
     def __create_addr(self):
         # create address associated with a user
         data = json.loads(self.request.body)
@@ -30,7 +30,8 @@ class SenderMobile(BaseHandler):
                 state = data.get('state')
                 zip = data.get('zip')
                 apt = data.get('apt')
-                a = Address(name=name, street=address, city=city, apt=apt, state=state, zip=zip)
+                a = Address(name=name, street=address, city=city, apt=apt, state=state, zip=zip, parent=u.key)
+                a.put()
                 response = { 'status': 'ok'}
         except:
             response = { 'status': 'Address Failed.'}            

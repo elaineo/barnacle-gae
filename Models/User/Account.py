@@ -28,22 +28,22 @@ class UserAccount(ndb.Model):
     name = ndb.StringProperty()
     location = ndb.StringProperty()
     locpt = ndb.GeoPtProperty(default=ndb.GeoPt(37.4,-122))
-    usertype = ndb.IntegerProperty(default=2)
+    usertype = ndb.IntegerProperty(default=2) #driver, sender, or both
     stats = ndb.StructuredProperty(UserStats)
 
 class UserAccounts(ndb.Model):
     email = ndb.StringProperty()
-    tel = ndb.StringProperty()
-    name = ndb.StringProperty()
-    location = ndb.StringProperty()
-    locpt = ndb.GeoPtProperty(default=ndb.GeoPt(37.4,-122))
-    usertype = ndb.IntegerProperty(default=2)
-    stats = ndb.StructuredProperty(UserStats)
+    pwhash = ndb.StringProperty() # hashed pw
     
     @classmethod
     def by_email(cls, email):
         u = cls.query(cls.email == email).get()
         return u    
+        
+    @classmethod
+    def by_user(cls, key):
+        u = cls.query(ancestor=key).get()
+        return u            
 
 class UserPrefs(ndb.Model):
     """ Individual User data fields """

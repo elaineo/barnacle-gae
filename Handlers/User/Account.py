@@ -168,8 +168,8 @@ class SignupPage(BaseHandler):
         # retrieve information
         password = data.get('password')
         email = data.get('email')
-        name = data.get('name').split()
-        mm={'error':None, 'name':name}
+        tel = data.get('tel')
+        mm={'error':None}
         if not valid_email(email):
             mm['error']="That's not a valid email address."
         else:
@@ -177,23 +177,24 @@ class SignupPage(BaseHandler):
         u = UserAccounts.by_email(email)
         if u:            
             mm['error']="That user exists already."
-        u = UserPrefs.by_email(email)
-        # What should we do if it's currently a fb account? Link them together?
         if not valid_pw(password):
             mm['error'] = "That wasn't a valid password."
+        tel = valid_tel(tel)
+        if not tel:
+            mm['error'] = "That is not a valid number."
         if mm['error'] is not None:
             mm['status'] = 'error'
             self.write(json.dumps(mm))
             return
         else:
             # make user account
-            u = UserAccounts(email = email, pwhash = make_pw_hash(email, password))
+            up = UserPrefs.by_email(email)
+            if not up:
+                up = UserPrefs(account_type = 'p2p', email = email, tel=tel)
+                up.put()
+            u = UserAccounts(email = email, pwhash = make_pw_hash(email, password), parent=up.key)
             u.put()
-            up = UserPrefs(account_type = 'p2p', email = email)
-            if name:
-                up.first_name=name[0]
-                up.last_name=name[-1]
-            up.put()
+
             u.set_login_token()  #FIXME AND SET COOKIE
             mm = u.as_json()
             mm['status'] = 'success'

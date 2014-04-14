@@ -8,6 +8,7 @@ import string
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 PW_RE = re.compile(r"^.{3,20}$")
 ZC_RE = re.compile(r"^[0-9]{5}$")
+TEL_RE = re.compile(r"^[0-9]{10}$")
 AG_RE = re.compile(r"^[0-9]{2,3}$")
 EM_RE = re.compile(r"^[\S]+@[\S]+\.[\S]+$")
 # hashing
@@ -30,6 +31,14 @@ def valid_email(email):
 def valid_zipcode(zipcode):
     """ 5-digit zipcode """
     return ZC_RE.match(zipcode)    
+
+def valid_tel(tel):
+    """ 10-digit number """
+    clean = re.sub("[^0-9]", "", tel)
+    if len(clean) == 10:
+        return clean
+    else:
+        return None
 
 def valid_age(age):
     """ 2 to 3 digit age """ # nobody under 10
