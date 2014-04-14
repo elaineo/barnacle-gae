@@ -22,6 +22,7 @@
         <th>Deliver By</th>
         <th>Offer</th>
         <th>Matches</th>
+        <th>#</th>
         <th>Notes</th>
         <th>Status</th>
     </tr></thead>
@@ -38,7 +39,9 @@
         {% else %}
         <td style='text-align:center'>{{req.num_matches}}</td>
         {% endif %}
-        <td>
+        <td>{{req.tel}}
+	</td>
+	<td>
             <textarea class="updatable">{% if req.notes is defined %}{{req.notes}}{% endif %}</textarea>
         </td>
         <td>

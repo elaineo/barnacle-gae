@@ -22,6 +22,10 @@ from Handlers.Money.Earnings import Earnings
 from Handlers.Money.Payments import Payments
 from Handlers.Launch.CheckoutHandler import *
 
+# Mobile App
+from Handlers.Mobile.Sender import SenderMobile
+from Handlers.Mobile.Driver import DriverMobile
+
 # Cron jobs
 from Handlers.Cron.ExpireHandler import *
 from Handlers.Cron.Reminder import *
@@ -38,7 +42,6 @@ from Handlers.Admin.Gerrit import GerritHandler
 from Handlers.Admin.RRDash import RRDashHandler
 from Handlers.Tracker.TrackerHandler import *
 
-from Handlers.Launch.MobileHandler import *
 from Handlers.Launch.ExternalHandler import *
 from Handlers.Seo.SitemapHandler import SitemapHandler, SitemapGenerationHandler
 from Handlers.Seo.SearchableRouteHandler import SearchableRouteHandler
@@ -78,7 +81,7 @@ app = webapp2.WSGIApplication([('/', HomePage),
    webapp2.Route('/scraped/<key:[\w\-]{20,}>', handler=CLHandler),
    webapp2.Route('/scraped/<action>/<key:[\w\-]{20,}>', handler=CLHandler),
 # mobile driver tracker
-   webapp2.Route('/mobile/<action>', handler=MobileHandler),
+   webapp2.Route('/mobile/<action>', handler=SenderMobile),
    webapp2.Route('/track/<action>', handler=TrackerHandler),
    webapp2.Route('/track/<action>/<key:[\w\-]{20,}>', handler=TrackerHandler),
    webapp2.Route('/tracker', handler=TrackerPage),
