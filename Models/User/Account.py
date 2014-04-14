@@ -20,7 +20,9 @@ class UserSettings(ndb.Model):
     """ 0.Messages 1.Reservation updates 2.Review notify 3.Matching Delivery requests    4. Newsletter """
     notify = ndb.IntegerProperty(repeated=True)
 
-class UserAccount(ndb.Model):
+class UserAccount(ndb.Model): 
+    # This is just for users who want to submit a request for a non-fb account
+    # DELETE THIS AFTER UserAccounts is set up
     email = ndb.StringProperty()
     tel = ndb.StringProperty()
     name = ndb.StringProperty()
@@ -28,6 +30,20 @@ class UserAccount(ndb.Model):
     locpt = ndb.GeoPtProperty(default=ndb.GeoPt(37.4,-122))
     usertype = ndb.IntegerProperty(default=2)
     stats = ndb.StructuredProperty(UserStats)
+
+class UserAccounts(ndb.Model):
+    email = ndb.StringProperty()
+    tel = ndb.StringProperty()
+    name = ndb.StringProperty()
+    location = ndb.StringProperty()
+    locpt = ndb.GeoPtProperty(default=ndb.GeoPt(37.4,-122))
+    usertype = ndb.IntegerProperty(default=2)
+    stats = ndb.StructuredProperty(UserStats)
+    
+    @classmethod
+    def by_email(cls, email):
+        u = cls.query(cls.email == email).get()
+        return u    
 
 class UserPrefs(ndb.Model):
     """ Individual User data fields """

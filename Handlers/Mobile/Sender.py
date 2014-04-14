@@ -1,6 +1,5 @@
 from Handlers.BaseHandler import *
-from Utils.EmailUtils import send_info
-from Utils.data.MobileDefs import *
+from Models.Mobile.Sender import *
 
 class SenderMobile(BaseHandler):
     def get(self, action=None):
@@ -25,17 +24,16 @@ class SenderMobile(BaseHandler):
             if not u:
                 response = { 'status': 'Not a user.'}
             else:
-                addrs = data['emails']
-                for a in addrs:
-                    sender = self.user_prefs.fullname() + " via Barnacle <" + a + ">"
-                    subject = (share_track_subj % {'first_name':self.user_prefs.first_name})
-                    body = (share_track % {'first_name': self.user_prefs.first_name,
-                        'locend' : r.locend,
-                        'post_url' : r.post_url() })
-                    send_info(sender, subject, body)
+                name = data.get('name')
+                address = data.get('address')
+                city = data.get('city')
+                state = data.get('state')
+                zip = data.get('zip')
+                apt = data.get('apt')
+                a = Address(name=name, street=address, city=city, apt=apt, state=state, zip=zip)
                 response = { 'status': 'ok'}
         except:
-            response = { 'status': 'Email Failed.'}            
+            response = { 'status': 'Address Failed.'}            
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))                             
     

@@ -163,17 +163,22 @@ class SignupPage(BaseHandler):
 
     def __mobile(self):
         self.response.headers['Content-Type'] = "application/json"
+        data = json.loads(self.request.body)
+        logging.info(data)
         # retrieve information
-        password = self.request.get('password')
-        email = self.request.get('email')
-        name = self.request.get('name').split()
+        password = data.get('password')
+        email = data.get('email')
+        name = data.get('name').split()
         mm={'error':None, 'name':name}
         if not valid_email(email):
             mm['error']="That's not a valid email address."
         else:
             mm['email'] = email
-        if UserAccounts.by_email(email).get():
+        u = UserAccounts.by_email(email)
+        if u:            
             mm['error']="That user exists already."
+        u = UserPrefs.by_email(email)
+        # What should we do if it's currently a fb account? Link them together?
         if not valid_pw(password):
             mm['error'] = "That wasn't a valid password."
         if mm['error'] is not None:
