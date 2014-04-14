@@ -194,7 +194,7 @@ class SignupPage(BaseHandler):
                 up.first_name=name[0]
                 up.last_name=name[-1]
             up.put()
-            u.set_login_token()
+            u.set_login_token()  #FIXME AND SET COOKIE
             mm = u.as_json()
             mm['status'] = 'success'
             self.write(json.dumps(mm))
