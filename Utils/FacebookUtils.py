@@ -6,6 +6,12 @@ import logging
 import json
 
 
+# 1) direct users to facebook login url with a redirect back
+# 2) a code will be in the query string of redirected url
+# 3) get the code from query parameter and trade for access_token on the backend
+# 4) login in the user if acesss_token and debug_info correspond to user
+
+
 APP_ID = '540602052657989'
 APP_SECRET = '89a554288210c8f7a8f3292612ed7a6f'
 
