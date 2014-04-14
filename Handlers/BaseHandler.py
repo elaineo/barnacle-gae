@@ -2,11 +2,13 @@ import webapp2
 import jinja2
 import os
 import logging
+import urlparse
 from google.appengine.api import users
 from Utils.UserUtils import *
+from Utils.FacebookUtils import login_url
 from Models.User.Account import *
 from Utils.PageUtils import *
-from Utils.data.Defs import signin_reg, blank_img
+from Utils.data.Defs import signin_reg, blank_img, signin_pattern
 
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader('templates'), autoescape = True)
 
@@ -97,16 +99,20 @@ class BaseHandler(webapp2.RequestHandler):
         if self.user_prefs:
             self.params.update(gen_header(self.user_prefs))
         else:
-            self.params.update(gen_header(None))
+            header = gen_header(None)
+            p = urlparse.urlparse(self.request.url)
+            redirect_uri = p.scheme + '://' + p.netloc + '/fblogin'
+            header['nickname'] = header['nickname'] % login_url(redirect_uri)
+            self.params.update(header)
             # set referer cookie if not from Barnacle
             referer = self.request.referer
             if referer and referer[0:25].lower()!='http://www.gobarnacle.com/'[0:25]:
                 self.set_secure_cookie('referral', referer)
-            
+
 
 def gen_header(up=None):
     header = {}
-    header['nickname'] = signin_reg
+    header['nickname'] = signin_pattern
     if up:
         header['account_links'] = gen_account_links(up)
         header['nickname'] = up.nickname()

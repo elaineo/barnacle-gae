@@ -10,6 +10,7 @@ tz_url = 'https://maps.googleapis.com/maps/api/timezone/json?'
 miles2m = 1609
 
 signin_reg = '<ul class="button-group right fblogin"><li><a class="small button facebook">SIGN UP</a></li></ul>'
+signin_pattern = r'<ul class="button-group right"><li><a class="small button facebook" href="%s">SIGN UP</a></li></ul>'
 
 MV_geolat = 37.416
 MV_geolon = -122.077

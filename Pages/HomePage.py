@@ -1,5 +1,7 @@
 from Handlers.BaseHandler import *
 from Utils.PageUtils import *
+from Utils.FacebookUtils import login_url
+import urlparse
 import json
 
 class HomePage(BaseHandler):
@@ -9,9 +11,12 @@ class HomePage(BaseHandler):
             #nr = Request.newest(5)
             #self.params['new_requests'] = [r.to_dict(incl_user=True) for r in nr]
             self.render('home.html', **self.params)
-        else:            
+        else:
             referer = self.request.referer
             self.set_secure_cookie('referral', referer)
+            p = urlparse.urlparse(self.request.url)
+            url = p.scheme + '://' + p.netloc + '/fblogin'
+            self.params['login_url'] = login_url(url)
             self.render('landing/splash.html', **self.params)
 
 class GuestPage(BaseHandler):
@@ -19,13 +24,13 @@ class GuestPage(BaseHandler):
     def get(self):
         # nr = Request.newest(5)
         # self.params['new_requests'] = [r.to_dict(incl_user=True) for r in nr]
-        self.render('home.html', **self.params)   
-        
+        self.render('home.html', **self.params)
+
 class SplashPage(BaseHandler):
     """ About page """
     def get(self):
         self.render('landing/splash.html', **self.params)
-        
+
 class AboutPage(BaseHandler):
     """ About page """
     def get(self):
@@ -35,27 +40,27 @@ class LocationPage(BaseHandler):
     """ About page """
     def get(self):
         self.render('location.html', **self.params)
-        
+
 class PrivacyPage(BaseHandler):
     """ Privacy page """
     def get(self):
         self.render('privacy.html', **self.params)
-        
+
 class PressPage(BaseHandler):
     """ Press page """
     def get(self):
         self.render('press.html', **self.params)
-        
+
 class HowItWorksPage(BaseHandler):
     """ How it works page """
     def get(self):
         self.render('how_it_works.html', **self.params)
-        
+
 class JobsPage(BaseHandler):
     """ Jobs page """
     def get(self):
         self.render('jobs.html', **self.params)
-        
+
 
 class TOSPage(BaseHandler):
     """ Terms of Service page """
@@ -65,12 +70,12 @@ class TOSPage(BaseHandler):
 class Kickstarter(BaseHandler):
     """ Terms of Service page """
     def get(self):
-        self.render('kick/index.html', **self.params)        
-        
+        self.render('kick/index.html', **self.params)
+
 class TrackerPage(BaseHandler):
     """ Terms of Service page """
     def get(self):
-        self.render('track/tracker.html', **self.params)                
+        self.render('track/tracker.html', **self.params)
 
 class BlogPage(BaseHandler):
     def get(self, post=None):
@@ -90,5 +95,5 @@ class NavHelper(BaseHandler):
         else:
             header = gen_header(None)
         self.response.headers['Content-Type'] = "application/json"
-        self.write(json.dumps(header))  
-        
+        self.write(json.dumps(header))
+
