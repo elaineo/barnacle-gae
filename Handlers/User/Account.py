@@ -62,7 +62,7 @@ class SignupPage(BaseHandler):
         self.write(json.dumps(response))
     def __fb(self):
         # retrieve information
-        # Fix for Bad content type: '; charset=utf-8'        
+        # Fix for Bad content type: '; charset=utf-8'
         if len(self.request.content_type) == 0:
             fp = self.request.environ['webob._body_file'][1]
             fp.reset()
@@ -74,27 +74,27 @@ class SignupPage(BaseHandler):
         remoteip = self.request.remote_addr
         first_name = data.get('first_name')
         last_name = data.get('last_name')
-        fbid = data.get('id')       
+        fbid = data.get('id')
         email = data.get('email')
         if not email:
             username = data.get('username')
             if not username:
                 username = fbid
-            email = username+'@facebook.com'                
+            email = username+'@facebook.com'
         try:
             location = data['location']['name']
         except:
             location = 'Mountain View, CA'
         # lookup ip address
         gi = pygeoip.GeoIP(CITY_DB_PATH)
-        geo = gi.record_by_addr(remoteip)    
-        if not geo: 
+        geo = gi.record_by_addr(remoteip)
+        if not geo:
             gi = pygeoip.GeoIP(CITYV6_DB_PATH)
-            geo = gi.record_by_addr(remoteip)                
+            geo = gi.record_by_addr(remoteip)
         if geo:
             geocity = geo.get('city') #hehehe
         else:
-            geocity = ''   
+            geocity = ''
 
         if not fbid:
             response = { 'status': 'fail'}
@@ -110,7 +110,7 @@ class SignupPage(BaseHandler):
                     logging.info(geocity)
                     stats = UserStats(referral=referral, code=code)
                 sett = UserSettings(notify=[1,2,3,4])
-                up = UserPrefs(account_type = 'fb', email = email, userid = fbid, first_name = first_name, last_name = last_name, img_id = -1, settings=sett, location = location, fblocation = location, 
+                up = UserPrefs(account_type = 'fb', email = email, userid = fbid, first_name = first_name, last_name = last_name, img_id = -1, settings=sett, location = location, fblocation = location,
                 stats=stats)
                 up.put()
                 self.user_prefs = up
@@ -137,9 +137,9 @@ class SignupPage(BaseHandler):
             self.login(fbid, 'fb')
             self.set_current_user()
             self.fill_header()
-            
+
             # check user agent to see if it's an app login
-            agent = self.request.headers['User-Agent']        
+            agent = self.request.headers['User-Agent']
             driver = 0
             try:
                 if agent:
@@ -150,13 +150,13 @@ class SignupPage(BaseHandler):
                     else:
                         logging.info(agent)
             except:
-                logging.error(agent)            
+                logging.error(agent)
             if driver > 0:
                 d = Driver.by_userkey(up.key)
                 if not d:
                     d = Driver(parent=self.user_prefs.key)
                 if not d.app_client:
-                    d.app_client = driver    
+                    d.app_client = driver
                     d.put()
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))
@@ -175,7 +175,7 @@ class SignupPage(BaseHandler):
         else:
             mm['email'] = email
         u = UserAccounts.by_email(email)
-        if u:            
+        if u:
             mm['error']="That user exists already."
         if not valid_pw(password):
             mm['error'] = "That wasn't a valid password."
@@ -194,19 +194,18 @@ class SignupPage(BaseHandler):
                 up.put()
             u = UserAccounts(email = email, pwhash = make_pw_hash(email, password), parent=up.key)
             u.put()
-
-            u.set_login_token()  #FIXME AND SET COOKIE
-            mm = u.as_json()
+            self.login(email, 'p2p')
+            mm = u.to_dict()
             mm['status'] = 'success'
             self.write(json.dumps(mm))
             return
-            
+
     def send_user_info(self, email):
         htmlbody =  self.render_str('email/welcome_user.html', **self.params)
-        textbody = welcome_user 
-        send_info(email, welcome_user_sub, textbody, htmlbody)        
-            
-            
+        textbody = welcome_user
+        send_info(email, welcome_user_sub, textbody, htmlbody)
+
+
 class SigninPage(BaseHandler):
     """ User Sign In Page """
     def get(self):
