@@ -10,7 +10,6 @@ class FBLoginPage(BaseHandler):
         code = self.request.get('code')
         p = urlparse.urlparse(self.request.url)
         url = p.scheme + '://' + p.netloc + p.path
-        url = 'http://www.gobarnacle.com:8080/fblogin'
         response = trade_code_for_access_token(url, code)
         if 'access_token' in response:
             access_token = response['access_token'][0]
