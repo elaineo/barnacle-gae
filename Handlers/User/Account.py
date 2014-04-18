@@ -154,7 +154,7 @@ class SignupPage(BaseHandler):
             if driver > 0:
                 d = Driver.by_userkey(up.key)
                 if not d:
-                    d = Driver(parent=self.user_prefs.key)
+                    d = Driver(parent=up.key)
                 if not d.app_client:
                     d.app_client = driver
                     d.put()
@@ -196,7 +196,8 @@ class SignupPage(BaseHandler):
             u.put()
             self.login(email, 'p2p')
             mm = u.to_dict()
-            mm['status'] = 'success'
+            mm['status'] = 'ok'
+            # return a cookie for local storage
             self.write(json.dumps(mm))
             return
 
