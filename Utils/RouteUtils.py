@@ -147,13 +147,9 @@ class RouteUtils:
             for p in r.pathpts[0::10]:
                 pathpts.append([p.lat, p.lon])
             paths.append(pathpts)
-
-        if len(lats) != 0:
-            lat = sum(lats)/len(lats)
-            lng = sum(lngs)/len(lngs)
-        else:
-            lat = 0
-            lng = 0
+        # map is nationwide, just dump center of US
+        lat = 40
+        lng = -103
         # calculate map zoom, between 3 and 10
         maxh = max(lats) - min(lats)
         maxw = max(lngs) - min(lngs)
