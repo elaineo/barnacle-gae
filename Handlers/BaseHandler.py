@@ -41,6 +41,9 @@ class BaseHandler(webapp2.RequestHandler):
         self.params = {} # parameters to pass to template renderer
         self.set_current_user()
         self.fill_header()
+        p = urlparse.urlparse(self.request.url)
+        url = p.scheme + '://' + p.netloc + '/fblogin'
+        self.params['login_url'] = login_url(url)
 
     def set_secure_cookie(self, name, val):
         """ set cookie """

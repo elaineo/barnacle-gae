@@ -4,7 +4,7 @@ import json
 import urlparse
 
 
-class FBLoginPage(BaseHandler):
+class FBLogin(BaseHandler):
     """ Login to facebook account """
     def get(self):
         code = self.request.get('code')

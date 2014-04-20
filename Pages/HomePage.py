@@ -1,6 +1,5 @@
 from Handlers.BaseHandler import *
 from Utils.PageUtils import *
-from Utils.FacebookUtils import login_url
 import urlparse
 import json
 
@@ -14,9 +13,6 @@ class HomePage(BaseHandler):
         else:
             referer = self.request.referer
             self.set_secure_cookie('referral', referer)
-            p = urlparse.urlparse(self.request.url)
-            url = p.scheme + '://' + p.netloc + '/fblogin'
-            self.params['login_url'] = login_url(url)
             self.render('landing/splash.html', **self.params)
 
 class GuestPage(BaseHandler):
