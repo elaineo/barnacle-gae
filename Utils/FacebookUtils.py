@@ -40,6 +40,25 @@ def get_app_token():
 
 def debug_token(token_to_inspect, app_token = get_app_token()):
     """ Examine the identity of the token
+
+        Example API response
+        {
+            "data": {
+                "app_id": 138483919580948,
+                "application": "Social Cafe",
+                "expires_at": 1352419328,
+                "is_valid": true,
+                "issued_at": 1347235328,
+                "metadata": {
+                    "sso": "iphone-safari"
+                },
+                "scopes": [
+                    "email",
+                    "publish_actions"
+                ],
+                "user_id": 1207059
+            }
+        }
     """
     url = 'https://graph.facebook.com/debug_token?input_token=%s&access_token=%s' % (token_to_inspect, app_token)
     r = urlfetch.fetch(url)
