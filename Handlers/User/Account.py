@@ -174,14 +174,21 @@ class SignupPage(BaseHandler):
             mm['error']="That's not a valid email address."
         else:
             mm['email'] = email
-        u = UserAccounts.by_email(email)
-        if u:
-            mm['error']="That user exists already."
-        if not valid_pw(password):
-            mm['error'] = "That wasn't a valid password."
         tel = valid_tel(tel)
         if not tel:
-            mm['error'] = "That is not a valid number."
+            mm['error'] = "That is not a valid number."            
+        u = UserAccounts.by_email(email)        
+        if not valid_pw(password):
+            mm['error'] = "That wasn't a valid password."        
+        elif u:
+            mm['error']="That user exists already."
+            # This is a hack because Android blows and double-fires events
+            if u.pwhash:
+                mm['status'] = 'ok'
+                mm['account'] = make_secure_val('p2p')
+                mm['userid'] = make_secure_val(email)            
+                self.write(json.dumps(mm))
+                return                
         if mm['error'] is not None:
             mm['status'] = 'error'
             self.write(json.dumps(mm))
@@ -194,9 +201,10 @@ class SignupPage(BaseHandler):
                 up.put()
             u = UserAccounts(email = email, pwhash = make_pw_hash(email, password), parent=up.key)
             u.put()
-            self.login(email, 'p2p')
-            mm = u.to_dict()
+            # return mobile login cookies
             mm['status'] = 'ok'
+            mm['account'] = make_secure_val('p2p')
+            mm['userid'] = make_secure_val(email)
             # return a cookie for local storage
             self.write(json.dumps(mm))
             return
