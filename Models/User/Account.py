@@ -59,7 +59,7 @@ class UserPrefs(ndb.Model):
     location = ndb.StringProperty()
     fblocation = ndb.StringProperty()
     locpt = ndb.GeoPtProperty(default=ndb.GeoPt(37.4,-122))
-    about = ndb.TextProperty()
+    about = ndb.TextProperty(indexed=False)
     last_active = ndb.DateTimeProperty(auto_now=True)
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
     img_id = ndb.IntegerProperty()      # set to -1 if using FB picture
