@@ -34,6 +34,7 @@ class UserAccount(ndb.Model):
 class UserAccounts(ndb.Model):
     email = ndb.StringProperty()
     pwhash = ndb.StringProperty() # hashed pw
+    access_token = ndb.StringProperty() #for FB accounts
     
     @classmethod
     def by_email(cls, email):

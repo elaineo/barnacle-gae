@@ -2,6 +2,7 @@ from Handlers.BaseHandler import *
 from Utils.FacebookUtils import *
 import json
 import urlparse
+import logging
 
 
 class FBLogin(BaseHandler):
@@ -15,6 +16,8 @@ class FBLogin(BaseHandler):
             access_token = response['access_token'][0]
             expire_time = response['expires'][0]
             debug_info = debug_token(access_token)
+            logging.info(response)
+            logging.info(debug_info)
             if 'data' in debug_info and 'user_id' in debug_info['data']:
                 user_id =  debug_info['data']['user_id']
                 self.login(user_id, 'fb')

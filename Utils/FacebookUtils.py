@@ -18,7 +18,7 @@ APP_SECRET = '89a554288210c8f7a8f3292612ed7a6f'
 
 def login_url(redirect_uri):
     """ Generate a login url for Facebook"""
-    url = 'https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&response_type=%s&display=popup' % (APP_ID, redirect_uri, r'code')
+    url = 'https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&response_type=%s&display=popup&scope=email,user_location' % (APP_ID, redirect_uri, r'code')
     return url
 
 
@@ -61,5 +61,10 @@ def debug_token(token_to_inspect, app_token = get_app_token()):
         }
     """
     url = 'https://graph.facebook.com/debug_token?input_token=%s&access_token=%s' % (token_to_inspect, app_token)
+    r = urlfetch.fetch(url)
+    return json.loads(r.content)
+
+def collect_info(userid, access_token):
+    url = 'https://graph.facebook.com/%s?fields=id,first_name,last_name,username,email,location&access_token=%s' % (userid, access_token)
     r = urlfetch.fetch(url)
     return json.loads(r.content)

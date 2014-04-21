@@ -2,64 +2,139 @@ from Handlers.BaseHandler import *
 from Models.User.Account import *
 from Models.User.Driver import *
 from Utils.UserUtils import *
+from Utils.FacebookUtils import *
 from Utils.data.Defs import CITY_DB_PATH, CITYV6_DB_PATH
 from Utils.Email.User import *
 from Utils.EmailUtils import send_info
+from google.appengine.api import taskqueue
 import hashlib
 import logging
 import json
 import pygeoip
+import urlparse
 
 class SignupPage(BaseHandler):
     """ User sign up page """
-    def get(self):
-        # we should never end up here.
-        if self.user_prefs: # if user is logged in, redirect to profile
+    def get(self,action=None):
+        if action=='fb':
+            self.__fbweb()
+        elif self.user_prefs: # if user is logged in, redirect to profile
             self.redirect("/profile")
+        elif action=='createfb':
+            self.__createfb()              
         else:
             self.redirect('/')
 
     def post(self,action=None):
         if not action:
-            self.__post()
-        elif action=='mobile':
-            self.__mobile()
-        elif action=='fb':
-            self.__fb()
+            return
+        elif action=='p2p':
+            self.__p2p()          
+            
 
-    def __post(self):
-        # retrieve information
-        password = self.request.get('password')
-        verify = self.request.get('verify')
-        email = self.request.get('email')
-        response = {}
-        response['has_error'] = 0
-        if not valid_email(email):
-            response['erroremail']="That's not a valid email address."
-            response['has_error'] = "email"
-        else:
-            response['email'] = email
-        if UserAccounts.by_email(email).get():
-            response['erroremail']="That user exists already."
-            response['has_error'] = "email"
-        if not valid_pw(password):
-            response['errorpw0'] = "That wasn't a valid password."
-            response['has_error'] = "password"
-        elif password != verify:
-            response['errorpw1'] = "Your passwords didn't match."
-            response['has_error'] = "verify"
-        if response['has_error']==0:
-            # make user account
-            u = UserAccounts(email = email, pwhash = make_pw_hash(email, password))
-            u.put()
-            up = UserPrefs(account_type = 'p2p', email = email, userid = email)
-            up.put()
-            # set cookies
-            self.login(email)
-            self.set_current_user()
-            self.fill_header()
-        self.response.headers['Content-Type'] = "application/json"
-        self.write(json.dumps(response))
+    def __fbweb(self):
+        self.response.headers['Content-Type'] = "application/json"    
+        remoteip = self.request.remote_addr    
+        
+        code = self.request.get('code')
+        p = urlparse.urlparse(self.request.url)
+        url = p.scheme + '://' + p.netloc + p.path
+        response = trade_code_for_access_token(url, code)
+
+        if 'access_token' in response:
+            access_token = response['access_token'][0]
+            expire_time = response['expires'][0]
+            debug_info = debug_token(access_token)
+
+            if 'data' in debug_info and 'user_id' in debug_info['data']:
+                user_id =  debug_info['data']['user_id']
+                if user_id:
+                    fbid = str(user_id)
+                    # lookup ip address
+                    gi = pygeoip.GeoIP(CITY_DB_PATH)
+                    geo = gi.record_by_addr(remoteip)
+                    if not geo:
+                        gi = pygeoip.GeoIP(CITYV6_DB_PATH)
+                        geo = gi.record_by_addr(remoteip)
+                    if geo:
+                        geocity = geo.get('city') #hehehe
+                    else:
+                        geocity = ''                
+                    # make user account                    
+                    up = UserPrefs.by_userid(fbid)
+                    if not up:               
+                        referral = self.read_secure_cookie('referral')
+                        refcode = self.read_secure_cookie('code')
+                        try:
+                            stats = UserStats(referral=referral, code=refcode, ip_addr=[remoteip], locations=[geocity])
+                        except:
+                            logging.info(geocity)
+                            stats = UserStats(referral=referral, code=refcode)
+                        sett = UserSettings(notify=[1,2,3,4])
+                        up = UserPrefs(account_type = 'fb', userid = fbid, img_id = -1, settings=sett, stats=stats)
+                        up.put()
+                        self.user_prefs = up
+                        self.current_user_key = up.key
+                        response = { 'status': 'new'}
+                        logging.info('New account')
+                        logging.info('/signup/createfb?userkey='+up.key.urlsafe()+'&token='+access_token+'&expire='+expire_time)
+                        taskqueue.add(url='/signup/createfb?userkey='+up.key.urlsafe()+'&token='+access_token+'&expire='+expire_time, method='get')                        
+                    else:
+                        response = { 'status': 'existing'}
+                        logging.info('Existing account login from ' + (geocity if geocity else ''))
+                        try:
+                            if geocity:
+                                if not up.stats and remoteip:
+                                    up.stats = UserStats(ip_addr=[remoteip], locations=[geocity])
+                                elif remoteip not in up.stats.ip_addr:
+                                    up.stats.ip_addr.append(remoteip)
+                                if geocity not in up.stats.locations:
+                                    up.stats.locations.append(geocity)
+                                up.put()
+                        except:
+                            logging.info(geocity)
+                            logging.info(remoteip)
+                    # set cookies
+                    self.login(fbid, 'fb')
+                    
+                    self.redirect('/account')    
+
+                response = { 'status': 'fail'}
+                self.write(json.dumps(response))                       
+   
+   
+    def __createfb(self):   
+        userkey = self.request.get('userkey')
+        token = self.request.get('token')        
+        expire = self.request.get('expire')      
+        # Make a call to FB graph API to populate user profile
+        try:
+            u = ndb.Key(urlsafe=userkey).get()
+        except:
+            return
+        data = collect_info(u.userid,token)
+        logging.info(data)
+        u.email = data.get('email')
+        if not u.email:
+            username = data.get('username')
+            if not username:
+                username = u.userid
+            email = username+'@facebook.com'
+
+        u.first_name = data.get('first_name')
+        u.last_name = data.get('last_name')        
+        self.send_user_info(u.email) 
+        try:
+            location = data['location']['name']
+        except:
+            location = 'Mountain View, CA'
+        u.fblocation = location
+        u.location = location
+        u.put()
+        ua = UserAccounts(access_token = token, parent=u.key)
+        ua.put()
+        return
+    
     def __fb(self):
         # retrieve information
         # Fix for Bad content type: '; charset=utf-8'
@@ -161,7 +236,7 @@ class SignupPage(BaseHandler):
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))
 
-    def __mobile(self):
+    def __p2p(self):
         self.response.headers['Content-Type'] = "application/json"
         data = json.loads(self.request.body)
         logging.info(data)
