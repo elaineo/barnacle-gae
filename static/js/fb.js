@@ -1,16 +1,3 @@
-  // This only happens if you click the Facebook button
-  function fbLogin() {
-    FB.login( function(response) {
-        console.log(response);
-       if (response.authResponse) {
-        createFBAcct();
-        return true;
-      } else {
-        console.log('User cancelled login or did not fully authorize.');
-        return false;
-      }
-    },{scope: 'email,user_location'});
-   }
 
   window.fbAsyncInit = function() {
     FB.init({
@@ -22,27 +9,7 @@
     });
     $(document).trigger('fbload');
 
-  // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
-  // for any authentication related change, such as login, logout or session refresh. This means that
-  // whenever someone who was previously logged out tries to log in again, the correct case below
-  // will be handled.
-  FB.Event.subscribe('auth.authResponseChange', function(response) {
-    // Here we specify what we do with the response anytime this event occurs.
-    if (response.status === 'connected') {
-      // The response object is returned with a status field that lets the app know the current
-      // login status of the person. In this case, we're handling the situation where they
-      // have logged in to the app.
-      console.log('Connected');
-    } else if (response.status === 'not_authorized') {
-      // In this case, the person is logged into Facebook, but not into the app
-      console.log('Not Authorized');
-    } else {
-      // In this case, the person is not logged into Facebook
-      console.log('Not logged in to facebook ');
-    }
-  });
-  };
-
+ 
   // Load the SDK asynchronously
   (function(d){
      var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
@@ -51,47 +18,6 @@
      js.src = "//connect.facebook.net/en_US/all.js";
      ref.parentNode.insertBefore(js, ref);
    }(document));
-
-  function createFBAcct() {
-    console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me?fields=first_name,last_name,email,id,username', function(response) {
-      console.log(response);
-      //var data = "first_name="+response.first_name+"&last_name="+response.last_name+"&id="+response.id;
-      $.ajax({
-        type: "POST",
-        dataType: "json",
-        contentType: "application/json",
-        url: "/signup/fb",
-        data: JSON.stringify(response),
-        success: function(response) {
-            // if (response.status == "new" || response.status == "existing") {
-                // closeModal();
-                // refresh_head();
-                // return true;
-            if (response.status == "new") {
-                // window.location.replace("/splash");
-                closeModal();
-                var nextLoc = $( 'body' ).data( "nextLoc");
-                if (typeof nextLoc != 'undefined')
-                    window.location.replace(nextLoc);
-                refresh_head();
-                // window.location.replace("/profile");
-            } else if (response.status == "existing") {
-                // window.location.replace(window.location.href.split('#')[0]);
-                closeModal();
-                var nextLoc = $( 'body' ).data( "nextLoc");
-                if (typeof nextLoc != 'undefined')
-                    window.location.replace(nextLoc);
-                refresh_head();
-            }
-            else {
-                console.log('FB Account failed.');
-                return false
-            }
-        }
-    });
-    });
-  }
 
   function dumpFriends(fb_id, dumpsite, max) {
     if (fb_id=='')
@@ -173,9 +99,6 @@ $.ajaxSetup ({
 });
 
 $(document).ready(function(){
-  $('.fblogin').click(function() {
-    fbLogin();
-  });
   $('#signoutFB').click(function() {
     // check if we have a fb cookie
     var acct = getCookie("account");
