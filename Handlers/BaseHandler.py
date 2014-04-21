@@ -42,7 +42,7 @@ class BaseHandler(webapp2.RequestHandler):
         self.set_current_user()
         self.fill_header()
         p = urlparse.urlparse(self.request.url)
-        url = p.scheme + '://' + p.netloc + '/fblogin'
+        url = p.scheme + '://' + p.netloc + '/signup/fb'
         self.params['login_url'] = login_url(url)
 
     def set_secure_cookie(self, name, val):
@@ -70,21 +70,6 @@ class BaseHandler(webapp2.RequestHandler):
         self.response.headers.add_header('Set-Cookie', 'account=; Path=/')
 
     def set_current_user(self):
-        # check google account
-        user = users.get_current_user()
-        if user:
-            up = UserPrefs.by_userid(user.user_id())
-            if not up:
-                up = UserPrefs(userid = user.user_id(), account_type = 'google')
-                up.put()
-            # set cookie
-            logacct = self.read_secure_cookie('account')
-            if logacct=='':
-                self.set_secure_cookie('account', 'google')
-                self.set_secure_cookie('user_id', str(up.userid))
-            self.user_prefs = up
-            self.current_user_key = up.key
-        # otherwise it's a p2p account or facebook
         email = self.read_secure_cookie('user_id')
         if email:
             up = UserPrefs.by_userid(email)
@@ -104,7 +89,7 @@ class BaseHandler(webapp2.RequestHandler):
         else:
             header = gen_header(None)
             p = urlparse.urlparse(self.request.url)
-            redirect_uri = p.scheme + '://' + p.netloc + '/fblogin'
+            redirect_uri = p.scheme + '://' + p.netloc + '/signup/fb'
             header['nickname'] = header['nickname'] % login_url(redirect_uri)
             self.params.update(header)
             # set referer cookie if not from Barnacle
