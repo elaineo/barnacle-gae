@@ -1,5 +1,7 @@
 from Handlers.BaseHandler import *
 from Models.User.Account import *
+from Models.User.DriverModel import *
+from google.appengine.api import taskqueue
 from Utils.ValidUtils import parse_date, get_search_json
 import logging
 import json
@@ -73,10 +75,11 @@ class ApplyHandler(BaseHandler):
 #                fbid = fbid, education = education, work = work, loc = loc)  
             dr.put()
             response = { 'status': 'new'}        
+            taskqueue.add(url='/summary/driver/'+dr.key.urlsafe(), method='get')
         except:
             response = {'status': 'err'}
         self.write(json.dumps(response))
-        logging.info('Driver application submitted '+email) 
+        logging.info('Driver application submitted '+email)         
 
     def __nofb(self):
         d = json.loads(self.request.body)

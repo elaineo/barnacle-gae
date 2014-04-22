@@ -110,3 +110,9 @@ class SummaryHandler(BaseHandler):
             buf += '\n http://www.gobarnacle.com' + r.profile_url()
             subject = 'New Barnacle payment account'
             self.email_report('help@gobarnacle.com', subject, buf)
+        elif action=='driver' and key:
+            r = ndb.Key(urlsafe=key).get()
+            buf = r.first_name + r.last_name + ' applied to be a driver'
+            buf += '\n\n' + str(r.to_dict())
+            subject = 'New Barnacle driver application'
+            self.email_report('help@gobarnacle.com', subject, buf)
