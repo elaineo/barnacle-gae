@@ -101,6 +101,8 @@ class SummaryHandler(BaseHandler):
                 buf = r.locstart + ' to ' + r.locend
             buf += '\n http://www.gobarnacle.com' + r.post_url()
             subject = 'New Barnacle request'
+            if r.__class__.__name__ == 'OfferRequest':
+                subject = 'New Barnacle reservation!!'
             self.email_report('help@gobarnacle.com', subject, buf)
         elif action=='selfpay' and key:
             r = ndb.Key(urlsafe=key).get()
