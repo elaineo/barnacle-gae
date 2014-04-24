@@ -1,15 +1,3 @@
-
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '540602052657989', // App ID
-      channelUrl : '//www.gobarnacle.com/static/js/channel.html', // Channel File
-      status     : true, // check login status
-      cookie     : true, // enable cookies to allow the server to access the session
-      xfbml      : true  // parse XFBML
-    });
-    $(document).trigger('fbload');
-
- 
   // Load the SDK asynchronously
   (function(d){
      var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
