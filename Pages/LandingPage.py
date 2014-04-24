@@ -179,7 +179,7 @@ class CouponPage(BaseHandler):
             r = Reservation(start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest, delivby=delivby, details=code)
             r.put()
             self.params.update(r.to_dict())
-            self.params['reskey'] = r.key.urlsafe()
+            self.params['reskey'] = r.key.urlsafe()            
             self.params['checkout_action'] = '/checkout/res/' + r.key.urlsafe()
             self.render('launch/fillcheckout_abbrev.html', **self.params)            
     def __get_map_form(self,pt):
@@ -208,6 +208,7 @@ class EventPage(BaseHandler):
             self.params['bizname'] = c.name
             self.params['estcost'] = c.price
             self.params['code'] = c.code
+            self.params['today'] = datetime.now().strftime('%Y-%m-%d')            
             c.views = c.views+1
             c.put()
             # set cookie so we know where they came from
