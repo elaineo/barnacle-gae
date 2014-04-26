@@ -40,6 +40,7 @@ class SitemapGenerationHandler(BaseHandler):
     def get_route_urls(self):
         urls = []
         for route in Route.query():
+            logging.info(route.key)
             if route.pathpts and len(route.pathpts) > 1:
                 try:
                     start_nearest_city = closest_city(route.pathpts[0])['city']
@@ -54,6 +55,7 @@ class SitemapGenerationHandler(BaseHandler):
     def get_request_urls(self):
         urls = []
         for request in Request.query():
+            logging.info(request.key)
             try:
                 start_nearest_city = closest_city(request.start)['city']
                 end_nearest_city = closest_city(request.dest)['city']
