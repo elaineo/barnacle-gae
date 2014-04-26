@@ -41,21 +41,27 @@ class SitemapGenerationHandler(BaseHandler):
         urls = []
         for route in Route.query():
             if route.pathpts and len(route.pathpts) > 1:
-                start_nearest_city = closest_city(route.pathpts[0])['city']
-                end_nearest_city = closest_city(route.pathpts[-1])['city']
-                urls.append('http://' + urllib.quote('www.gobarnacle.com/route/from/' + start_nearest_city + '/to/' + end_nearest_city))
-                urls.append('http://' + urllib.quote('www.gobarnacle.com/route/from/' + start_nearest_city))
-                urls.append('http://' + urllib.quote('www.gobarnacle.com/route/to/' + end_nearest_city))
+                try:
+                    start_nearest_city = closest_city(route.pathpts[0])['city']
+                    end_nearest_city = closest_city(route.pathpts[-1])['city']
+                    urls.append('http://' + urllib.quote('www.gobarnacle.com/route/from/' + start_nearest_city + '/to/' + end_nearest_city))
+                    urls.append('http://' + urllib.quote('www.gobarnacle.com/route/from/' + start_nearest_city))
+                    urls.append('http://' + urllib.quote('www.gobarnacle.com/route/to/' + end_nearest_city))
+                except:
+                    logging.warn('error for route: ' + route.key)
         return set(urls)
 
     def get_request_urls(self):
         urls = []
         for request in Request.query():
-            start_nearest_city = closest_city(request.start)['city']
-            end_nearest_city = closest_city(request.dest)['city']
-            urls.append('http://' + urllib.quote('www.gobarnacle.com/request/from/' + start_nearest_city + '/to/' + end_nearest_city))
-            urls.append('http://' + urllib.quote('www.gobarnacle.com/request/from/' + start_nearest_city))
-            urls.append('http://' + urllib.quote('www.gobarnacle.com/request/to/' + end_nearest_city))
+            try:
+                start_nearest_city = closest_city(request.start)['city']
+                end_nearest_city = closest_city(request.dest)['city']
+                urls.append('http://' + urllib.quote('www.gobarnacle.com/request/from/' + start_nearest_city + '/to/' + end_nearest_city))
+                urls.append('http://' + urllib.quote('www.gobarnacle.com/request/from/' + start_nearest_city))
+                urls.append('http://' + urllib.quote('www.gobarnacle.com/request/to/' + end_nearest_city))
+            except:
+                logging.warn('error for request: ' + request.key)
         return set(urls)
 
 
