@@ -41,15 +41,15 @@ class SearchableRequestHandler(BaseHandler):
             self.params['center'] = [40,-99]
             self.render('search/seo_requests_all.html', **self.params)            
         elif dest == None:
-            try:
-                posts, center = self.__get_reqs_from(origin)            
-                posts = dump_results(posts) 
-                self.params['posts'] = [p.to_search() for p in posts]
-                rdump = RouteUtils.dumpreqs(posts, dest=False)
-                self.params['markers'] = rdump['markers']
-                self.params['center'] = center
-            except:
-                pass
+            # try:
+            posts, center = self.__get_reqs_from(origin)            
+            posts = dump_results(posts) 
+            self.params['posts'] = [p.to_search for p in posts]
+            rdump = RouteUtils.dumpreqs(posts, dest=False)
+            self.params['markers'] = rdump['markers']
+            self.params['center'] = center
+            # except:
+                # pass
             self.render('search/seo_requests_from.html', **self.params)
         else:
             try:
@@ -91,7 +91,7 @@ class SearchableRequestHandler(BaseHandler):
             return []    
         deststr = dest
 
-        dest = city_dict[dest]
+        dest = city_dict[dest]        
 
         dist=100
         delivstart = datetime.now()
@@ -107,7 +107,7 @@ class SearchableRequestHandler(BaseHandler):
         startstr = start
 
         start = city_dict[start]
-
+        
         dist=100
         delivstart = datetime.now()
         delivend = delivstart + timedelta(days=365)
@@ -175,5 +175,16 @@ def dump_results(results):
     posts = []
     for doc in results.results:
         d = search_todict(doc)
-        posts.append(d)        
-    return [ndb.Key(urlsafe=p['routekey']).get() for p in posts]
+        #posts.append(d)        
+        try:
+            req = ndb.Key(urlsafe=d.get('routekey')).get()
+            if req:
+                posts.append(req)
+            else:
+                logging.error('Could not find request')
+                logging.error(d)                
+        except:
+            logging.error('Could not find request')
+            logging.error(d)
+            continue
+    return posts
