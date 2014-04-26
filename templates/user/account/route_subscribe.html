@@ -26,7 +26,9 @@
       <div class="span12">
        <h4>Subscribed Routes</h4>
        {% if subscribed %}
-       <p>You will be alerted when there are requests along your subscribed routes.</p>
+       <p>You will be alerted when there are requests along your subscribed routes.
+       <input type="button" class="button tiny secondary" value="Unsubscribe" id='delete_btn'>
+       </p>       
        {% else %}
        <p>You are not subscribed to any routes. <a href='/route'>Subscribe now</a>.</p>
        {% endif %}
@@ -78,6 +80,7 @@ $(document).ready(function(){
     input.addEventListener("change", function (e) {
       $('#save_btn').removeAttr('disabled');
     });    
+    add_confirmation_dialog('{{delete_url}}',"delete_btn");    
 });
 
 </script>

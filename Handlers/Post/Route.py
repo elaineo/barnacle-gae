@@ -4,11 +4,12 @@ from google.appengine.api import taskqueue
 from google.appengine.api import memcache
 from Handlers.Post.Post import PostHandler
 from Models.Post.Route import *
+from Models.Post.Post import PostStatus
 
 from Models.User.Driver import *
 
 from Utils.RouteUtils import RouteUtils
-from Utils.SearchDocUtils import create_route_doc
+from Utils.SearchDocUtils import create_route_doc, delete_doc
 from Utils.ValidUtils import *
 from Utils.data.routesub import ROUTE_I5
 
@@ -102,6 +103,9 @@ class RouteHandler(PostHandler):
         if action=='subscribe':
             self.__subscribe()
             return
+        elif action=='unsubscribe':
+            self.__unsubscribe()
+            return
         if action=='edit' and key:
             try:
                 p = ndb.Key(urlsafe=key).get()
@@ -158,6 +162,25 @@ class RouteHandler(PostHandler):
         add_roundtrip(s, new_r)
         response['next'] = '/account'
         self.write(json.dumps(response))
+    
+    def __unsubscribe(self):        
+        if self.user_prefs:
+            routes = Route.by_subscriber(self.user_prefs.key)            
+            for r in routes:
+                if r.key.parent()==self.user_prefs.key:
+                    for q in r.offers:
+                        route = q.get()
+                        route.dead = PostStatus.index('DELETED')
+                        route.put()
+                    taskqueue.add(url='/match/cleanmatch/'+r.key.urlsafe(), method='get')
+                    # delete in search docs
+                    delete_doc(r.key.urlsafe(),r.__class__.__name__)
+                    r.dead = PostStatus.index('DELETED')
+                    r.put()
+            self.redirect('/account')
+        else:
+            self.abort(403)
+            return
     
     def __create_route(self,key=None):
         self.response.headers['Content-Type'] = "application/json"        

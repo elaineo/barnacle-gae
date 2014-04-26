@@ -17,7 +17,11 @@ class AccountPage(BaseHandler):
         if d:
             self.params.update(d.params_fill())
             routes = Route.by_subscriber(self.user_prefs.key)
-            self.params['subscribed'] = (len(routes) > 0)
+            if len(routes) > 0:
+                self.params['subscribed'] = True
+                self.params['delete_url'] = '/post/unsubscribe'
+            else:
+                self.params['subscribed'] = False
             self.render('user/account/driver.html',**self.params)
         else:
             self.params.update(self.user_prefs.params_fill())        
