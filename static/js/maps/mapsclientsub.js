@@ -112,7 +112,7 @@ function mapToRoute(mpoint) {
   else if (lat < 32.56)
     lat = 32.56;  
   maplon = routei5[lat];
-  if (maplon == 'undefined')
+  if (maplon == 'undefined' || isNaN(lat) || isNaN(maplon))
     mappoint = defaultPt;
   else
     mappoint = new google.maps.LatLng(lat,maplon);
