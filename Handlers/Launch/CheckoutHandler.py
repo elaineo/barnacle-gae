@@ -90,10 +90,13 @@ class CheckoutHandler(BaseHandler):
         tel = self.request.get('tel')
         name = self.request.get('name')
         uri = self.request.get('balancedCreditCardURI')        
+        fee = self.request.get('fee')
         
         customer = self.__create_anon(email,tel,name)
         customer.add_card(uri)        
         charge = res.rates*100
+        if fee:
+            charge = charge + fee
         if charge > 0:    
             customer.debit(amount=charge)
         self.params.update(res.to_dict())

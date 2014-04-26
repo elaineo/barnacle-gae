@@ -181,6 +181,7 @@ class CouponPage(BaseHandler):
             self.params.update(r.to_dict())
             self.params['reskey'] = r.key.urlsafe()            
             self.params['checkout_action'] = '/checkout/res/' + r.key.urlsafe()
+            self.params['booking_fee'] = 15
             self.render('launch/fillcheckout_abbrev.html', **self.params)            
     def __get_map_form(self,pt):
         ptlat = self.request.get(pt+'lat')

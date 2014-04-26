@@ -60,7 +60,7 @@
       </div>
       <div class="span6">
         <span class="add-on hidden-phone">$</span>
-          {{ rates }}
+          {{ rates }} + 15 (booking fee)
       </div>
     </div>   
     <div class="row-fluid hidden-phone" style='height:20px'></div> 
@@ -71,6 +71,7 @@
       </label>
       </div>
     </div> 
+    <input type='hidden' name='fee' value='{{booking_fee}}'>
     <div class="row-fluid"> 
       <div class='span4 offset4'>
 	<button type="submit" class="button secondary" id='request_btn' disabled='disabled'>Book It</button>
