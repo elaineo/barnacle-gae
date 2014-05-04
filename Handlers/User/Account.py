@@ -77,7 +77,6 @@ class SignupPage(BaseHandler):
                         self.current_user_key = up.key
                         response = { 'status': 'new'}
                         logging.info('New account')
-                        logging.info('/signup/createfb?userkey='+up.key.urlsafe()+'&token='+access_token+'&expire='+expire_time)
                         taskqueue.add(url='/signup/createfb?userkey='+up.key.urlsafe()+'&token='+access_token+'&expire='+expire_time, method='get')                        
                     else:
                         response = { 'status': 'existing'}
@@ -114,13 +113,13 @@ class SignupPage(BaseHandler):
             return
         data = collect_info(u.userid,token)
         logging.info(data)
-        u.email = data.get('email')
-        if not u.email:
+        email = data.get('email')
+        if not email:
             username = data.get('username')
             if not username:
                 username = u.userid
             email = username+'@facebook.com'
-
+        u.email = email
         u.first_name = data.get('first_name')
         u.last_name = data.get('last_name')        
         self.send_user_info(u.email) 

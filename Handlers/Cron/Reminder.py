@@ -20,13 +20,15 @@ class Reminder(BaseHandler):
             for r in reqs:
                 if r.stats.status==RequestStatus.index('INCOMP'):
                     u = r.key.parent().get()
+                    logging.info(r)
                     params = {'first_name': u.first_name, 'req_url': r.post_url()}
                     htmlbody =  self.render_str('email/reminders/complreq.html', **params)
                     textbody = complreq_txt % params 
                     sub = complreq_sub
-                    send_info(u.email, sub, textbody, htmlbody)                    
+                    send_info(u.email, sub, textbody, htmlbody)
                 elif r.stats.status==RequestStatus.index('NO_CC'):
                     u = r.key.parent().get()
+                    logging.info(r)
                     params = {'first_name': u.first_name}
                     htmlbody =  self.render_str('email/reminders/addcc.html', **params)
                     textbody = addcc_txt % params 
