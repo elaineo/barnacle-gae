@@ -41,15 +41,15 @@ class SearchableRequestHandler(BaseHandler):
             self.params['center'] = [40,-99]
             self.render('search/seo_requests_all.html', **self.params)            
         elif dest == None:
-            # try:
-            posts, center = self.__get_reqs_from(origin)            
-            posts = dump_results(posts) 
-            self.params['posts'] = [p.to_search for p in posts]
-            rdump = RouteUtils.dumpreqs(posts, dest=False)
-            self.params['markers'] = rdump['markers']
-            self.params['center'] = center
-            # except:
-                # pass
+            try:
+                posts, center = self.__get_reqs_from(origin)            
+                posts = dump_results(posts) 
+                self.params['posts'] = [p.to_search() for p in posts]
+                rdump = RouteUtils.dumpreqs(posts, dest=False)
+                self.params['markers'] = rdump['markers']
+                self.params['center'] = center
+            except:
+                pass
             self.render('search/seo_requests_from.html', **self.params)
         else:
             try:
