@@ -30,6 +30,8 @@ class SignupPage(BaseHandler):
             return
         elif action=='p2p':
             self.__p2p()          
+        elif action=='fbapp':
+            self.__fbapp()
             
 
     def __fbweb(self):
@@ -133,6 +135,50 @@ class SignupPage(BaseHandler):
         ua = UserAccounts(access_token = token, parent=u.key)
         ua.put()
         return
+    
+    def __fbapp(self):
+        if len(self.request.content_type) == 0:
+            fp = self.request.environ['webob._body_file'][1]
+            fp.reset()
+            buf = fp.read()
+            data = json.loads(buf)
+        else:
+            data = json.loads(unicode(self.request.body, errors='replace'))
+        data = data.split('&')
+        logging.info('app login')
+        logging.info(data)
+        try:
+            access_token = data[0].split('=')[-1]
+            expire_time = data[-1].split('=')[-1]
+            debug_info = debug_token(access_token)
+            response = {'status':'ok', 'account':'fb'}
+        except:
+            debug_info=None
+            response = {'status' : 'fail', 'error' : 'bad token'}
+            
+        if 'data' in debug_info and 'user_id' in debug_info['data']:
+            user_id =  debug_info['data']['user_id']
+            if user_id:
+                fbid = str(user_id)
+                # make user account                    
+                up = UserPrefs.by_userid(fbid)
+                if not up:               
+                    sett = UserSettings(notify=[1,2,3,4])
+                    up = UserPrefs(account_type = 'fb', userid = fbid, img_id = -1, settings=sett)
+                    up.put()
+                    self.user_prefs = up
+                    self.current_user_key = up.key
+                    response['type'] = 'new'
+                    logging.info('New account')
+                    taskqueue.add(url='/signup/createfb?userkey='+up.key.urlsafe()+'&token='+access_token+'&expire='+expire_time, method='get')                        
+                else:
+                    response = ['type'] = 'existing'
+                    logging.info('Existing account login from mobile')
+                response['userid'] = user_id
+
+        self.response.headers['Content-Type'] = "application/json"
+        self.write(json.dumps(response))       
+
     
     def __fb(self):
         # retrieve information
