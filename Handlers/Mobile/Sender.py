@@ -1,9 +1,12 @@
 from Handlers.BaseHandler import *
 from Models.Mobile.Sender import *
+from Utils.ValidUtils import parse_unit
 import logging
 
 class SenderMobile(BaseHandler):
     def get(self, action=None):
+        if action=='get_addr':
+            self.__get_addr()
         return
     
     def post(self, action=None):
@@ -14,6 +17,31 @@ class SenderMobile(BaseHandler):
         else:
             return
         
+    def __get_addr(self):
+        # return address associated with user
+        data = json.loads(self.request.body)
+        logging.info(data)
+        try:
+            key = data.get('userkey')
+            type = parse_unit(data.get('type'))
+            u = ndb.Key(urlsafe=key).get()
+            if not u:
+                response = { 'status': 'Not a user.'}
+            else:
+                addrs = Address.by_userkey_type(u.key,type)
+                addbook = []
+                for a in addrs:
+                    addbook.append(a.to_dict())
+                if len(addbook) > 0:
+                    response = { 'status': 'ok'}
+                    response['addrs'] = addbook
+                else:
+                    response = { 'status': 'No addresses.'}
+        except:
+            response = { 'status': 'Fail.'}
+        self.response.headers['Content-Type'] = "application/json"
+        self.write(json.dumps(response))           
+    
     def __create_addr(self):
         # create address associated with a user
         data = json.loads(self.request.body)
@@ -32,7 +60,7 @@ class SenderMobile(BaseHandler):
                 apt = data.get('apt')
                 a = Address(name=name, street=address, city=city, apt=apt, state=state, zip=zip, parent=u.key)
                 a.put()
-                response = { 'status': 'ok'}
+                response = { 'status': 'ok', 'addrkey': a.key.urlsafe()}
         except:
             response = { 'status': 'Address Failed.'}            
         self.response.headers['Content-Type'] = "application/json"
