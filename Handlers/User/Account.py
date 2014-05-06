@@ -32,6 +32,8 @@ class SignupPage(BaseHandler):
             self.__p2p()          
         elif action=='fbapp':
             self.__fbapp()
+        elif action=='mobile':
+            self.__mobile()
             
 
     def __fbweb(self):
@@ -136,6 +138,12 @@ class SignupPage(BaseHandler):
         ua.put()
         return
     
+    def __mobile(self):
+        data = json.loads(unicode(self.request.body, errors='replace'))
+        idenc = data.get('userid')
+        userid = idenc and check_secure_val(idenc)
+        #I don't know that this is necessary...
+    
     def __fbapp(self):
         if len(self.request.content_type) == 0:
             fp = self.request.environ['webob._body_file'][1]
@@ -172,10 +180,10 @@ class SignupPage(BaseHandler):
                     logging.info('New account')
                     taskqueue.add(url='/signup/createfb?userkey='+up.key.urlsafe()+'&token='+access_token+'&expire='+expire_time, method='get')                        
                 else:
-                    response = ['type'] = 'existing'
+                    response['type'] = 'existing'
                     logging.info('Existing account login from mobile')
-                response['userid'] = user_id
-
+                response['userid'] = make_secure_val(str(user_id))
+                response['userkey'] = up.key.urlsafe()
         self.response.headers['Content-Type'] = "application/json"
         self.write(json.dumps(response))       
 
