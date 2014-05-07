@@ -57,6 +57,7 @@ from Handlers.Launch.ReserveHandler import *
 from Pages.LandingPage import *
 from Pages.HomePage import *
 from Pages.ContactPage import *
+from Pages.Mobile import *
 from Pages.PromoPage import SpringBreak
 
 
@@ -68,6 +69,8 @@ app = webapp2.WSGIApplication([('/', HomePage),
                                 ('/home', GuestPage),
                                 ('/splash', SplashPage),
                                 ('/springbreak', SpringBreak),
+                  webapp2.Route('/mit100k', MIT100k),
+                  webapp2.Route('/mit100k/<action>', MIT100k),
 # LAUNCH!
 # requests
     webapp2.Route('/res', handler=RequestHandler),  #get rid of this

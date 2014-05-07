@@ -143,6 +143,7 @@ class SignupPage(BaseHandler):
         idenc = data.get('userid')
         userid = idenc and check_secure_val(idenc)
         #I don't know that this is necessary...
+        # supposed to check that their cookie is valid
     
     def __fbapp(self):
         if len(self.request.content_type) == 0:

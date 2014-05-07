@@ -6,6 +6,11 @@ class MobileStats(ndb.Model):
     """ I'm not sure what we're gonna do here yet """
     referral = ndb.StringProperty()
     
+class Shipment(ndb.Model):
+    start = ndb.KeyProperty() #key to Address
+    dest = ndb.KeyProperty() #key to Address
+    imgblob = ndb.BlobKeyProperty()
+    
 class Address(ndb.Model):
     name = ndb.StringProperty() #recipient's name
     street = ndb.StringProperty() #street address
