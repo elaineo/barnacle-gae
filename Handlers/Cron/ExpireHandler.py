@@ -51,6 +51,11 @@ class ExpireHandler(BaseHandler):
             route_index.delete(r.key.urlsafe())
             if r.roundtrip:
                 route_index.delete(r.key.urlsafe()+'_RT')
+            # expire children 
+            childr = OfferRequest.by_route(r.key)
+            for q in childr:
+                q.dead = PostStatus.index('EXPIRED')
+                q.put()
             # clean matches
             taskqueue.add(url='/match/cleanmatch/'+r.key.urlsafe(), method='get')
         deadreqs = Request.query(Request.delivby<now,Request.dead==0)
@@ -59,6 +64,11 @@ class ExpireHandler(BaseHandler):
             r.dead = PostStatus.index('EXPIRED')
             r.put()
             req_index.delete(r.key.urlsafe())
+            # expire children 
+            childr = OfferRoute.by_route(r.key)
+            for q in childr:
+                q.dead = PostStatus.index('EXPIRED')
+                q.put()
             # clean matches
             taskqueue.add(url='/match/cleanmatch/'+r.key.urlsafe(), method='get')
             # send expiration email
@@ -72,20 +82,20 @@ class ExpireHandler(BaseHandler):
         for q in deadreq:
             q.dead = PostStatus.index('EXPIRED')
             q.put()            
-        deadcl = CLModel.query().filter(CLModel.delivend<now)
-        cl_index = search.Index(name=PATHPT_INDEX)
-        bodycount = 0
-        for r in deadcl:
-            cl_index.delete(r.key.urlsafe())
-            r.key.delete()
-            bodycount=bodycount+1            
-        logging.info(str(bodycount) + ' CL entries deleted')
+        # deadcl = CLModel.query().filter(CLModel.delivend<now)
+        # cl_index = search.Index(name=PATHPT_INDEX)
+        # bodycount = 0
+        # for r in deadcl:
+        #     cl_index.delete(r.key.urlsafe())
+        #     r.key.delete()
+        #     bodycount=bodycount+1            
+        # logging.info(str(bodycount) + ' CL entries deleted')
         
-        deadz = ZimModel.query().filter(ZimModel.delivend<now)
-        z_index = search.Index(name=ZIM_INDEX)
-        for r in deadz:
-            z_index.delete(r.key.urlsafe())
-            r.key.delete()
+        # deadz = ZimModel.query().filter(ZimModel.delivend<now)
+        # z_index = search.Index(name=ZIM_INDEX)
+        # for r in deadz:
+        #     z_index.delete(r.key.urlsafe())
+        #     r.key.delete()
         
         hourago = datetime.now() - timedelta(minutes=60)
         deadsearch = SearchEntry.query().filter(SearchEntry.created < hourago)

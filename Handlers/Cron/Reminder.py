@@ -39,6 +39,7 @@ class Reminder(BaseHandler):
             for r in res:
                 u = r.key.parent().get()
                 if not u.cc:
+                    logging.info(r)
                     params = {'first_name': u.first_name}
                     htmlbody =  self.render_str('email/reminders/addcc.html', **params)
                     textbody = addcc_txt % params 
