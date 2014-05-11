@@ -4,7 +4,7 @@ from google.appengine.api import taskqueue
 
 from Handlers.BaseHandler import *
 from Handlers.Launch.CheckoutHandler import *
-from Handlers.Tracker.TrackerHandler import create_from_res
+from Handlers.Mobile.Tracker import create_from_res
 from Handlers.MessageHandler import create_message
 from Models.Post.OfferRequest import *
 from Models.Post.OfferRoute import *

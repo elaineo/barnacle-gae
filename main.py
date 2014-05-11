@@ -25,6 +25,8 @@ from Handlers.Launch.CheckoutHandler import *
 # Mobile App
 from Handlers.Mobile.Sender import SenderMobile
 from Handlers.Mobile.Driver import DriverMobile
+from Handlers.Mobile.Tracker import *
+from Handlers.Mobile.Image import ImageServeHandler
 
 # Cron jobs
 from Handlers.Cron.ExpireHandler import *
@@ -40,7 +42,6 @@ from Handlers.SearchHandler import *
 from Handlers.NewsHandler import *
 from Handlers.Admin.Gerrit import GerritHandler
 from Handlers.Admin.RRDash import RRDashHandler
-from Handlers.Tracker.TrackerHandler import *
 
 from Handlers.Launch.ExternalHandler import *
 from Handlers.Seo.SitemapHandler import SitemapHandler, SitemapGenerationHandler
@@ -83,15 +84,15 @@ app = webapp2.WSGIApplication([('/', HomePage),
 # scrape
    webapp2.Route('/scraped/<key:[\w\-]{20,}>', handler=CLHandler),
    webapp2.Route('/scraped/<action>/<key:[\w\-]{20,}>', handler=CLHandler),
-# mobile driver tracker
+# mobile 
+   webapp2.Route('/mobile', handler=MobilePage),
    webapp2.Route('/mobile/<action>', handler=SenderMobile),
+   webapp2.Route('/imgserv/<action>/<resource>', handler=ImageServeHandler),
+   webapp2.Route('/imgserv/<action>', handler=ImageServeHandler),
+# driver tracker
    webapp2.Route('/track/<action>', handler=TrackerHandler),
    webapp2.Route('/track/<action>/<key:[\w\-]{20,}>', handler=TrackerHandler),
    webapp2.Route('/tracker', handler=TrackerPage),
-   webapp2.Route('/tracker/img/<resource>', handler=TrackerImageServeHandler),
-   webapp2.Route('/tracker/image_upload', handler=TrackerImageUploadHandler),
-   webapp2.Route('/tracker/image_upload/success/<blob_key>', handler=TrackerImageUploadSuccess),
-   webapp2.Route('/tracker/image_upload_url', handler=TrackerImageUploadUrl),
 # search
    webapp2.Route('/search', handler=SearchHandler),
    webapp2.Route('/search/<action>', handler=SearchHandler),

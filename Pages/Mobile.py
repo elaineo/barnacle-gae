@@ -7,3 +7,8 @@ class MIT100k(BaseHandler):
 	        referer = self.request.referer
 	        self.set_secure_cookie('referral', referer)
 	        self.render('mobile/mit.html', **self.params)
+
+class MobilePage(BaseHandler):
+	# page to redirect mobile platforms to download app
+	def get(self):
+		self.render('mobile/index.html', **self.params)
