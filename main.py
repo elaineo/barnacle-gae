@@ -26,7 +26,7 @@ from Handlers.Launch.CheckoutHandler import *
 from Handlers.Mobile.Sender import SenderMobile
 from Handlers.Mobile.Driver import DriverMobile
 from Handlers.Mobile.Tracker import *
-from Handlers.Mobile.Image import ImageServeHandler
+from Handlers.Mobile.Image import *
 
 # Cron jobs
 from Handlers.Cron.ExpireHandler import *
@@ -84,11 +84,12 @@ app = webapp2.WSGIApplication([('/', HomePage),
 # scrape
    webapp2.Route('/scraped/<key:[\w\-]{20,}>', handler=CLHandler),
    webapp2.Route('/scraped/<action>/<key:[\w\-]{20,}>', handler=CLHandler),
-# mobile 
+# mobile
    webapp2.Route('/mobile', handler=MobilePage),
    webapp2.Route('/mobile/<action>', handler=SenderMobile),
-   webapp2.Route('/imgserv/<action>/<resource>', handler=ImageServeHandler),
+   webapp2.Route('/imgblob/<action>', handler=ImageBlobHandler),
    webapp2.Route('/imgserv/<action>', handler=ImageServeHandler),
+   webapp2.Route('/imgserv/<action>/<resource>', handler=ImageServeHandler),
 # driver tracker
    webapp2.Route('/track/<action>', handler=TrackerHandler),
    webapp2.Route('/track/<action>/<key:[\w\-]{20,}>', handler=TrackerHandler),

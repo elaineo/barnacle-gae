@@ -22,8 +22,14 @@ from google.appengine.ext.webapp import blobstore_handlers
 # ... then iOS posts image url with lat and long
 
 
-class ImageServeHandler(blobstore_handlers.BlobstoreUploadHandler):
+class ImageServeHandler(BaseHandler):
     def get(self, action=None, resource=None):
+        if action=='url':
+            upload_url = blobstore.create_upload_url('/imgblob/upload')
+            self.response.headers['Content-Type'] = "application/json"
+            response = {'status':'ok'}
+            response['upload_url'] = upload_url
+            self.write(json.dumps(response))
         if resource and action=='success':
             self.response.headers['Content-Type'] = "application/json"
             #url = images.get_serving_url(blobstore.BlobKey(blob_key))
@@ -32,11 +38,9 @@ class ImageServeHandler(blobstore_handlers.BlobstoreUploadHandler):
         elif resource and action=='img':
             resource = str(urllib.unquote(resource))
             blob_info = blobstore.BlobInfo.get(resource)
-            self.send_blob(blob_info)            
-        elif action=='url':
-            upload_url = blobstore.create_upload_url('/imgserv/upload')
-            self.response.headers['Content-Type'] = "application/json"
-            self.write(json.dumps({'upload_url' : upload_url}))            
+            self.send_blob(blob_info)
+
+class ImageBlobHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self, action=None):
         if action=='upload':
             upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
