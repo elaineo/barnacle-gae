@@ -6,7 +6,7 @@ class MIT100k(BaseHandler):
     	if action=='p2':
 	        referer = self.request.referer
 	        self.set_secure_cookie('referral', referer)
-	        self.render('mobile/mit.html', **self.params)
+	        self.redirect('/static/mobile/home.html')
 
 class MobilePage(BaseHandler):
 	# page to redirect mobile platforms to download app
