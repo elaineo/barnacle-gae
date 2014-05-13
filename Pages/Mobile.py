@@ -11,4 +11,4 @@ class MIT100k(BaseHandler):
 class MobilePage(BaseHandler):
 	# page to redirect mobile platforms to download app
 	def get(self):
-		self.render('mobile/index.html', **self.params)
+		self.render('mobile/appredir.html', **self.params)

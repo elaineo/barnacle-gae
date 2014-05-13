@@ -1,0 +1,44 @@
+<html>
+<head>
+<script>
+other_mobile = [ "series60",
+           "symbian",
+           "windows ce",
+           "windows7phone",
+           "w7p",
+           "blackberry",
+           "palm"];
+function detect_ios() {
+       var uagent = navigator.userAgent.toLowerCase();
+       var mobile = false;
+       var search_strings = [
+           "iphone",
+           "ipod",
+           "ipad"
+       ];
+       for (i in search_strings) {
+           if (uagent.search(search_strings[i]) > -1) mobile = true;
+       }
+       return mobile;
+   }
+function detect_android() {
+       var uagent = navigator.userAgent.toLowerCase();
+       var mobile = false;
+       var search_strings = [
+           "android"
+       ];
+       for (i in search_strings) {
+           if (uagent.search(search_strings[i]) > -1) mobile = true;
+       }
+       return mobile;
+   }
+   if (detect_ios()) window.location = "https://itunes.apple.com/us/app/barnacle/id797355394";
+   else if (detect_android()) window.location = "https://play.google.com/store/apps/details?id=com.gobarnacle";
+</script>
+</head>
+<body>
+  <br>
+  <a href="https://play.google.com/store/apps/details?id=com.gobarnacle"><img width='120px' src='/static/img/icons/play_store.png'></a>
+  <br><br><a href="https://itunes.apple.com/us/app/barnacle/id797355394"><img width='120px' src='/static/img/icons/app_store.png'></a><br>
+</body>
+</html>
