@@ -220,22 +220,22 @@ class RequestHandler(PostHandler):
                 p.img_id = imgstore.key.id()
             p.rates = rates
             p.details = items
-            # If user already has cc on file, this is important.
-            # else, collect a cc
+            p.stats.status = RequestStatus.index('PURSUE')
             logging.info('Complete request')
+            logging.info(p)
             taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
             taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
             taskqueue.add(url='/notify/thanks/'+p.key.urlsafe(), method='get')
-            create_request_doc(p.key.urlsafe(), p)                        
+            create_request_doc(p.key.urlsafe(), p)        
+            # If user already has cc on file, this is important.
+            # else, collect a cc            
             if not self.user_prefs.cc:
                 p.stats.status = RequestStatus.index('NO_CC')
                 p.put()
                 self.params.update(self.user_prefs.params_fill())
                 self.params['next_url'] = '/request/' + p.key.urlsafe()
                 self.render('money/forms/cc.html', **self.params)
-                return
-                
-            p.stats.status = RequestStatus.index('PURSUE')
+                return                
             p.put()                                                
             self.view_page(p.key.urlsafe())            
         else:

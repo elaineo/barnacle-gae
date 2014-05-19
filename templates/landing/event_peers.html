@@ -1,4 +1,4 @@
-{% extends "landing/base_peers.html" %}
+{% extends "landing/base_event.html" %}
 
 {% block title %}
 Barnacle - Ship Outside the Box
@@ -11,6 +11,66 @@ Barnacle - Ship Outside the Box
 
 {% block keyphrase %}
 Deliveries
+{% endblock %}
+
+{% block cornerimg %}
+<div class="one column login-buttons" id='user_head'></div>
+<div class="two columns login-buttons" id='user_head'>
+    <img src='/static/landing/images/profile-peers/i5.png' style='position:absolute; margin-top:10x; margin-right:10px; max-width:120px'>
+</div>
+{% endblock %}
+{% block form %}
+  <form action="/c/peers" method="post" class="custom form-search" id='request_form'>
+    <div class="row">
+      <div class="five mobile-four columns">
+        <label class="right inline">Origin:</label>
+      </div>
+      <div class="seven mobile-four columns">
+        <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locstart}}">
+      </div>
+    </div><!--end row-->
+  <div class="row">
+      <div class="five mobile-four columns">
+        <label class="right inline">Destination:</label>
+      </div>
+      <div class="seven mobile-four columns">
+        <input class="input input-xlarge" type="text" name="dest" id='map1Field' value="{{locend}}">
+      </div>
+    </div><!--end row-->
+
+    <div class="row">
+      <div class="five mobile-four columns">
+        <label class="right inline">Deliver By:</label>
+      </div>
+      <div class="seven mobile-four columns">
+        <input type="date" name="reqdate" min="{{today}}" value="{{delivby}}" id="reqdate" autocomplete="off">
+      </div>
+    </div><!--end row-->
+    <div class="row">
+      <div class="five mobile-four columns">
+        <label class="right inline">Quote:</label>
+      </div>
+
+      <div class="seven mobile-four columns">
+        <input class="input input-xlarge" type="text" name="estcost" id="estcost" value="${{estcost}}" disabled>
+        <input class="input input-xlarge" type="hidden" name="estdup" id="estdup" value="{{estcost}}">
+        <input class="input input-xlarge" type="hidden" name="code" value="{{code}}">
+      </div>
+    </div><!--end row-->
+
+    <input type='hidden' name="startlat" id="startlat">
+    <input type='hidden' name="startlon" id="startlon">
+    <input type='hidden' name="startstr" id="startstr">
+    <input type='hidden' name="destlat" id="destlat">
+    <input type='hidden' name="destlon" id="destlon">
+    <input type='hidden' name="deststr" id="deststr">
+    <input type='hidden' name='distance' id='distance' value='0'>
+    <div class="row">
+      <div class="seven offset-by-five columns"><button class="button" id='request_btn'><i class="icon-search"></i> &nbsp;BOOK IT</button></div>
+    </div>
+    <span class="notch"></span>
+  </form>
+
 {% endblock %}
 
 {% block testimonials %}

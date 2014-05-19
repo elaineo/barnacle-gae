@@ -7,10 +7,11 @@ import random
 class Codes(ndb.Model):
     name = ndb.StringProperty()     # associated business name
     code = ndb.StringProperty()  
-    category = ndb.IntegerProperty(default=4)    # 0 - pets, 1 - auto, 2 - equip
+    category = ndb.IntegerProperty(default=4)    # 0 - pets, 1 - auto, 2 - equip, 10 - Maker Faire
     views = ndb.IntegerProperty(default=0)
     last_view = ndb.DateTimeProperty(auto_now=True)
-    creation_date = ndb.DateTimeProperty(auto_now_add=True)                
+    creation_date = ndb.DateTimeProperty(auto_now_add=True)        
+    price = ndb.IntegerProperty(default=0)    
     
     @classmethod
     def by_code(cls,code):

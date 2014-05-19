@@ -1,0 +1,120 @@
+{% extends "landing/base_event.html" %}
+
+{% block title %}
+Barnacle - Ship Outside the Box
+{% endblock %}
+
+{% block metadescr %}
+  <meta content="barnacle,guitar transport,las vegas,furniture shipping,auto transit, military moves, ship package,logistics,crowdsourced deliveries,crowdsourced shipping,courier,freight, shipping, disruption,postmates,zipments,taskrabbit,shutl,uship,fedex,ups,dhl,usps,shyp,mini storage, self storage,auto transit" name="keywords">
+  <meta content="Barnacle is a crowdsourced shipping and delivery community that matches drivers with people who need to transport large packages. Bulky or fragile shipments and parcels may be uneconomical to mail, or a hassle to wrap in packaging. Give them their own private seats in passenger vehicles!" name="description">
+{% endblock %}
+
+{% block keyphrase %}
+Deliveries
+{% endblock %}
+
+{% block cornerimg %}
+<div class="one column login-buttons" id='user_head'></div>
+<div class="two columns login-buttons" id='user_head'>
+  <img src='/static/landing/images/profile-mf/mr-makey.png' style='position:absolute; margin-top:0;'>
+</div>
+{% endblock %}
+{% block form %}
+
+          <!--Search form-->
+          <form action="/c/event" method="post" class="custom form-search" id='request_form'>
+            <div class="row">
+              <div class="five mobile-four columns">
+                <label class="right inline">Destination:</label>
+              </div>
+              <div class="seven mobile-four columns">
+                <input class="input input-xlarge" type="text" name="start" id='map0Field' value="{{locend}}">
+              </div>
+            </div><!--end row-->
+            <div class="row">
+              <div class="five mobile-four columns">
+                <label class="right inline">Deliver By:</label>
+              </div>
+              <div class="seven mobile-four columns">
+                <input type="date" name="reqdate" min="{{today}}" value="{{delivby}}" id="reqdate" autocomplete="off">
+              </div>
+            </div><!--end row-->
+            <div class="row">
+              <div class="five mobile-four columns">
+                <label class="right inline">Space Needed:</label>
+              </div>
+              <div class="seven mobile-four columns">
+                <select name="vcap" class="expand">
+                  <option selected="selected" value="1">Passenger Seat</option>
+                  <option value="2">Trunk</option>
+                </select>
+              </div>
+            </div><!--end row-->
+            <div class="row">
+              <div class="twelve mobile-four columns">
+                <label class="right inline">Please contact us for oversized items.</label>
+              </div>
+            </div><!--end row-->
+            <div class="row">
+              <div class="five mobile-four columns">
+                <label class="right inline">Quote:</label>
+              </div>
+
+              <div class="seven mobile-four columns">
+                <input class="input input-xlarge" type="text" name="estcost" id="estcost" value="${{estcost}}" disabled>
+                <input class="input input-xlarge" type="hidden" name="estdup" id="estdup" value="{{estcost}}">
+                <input class="input input-xlarge" type="hidden" name="code" value="{{code}}">
+              </div>
+            </div><!--end row-->
+            <input type='hidden' name="startlat" id="startlat">
+            <input type='hidden' name="startlon" id="startlon">
+            <input type='hidden' name="startstr" id="startstr">
+
+            <input type='hidden' name='distance' id='distance' value='0'>
+            <div class="row">
+              <div class="seven offset-by-five columns"><button class="button" id='request_btn'><i class="icon-search"></i> &nbsp;BOOK IT</button></div>
+            </div>
+            <span class="notch"></span>
+          </form>
+{% endblock %}
+
+{% block testimonials %}
+<section>
+	<div id="testimonials">
+  	<div class="row">
+    	<div class="twelve columns">
+      <h3 class="text-center"><br><span class="no-bg">Businesses Use <span class="blue-text">Barnacle</span></span></h3>
+      	<ul class="testimonials-carousel">
+        	<li>
+          	<div class="quote-content">
+              Flying with my double bass has always been a huge hassle for me. Barnacle got my bass to me in Los Angeles for my last gig and back home again. This is awesome.
+            </div>
+          	<div class="quote-author">
+            	<strong>Jamie</strong>
+              <span class="author-description"> &nbsp; Seattle, WA</span>
+            </div>            
+          </li>          
+        	<li class="hide-on-mobile">
+            <div class="quote-content">
+              I bought a used full-stack Crate amp from a guy in San Francisco, and had a heck of a time figuring out how to ship it. I found Barnacle through a forum recommendation, and had a driver bringing my amp down the next weekend. I am so glad this service exists!
+            </div>
+            <div class="quote-author">
+            	<strong>Jon</strong>
+              <span class="author-description"> &nbsp;  San Diego, CA</span>
+            </div>
+          </li>          
+          <li class="hide-on-mobile">
+            <div class="quote-content">
+              I used Barnacle to transport 4 boxes from Oakland to Seattle. The process was super easy and affordable. I plan to use their services again in a couple weeks. Thanks, Barnacle!
+            </div>
+            <div class="quote-author">
+            	<strong>Office Ninjas</strong>
+              <span class="author-description"> &nbsp; Oakland, CA</span>
+            </div>
+          </li>
+        </ul><hr>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

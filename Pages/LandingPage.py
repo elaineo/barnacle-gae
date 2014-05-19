@@ -50,16 +50,6 @@ class LandingPage(BaseHandler):
             self.params['seosub'] = 'shipments'
             self.params['items'] = 'stuff'
             self.render('landing/event.html', **self.params)
-        elif action=='sxsw':
-            self.params['seodir'] = 'sxsw'
-            self.params['seosub'] = 'shipments'
-            self.params['items'] = 'stuff'
-            self.render('landing/sxsw.html', **self.params)                         
-        elif action=='vegas':
-            self.params['seodir'] = 'sxsw'
-            self.params['seosub'] = 'shipments'
-            self.params['items'] = 'stuff'
-            self.render('landing/vegas.html', **self.params)                 
         elif action=='auto':
             self.params['seodir'] = 'auto'
             self.params['seosub'] = 'shipments'
@@ -72,8 +62,6 @@ class CouponPage(BaseHandler):
             self.render('landing/coupongen.html', **self.params)  
         elif action=='calc':
             self.render('landing/pricegen.html', **self.params)  
-        elif action=='sxsw':
-            self.render('landing/sxswgen.html', **self.params)  
         else: 
             c = Codes.by_code(action.upper())
             if not c:
@@ -111,32 +99,19 @@ class CouponPage(BaseHandler):
             self.params['last_biz'] = c.name
             self.params['last_code'] = c.code
             self.render('landing/coupongen.html', **self.params)
-        elif action=='sxsw':
-            rates = self.request.get('estdup')
-            rates = int(rates)
-            code = self.request.get('code')
-            dest, deststr = self.__get_map_form('start')
-            start = ndb.GeoPt(30.266184,-97.742325)
-            startstr = 'SXSW 2014'
-            delivby = datetime.now()+timedelta(weeks=1)
-            r = Reservation(start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest, delivby=delivby, details=code)
-            r.put()
-            self.params.update(r.to_dict())
-            self.params['reskey'] = r.key.urlsafe()
-            self.params['checkout_action'] = '/checkout/res/' + r.key.urlsafe()
-            self.render('launch/fillcheckout_abbrev.html', **self.params)     
+    
         elif action=='event':
             rates = self.request.get('estdup')
             rates = int(rates)
             code = self.request.get('code')
-            deststr = 'SF Bay Area'
-            dest = ndb.GeoPt(37.4,-122)
-            start, startstr = self.__get_map_form('start')
+            startstr = 'SF Bay Area'
+            start = ndb.GeoPt(37.4,-122)
+            dest, deststr = self.__get_map_form('start')
             reqdate = self.request.get('reqdate')
             if reqdate:
                 delivby = parse_date(reqdate)
             else:
-                delivby = datetime(2014,05,15)
+                delivby = datetime(2014,06,15)
             r = Reservation(start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest, delivby=delivby, details=code)
             r.put()
             self.params.update(r.to_dict())
@@ -200,10 +175,9 @@ class CouponPage(BaseHandler):
 class EventPage(BaseHandler):
     def get(self, action=None):
         if action=='gen':
-            self.render('landing/sxswgen.html', **self.params)          
+            self.render('landing/quotegen.html', **self.params)          
         else: 
-            ### ELAINE TO DO: Set up a better freaking way of doing this
-            c = SXSWCode.by_code(action.upper())
+            c = Codes.by_code(action.upper())
             if not c:
                 self.redirect('/')
             self.params['bizname'] = c.name
@@ -216,63 +190,33 @@ class EventPage(BaseHandler):
             self.set_secure_cookie('code', action.upper())
             referer = self.request.referer
             self.set_secure_cookie('referral', referer)
-            #self.params['seodir'] = 'event'
-            self.params['seodir'] = 'peers'
-            self.params['seosub'] = 'shipments'
-            self.params['items'] = 'stuff'
-            self.render('landing/event_peers.html', **self.params)     
-
-    def post(self, action=None):
-        if action=='gen':
-            name = self.request.get('name')
-            price = self.request.get('price')
-            # Look up code
-            c = SXSWCode.by_name(name.upper())
-            if not c:
-                c = SXSWCode(name=name.upper(),price=int(price))
-                c.code = name[0:3].upper() + str(random.randint(0,99))
-                c.put()
-            self.params['last_biz'] = c.name
-            self.params['last_code'] = c.code
-            self.render('landing/sxswgen.html', **self.params)            
-        
-class SXSWPage(BaseHandler):
-    def get(self, action=None):
-        if action=='gen':
-            self.render('landing/sxswgen.html', **self.params)  
-        elif action=='drive':
-            self.params['seodir'] = 'sxsw'
-            self.params['seosub'] = 'shipments'
-            self.params['items'] = 'stuff'        
-            self.render('landing/sxswdrive.html',**self.params)  
-        else: 
-            c = SXSWCode.by_code(action.upper())
-            if not c:
-                self.redirect('/')
-            self.params['bizname'] = c.name
+            self.params['bizname'] = c.name            
             self.params['estcost'] = c.price
             self.params['code'] = c.code
-            c.views = c.views+1
-            c.put()
-            # set cookie so we know where they came from
-            self.set_secure_cookie('code', action.upper())
-            referer = self.request.referer
-            self.set_secure_cookie('referral', referer)
-            self.params['seodir'] = 'sxsw'
-            self.params['seosub'] = 'shipments'
-            self.params['items'] = 'stuff'
-            self.render('landing/sxsw2.html', **self.params)     
+            self.params['today'] = datetime.now().strftime('%Y-%m-%d')
+            if c.category == 10:
+                self.params['seodir'] = 'mf'
+                self.params['seosub'] = 'shipments'
+                self.params['items'] = 'stuff'
+                self.render('landing/mf.html', **self.params)     
+            else:
+                self.params['seodir'] = 'peers'
+                self.params['seosub'] = 'shipments'
+                self.params['items'] = 'stuff'
+                self.render('landing/event_peers.html', **self.params)     
 
     def post(self, action=None):
-        if action=='gen':
+        if action=='gen':            
             name = self.request.get('name')
             price = self.request.get('price')
-            # Look up code
-            c = SXSWCode.by_name(name.upper())
+            cat = self.request.get('cat')
+            # Look up code            
+            c = Codes.by_name(name.upper())
             if not c:
-                c = SXSWCode(name=name.upper(),price=int(price))
+                c = Codes(name=name.upper(),price=int(price), category=int(cat))
                 c.code = name[0:3].upper() + str(random.randint(0,99))
                 c.put()
             self.params['last_biz'] = c.name
-            self.params['last_code'] = c.code
-            self.render('landing/sxswgen.html', **self.params)               
+            self.params['last_code'] = c.code                
+            self.render('landing/quotegen.html', **self.params)            
+        
