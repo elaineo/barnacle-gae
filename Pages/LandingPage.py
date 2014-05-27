@@ -59,10 +59,10 @@ class LandingPage(BaseHandler):
 class CouponPage(BaseHandler):
     def get(self, action=None):
         if action=='gen':
-            self.render('landing/coupongen.html', **self.params)  
+            self.render('landing/coupongen.html', **self.params)
         elif action=='calc':
-            self.render('landing/pricegen.html', **self.params)  
-        else: 
+            self.render('landing/pricegen.html', **self.params)
+        else:
             c = Codes.by_code(action.upper())
             if not c:
                 self.redirect('/')
@@ -99,7 +99,7 @@ class CouponPage(BaseHandler):
             self.params['last_biz'] = c.name
             self.params['last_code'] = c.code
             self.render('landing/coupongen.html', **self.params)
-    
+
         elif action=='event':
             rates = self.request.get('estdup')
             rates = int(rates)
@@ -117,7 +117,7 @@ class CouponPage(BaseHandler):
             self.params.update(r.to_dict())
             self.params['reskey'] = r.key.urlsafe()
             self.params['checkout_action'] = '/checkout/res/' + r.key.urlsafe()
-            self.render('launch/fillcheckout_abbrev.html', **self.params)              
+            self.render('launch/fillcheckout_abbrev.html', **self.params)
         elif action=='vegas':
             rates = self.request.get('estdup')
             rates = int(rates)
@@ -128,8 +128,8 @@ class CouponPage(BaseHandler):
             if reqdate:
                 delivby = parse_date(reqdate)
             else:
-                delivby = datetime.now()+timedelta(weeks=2)            
-            
+                delivby = datetime.now()+timedelta(weeks=2)
+
             start, startstr = self.__get_map_form('start')
             dest = ndb.GeoPt(36.114646,-115.172816)
             deststr = 'Las Vegas, Nevada'
@@ -139,7 +139,7 @@ class CouponPage(BaseHandler):
             self.params['reskey'] = r.key.urlsafe()
             self.params['checkout_action'] = '/checkout/res/' + r.key.urlsafe()
             self.render('launch/fillcheckout_abbrev.html', **self.params)
-            
+
         elif action=='peers':
             rates = self.request.get('estdup')
             rates = int(rates)
@@ -154,14 +154,14 @@ class CouponPage(BaseHandler):
             r = Reservation(start=start, locstart=startstr, rates=rates, locend=deststr, dest=dest, delivby=delivby, details=code)
             r.put()
             self.params.update(r.to_dict())
-            self.params['reskey'] = r.key.urlsafe()            
+            self.params['reskey'] = r.key.urlsafe()
             self.params['checkout_action'] = '/checkout/res/' + r.key.urlsafe()
-            self.params['booking_fee'] = 15
-            self.render('launch/fillcheckout_abbrev.html', **self.params)            
+            self.params['booking_fee'] = 0
+            self.render('launch/fillcheckout_abbrev.html', **self.params)
     def __get_map_form(self,pt):
         ptlat = self.request.get(pt+'lat')
         ptlon = self.request.get(pt+'lon')
-        ptstr = self.request.get(pt+'str')        
+        ptstr = self.request.get(pt+'str')
         if not ptstr or not ptlat or not ptlon:
             ptstr = self.request.get(pt)
             if ptstr:
@@ -169,28 +169,28 @@ class CouponPage(BaseHandler):
             else:
                 ptg = None
         else:
-            ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)    
-        return ptg, ptstr            
+            ptg = ndb.GeoPt(lat=ptlat,lon=ptlon)
+        return ptg, ptstr
 
 class EventPage(BaseHandler):
     def get(self, action=None):
         if action=='gen':
-            self.render('landing/quotegen.html', **self.params)          
-        else: 
+            self.render('landing/quotegen.html', **self.params)
+        else:
             c = Codes.by_code(action.upper())
             if not c:
                 self.redirect('/')
             self.params['bizname'] = c.name
             self.params['estcost'] = c.price
             self.params['code'] = c.code
-            self.params['today'] = datetime.now().strftime('%Y-%m-%d')            
+            self.params['today'] = datetime.now().strftime('%Y-%m-%d')
             c.views = c.views+1
             c.put()
             # set cookie so we know where they came from
             self.set_secure_cookie('code', action.upper())
             referer = self.request.referer
             self.set_secure_cookie('referral', referer)
-            self.params['bizname'] = c.name            
+            self.params['bizname'] = c.name
             self.params['estcost'] = c.price
             self.params['code'] = c.code
             self.params['today'] = datetime.now().strftime('%Y-%m-%d')
@@ -198,25 +198,25 @@ class EventPage(BaseHandler):
                 self.params['seodir'] = 'mf'
                 self.params['seosub'] = 'shipments'
                 self.params['items'] = 'stuff'
-                self.render('landing/mf.html', **self.params)     
+                self.render('landing/mf.html', **self.params)
             else:
                 self.params['seodir'] = 'peers'
                 self.params['seosub'] = 'shipments'
                 self.params['items'] = 'stuff'
-                self.render('landing/event_peers.html', **self.params)     
+                self.render('landing/event_peers.html', **self.params)
 
     def post(self, action=None):
-        if action=='gen':            
+        if action=='gen':
             name = self.request.get('name')
             price = self.request.get('price')
             cat = self.request.get('cat')
-            # Look up code            
+            # Look up code
             c = Codes.by_name(name.upper())
             if not c:
                 c = Codes(name=name.upper(),price=int(price), category=int(cat))
                 c.code = name[0:3].upper() + str(random.randint(0,99))
                 c.put()
             self.params['last_biz'] = c.name
-            self.params['last_code'] = c.code                
-            self.render('landing/quotegen.html', **self.params)            
-        
+            self.params['last_code'] = c.code
+            self.render('landing/quotegen.html', **self.params)
+
