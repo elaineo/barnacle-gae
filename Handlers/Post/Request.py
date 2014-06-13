@@ -221,6 +221,7 @@ class RequestHandler(PostHandler):
             p.rates = rates
             p.details = items
             p.stats.status = RequestStatus.index('PURSUE')
+            p.put()
             logging.info('Complete request')
             logging.info(p)
             taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')

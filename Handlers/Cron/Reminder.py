@@ -14,16 +14,21 @@ class Reminder(BaseHandler):
     def awhile_ago(self):
         return datetime.now() - timedelta(hours=2)
 
+    def aweek_ago(self):
+        return datetime.now() - timedelta(days=7)
+
     def get(self, action=None):
         if action=='incomp':
             reqs = Request.query(Request.dead==0, Request.created<self.awhile_ago())
             for r in reqs:
+                if r.created > self.aweek_ago:
+                    continue
                 if r.stats.status==RequestStatus.index('INCOMP'):
                     u = r.key.parent().get()
                     logging.info(r)
                     params = {'first_name': u.first_name, 'req_url': r.post_url()}
                     htmlbody =  self.render_str('email/reminders/complreq.html', **params)
-                    textbody = complreq_txt % params 
+                    textbody = complreq_txt % params
                     sub = complreq_sub
                     send_info(u.email, sub, textbody, htmlbody)
                 elif r.stats.status==RequestStatus.index('NO_CC'):
@@ -31,7 +36,7 @@ class Reminder(BaseHandler):
                     logging.info(r)
                     params = {'first_name': u.first_name}
                     htmlbody =  self.render_str('email/reminders/addcc.html', **params)
-                    textbody = addcc_txt % params 
+                    textbody = addcc_txt % params
                     sub = 'Reminder: Add a payment account'
                     send_info(u.email, sub, textbody, htmlbody)
             # check for reservations without cc
@@ -42,10 +47,10 @@ class Reminder(BaseHandler):
                     logging.info(r)
                     params = {'first_name': u.first_name}
                     htmlbody =  self.render_str('email/reminders/addcc.html', **params)
-                    textbody = addcc_txt % params 
-                    sub = addcc_sub 
+                    textbody = addcc_txt % params
+                    sub = addcc_sub
                     send_info(u.email, sub, textbody, htmlbody)
-                
+
 class Notify(BaseHandler):
     def get(self, action=None, key=None):
         if action=='thanks':
@@ -54,20 +59,20 @@ class Notify(BaseHandler):
             if r.__class__.__name__ == 'Route':
                 params = {'first_name': u.first_name, 'post_url': r.post_url()}
                 htmlbody =  self.render_str('email/thanks_route.html', **params)
-                textbody = thanksroute_txt % params 
-                sub = thanksroute_sub 
-                send_info(u.email, sub, textbody, htmlbody)                    
-            else: 
+                textbody = thanksroute_txt % params
+                sub = thanksroute_sub
+                send_info(u.email, sub, textbody, htmlbody)
+            else:
                 params = {'first_name': u.first_name, 'post_url': r.post_url()}
                 htmlbody =  self.render_str('email/thanks_req.html', **params)
-                textbody = thanksreq_txt % params 
+                textbody = thanksreq_txt % params
                 sub = thanksreq_sub
-                send_info(u.email, sub, textbody, htmlbody)           
+                send_info(u.email, sub, textbody, htmlbody)
         elif action=='expire':
             r = ndb.Key(urlsafe=key).get()
             u = r.key.parent().get()
             params = {'first_name': u.first_name, 'repost_url': r.repost_url()}
             htmlbody =  self.render_str('email/expire_req.html', **params)
-            textbody = expirereq_txt % params 
+            textbody = expirereq_txt % params
             sub = expirereq_sub
-            send_info(u.email, sub, textbody, htmlbody)           
+            send_info(u.email, sub, textbody, htmlbody)
