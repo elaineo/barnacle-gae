@@ -16,7 +16,7 @@ import time
 class RequestHandler(PostHandler):
     """ Post a new route """
     def get(self, action=None,key=None):
-        if not action and key: 
+        if not action and key:
             self.view_page(key)
             return
         if action=='json' and key:
@@ -35,10 +35,10 @@ class RequestHandler(PostHandler):
             for p in reqs:
                 p.stats.status = RequestStatus.index('PURSUE')
                 p.put()
-            return            
+            return
         if action and not self.user_prefs:
             self.redirect('/request#signin-box')
-            return            
+            return
         elif action=='repost' and key:
             try:
                 p = ndb.Key(urlsafe=key).get()
@@ -129,7 +129,7 @@ class RequestHandler(PostHandler):
             if p.dead>0:
                 logging.info('Request coming back from ' + PostStatus[p.dead])
                 p.dead=0
-                create_request_doc(p.key.urlsafe(), p) 
+                create_request_doc(p.key.urlsafe(), p)
             if img:
                 if p.img_id: # existing image
                     imgstore = ImageStore.get_by_id(p.img_id)
@@ -158,7 +158,7 @@ class RequestHandler(PostHandler):
             self.params['today'] = datetime.now().strftime('%Y-%m-%d')
             self.render('post/forms/fillrequest.html', **self.params)
 
-    def __init_request(self,key=None):        
+    def __init_request(self,key=None):
         data = json.loads(unicode(self.request.body, errors='replace'))
         capacity = data.get('vcap')
         capacity = parse_unit(capacity)
@@ -174,7 +174,7 @@ class RequestHandler(PostHandler):
         logging.info('Initial Request: '+startstr+' to '+deststr)
         distance = data.get('distance')
         p = Request(parent=self.user_prefs.key, start=start,
-            dest=dest, capacity=capacity, 
+            dest=dest, capacity=capacity,
             delivby=delivby, locstart=startstr, locend=deststr)
         price, seed = RouteUtils.priceEst(p, distance)
         stats = ReqStats(sugg_price = price, seed = seed, distance = distance)
@@ -226,18 +226,20 @@ class RequestHandler(PostHandler):
             taskqueue.add(url='/match/updatereq/'+p.key.urlsafe(), method='get')
             taskqueue.add(url='/summary/selfnote/'+p.key.urlsafe(), method='get')
             taskqueue.add(url='/notify/thanks/'+p.key.urlsafe(), method='get')
-            create_request_doc(p.key.urlsafe(), p)        
+            create_request_doc(p.key.urlsafe(), p)
             # If user already has cc on file, this is important.
-            # else, collect a cc            
+            # else, collect a cc
             if not self.user_prefs.cc:
                 p.stats.status = RequestStatus.index('NO_CC')
+                logging.info(p)
                 p.put()
+                logging.info(p)
                 self.params.update(self.user_prefs.params_fill())
                 self.params['next_url'] = '/request/' + p.key.urlsafe()
                 self.render('money/forms/cc.html', **self.params)
-                return                
-            p.put()                                                
-            self.view_page(p.key.urlsafe())            
+                return
+            p.put()
+            self.view_page(p.key.urlsafe())
         else:
             self.redirect('/request')
 
