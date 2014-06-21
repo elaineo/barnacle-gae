@@ -29,6 +29,8 @@ class CheckoutHandler(BaseHandler):
             self.__confirm_hold(key)
         elif action=='payout':
             self.__release(key)
+        elif action=='invoice':
+            self.__invoice(key)
 
     def post(self, action=None, key=None):
         if action=='bank':
@@ -80,6 +82,14 @@ class CheckoutHandler(BaseHandler):
         ## THIS ASSUMES DRIVER HAS BEEN RESERVED
         self.render('money/receipt/reservation.html', **self.params)
         self.send_receipt(email, res, eparams)
+
+    def __invoice(self,key):
+        #anonymous invoice
+        r = ndb.Key(urlsafe=key).get()
+        self.params.update(r.to_dict())
+        self.params['reskey'] = r.key.urlsafe()
+        self.params['checkout_action'] = '/checkout/res/' + r.key.urlsafe()
+        self.render('launch/fillinvoice.html', **self.params)
 
     def __process_anon(self,key):
         #Make an anonymous booking
@@ -264,7 +274,10 @@ class CheckoutHandler(BaseHandler):
     def __create_anon(self,email=None,tel=None, name=None):
         #create anonymous customer
         balanced.configure(baccount)
-        customer = balanced.Customer(email=email, phone=tel, name=name).save()
+        if email and tel:
+            customer = balanced.Customer(email=email, phone=tel, name=name).save()
+        else:
+            customer = balanced.Customer(name=name).save()
         return customer
 
     def __test(self):

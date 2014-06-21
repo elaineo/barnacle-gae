@@ -69,9 +69,6 @@ app = webapp2.WSGIApplication([('/', HomePage),
                   webapp2.Route('/img/<id:[0-9]+>', handler=ImagePage),
                                 ('/home', GuestPage),
                                 ('/splash', SplashPage),
-                                ('/springbreak', SpringBreak),
-                  webapp2.Route('/mit100k', MIT100k),
-                  webapp2.Route('/mit100k/<action>', MIT100k),
 # LAUNCH!
 # requests
     webapp2.Route('/res', handler=RequestHandler),  #get rid of this

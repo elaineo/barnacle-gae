@@ -42,7 +42,7 @@ class DebugUtils(BaseHandler):
             clean_index(REQUEST_INDEX)
             clean_index(ROUTE_INDEX)
         elif action=='qtask':
-            taskqueue.add(url='/debug/clearusers')
+            taskqueue.add(url='/debug/email')
         elif action=='cities':
             delete_all_in_index(CITY_INDEX)
             for c in cities:
@@ -127,6 +127,10 @@ class DebugUtils(BaseHandler):
             # need to make a dummy call because strptime has problems with multithreading
             datetime.strptime('2012-01-01', '%Y-%m-%d')
             self.render('share/cldata.html', **self.params)
+        elif action=='emails':
+            users = UserPrefs.query()
+            emails = [u.email for u in users]
+            self.write(emails)
         # elif action=='reset':
             # routes = BarnacleModel.query()
             # for r in routes:
