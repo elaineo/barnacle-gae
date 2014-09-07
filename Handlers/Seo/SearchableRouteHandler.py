@@ -53,7 +53,7 @@ class SearchableRouteHandler(BaseHandler):
                 self.params['center'] = rdump['center']
                 self.params['paths'] = rdump['paths']
                 routes_usa = self.render_str('search/seo_route_all.html', **self.params)
-                memcache.add(key=ROUTE_USA_KEY, value=routes_usa, time=3600)
+                memcache.add(key=ROUTE_USA_KEY, value=routes_usa)
                 self.write(routes_usa)
         elif dest == None:
             try:
