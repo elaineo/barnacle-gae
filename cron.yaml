@@ -13,9 +13,9 @@ cron:
 - description: daily clean out incomplete requests
   url: /expire/incomp
   schedule: every day 07:59
-- description: daily sitemap.xml generation
-  url: /generate/sitemap
-  schedule: every day 08:15
+# - description: daily sitemap.xml generation
+  # url: /generate/sitemap
+  # schedule: every day 08:15
 - description: daily notifications to senders
   url: /match/requests
   schedule: every day 23:20
