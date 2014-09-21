@@ -16,12 +16,12 @@ cron:
 # - description: daily sitemap.xml generation
   # url: /generate/sitemap
   # schedule: every day 08:15
-- description: daily notifications to senders
-  url: /match/requests
-  schedule: every day 23:20
-- description: daily notifications to drivers
-  url: /match/routes
-  schedule: every day 23:20
+# - description: daily notifications to senders
+#   url: /match/requests
+#   schedule: every day 23:20
+# - description: daily notifications to drivers
+#   url: /match/routes
+#   schedule: every day 23:20
 - description: Weekly remove dups until elaine fixes this
   url: /debug/qtask
   schedule: every sunday 07:29
