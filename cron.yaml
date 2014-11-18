@@ -1,18 +1,18 @@
 # https://developers.google.com/appengine/docs/python/config/cron
 # invoked HTTP request is allowed to run up to 10 minutes
 cron:
-- description: daily summary job
-  url: /summary
-  schedule: every day 00:00
-- description: daily reminder to complete requests
-  url: /remind/incomp
-  schedule: every mon,thu 21:00
-- description: daily expiration job
-  url: /expire/dead
-  schedule: every day 06:59
-- description: daily clean out incomplete requests
-  url: /expire/incomp
-  schedule: every day 07:59
+#- description: daily summary job
+  #url: /summary
+  #schedule: every day 00:00
+#- description: daily reminder to complete requests
+#  url: /remind/incomp
+  #schedule: every mon,thu 21:00
+#- description: daily expiration job
+  #url: /expire/dead
+  #schedule: every day 06:59
+#- description: daily clean out incomplete requests
+  #url: /expire/incomp
+  #schedule: every day 07:59
 # - description: daily sitemap.xml generation
   # url: /generate/sitemap
   # schedule: every day 08:15
@@ -22,9 +22,9 @@ cron:
 # - description: daily notifications to drivers
 #   url: /match/routes
 #   schedule: every day 23:20
-- description: Weekly remove dups until elaine fixes this
-  url: /debug/qtask
-  schedule: every sunday 07:29
+# - description: Weekly remove dups until elaine fixes this
+#   url: /debug/qtask
+#   schedule: every sunday 07:29
 # - description: Weekly backup
 #   url: /_ah/datastore_admin/backup.create?name=BAK&kind=DeliveryOffer&kind=Driver&kind=DriverModel&kind=ExpiredOffer&kind=ExpiredRequest&kind=ExpiredReservation&kind=ExpiredRoute&kind=HoldAccount&kind=Request&kind=Reservation&kind=Review&kind=Route&kind=TrackerModel&kind=UserPrefs&filesystem=gs&gs_bucket_name=barnaclebak
 #   schedule: every sunday 06:59
